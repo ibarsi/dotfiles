@@ -1,0 +1,5 @@
+{
+    "rules": {
+        "block-no-single-line": true
+    }
+}
