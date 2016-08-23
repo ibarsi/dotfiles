@@ -1,5 +1,10 @@
+# Git
+**/.git
+
 # Static files
 **/node_modules
+**/components
+**/dist
 
 # Python
 **/*.pyc
