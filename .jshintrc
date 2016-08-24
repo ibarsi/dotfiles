@@ -48,7 +48,7 @@
     "evil"          : false,     // true: Tolerate use of `eval` and `new Function()`
     "expr"          : false,     // true: Tolerate `ExpressionStatement` as Programs
     "funcscope"     : false,     // true: Tolerate defining variables inside control statements
-    "globalstrict"  : false,     // true: Allow global "use strict" (also enables 'strict')
+    "globalstrict"  : false,      // true: Allow global "use strict" (also enables 'strict')
     "iterator"      : false,     // true: Tolerate using the `__iterator__` property
     "lastsemic"     : false,     // true: Tolerate omitting a semicolon for the last statement of a 1-line block
     "laxbreak"      : false,     // true: Tolerate possibly unsafe line breakings
@@ -66,14 +66,17 @@
 
     // Environments
     "browser"       : true,     // Web Browser (window, document, etc)
-    "browserify"    : false,    // Browserify (node.js code in the browser)
+    "browserify"    : true,    // Browserify (node.js code in the browser)
     "devel"         : true,     // Development/debugging (alert, confirm, etc)
-    "jasmine"       : false,    // Jasmine
-    "jquery"        : false,    // jQuery
+    "jasmine"       : true,    // Jasmine
+    "jquery"        : true,    // jQuery
     "mocha"         : true,     // Mocha
-    "node"          : false,    // Node.js
-    "worker"        : false,    // Web Workers
+    "node"          : true,    // Node.js
+    "worker"        : true,    // Web Workers
 
     // Custom Globals
-    "globals"       : {}        // additional predefined global variables
+    "globals"       : {
+        "_": true,
+        "Backbone": true
+    }
 }
