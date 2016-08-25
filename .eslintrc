@@ -112,7 +112,7 @@
         "no-with": 1,               // disallow use of the with statement
         "radix": 1,                 // require use of the second argument for parseInt() (off by default)
         "vars-on-top": 0,           // requires to declare all vars on top of their containing scope (off by default)
-        "wrap-iife": 1,             // require immediate function invocation to be wrapped in parentheses (off by default)
+        "wrap-iife": [1, "inside"], // require immediate function invocation to be wrapped in parentheses (off by default)
         "yoda": [1, "never"],       // require or disallow Yoda conditions
 
 
