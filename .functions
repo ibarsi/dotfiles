@@ -7,6 +7,12 @@ function touchgo()
     vim $1;
 }
 
+# List user installed npm packages
+function npm-ls()
+{
+    npm list -g --depth=0
+}
+
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$_";
