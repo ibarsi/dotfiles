@@ -7,6 +7,16 @@ function touchgo()
     vim $1;
 }
 
+# Take full responsive screenshots of a webpage
+function screenshots() {
+    local array=(1600 768 320)
+
+    for i in "${array[@]}"
+    do
+        webkit2png -Fs 1 -W $i --filename='screenshot-'$(date +%Y%m%d-%H%M%S) --delay=2 "$1"
+    done
+}
+
 # Simple calculator
 function calc() {
     local result="";
