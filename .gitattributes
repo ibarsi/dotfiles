@@ -1,5 +1,5 @@
 # Add all zip files through Git LFS
-git lfs track "*.bin"
-git lfs track "*.dll"
-git lfs track "*.zip"
-git lfs track "*.psd"
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
