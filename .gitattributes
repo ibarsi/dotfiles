@@ -1,3 +1,5 @@
 # Add all zip files through Git LFS
-$ git lfs track "*.zip"
-$ git lfs track "*.psd"
+git lfs track "*.bin"
+git lfs track "*.dll"
+git lfs track "*.zip"
+git lfs track "*.psd"
