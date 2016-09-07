@@ -7,6 +7,12 @@ function touchgo()
     vim $1;
 }
 
+# List user installed npm packages
+function npm-ls()
+{
+    npm list -g --depth=0
+}
+
 # Take full responsive screenshots of a webpage
 function screenshots() {
     local array=(1600 768 320)
