@@ -13,6 +13,11 @@ function npm-ls()
     npm list -g --depth=0
 }
 
+ # Go to a django project's site root
+ function djp() {
+     cd ~/projects/$1/site/$1
+ }
+
 # Take full responsive screenshots of a webpage
 function screenshots() {
     local array=(1600 768 320)
