@@ -10,7 +10,9 @@ alias -- -="cd -"
 
 # Shortcuts
 alias cdd="cd ~/Desktop"
+alias cdl="cd ~/Downloads"
 alias cdp="cd C:/Projects"
+alias cdot="cd C:/Projects/dotfiles"
 alias g="git"
 alias h="history"
 alias j="jobs"
