@@ -1,4 +1,6 @@
 {
+    "parser": "babel-eslint",
+
     "env": {
         "browser": true,     // browser global variables.
         "node": true,        // Node.js global variables and Node.js-specific rules.
@@ -15,7 +17,7 @@
     },
 
     "plugins": [
-
+        "flowtype"
     ],
 
     "parserOptions": {
@@ -225,6 +227,59 @@
         "no-confusing-arrow": 0,        // Disallow arrow functions where they could be confused with comparisons
 
 
+        ////////// Flow //////////
+
+        "flowtype/boolean-style": [
+            2,
+            "boolean"
+        ],
+        "flowtype/define-flow-type": 1,
+        "flowtype/delimiter-dangle": [
+            2,
+            "never"
+        ],
+        "flowtype/generic-spacing": [
+            2,
+            "never"
+        ],
+        "flowtype/no-weak-types": 2,
+        "flowtype/require-parameter-type": 0,
+        "flowtype/require-return-type": [
+            2,
+            "never",
+        {
+            "annotateUndefined": "never"
+        }
+        ],
+        "flowtype/require-valid-file-annotation": 2,
+        "flowtype/semi": [
+            2,
+            "always"
+        ],
+        "flowtype/space-after-type-colon": [
+            2,
+            "always"
+        ],
+        "flowtype/space-before-generic-bracket": [
+            2,
+            "never"
+        ],
+        "flowtype/space-before-type-colon": [
+            2,
+            "never"
+        ],
+        "flowtype/type-id-match": [
+            2,
+            "^([A-Z][a-z0-9]+)+Type$"
+        ],
+        "flowtype/union-intersection-spacing": [
+            2,
+            "always"
+        ],
+        "flowtype/use-flow-type": 1,
+        "flowtype/valid-syntax": 1,
+
+
         ////////// Legacy //////////
 
         "max-depth": 0,       // specify the maximum depth that blocks can be nested (off by default)
@@ -233,5 +288,11 @@
         "max-statements": 0,  // specify the maximum number of statement allowed in a function (off by default)
         "no-bitwise": 0,      // disallow use of bitwise operators (off by default)
         "no-plusplus": 0      // disallow use of unary operators, ++ and -- (off by default)
+    },
+
+    "settings": {
+        "flowtype": {
+            "onlyFilesWithFlowAnnotation": true
+        }
     }
 }
