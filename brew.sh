@@ -60,5 +60,9 @@ brew install webkit2png                 # Take full screenshots of a webpage
 # brew install zopfli                   # Ability to use Zopfli compression
 brew install gnupg gnupg2               # Encrypt and sign data/communication via GnuPG
 
+# Development
+brew install mongodb                    # Install MongoDB, a NoSQL database
+brew install watchman                   # Instal Watchman, a file watching tool
+
 # Remove outdated versions from the cellar.
 brew cleanup

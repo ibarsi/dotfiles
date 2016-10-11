@@ -1,5 +1,6 @@
 **/.git/**/*
 **/node_modules/**/*
 **/components/**/*
-**/vendor/**/*
-**/dist/**/*
+**/bower_components/**/*
+**/static/dist/**/*
+**/static/build/**/*
