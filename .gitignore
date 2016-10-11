@@ -4,6 +4,7 @@
 # Static files
 **/node_modules
 **/components
+**/bower_components
 **/dist
 
 # Python
