@@ -62,7 +62,7 @@ brew install gnupg gnupg2               # Encrypt and sign data/communication vi
 
 # Development
 brew install python                     # Python language
-brew install nginx                      # High performance load balancer, web server and reverse proxy 
+brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install node                       # Server-side JavaScript
 brew install mongodb                    # NoSQL database
 brew install watchman                   # File watching tool
@@ -76,8 +76,6 @@ brew cask install visual-studio-code    # VS Code text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
-brew cask install virtual-box           # Oracle VM
-brew cask install vagrant               # Development environment generator
 
 # Remove outdated versions from the cellar.
 brew cleanup
