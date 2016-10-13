@@ -7,10 +7,16 @@ function touchgo()
     vim $1;
 }
 
-# List user installed npm packages
+# List global npm packages
 function npm-ls()
 {
     npm list -g --depth=0
+}
+
+# Store global npm packages
+function npm-store()
+{
+    npm-ls > ~/npm-ls.txt
 }
 
 # Create a new directory and enter it
