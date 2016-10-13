@@ -7,7 +7,7 @@ function doIt() {
     DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
     # Currently only links one level deep :(
-    find . -mindepth 1 -maxdepth 1 -type f \( -iname "*" ! -iname ".DS_Store" ! -iname "README.md" ! -iname "bootstrap.sh" \) -not -path "./.git/*" | sed 's#.*/##' | while read file; do
+    find . -mindepth 1 -maxdepth 1 -type f \( -iname "*" ! -iname ".DS_Store" ! -iname "README.md" ! -iname "bootstrap.sh" ! -iname "brew.sh" \) -not -path "./.git/*" | sed 's#.*/##' | while read file; do
         echo "Removing $file from $HOME."
         rm "$HOME/$file"
 
