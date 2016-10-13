@@ -4,7 +4,7 @@ Forked from Mathias Bynens' excellent repo!
 
 https://github.com/mathiasbynens/dotfiles.git
 
-## Steps to Configure Environment
+## Steps to Configure (OSX) Environment
 1. Install Xcode
 2. Install Homebrew.
 3. `source brew.sh`
