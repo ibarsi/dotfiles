@@ -25,10 +25,17 @@ function djp()
     cd ~/projects/$1/site/$1
 }
 
+# SSH into vagrant box
 function vagrant-ssh()
 {
     cd ~/vagrant-ansible-devbox;
     vagrant ssh;
+}
+
+# Emit notification popup letting me know some terminal tasks just finished.
+function ding() {
+    tput bel;
+    osascript -e 'display notification "Ding! Something just finished!" with title "iTerm"';
 }
 
 # Take full responsive screenshots of a webpage

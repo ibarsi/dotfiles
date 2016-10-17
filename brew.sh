@@ -50,10 +50,10 @@ brew install exiv2                      # Read/Write image metadata
 brew install git                        # Source control
 brew install git-lfs                    # System for managing large files in source control via Git LFS
 brew install imagemagick --with-webp    # Create, edit, compose or convert bitmap images
-# brew install p7zip                    # 7zip for Mac
+brew install p7zip                      # 7zip for Mac
 # brew install pigz                     # Parallel implementation of gzip
 brew install speedtest_cli              # Test your internet connection speed
-# brew install ssh-copy-id              # Add ssh identity to remote host for easy login
+brew install ssh-copy-id                # Add ssh identity to remote host for easy login
 brew install testssl                    # Test ssl configuration strength
 brew install tree                       # View tree list of folder/file structures
 brew install webkit2png                 # Take full screenshots of a webpage
@@ -73,6 +73,7 @@ brew cask install opera                 # Opera browser
 brew cask install google-chrome         # Chrome browser
 brew cask install firefox               # Firefox browser
 brew cask install visual-studio-code    # VS Code text editor
+brew cask install brackets              # Brackets text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
