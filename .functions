@@ -25,11 +25,12 @@ function djp()
     cd ~/projects/$1/site/$1
 }
 
-# SSH into vagrant box
+# SSH into default vagrant box (first in global list, if you have multiple)
 function vagrant-ssh()
 {
-    cd ~/vagrant-ansible-devbox;
-    vagrant ssh;
+    id=$(vagrant global-status | sed -n '/id/{n;n;p;}' | cut -c 1-7)
+
+    vagrant ssh $id
 }
 
 # Emit notification popup letting me know some terminal tasks just finished.
