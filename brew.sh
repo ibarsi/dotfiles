@@ -77,6 +77,7 @@ brew cask install brackets              # Brackets text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
+brew cask install avibrazil-rdm         # Screen display client that lets you set insanely high resolutions
 
 # Remove outdated versions from the cellar.
 brew cleanup
