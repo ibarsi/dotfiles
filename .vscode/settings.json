@@ -55,6 +55,7 @@
     //-------- ESLint configuration --------
 
     "eslint.enable": true,
+    "eslint.autoFixOnSave": false,
 
 
     //-------- HTMLHint configuration --------
