@@ -11,6 +11,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.renderWhitespace": "boundary",
     "editor.formatOnSave": false,
+    "extensions.autoUpdate": true,
 
     "search.exclude": {
         // GENERAL
