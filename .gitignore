@@ -14,6 +14,13 @@
 # Node
 **/npm-debug.log
 
+# ESLint
+.eslintcache
+
+# Istanbul
+/coverage
+/.nyc_output
+
 # Folder view configuration files
 **/.DS_Store
 **/Desktop.ini

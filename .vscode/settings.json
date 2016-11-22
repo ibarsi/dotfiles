@@ -11,6 +11,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.renderWhitespace": "boundary",
     "editor.formatOnSave": false,
+    "extensions.autoUpdate": true,
 
     "search.exclude": {
         // GENERAL
@@ -55,6 +56,7 @@
     //-------- ESLint configuration --------
 
     "eslint.enable": true,
+    "eslint.autoFixOnSave": false,
 
 
     //-------- HTMLHint configuration --------
