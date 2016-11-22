@@ -13,7 +13,6 @@
 		"ms-vscode.csharp",
 		"ms-vscode.typescript-javascript-grammar",
 		"robertohuertasm.vscode-icons",
-		"shinnn.stylelint",
-		"PeterJausovec.vscode-docker"
+		"shinnn.stylelint"
 	]
 }
