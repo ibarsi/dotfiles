@@ -300,5 +300,6 @@
     "less.lint.float": "ignore",
 
     // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-    "less.lint.idSelector": "ignore"
+    "less.lint.idSelector": "ignore",
+    "vsicons.dontShowNewVersionMessage": true
 }
