@@ -11,7 +11,6 @@
 ├── grunt@1.0.1
 ├── grunt-cli@1.2.0
 ├── htmlhint@0.9.13
-├── jshint@2.9.3
 ├── npm@3.10.7
 ├── react-native-cli@1.0.0
 ├── stylelint@7.4.2
