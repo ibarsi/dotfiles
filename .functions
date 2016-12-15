@@ -20,7 +20,7 @@ function npm-store()
 }
 
 # Go to a django project's site root
-function djp() 
+function djp()
 {
     cd ~/projects/$1/site/$1
 }
