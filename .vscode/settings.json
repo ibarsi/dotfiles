@@ -301,5 +301,6 @@
 
     // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
     "less.lint.idSelector": "ignore",
-    "vsicons.dontShowNewVersionMessage": true
+    "vsicons.dontShowNewVersionMessage": true,
+    "window.zoomLevel": 0
 }

@@ -25,6 +25,12 @@ function djp()
     cd ~/projects/$1/site/$1
 }
 
+# Activate local virtualenv
+function venv()
+{
+    source ${PWD##*/}/bin/activate
+}
+
 # SSH into default vagrant box (first in global list, if you have multiple)
 function vagrant-ssh()
 {

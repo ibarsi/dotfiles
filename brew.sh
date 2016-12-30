@@ -49,7 +49,6 @@ brew install dark-mode                  # Toggle Mac dark mode
 brew install exiv2                      # Read/Write image metadata
 brew install git                        # Source control
 brew install git-lfs                    # System for managing large files in source control via Git LFS
-brew install imagemagick --with-webp    # Create, edit, compose or convert bitmap images
 brew install p7zip                      # 7zip for Mac
 # brew install pigz                     # Parallel implementation of gzip
 brew install speedtest_cli              # Test your internet connection speed
