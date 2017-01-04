@@ -20,6 +20,11 @@
         "**/components": true,
         "**/dist": true,
 
+        // .NET
+        "**/bin": true,
+        "**/obj": true,
+        "**/packages": true,
+
         // DJANGO
         "**/migrations": true,
         "**/south_migrations": true,
