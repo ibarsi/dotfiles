@@ -4,7 +4,6 @@
 	"recommendations": [
 		// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 		"abierbaum.vscode-file-peek",
-		"dbaeumer.jshint",
 		"dbaeumer.vscode-eslint",
 		"flowtype.flow-for-vscode",
 		"minhthai.vscode-todo-parser",
@@ -12,6 +11,7 @@
 		"ms-vscode.csharp",
 		"ms-vscode.typescript-javascript-grammar",
 		"robertohuertasm.vscode-icons",
-		"shinnn.stylelint"
+		"shinnn.stylelint",
+        "waderyan.gitblame"
 	]
 }
