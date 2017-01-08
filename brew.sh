@@ -63,16 +63,12 @@ brew install gnupg gnupg2               # Encrypt and sign data/communication vi
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install node                       # Server-side JavaScript
-brew install mongodb                    # NoSQL database
-brew install watchman                   # File watching tool
 
 # Applications
 brew cask install iterm2                # Improved Mac Terminal
-brew cask install opera                 # Opera browser
 brew cask install google-chrome         # Chrome browser
 brew cask install firefox               # Firefox browser
 brew cask install visual-studio-code    # VS Code text editor
-brew cask install brackets              # Brackets text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger

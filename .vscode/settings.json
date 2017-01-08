@@ -17,7 +17,7 @@
         // GENERAL
         "**/.git": true,
         "**/node_modules": true,
-        "**/components": true,
+        "**/build": true,
         "**/dist": true,
 
         // .NET
