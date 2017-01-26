@@ -18,7 +18,8 @@
 
     "plugins": [
         "flowtype",
-        "react"
+        "react",
+        "compat"
     ],
 
     "extends": [
@@ -50,6 +51,11 @@
     },
 
     "rules": {
+
+        ////////// Campatability Errors //////////
+
+        "compat/compat": 2,
+
         ////////// Possible Errors //////////
 
         "no-cond-assign": 2,            // disallow assignment in conditional expressions
@@ -245,6 +251,10 @@
     "settings": {
         "flowtype": {
             "onlyFilesWithFlowAnnotation": false
-        }
+        },
+        "targets": ["chrome", "firefox", "ie", "edge", "safari"],
+        "polyfills": [],
+        "coverage": true,
+        "compiler": "babel"
     }
 }
