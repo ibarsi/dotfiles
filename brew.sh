@@ -72,6 +72,7 @@ brew cask install visual-studio-code    # VS Code text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
+brew cask install filezilla             # FTP Client
 
 # Remove outdated versions from the cellar.
 brew cleanup

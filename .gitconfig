@@ -4,6 +4,12 @@
 
 [alias]
 
+    # Shorthand for checkout
+    co = "checkout"
+
+    # Shorthand for merge
+    m = "merge"
+
     # View abbreviated SHA, description, and history graph of the latest 20 commits
     l = log --pretty=format:'%C(auto,yellow)%h %C(auto,blue)%ad %C(auto,green)%aN %Creset%s %C(auto,cyan)% %d' -n 20 --graph --abbrev-commit --date=relative
 
