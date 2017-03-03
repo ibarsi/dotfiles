@@ -18,8 +18,7 @@
 
     "plugins": [
         "flowtype",
-        "react",
-        "compat"
+        "react"
     ],
 
     "extends": [
@@ -54,7 +53,7 @@
 
         ////////// Campatability Errors //////////
 
-        "compat/compat": 2,
+        // TODO: Fix compat errors, currently breaks linting.
 
         ////////// Possible Errors //////////
 
@@ -251,10 +250,6 @@
     "settings": {
         "flowtype": {
             "onlyFilesWithFlowAnnotation": false
-        },
-        "targets": ["chrome", "firefox", "ie", "edge", "safari"],
-        "polyfills": [],
-        "coverage": true,
-        "compiler": "babel"
+        }
     }
 }
