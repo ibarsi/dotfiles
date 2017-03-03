@@ -3,15 +3,21 @@
     //-------- Editor configuration --------
 
     "window.menuBarVisibility": "toggle",
+    "window.zoomLevel": 0,
+    "window.newWindowDimensions": "maximized",
     "editor.tabSize": 4,
     "editor.renderIndentGuides": true,
     "editor.glyphMargin": true,
     "editor.scrollBeyondLastLine": true,
     "editor.mouseWheelZoom": false,
     "editor.cursorStyle": "line",
-    "diffEditor.ignoreTrimWhitespace": false,
     "editor.renderWhitespace": "boundary",
     "editor.formatOnSave": false,
+    "editor.minimap.enabled": false,
+    "editor.wordWrap": "on",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "debug.inlineValues": true,
+    "workbench.iconTheme": "vscode-icons",
     "extensions.autoUpdate": true,
 
     "search.exclude": {
@@ -48,15 +54,9 @@
 
     //-------- Icons --------
 
-    "vsicons.icons": "http://github.com/robertohuertasm/vscode-icons/blob/master/icons.zip?raw=true",
-
-    // Greyscale
-    // "vsicons.icons": "https://github.com/jedmao/vscode-icons/blob/grayscale-icons/icons.zip?raw=true",
-
-
-    //-------- JSHint configuration --------
-
-    "jshint.enable": false,
+    "vsicons.dontShowNewVersionMessage": true,
+    "vsicons.projectDetection.disableDetect": true,
+    "vsicons.presets.angular": true,
 
 
     //-------- ESLint configuration --------
@@ -306,7 +306,5 @@
     "less.lint.float": "ignore",
 
     // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-    "less.lint.idSelector": "ignore",
-    "vsicons.dontShowNewVersionMessage": true,
-    "window.zoomLevel": 0
+    "less.lint.idSelector": "ignore"
 }

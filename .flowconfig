@@ -1,5 +1,11 @@
 [ignore]
 .*/node_modules/.*
 .*/bower_components/.*
+.*/coverage/.*
 .*/dist/.*
 .*/build/.*
+.*\.config\.js
+.*\.test\.js
+
+[options]
+all=true
