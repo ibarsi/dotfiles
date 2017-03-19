@@ -4,15 +4,13 @@
 # Static files
 **/node_modules
 **/bower_components
-**/dist
-**/build
 
 # Python
 **/*.pyc
 **/*.sqlite3
 
 # Node
-**/npm-debug.log
+**/npm-debug.log*
 
 # ESLint
 .eslintcache
