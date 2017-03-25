@@ -18,8 +18,7 @@
 
     "plugins": [
         "flowtype",
-        "react",
-        "compat"
+        "react"
     ],
 
     "extends": [
@@ -51,11 +50,6 @@
     },
 
     "rules": {
-
-        ////////// Campatability Errors //////////
-
-        "compat/compat": 2,
-
         ////////// Possible Errors //////////
 
         "no-cond-assign": 2,            // disallow assignment in conditional expressions
