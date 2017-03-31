@@ -59,6 +59,10 @@ brew install webkit2png                 # Take full screenshots of a webpage
 # brew install zopfli                   # Ability to use Zopfli compression
 brew install gnupg gnupg2               # Encrypt and sign data/communication via GnuPG
 
+# Fonts
+brew tap caskroom/fonts
+brew cask install font-fira-code        # Fira (Ligatures)
+
 # Development
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy

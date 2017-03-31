@@ -4,6 +4,8 @@
 
     "window.zoomLevel": 0,
     "window.newWindowDimensions": "maximized",
+    "editor.fontFamily": "Fira Code",
+    "editor.fontSize": 13,
     "editor.tabSize": 4,
     "editor.renderIndentGuides": true,
     "editor.glyphMargin": true,
@@ -14,6 +16,7 @@
     "editor.formatOnSave": false,
     "editor.minimap.enabled": false,
     "editor.wordWrap": "off",
+    "editor.fontLigatures": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "debug.inlineValues": true,
     "workbench.iconTheme": "vscode-icons",
