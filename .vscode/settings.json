@@ -17,9 +17,12 @@
     "editor.minimap.enabled": false,
     "editor.wordWrap": "off",
     "editor.fontLigatures": true,
+    "editor.renderControlCharacters": true,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.editor.revealIfOpen": true,
+    "terminal.integrated.confirmOnExit": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "debug.inlineValues": true,
-    "workbench.iconTheme": "vscode-icons",
     "extensions.autoUpdate": true,
 
     "search.exclude": {

@@ -1,19 +1,19 @@
 {
-	// See http://go.microsoft.com/fwlink/?LinkId=827846
-	// for the documentation about the extensions.json format
-	"recommendations": [
-		// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
-		"abierbaum.vscode-file-peek",
-		"dbaeumer.vscode-eslint",
-		"donjayamanne.python",
-		"flowtype.flow-for-vscode",
-		"minhthai.vscode-todo-parser",
-		"mkaufman.HTMLHint",
-		"ms-vscode.csharp",
-		"ms-vscode.typescript-javascript-grammar",
-		"robertohuertasm.vscode-icons",
-		"shinnn.stylelint",
-		"vsmobile.vscode-react-native",
-        "waderyan.gitblame"
-	]
+    // See http://go.microsoft.com/fwlink/?LinkId=827846
+    // for the documentation about the extensions.json format
+    "recommendations": [
+        // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+        "dbaeumer.vscode-eslint",
+        "donjayamanne.python",
+        "flowtype.flow-for-vscode",
+        "minhthai.vscode-todo-parser",
+        "mkaufman.HTMLHint",
+        "ms-vscode.csharp",
+        "ms-vscode.typescript-javascript-grammar",
+        "robertohuertasm.vscode-icons",
+        "shinnn.stylelint",
+        "vsmobile.vscode-react-native",
+        "waderyan.gitblame",
+        "joelday.docthis"
+    ]
 }
