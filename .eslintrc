@@ -50,11 +50,6 @@
     },
 
     "rules": {
-
-        ////////// Campatability Errors //////////
-
-        // TODO: Fix compat errors, currently breaks linting.
-
         ////////// Possible Errors //////////
 
         "no-cond-assign": 2,            // disallow assignment in conditional expressions
@@ -182,7 +177,7 @@
             }
         ],
         "comma-style": [1, "last"],     // enforce one true comma style (off by default)
-        "comma-dangle": 2,              // disallow trailing commas in object literals
+        "comma-dangle": 0,              // disallow trailing commas in object literals
         "consistent-this": 1,           // enforces consistent naming when capturing the current execution context (off by default)
         "eol-last": 1,                  // enforce newline at the end of file, with no multiple empty lines
         "func-names": 0,                // require function expressions to have a name (off by default)
