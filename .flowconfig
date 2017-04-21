@@ -8,4 +8,4 @@
 .*\.test\.js
 
 [options]
-all=true
+all=false
