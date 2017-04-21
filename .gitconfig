@@ -34,9 +34,6 @@
     # Switch to a branch, creating it if necessary
     go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
-    # Switch to last branch
-    back = !"git checkout -"
-
     # Show verbose output about tags, branches or remotes
     tags = tag -l
     branches = branch -a
