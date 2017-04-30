@@ -1,0 +1,8 @@
+# Homebrew's sbin (`brew doctor` suggestion)
+export PATH="/usr/local/sbin:$PATH"
+
+# RVM
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# Yarn
+export PATH="$PATH:`yarn global bin`"
