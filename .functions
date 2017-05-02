@@ -27,6 +27,12 @@ function vagrant-ssh()
     vagrant ssh $id
 }
 
+# List all yarn packages installed globally
+function yarn-ls()
+{
+    ls `yarn global bin` | grep -Eo '^[^ ]+'
+}
+
 # Fix system time, match with Apple server time.
 function fix-time() {
     sudo ntpdate -u time.apple.com
