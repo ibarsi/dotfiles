@@ -33,6 +33,12 @@ function npm-ls()
     npm list -g --depth=0
 }
 
+# Store global npm packages
+function npm-store()
+{
+    npm-ls > ~/npm-ls.txt
+}
+
 # Fix system time, match with Apple server time.
 function fix-time() {
     sudo ntpdate -u time.apple.com
