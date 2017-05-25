@@ -91,6 +91,7 @@
 
     // Is flow enabled
     "flow.enabled": true,
+    "flow.runOnEdit": false,
 
 
     //-------- HTML configuration --------

@@ -27,10 +27,10 @@ function vagrant-ssh()
     vagrant ssh $id
 }
 
-# List all yarn packages installed globally
-function yarn-ls()
+# List all npm packages installed globally
+function npm-ls()
 {
-    ls `yarn global bin` | grep -Eo '^[^ ]+'
+    npm list -g --depth=0
 }
 
 # Fix system time, match with Apple server time.

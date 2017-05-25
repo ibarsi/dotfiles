@@ -66,7 +66,14 @@ brew cask install font-fira-code        # Fira (Ligatures)
 # Development
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
-brew install node                       # Server-side JavaScript
+
+# Need a few steps to install node the "right" way.
+# https://johnpapa.net/how-to-use-npm-global-without-sudo-on-osx/
+brew install node --without-npm         # Server-side JavaScript
+mkdir "${HOME}/.npm-packages"
+echo prefix=${HOME}/.npm-packages >> ${HOME}/.npmrc
+curl -L https://www.npmjs.org/install.sh | sh
+
 brew install yarn                       # JavaScript package manager
 
 # Applications

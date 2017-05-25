@@ -4,5 +4,7 @@ export PATH="/usr/local/sbin:$PATH"
 # RVM
 export PATH="$PATH:$HOME/.rvm/bin"
 
-# Yarn
-export PATH="$PATH:`yarn global bin`"
+# NPM
+export NPM_PACKAGES="$HOME/.npm-packages"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+export PATH="$NPM_PACKAGES/bin:$PATH"
