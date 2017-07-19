@@ -20,6 +20,7 @@
     "editor.renderControlCharacters": true,
     "workbench.iconTheme": "vscode-icons",
     "workbench.editor.revealIfOpen": true,
+    "workbench.startupEditor": "newUntitledFile",
     "files.insertFinalNewline": true,
     "terminal.integrated.confirmOnExit": true,
     "diffEditor.ignoreTrimWhitespace": false,
