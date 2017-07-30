@@ -51,5 +51,4 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 if [[ $SSH_AUTH_SOCK && $(ssh-add -l | grep "The agent has no identities") ]]; then
     eval `ssh-agent -s`
     ssh-add
-    ssh-add "$HOME/.ssh/id_rsa_union"
 fi

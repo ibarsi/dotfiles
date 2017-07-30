@@ -200,7 +200,7 @@
     //-------- CSS configuration --------
 
     // TODO: Noticed problems with these settings and stylelint, consider removing.
-    "css.validate": false,
+    "css.validate": true,
 
     // When using a vendor-specific prefix make sure to also include all other vendor-specific properties
     "css.lint.compatibleVendorPrefixes": "warning",

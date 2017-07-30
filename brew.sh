@@ -66,8 +66,9 @@ brew cask install font-fira-code        # Fira (Ligatures)
 # Development
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
+brew install mongodb                    # NoSQL document based database
 brew install node                       # Server-side JavaScript
-brew install yarn                       # JavaScript package manager
+brew install phantomjs                  # Headless browser
 
 # Applications
 brew cask install iterm2                # Improved Mac Terminal
