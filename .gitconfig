@@ -1,6 +1,6 @@
 [user]
     name = Igor Barsi
-	email = ibarsi92@gmail.com
+    email = ibarsi92@gmail.com
 
 [alias]
 
@@ -38,6 +38,9 @@
     tags = tag -l
     branches = branch -a
     remotes = remote -v
+
+    # List aliases
+    aliases = config --get-regexp alias
 
     # Amend the currently staged files to the latest commit
     amend = commit --amend --reuse-message=HEAD

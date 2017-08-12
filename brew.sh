@@ -6,12 +6,11 @@
 brew update
 
 # Upgrade any already-installed formulae.
-brew upgrade --all
+brew upgrade
 
 # Install GNU core utilities (those that come with macOS are outdated).
 # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
 brew install coreutils
-ln -s /usr/local/bin/gsha256sum /usr/local/bin/sha256sum
 
 # Install some other useful utilities like `sponge`.
 brew install moreutils
@@ -26,7 +25,6 @@ brew install findutils
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
 # running `chsh`.
 brew install bash
-brew tap homebrew/versions
 brew install bash-completion2
 
 # Switch to using brew-installed bash as default shell
@@ -38,6 +36,9 @@ fi;
 # Install `wget` with IRI support.
 brew install wget --with-iri
 
+# Install GnuPG to enable PGP-signing commits.
+brew install gnupg
+
 # Install more recent versions of some macOS tools.
 brew install vim --with-override-system-vi
 brew install homebrew/dupes/grep
@@ -45,6 +46,7 @@ brew install homebrew/dupes/openssh
 # brew install homebrew/dupes/screen
 
 # Install other useful binaries.
+brew install ack                        # Beyond `grep`
 brew install dark-mode                  # Toggle Mac dark mode
 brew install exiv2                      # Read/Write image metadata
 brew install git                        # Source control
