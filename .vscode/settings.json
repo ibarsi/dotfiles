@@ -18,10 +18,13 @@
     "editor.wordWrap": "off",
     "editor.fontLigatures": true,
     "editor.renderControlCharacters": true,
+    "editor.autoIndent": false,
+    "editor.snippetSuggestions": "top",
     "workbench.iconTheme": "vscode-icons",
     "workbench.editor.revealIfOpen": true,
     "workbench.startupEditor": "newUntitledFile",
     "files.insertFinalNewline": true,
+    "editor.insertSpaces": true,
     "terminal.integrated.confirmOnExit": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "debug.inlineValues": true,
@@ -98,6 +101,8 @@
 
     //-------- HTML configuration --------
 
+    "emmet.showSuggestionsAsSnippets": true,
+
     // Maximum amount of characters per line (0 = disable).
     "html.format.wrapLineLength": 120,
 
@@ -121,6 +126,9 @@
 
     // List of tags, comma separated, that should have an extra newline before them. 'null' defaults to "head, body, /html".
     "html.format.extraLiners": "head, body, /html",
+
+    // Wrap attributes.
+    "html.format.wrapAttributes": "force",
 
 
     //-------- JavaScript configuration --------

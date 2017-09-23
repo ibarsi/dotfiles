@@ -26,24 +26,6 @@
         "sourceType": "module"
     },
 
-    "ecmaFeatures": {
-        "binaryLiterals": true,                    // enable binary literals
-        "blockBindings": true,                     // enable let and const (aka block bindings)
-        "defaultParams": true,                     // enable default function parameters
-        "forOf": true,                             // enable for-of loops
-        "generators": true,                        // enable generators
-        "objectLiteralComputedProperties": true,   // enable computed object literal property names
-        "objectLiteralDuplicateProperties": true,  // enable duplicate object literal properties in strict mode
-        "objectLiteralShorthandMethods": true,     // enable object literal shorthand methods
-        "objectLiteralShorthandProperties": true,  // enable object literal shorthand properties
-        "octalLiterals": true,                     // enable octal literals
-        "regexUFlag": true,                        // enable the regular expression u flag
-        "regexYFlag": true,                        // enable the regular expression y flag
-        "templateStrings": true,                   // enable template strings
-        "unicodeCodePointEscapes": true,           // enable code point escapes
-        "jsx": true                                // enable JSX
-    },
-
     "rules": {
         // GENERAL
         "no-console": 0,
@@ -54,6 +36,7 @@
         "no-warning-comments": 0,
         "no-mixed-operators": 0,
         "no-confusing-arrow": 0,
+        "arrow-body-style": 0,
         "no-empty-function": 0,
         "array-callback-return": 0,
         "no-undefined": 0,
@@ -62,7 +45,8 @@
         // STYLE
         "indent": [1, 4,
             {
-                "SwitchCase": 1
+                "SwitchCase": 1,
+                "MemberExpression": 0
             }],
         "max-len": 0, // NOTE: Might want to configure this to keep lines from trailing off screen.
         "max-statements": 0,
@@ -72,7 +56,8 @@
         "quote-props": [1, "consistent-as-needed"],
         "object-curly-newline": 0,
         "sort-imports": 0,
-        "object-property-newline": 1,
+        "object-property-newline": 0,
+        "newline-per-chained-call": 0,
         "object-shorthand": 1,
         "space-before-function-paren": [1, "never"],
         "brace-style": [
@@ -90,6 +75,7 @@
                 "after": true
             }
         ],
+        "class-methods-use-this": 0,
         "computed-property-spacing": [1, "always"],
         "template-curly-spacing": [1, "always"],
         "arrow-parens": [1, "as-needed"],
@@ -110,6 +96,7 @@
         "line-comment-position": 0,
         "no-lonely-if": 2,
         "no-mixed-spaces-and-tabs": 2,
+        "no-multi-spaces": 1,
         "no-multiple-empty-lines": 1,
         "no-nested-ternary": 0,
         "no-new-object": 2,
@@ -135,6 +122,7 @@
         "space-before-blocks": 1,
         "object-curly-spacing": [1, "always"],
         "array-bracket-spacing": [1, "always"],
+        "array-element-newline": 0,
         "space-in-parens": 0,
         "space-infix-ops": 0,
         "keyword-spacing": 1,
@@ -150,7 +138,11 @@
         "no-sync": 0,
         "no-process-env": 0,
         "require-jsdoc": 0,
-        "jsx-quotes": [0, "prefer-single"]
+        "jsx-quotes": [0, "prefer-single"],
+        "global-require": 0,
+
+        // REACT
+        "react/prop-types": 0
     },
 
     "settings": {

@@ -55,14 +55,14 @@ alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date
 
 # Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages.
 # TODO: Should also prune un-needed packages, but note that brew cleanup blows away npm for some reason...
-alias update='sudo softwareupdate -i -a; brew update; brew upgrade --all; sudo npm update -g; sudo gem update --system; sudo gem update'
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update; sudo gem cleanup'
 
 # Google Chrome
 alias chrome='open -a Google\ Chrome'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias ipl="ipconfig getifaddr en0"
+alias lip="ipconfig getifaddr en0"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Show active network interfaces
