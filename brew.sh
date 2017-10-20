@@ -40,7 +40,7 @@ brew install wget --with-iri
 brew install gnupg
 
 # Install more recent versions of some macOS tools.
-brew install vim --with-override-system-vi
+brew install vim
 brew install homebrew/dupes/grep
 brew install homebrew/dupes/openssh
 # brew install homebrew/dupes/screen
@@ -81,6 +81,7 @@ brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
 brew cask install filezilla             # FTP Client
+brew cask instal disk-inventory-x       # Harddrive disk space analysis
 
 # Remove outdated versions from the cellar.
 brew cleanup

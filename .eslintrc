@@ -59,10 +59,10 @@
         "object-property-newline": 0,
         "newline-per-chained-call": 0,
         "object-shorthand": 1,
-        "space-before-function-paren": [1, "never"],
+        "space-before-function-paren": [1, "always"],
         "brace-style": [
             1,
-            "stroustrup",
+            "1tbs",
             {
                 "allowSingleLine": true
             }
@@ -80,6 +80,7 @@
         "template-curly-spacing": [1, "always"],
         "arrow-parens": [1, "as-needed"],
         "sort-keys": 0,
+        "no-prototype-builtins": 0,
         "dot-location": [1, "property"],
         "comma-style": [1, "last"],
         "comma-dangle": 0,
