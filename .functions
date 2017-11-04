@@ -7,24 +7,16 @@ function touchgo()
     vim $1;
 }
 
-# Go to a django project's site root
-function djp()
-{
-    cd ~/projects/$1/site/$1
+# Toggle "focus mode"
+function focus() {
+    osascript -e 'tell application "System Events" to keystroke "d" using {command down, option down}'
+    osascript -e 'tell application "System Events" to keystroke "d" using {command down, option down, control down}'
 }
 
 # Activate local virtualenv
 function venv()
 {
     source ${PWD##*/}/bin/activate
-}
-
-# SSH into default vagrant box (first in global list, if you have multiple)
-function vagrant-ssh()
-{
-    id=$(vagrant global-status | sed -n '/id/{n;n;p;}' | cut -c 1-7)
-
-    vagrant ssh $id
 }
 
 # List all npm packages installed globally
