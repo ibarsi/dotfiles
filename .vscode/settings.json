@@ -22,6 +22,7 @@
     "editor.renderControlCharacters": true,
     "editor.autoIndent": false,
     "editor.snippetSuggestions": "top",
+    "explorer.confirmDragAndDrop": false,
     "workbench.iconTheme": "vscode-icons",
     "workbench.editor.revealIfOpen": true,
     "workbench.startupEditor": "newUntitledFile",

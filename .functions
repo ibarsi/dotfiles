@@ -22,7 +22,7 @@ function venv()
 # List all npm packages installed globally
 function npm-ls()
 {
-    npm list -g --depth=0
+    npm ls -g --depth=0 --silent
 }
 
 # Store global npm packages
