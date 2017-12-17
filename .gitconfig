@@ -11,7 +11,7 @@
     m = "merge"
 
     # View abbreviated SHA, description, and history graph of the latest 20 commits
-    l = log --pretty=format:'%C(auto,yellow)%h %C(auto,blue)%ad %C(auto,green)%aN %Creset%s %C(auto,cyan)% %d' -n 20 --graph --abbrev-commit --date=relative
+    l = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
 
     # View the current working tree status using the short format
     s = status -s

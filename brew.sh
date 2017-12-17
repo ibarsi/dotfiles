@@ -71,6 +71,7 @@ brew install nginx                      # High performance load balancer, web se
 brew install mongodb                    # NoSQL document based database
 brew install node                       # Server-side JavaScript
 brew install phantomjs                  # Headless browser
+brew install hub                        # GitHub CLI
 
 # Applications
 brew cask install iterm2                # Improved Mac Terminal

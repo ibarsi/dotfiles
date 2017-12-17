@@ -47,6 +47,9 @@ complete -W "NSGlobalDomain" defaults;
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
 
+# Add hub commands to git
+eval "$(hub alias -s)"
+
 # Start ssh agent and add all relevant keys if no keys are currently available.
 if [[ $SSH_AUTH_SOCK && $(ssh-add -l | grep "The agent has no identities") ]]; then
     eval `ssh-agent -s`
