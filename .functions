@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Run Mavencare dev environment
+function maven() 
+{
+    mongod --dbpath ~/mongo/db/ --fork --logpath ~/mongo/logs/log;
+    redis-server --port 6380 --daemonize yes;
+}
+
 # Touch and vim a file
 function touchgo()
 {
