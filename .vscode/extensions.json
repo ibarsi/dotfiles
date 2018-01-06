@@ -4,6 +4,7 @@
     "recommendations": [
         // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
         "dbaeumer.vscode-eslint",
+        "dbaeumer.jshint",
         "donjayamanne.python",
         "flowtype.flow-for-vscode",
         "minhthai.vscode-todo-parser",
@@ -13,6 +14,9 @@
         "shinnn.stylelint",
         "vsmobile.vscode-react-native",
         "waderyan.gitblame",
-        "joelday.docthis"
+        "joelday.docthis",
+        "ms-vscode.node-debug2",
+        "eg2.vscode-npm-script",
+        "christian-kohler.npm-intellisense"
     ]
 }

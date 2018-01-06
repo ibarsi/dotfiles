@@ -4,8 +4,14 @@
 
     "window.zoomLevel": 0,
     "window.newWindowDimensions": "maximized",
-    "workbench.editor.labelFormat": "short",
     "window.nativeTabs": false,
+
+    "workbench.editor.labelFormat": "short",
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.editor.revealIfOpen": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "workbench.colorTheme": "Abyss",
+
     "editor.fontFamily": "Fira Code",
     "editor.fontSize": 13,
     "editor.tabSize": 4,
@@ -22,15 +28,14 @@
     "editor.renderControlCharacters": true,
     "editor.autoIndent": false,
     "editor.snippetSuggestions": "top",
-    "explorer.confirmDragAndDrop": false,
-    "workbench.iconTheme": "vscode-icons",
-    "workbench.editor.revealIfOpen": true,
-    "workbench.startupEditor": "newUntitledFile",
-    "files.insertFinalNewline": true,
     "editor.insertSpaces": true,
+
     "terminal.integrated.confirmOnExit": true,
     "terminal.integrated.fontFamily": "Fira Code",
     "terminal.integrated.fontSize": 13,
+
+    "explorer.confirmDragAndDrop": false,
+    "files.insertFinalNewline": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "debug.inlineValues": true,
     "extensions.autoUpdate": true,

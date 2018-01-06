@@ -49,16 +49,11 @@ brew install homebrew/dupes/openssh
 brew install ack                        # Beyond `grep`
 brew install dark-mode                  # Toggle Mac dark mode
 brew install exiv2                      # Read/Write image metadata
-brew install git                        # Source control
-brew install git-lfs                    # System for managing large files in source control via Git LFS
 brew install p7zip                      # 7zip for Mac
-# brew install pigz                     # Parallel implementation of gzip
 brew install speedtest_cli              # Test your internet connection speed
 brew install ssh-copy-id                # Add ssh identity to remote host for easy login
 brew install testssl                    # Test ssl configuration strength
 brew install tree                       # View tree list of folder/file structures
-brew install webkit2png                 # Take full screenshots of a webpage
-# brew install zopfli                   # Ability to use Zopfli compression
 brew install gnupg gnupg2               # Encrypt and sign data/communication via GnuPG
 
 # Fonts
@@ -66,6 +61,8 @@ brew tap caskroom/fonts
 brew cask install font-fira-code        # Fira (Ligatures)
 
 # Development
+brew install git                        # Source control
+brew install git-lfs                    # System for managing large files in source control via Git LFS
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install mongodb                    # NoSQL document based database
@@ -82,7 +79,7 @@ brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
 brew cask install filezilla             # FTP Client
-brew cask instal disk-inventory-x       # Harddrive disk space analysis
+brew cask install disk-inventory-x      # Harddrive disk space analysis
 
 # Remove outdated versions from the cellar.
 brew cleanup
