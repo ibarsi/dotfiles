@@ -12,6 +12,11 @@
     "workbench.startupEditor": "newUntitledFile",
     "workbench.colorTheme": "Abyss",
 
+    // Abyss only!
+    "editor.tokenColorCustomizations": {
+        "comments": "#225588",
+        "keywords": "#2d6fb1"
+    },
     "editor.fontFamily": "Fira Code",
     "editor.fontSize": 13,
     "editor.tabSize": 4,
@@ -103,6 +108,20 @@
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
     "python.linting.pep8Enabled": true,
+
+
+    //-------- GitLens configuration --------
+
+    "gitlens.advanced.messages": {
+        "suppressCommitHasNoPreviousCommitWarning": false,
+        "suppressCommitNotFoundWarning": false,
+        "suppressFileNotUnderSourceControlWarning": false,
+        "suppressGitVersionWarning": false,
+        "suppressLineUncommittedWarning": false,
+        "suppressNoRepositoryWarning": false,
+        "suppressUpdateNotice": false,
+        "suppressWelcomeNotice": true
+    },
 
 
     //-------- Flow configuration --------

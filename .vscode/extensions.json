@@ -13,10 +13,10 @@
         "robertohuertasm.vscode-icons",
         "shinnn.stylelint",
         "vsmobile.vscode-react-native",
-        "waderyan.gitblame",
         "joelday.docthis",
         "ms-vscode.node-debug2",
         "eg2.vscode-npm-script",
-        "christian-kohler.npm-intellisense"
+        "christian-kohler.npm-intellisense",
+        "eamodio.gitlens"
     ]
 }
