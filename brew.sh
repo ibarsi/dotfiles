@@ -80,6 +80,9 @@ brew cask install spotify               # Music subsciption service/player
 brew cask install postman               # API request compose/debugger
 brew cask install filezilla             # FTP Client
 brew cask install disk-inventory-x      # Harddrive disk space analysis
+brew cask install spectacle             # Keyboard shortcuts for window sizing
+brew cask install vanilla               # Hide menu bar icons
+brew cask install licecap               # GIF screen capture
 
 # Remove outdated versions from the cellar.
 brew cleanup
