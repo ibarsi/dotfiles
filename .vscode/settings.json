@@ -12,11 +12,11 @@
     "workbench.startupEditor": "newUntitledFile",
     "workbench.colorTheme": "Abyss",
     "workbench.editor.enablePreviewFromQuickOpen": false,
-
-    // Abyss only!
     "editor.tokenColorCustomizations": {
-        "comments": "#225588",
-        "keywords": "#2d6fb1"
+        "[Abyss]": {
+            "comments": "#225588",
+            "keywords": "#2d6fb1"
+        }
     },
     "editor.fontFamily": "Fira Code",
     "editor.fontSize": 13,
@@ -45,6 +45,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "debug.inlineValues": true,
     "extensions.autoUpdate": true,
+    "git.promptToSaveFilesBeforeCommit": true,
 
     "search.exclude": {
         // GENERAL

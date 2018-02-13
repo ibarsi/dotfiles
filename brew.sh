@@ -36,19 +36,14 @@ fi;
 # Install `wget` with IRI support.
 brew install wget --with-iri
 
-# Install GnuPG to enable PGP-signing commits.
-brew install gnupg
-
 # Install more recent versions of some macOS tools.
 brew install vim
-brew install homebrew/dupes/grep
-brew install homebrew/dupes/openssh
-# brew install homebrew/dupes/screen
+brew install grep
+brew install openssh
 
 # Install other useful binaries.
 brew install ack                        # Beyond `grep`
 brew install dark-mode                  # Toggle Mac dark mode
-brew install exiv2                      # Read/Write image metadata
 brew install p7zip                      # 7zip for Mac
 brew install speedtest_cli              # Test your internet connection speed
 brew install ssh-copy-id                # Add ssh identity to remote host for easy login
@@ -83,6 +78,7 @@ brew cask install disk-inventory-x      # Harddrive disk space analysis
 brew cask install spectacle             # Keyboard shortcuts for window sizing
 brew cask install vanilla               # Hide menu bar icons
 brew cask install licecap               # GIF screen capture
+brew cask install caprine               # Facebook Messenger desktop application
 
 # Remove outdated versions from the cellar.
 brew cleanup
