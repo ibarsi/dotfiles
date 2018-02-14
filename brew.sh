@@ -72,6 +72,7 @@ brew cask install firefox               # Firefox browser
 brew cask install visual-studio-code    # VS Code text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
+brew cask install dropbox               # Cloud file storage
 brew cask install postman               # API request compose/debugger
 brew cask install filezilla             # FTP Client
 brew cask install disk-inventory-x      # Harddrive disk space analysis
