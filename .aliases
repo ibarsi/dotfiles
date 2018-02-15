@@ -142,3 +142,15 @@ alias reload="exec ${SHELL} -l"
 
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
+
+# List all npm packages installed globally
+alias npmls='npm ls -g --depth=0 --silent'
+
+# Store global npm packages in text file
+alias npmst='npmls > ~/npm-ls.txt'
+
+# Activate local virtualenv
+alias venv='source ${PWD##*/}/bin/activate'
+
+# Fix system time by matching Apple server time.
+alias fixtime='sudo ntpdate -u time.apple.com'

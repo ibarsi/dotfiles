@@ -21,29 +21,6 @@ function focus() {
     osascript -e 'tell application "System Events" to keystroke "d" using {command down, option down, control down}'
 }
 
-# Activate local virtualenv
-function venv()
-{
-    source ${PWD##*/}/bin/activate
-}
-
-# List all npm packages installed globally
-function npm-ls()
-{
-    npm ls -g --depth=0 --silent
-}
-
-# Store global npm packages
-function npm-store()
-{
-    npm-ls > ~/npm-ls.txt
-}
-
-# Fix system time, match with Apple server time.
-function fix-time() {
-    sudo ntpdate -u time.apple.com
-}
-
 # Simple calculator
 function calc() {
     local result="";
