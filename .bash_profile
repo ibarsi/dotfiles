@@ -55,3 +55,8 @@ if [[ $SSH_AUTH_SOCK && $(ssh-add -l | grep "The agent has no identities") ]]; t
     eval `ssh-agent -s`
     ssh-add
 fi
+
+# Load nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
