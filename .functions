@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# Run Mavencare dev environment
-function maven() 
+# Kill process by port
+function killport() 
 {
-    mongod --dbpath ~/mongo/db/ --fork --logpath ~/mongo/logs/log;
-    redis-server --port 6380 --daemonize yes;
-    redis-server --port 6379 --daemonize yes;
+    lsof -i tcp:$1 | awk 'FNR == 2 {print $2}' | xargs kill -9
 }
 
 # Touch and vim a file
