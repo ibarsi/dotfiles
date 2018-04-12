@@ -29,6 +29,12 @@
     # Clone a repository including all submodules
     c = clone --recursive
 
+    # Print current branch name
+    b = "!git rev-parse --abbrev-ref HEAD"
+
+    # Fetch origin
+    fo = "!git fetch origin"
+
     # Commit all changes
     ca = !git add -A && git commit -av
 
@@ -52,6 +58,12 @@
     # Interactive rebase with the given number of latest commits
     reb = "!r() { git rebase -i HEAD~$1; }; r"
 
+    # Fetch and rebase current branch with master
+    mreb = "!git rebase origin/master"
+
+    # Interactively rebase changes in current branch
+    breb = "!git rebase -i `git merge-base master HEAD`"
+
     # Remove the old tag with this name and tag the latest commit with it.
     retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
 
@@ -74,8 +86,14 @@
     # List contributors with number of commits
     contrib = shortlog --summary --numbered
 
-    # Pull request with Mavencare defaults.
-    mpr = "!git branch | sed -n 's/* //gp' | sed 's/-/ /g' | sed 's/.*/\\u&/' | awk '{ print \"\\\"\"$0\"\\\"\"}' | xargs hub pull-request -l NEEDS_REVIEW -m"
+    # Create a PR with branch generated name.
+    mpr = "!git b | sed 's/-/ /g' | sed 's/.*/\\u&/' | awk '{ print \"\\\"\"$0\"\\\"\"}' | xargs hub pull-request -m"
+
+    # Push current branch to origin and set upstream
+    pub = "!git push -u origin $(git b)"
+
+    # Delete current branch from origin
+    unpub = "!git push origin :$(git b)"
 
 [apply]
 
