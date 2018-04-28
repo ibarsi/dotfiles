@@ -13,13 +13,17 @@
 
     "plugins": [
         "flowtype",
-        "react"
+        "react",
+        "prettier",
     ],
 
     "extends": [
         "eslint:all",
         "plugin:react/recommended",
-        "plugin:flowtype/recommended"
+        "plugin:flowtype/recommended",
+        "prettier",
+        "prettier/flowtype",
+        "prettier/react",
     ],
 
     "parserOptions": {
@@ -43,100 +47,46 @@
         "complexity": 0, // NOTE: This is actually a pretty valid constraint. Might want to reconsider.
 
         // STYLE
-        "indent": [1, 4,
-            {
-                "SwitchCase": 1,
-                "MemberExpression": 0
-            }],
         "max-len": 0, // NOTE: Might want to configure this to keep lines from trailing off screen.
         "max-statements": 0,
         "max-statements-per-line": 0,
         "max-params": 0,
         "max-lines": 0,
-        "quote-props": [1, "consistent-as-needed"],
         "object-curly-newline": 0,
         "sort-imports": 0,
         "object-property-newline": 0,
         "newline-per-chained-call": 0,
         "object-shorthand": 1,
-        "space-before-function-paren": [1, "always"],
-        "brace-style": [
-            1,
-            "1tbs",
-            {
-                "allowSingleLine": true
-            }
-        ],
         "camelcase": 0,
-        "comma-spacing": [
-            1,
-            {
-                "before": false,
-                "after": true
-            }
-        ],
         "class-methods-use-this": 0,
-        "computed-property-spacing": [1, "always"],
-        "template-curly-spacing": [1, "always"],
-        "arrow-parens": [1, "as-needed"],
         "sort-keys": 0,
         "no-prototype-builtins": 0,
-        "dot-location": [1, "property"],
-        "comma-style": [1, "last"],
-        "comma-dangle": [1, "always-multiline"],
         "consistent-this": 0,
-        "eol-last": 1,
         "func-names": 0,
         "func-style": 0,
-        "key-spacing": 1,
         "max-nested-callbacks": [1, 4],
         "new-cap": 0,
-        "new-parens": 1,
         "no-array-constructor": 2,
         "no-inline-comments": 0,
         "line-comment-position": 0,
         "capitalized-comments": 0,
         "no-lonely-if": 2,
-        "no-mixed-spaces-and-tabs": 2,
-        "no-multi-spaces": 1,
-        "no-multiple-empty-lines": 1,
         "no-nested-ternary": 0,
         "no-new-object": 2,
         "no-magic-numbers": 0,
         "no-use-before-define": 0,
         "multiline-ternary": 0,
-        "semi-spacing": [
-            1,
-            {
-                "before": false,
-                "after": true
-            }],
-        "no-spaced-func": 1,
         "no-ternary": 0,
-        "no-trailing-spaces": 1,
         "no-underscore-dangle": 0,
         "one-var": [1, "never"],
         "operator-assignment": 1,
         "padded-blocks": 0,
-        "quotes": [1, "single"],
-        "semi": 2,
         "sort-vars": 0,
-        "space-before-blocks": 1,
-        "object-curly-spacing": [1, "always"],
-        "array-bracket-spacing": [1, "always"],
         "array-element-newline": 0,
         "space-in-parens": 0,
         "space-infix-ops": 0,
-        "keyword-spacing": 1,
-        "space-unary-ops": [
-            1,
-            {
-                "words": true,
-                "nonwords": false
-            }],
         "spaced-comment": [1, "always"],
         "wrap-regex": 0,
-        "wrap-iife": [1, "inside"],
         "no-sync": 0,
         "no-process-env": 0,
         "require-jsdoc": 0,
@@ -144,12 +94,15 @@
         "global-require": 0,
 
         // REACT
-        "react/prop-types": 0
+        "react/prop-types": 0,
+
+        // PRETTIER
+        "prettier/prettier": "error"
     },
 
     "settings": {
         "flowtype": {
-            "onlyFilesWithFlowAnnotation": false
+            "onlyFilesWithFlowAnnotation": true
         },
         "compiler": "babel"
     }

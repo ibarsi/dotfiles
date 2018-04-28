@@ -48,6 +48,8 @@
         "**/node_modules": true,
         "**/build": true,
         "**/dist": true,
+        // JS
+        "**/flow-typed": true,
         // TESTS
         "**/coverage": true,
         // .NET
@@ -71,18 +73,15 @@
     "vsicons.dontShowNewVersionMessage": true,
     "vsicons.projectDetection.disableDetect": true,
     "vsicons.presets.angular": true,
-
     //-------- Prettier configuration --------
     "prettier.requireConfig": true,
-
-
     //-------- ESLint configuration --------
     "eslint.enable": true,
     "eslint.autoFixOnSave": true,
     //-------- HTMLHint configuration --------
     "htmlhint.enable": true,
     //-------- StyleLint configuration --------
-    "stylelint.enable": true,
+    "stylelint.enable": false,
     //-------- Python configuration --------
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": false,
