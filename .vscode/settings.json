@@ -99,8 +99,15 @@
         "suppressUpdateNotice": false,
         "suppressWelcomeNotice": true
     },
+    //-------- SpellRight configuration --------
+    "spellright.notificationClass": "warning",
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext",
+        "javascript"
+    ],
     //-------- Flow configuration --------
-    // Is flow enabled
     "flow.enabled": true,
     "flow.runOnEdit": false,
     //-------- HTML configuration --------

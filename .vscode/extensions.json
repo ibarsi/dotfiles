@@ -4,19 +4,20 @@
     "recommendations": [
         // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
         "dbaeumer.vscode-eslint",
-        "dbaeumer.jshint",
-        "donjayamanne.python",
+        "ms-python.python",
         "flowtype.flow-for-vscode",
-        "minhthai.vscode-todo-parser",
         "mkaufman.HTMLHint",
-        "ms-vscode.typescript-javascript-grammar",
         "robertohuertasm.vscode-icons",
         "shinnn.stylelint",
         "joelday.docthis",
-        "ms-vscode.node-debug2",
         "eg2.vscode-npm-script",
         "christian-kohler.npm-intellisense",
         "eamodio.gitlens",
-        "EditorConfig.editorconfig"
+        "EditorConfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "asvetliakov.snapshot-tools",
+        "ban.spellright",
+        "bierner.markdown-preview-github-styles",
+        "wayou.vscode-todo-highlight"
     ]
 }
