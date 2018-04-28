@@ -27,5 +27,15 @@
   {
     "key": "cmd+k z",
     "command": "-workbench.action.toggleZenMode"
-  }
+  },
+  {
+    "key": "cmd+d",
+    "command": "workbench.action.terminal.split",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
 ]
