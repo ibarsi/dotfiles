@@ -18,3 +18,7 @@ code --install-extension asvetliakov.snapshot-tools
 code --install-extension ban.spellright
 code --install-extension bierner.markdown-preview-github-styles
 code --install-extension wayou.vscode-todo-highlight
+code --install-extension alexdima.copy-relative-path
+code --install-extension wangtao0101.vscode-js-import
+code --install-extension CoenraadS.bracket-pair-colorizer
+code --install-extension yahya-gilany.vscode-terminal-launcher

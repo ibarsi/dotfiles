@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Randomize desktop background image
+function desktoprandomizer() {
+    path="${HOME}/Projects/desktop-randomizer"
+    source "${path}/desktop-randomizer/bin/activate";
+    python "${path}/main.py"
+    deactivate;
+}
+
 # Kill process by port
 function killport() 
 {

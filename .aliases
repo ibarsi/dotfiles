@@ -59,9 +59,6 @@ alias update='sudo softwareupdate -i -a; brew update; brew upgrade; npm install 
 # Google Chrome
 alias chrome='open -a Google\ Chrome'
 
-# Vanilla
-alias vanilla='open -a Vanilla'
-
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias lip="ipconfig getifaddr en0"
