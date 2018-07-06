@@ -33,6 +33,7 @@
     "no-ternary": "off",
     "sort-imports": "off",
     "sort-keys": "off",
+    "no-magic-numbers": "off",
 
     // REACT
     "react/prop-types": "off",

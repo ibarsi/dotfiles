@@ -35,6 +35,9 @@
     # Fetch origin
     fo = "!git fetch origin"
 
+    # Fetch upstream
+    fu = "!git fetch upstream"
+
     # Commit all changes
     ca = !git add -A && git commit -av
 
@@ -58,8 +61,11 @@
     # Interactive rebase with the given number of latest commits
     reb = "!r() { git rebase -i HEAD~$1; }; r"
 
-    # Fetch and rebase current branch with master
-    mreb = "!git rebase origin/master"
+    # Fetch and rebase current branch with origin's master
+    oreb = "!git rebase origin/master"
+
+    # Fetch and rebase current branch with upstream's master
+    ureb = "!git rebase upstream/master"
 
     # Interactively rebase changes in current branch
     breb = "!git rebase -i `git merge-base master HEAD`"
@@ -173,10 +179,8 @@
 
 [push]
 
-    # Use the Git 1.x.x default to avoid errors on machines with old Git
-    # installations. To use `simple` instead, add this to your `~/.extra` file:
-    # `git config --global push.default simple`. See http://git.io/mMah-w.
-    default = matching
+    # Push current branch to its upstream branch.
+	default = upstream
     # Make `git push` push relevant annotated tags when pushing branches out.
     followTags = true
 

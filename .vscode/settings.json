@@ -43,6 +43,7 @@
   "files.insertFinalNewline": true,
   "diffEditor.ignoreTrimWhitespace": false,
   "debug.inlineValues": true,
+  "debug.toolBarLocation": "docked",
   "extensions.autoUpdate": true,
   "git.promptToSaveFilesBeforeCommit": true,
   "search.exclude": {
