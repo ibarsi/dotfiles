@@ -52,8 +52,6 @@
     "**/node_modules": true,
     "**/build": true,
     "**/dist": true,
-    // JS
-    "**/flow-typed": true,
     // TESTS
     "**/coverage": true,
     // .NET
@@ -106,7 +104,7 @@
     "suppressWelcomeNotice": true
   },
   //-------- SpellRight configuration --------
-  "spellright.language": "en",
+  "spellright.language": ["en"],
   "spellright.notificationClass": "warning",
   "spellright.documentTypes": [
     "markdown",
@@ -115,9 +113,6 @@
     "javascript",
     "typescript"
   ],
-  //-------- Flow configuration --------
-  "flow.enabled": true,
-  "flow.runOnEdit": false,
   //-------- HTML configuration --------
   "emmet.showSuggestionsAsSnippets": true,
   // Maximum amount of characters per line (0 = disable).
