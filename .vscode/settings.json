@@ -34,7 +34,7 @@
   "editor.snippetSuggestions": "top",
   "editor.insertSpaces": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": false,
+    "source.organizeImports": false
   },
   "terminal.integrated.confirmOnExit": true,
   "terminal.integrated.fontFamily": "Fira Code",
@@ -77,6 +77,8 @@
   "vsicons.dontShowNewVersionMessage": true,
   "vsicons.projectDetection.disableDetect": true,
   "vsicons.presets.angular": true,
+  //-------- GitLens configuration --------
+  "gitlens.historyExplorer.enabled": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
   //-------- ESLint configuration --------
@@ -104,12 +106,14 @@
     "suppressWelcomeNotice": true
   },
   //-------- SpellRight configuration --------
+  "spellright.language": "en",
   "spellright.notificationClass": "warning",
   "spellright.documentTypes": [
     "markdown",
     "latex",
     "plaintext",
-    "javascript"
+    "javascript",
+    "typescript"
   ],
   //-------- Flow configuration --------
   "flow.enabled": true,
@@ -214,6 +218,5 @@
   // Avoid using 'float'. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
   "less.lint.float": "ignore",
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-  "less.lint.idSelector": "ignore",
-  "gitlens.historyExplorer.enabled": true
+  "less.lint.idSelector": "ignore"
 }

@@ -11,14 +11,12 @@
     "es6": true // enable es6 keywords, except module.
   },
 
-  "plugins": ["flowtype", "react", "prettier"],
+  "plugins": ["react", "prettier"],
 
   "extends": [
     "eslint:all",
     "plugin:react/recommended",
-    "plugin:flowtype/recommended",
     "prettier",
-    "prettier/flowtype",
     "prettier/react"
   ],
 
@@ -43,9 +41,6 @@
   },
 
   "settings": {
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": true
-    },
     "compiler": "babel"
   }
 }
