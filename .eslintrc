@@ -2,13 +2,12 @@
   "parser": "babel-eslint",
 
   "env": {
-    "browser": true, // browser global variables.
-    "node": true, // Node.js global variables and Node.js-specific rules.
-    "amd": true, // defines require() and define() as global variables as per the amd spec.
-    "mocha": true, // adds all of the Mocha testing global variables.
-    "jasmine": true, // adds all of the Jasmine testing global variables for version 1.3 and 0.0.
-    "jquery": true, // jquery global variables.
-    "es6": true // enable es6 keywords, except module.
+    "browser": true,
+    "node": true,
+    "amd": true,
+    "mocha": true,
+    "jasmine": true,
+    "es6": true
   },
 
   "plugins": ["react", "prettier"],
@@ -25,7 +24,6 @@
   },
 
   "rules": {
-    // GENERAL
     "one-var": "off",
     "no-process-env": "off",
     "no-ternary": "off",
@@ -33,10 +31,8 @@
     "sort-keys": "off",
     "no-magic-numbers": "off",
 
-    // REACT
     "react/prop-types": "off",
 
-    // PRETTIER
     "prettier/prettier": "error"
   },
 
