@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Randomize desktop background image
-function desktoprandomizer() {
+function drand() {
     path="${HOME}/Projects/desktop-randomizer"
     source "${path}/desktop-randomizer/bin/activate";
     python "${path}/main.py"
@@ -9,7 +9,7 @@ function desktoprandomizer() {
 }
 
 # Kill process by port
-function killport() 
+function killport()
 {
     lsof -i tcp:$1 | awk 'FNR == 2 {print $2}' | xargs kill -9
 }

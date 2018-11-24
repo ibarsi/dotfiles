@@ -10,6 +10,7 @@
   "workbench.startupEditor": "newUntitledFile",
   "workbench.colorTheme": "Abyss",
   "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.highlightModifiedTabs": true,
   "editor.tokenColorCustomizations": {
     "[Abyss]": {
       "comments": "#225588",
@@ -46,6 +47,7 @@
   "debug.toolBarLocation": "docked",
   "extensions.autoUpdate": true,
   "git.promptToSaveFilesBeforeCommit": true,
+  "search.showLineNumbers": true,
   "search.exclude": {
     // GENERAL
     "**/.git": true,
@@ -65,6 +67,7 @@
     // JEKYLL
     "**/_site": true
   },
+  "typescript.updateImportsOnFileMove.enabled": "always",
   //-------- Files configuration --------
   "files.exclude": {
     "**/*.pyc": true,
