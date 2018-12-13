@@ -79,7 +79,8 @@
   "vsicons.projectDetection.disableDetect": true,
   "vsicons.presets.angular": true,
   //-------- GitLens configuration --------
-  "gitlens.historyExplorer.enabled": true,
+  "gitlens.views.fileHistory.enabled": true,
+  "gitlens.views.lineHistory.enabled": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
   //-------- ESLint configuration --------
@@ -139,6 +140,7 @@
   //-------- JavaScript configuration --------
   // TODO: Noticed problems with these settings and eslint, consider removing.
   "javascript.validate.enable": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
   //-------- CSS configuration --------
   // TODO: Noticed problems with these settings and stylelint, consider removing.
   "css.validate": true,
