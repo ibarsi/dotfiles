@@ -62,10 +62,10 @@
     reb = "!r() { git rebase -i HEAD~$1; }; r"
 
     # Fetch and rebase current branch with origin's master
-    oreb = "!git rebase origin/master"
+    oreb = "!f() { git rebase origin/${1:-$(git symbolic-ref --short HEAD)}; }; f"
 
     # Fetch and rebase current branch with upstream's master
-    ureb = "!git rebase upstream/master"
+    ureb = "!f() { git rebase upstream/${1:-$(git symbolic-ref --short HEAD)}; }; f"
 
     # Interactively rebase changes in current branch
     breb = "!git rebase -i `git merge-base master HEAD`"
