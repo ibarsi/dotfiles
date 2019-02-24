@@ -60,6 +60,9 @@ ln -s /Users/Igor/Projects/dotfiles/.config/pep8 /Users/Igor/.config
 echo "Installing NVM"
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
 
+echo "Installing Global Node modules"
+cat npm-ls.txt | xargs npm -g i
+
 echo "Applying OSX configurations"
 source ~/Projects/dotfiles/.macos
 
