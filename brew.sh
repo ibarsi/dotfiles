@@ -18,8 +18,8 @@ brew install moreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 brew install findutils
 
-# Install GNU `sed`, overwriting the built-in `sed`.
-brew install gnu-sed --with-default-names
+# Install GNU `sed`.
+brew install gnu-sed
 
 # Install Bash 4.
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
@@ -33,8 +33,8 @@ if ! fgrep -q '/usr/local/bin/bash' /etc/shells; then
     chsh -s /usr/local/bin/bash;
 fi;
 
-# Install `wget` with IRI support.
-brew install wget --with-iri
+# Install `wget`.
+brew install wget
 
 # Install more recent versions of some macOS tools.
 brew install vim
@@ -43,8 +43,6 @@ brew install openssh
 
 # Install other useful binaries.
 brew install ack                        # Beyond `grep`
-brew install dark-mode                  # Toggle Mac dark mode
-brew install p7zip                      # 7zip for Mac
 brew install speedtest_cli              # Test your internet connection speed
 brew install ssh-copy-id                # Add ssh identity to remote host for easy login
 brew install testssl                    # Test ssl configuration strength
@@ -60,9 +58,7 @@ brew install git                        # Source control
 brew install git-lfs                    # System for managing large files in source control via Git LFS
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
-brew install mongodb                    # NoSQL document based database
 brew install node                       # Server-side JavaScript
-brew install phantomjs                  # Headless browser
 brew install hub                        # GitHub CLI
 
 # Applications
@@ -72,10 +68,7 @@ brew cask install firefox               # Firefox browser
 brew cask install visual-studio-code    # VS Code text editor
 brew cask install slack                 # IM team chat application
 brew cask install spotify               # Music subsciption service/player
-brew cask install dropbox               # Cloud file storage
 brew cask install postman               # API request compose/debugger
-brew cask install filezilla             # FTP Client
-brew cask install disk-inventory-x      # Harddrive disk space analysis
 brew cask install spectacle             # Keyboard shortcuts for window sizing
 brew cask install vanilla               # Hide menu bar icons
 brew cask install licecap               # GIF screen capture
