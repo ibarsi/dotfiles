@@ -58,7 +58,6 @@ brew install git                        # Source control
 brew install git-lfs                    # System for managing large files in source control via Git LFS
 brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
-brew install node                       # Server-side JavaScript
 brew install hub                        # GitHub CLI
 
 # Applications
