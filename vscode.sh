@@ -17,6 +17,7 @@ code --install-extension ban.spellright
 code --install-extension bierner.markdown-preview-github-styles
 code --install-extension wayou.vscode-todo-highlight
 code --install-extension CoenraadS.bracket-pair-colorizer
-code --install-extension yahya-gilany.vscode-terminal-launcher
-code --install-extension eg2.tslint
+code --install-extension ms-vscode.vscode-typescript-tslint-plugin
 code --install-extension davidanson.vscode-markdownlint
+code --install-extension octref.vetur
+code --install-extension wix.vscode-import-cost
