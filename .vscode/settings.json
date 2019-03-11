@@ -48,25 +48,6 @@
   "extensions.autoUpdate": true,
   "git.promptToSaveFilesBeforeCommit": true,
   "search.showLineNumbers": true,
-  "search.exclude": {
-    // GENERAL
-    "**/.git": true,
-    "**/node_modules": true,
-    "**/build": true,
-    "**/dist": true,
-    // TESTS
-    "**/coverage": true,
-    // .NET
-    "**/bin": true,
-    "**/obj": true,
-    "**/packages": true,
-    // DJANGO
-    "**/migrations": true,
-    "**/south_migrations": true,
-    "**/lib": true,
-    // JEKYLL
-    "**/_site": true
-  },
   "typescript.updateImportsOnFileMove.enabled": "always",
   //-------- Files configuration --------
   "files.exclude": {
@@ -86,10 +67,11 @@
   //-------- ESLint configuration --------
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
+  //-------- TSLint configuration --------
+  "tslint.alwaysShowRuleFailuresAsWarnings": false,
+  "tslint.jsEnable": false,
   //-------- HTMLHint configuration --------
   "htmlhint.enable": true,
-  //-------- StyleLint configuration --------
-  "stylelint.enable": false,
   //-------- Python configuration --------
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": false,
@@ -108,7 +90,9 @@
     "suppressWelcomeNotice": true
   },
   //-------- SpellRight configuration --------
-  "spellright.language": ["en"],
+  "spellright.language": [
+    "en"
+  ],
   "spellright.notificationClass": "warning",
   "spellright.documentTypes": [
     "markdown",
@@ -142,7 +126,6 @@
   "javascript.validate.enable": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
   //-------- CSS configuration --------
-  // TODO: Noticed problems with these settings and stylelint, consider removing.
   "css.validate": true,
   // When using a vendor-specific prefix make sure to also include all other vendor-specific properties
   "css.lint.compatibleVendorPrefixes": "warning",
@@ -181,42 +164,5 @@
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
   "css.lint.idSelector": "ignore",
   //-------- LESS configuration --------
-  // TODO: Noticed problems with these settings and stylelint, consider removing.
-  "less.validate": false,
-  // When using a vendor-specific prefix make sure to also include all other vendor-specific properties
-  "less.lint.compatibleVendorPrefixes": "warning",
-  // When using a vendor-specific prefix also include the standard property
-  "less.lint.vendorPrefix": "warning",
-  // Do not use duplicate style definitions
-  "less.lint.duplicateProperties": "error",
-  // Do not use empty rulesets
-  "less.lint.emptyRules": "error",
-  // Import statements do not load in parallel
-  "less.lint.importStatement": "warning",
-  // Do not use width or height when using padding or border
-  "less.lint.boxModel": "ignore",
-  // The universal selector (*) is known to be slow
-  "less.lint.universalSelector": "ignore",
-  // No unit for zero needed
-  "less.lint.zeroUnits": "error",
-  // @font-face rule must define 'src' and 'font-family' properties
-  "less.lint.fontFaceProperties": "warning",
-  // Hex colors must consist of three or six hex numbers
-  "less.lint.hexColorLength": "error",
-  // Invalid number of parameters
-  "less.lint.argumentsInColorFunction": "error",
-  // Unknown property.
-  "less.lint.unknownProperties": "error",
-  // IE hacks are only necessary when supporting IE7 and older
-  "less.lint.ieHack": "warning",
-  // Unknown vendor specific property.
-  "less.lint.unknownVendorSpecificProperties": "warning",
-  // Property is ignored due to the display. E.g. with 'display: inline', the width, height, margin-top, margin-bottom, and float properties have no effect
-  "less.lint.propertyIgnoredDueToDisplay": "error",
-  // Avoid using !important. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-  "less.lint.important": "warning",
-  // Avoid using 'float'. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-  "less.lint.float": "ignore",
-  // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-  "less.lint.idSelector": "ignore"
+  "less.validate": true,
 }
