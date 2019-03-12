@@ -32,10 +32,10 @@ elif [ -f /etc/bash_completion ]; then
     source /etc/bash_completion;
 fi;
 
-# Enable tab completion for `g` by marking it as an alias for `git`
-if type _git &> /dev/null && [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
-    complete -o default -o nospace -F _git g;
-fi;
+# Add tab completion for git
+if [ -f `brew --prefix`/etc/bash_completion.d/git-completion.bash ]; then
+  source `brew --prefix`/etc/bash_completion.d/git-completion.bash
+fi
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
@@ -55,8 +55,3 @@ if [[ $SSH_AUTH_SOCK && $(ssh-add -l | grep "The agent has no identities") ]]; t
     eval `ssh-agent -s`
     ssh-add
 fi
-
-# Load nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
