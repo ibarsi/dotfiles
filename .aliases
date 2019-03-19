@@ -12,9 +12,6 @@ alias cdd="cd ~/Desktop"
 alias cdl="cd ~/Downloads"
 alias cdp="cd ~/Projects"
 alias cdot="cd ~/Projects/dotfiles"
-alias g="git"
-alias h="history"
-alias j="jobs"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -151,3 +148,8 @@ alias venv='source ${PWD##*/}/bin/activate'
 
 # Fix system time by matching Apple server time.
 alias fixtime='sudo ntpdate -u time.apple.com'
+
+# === CLEARBANC === #
+
+# Connect to staging CloudSQL in the background.
+alias cbsql="nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-staging:us-central1:staging=tcp:5433 -credential_file=$HOME/.clearbanc/clearbanc-api-staging-3c6b89301c8e.json &>/dev/null &"

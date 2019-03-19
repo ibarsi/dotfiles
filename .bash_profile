@@ -55,3 +55,10 @@ if [[ $SSH_AUTH_SOCK && $(ssh-add -l | grep "The agent has no identities") ]]; t
     eval `ssh-agent -s`
     ssh-add
 fi
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+# Load NVM and enable its bash completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
