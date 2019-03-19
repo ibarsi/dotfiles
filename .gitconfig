@@ -92,7 +92,7 @@
     contrib = shortlog --summary --numbered
 
     # Create a PR with branch generated name.
-    mpr = "!git b | sed 's/-/ /g' | sed 's/.*/&/' | awk '{ print \"\\\"\"$0\"\\\"\"}' | xargs hub pull-request -m | xargs open"
+    mpr = "!f() { git b | sed 's/-/ /g' | sed 's/.*/&/' | awk '{ print \"\\\"\"$0\"\\\"\"}' | xargs -I{} hub pull-request -m \"$1 {}\" | xargs open; }; f"
 
     # Push current branch to origin and set upstream
     pub = "!git push -u origin $(git b)"
