@@ -5,12 +5,12 @@
   "window.newWindowDimensions": "maximized",
   "window.nativeTabs": false,
   "workbench.editor.labelFormat": "short",
-  "workbench.iconTheme": "vscode-icons",
   "workbench.editor.revealIfOpen": true,
   "workbench.startupEditor": "newUntitledFile",
   "workbench.colorTheme": "Abyss",
   "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editor.highlightModifiedTabs": true,
+  "workbench.iconTheme": "vscode-icons",
   "editor.tokenColorCustomizations": {
     "[Abyss]": {
       "comments": "#225588",
@@ -37,9 +37,11 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": false
   },
+  "editor.gotoLocation.multiple": "goto",
   "terminal.integrated.confirmOnExit": true,
   "terminal.integrated.fontFamily": "Fira Code",
   "terminal.integrated.fontSize": 13,
+  "terminal.integrated.rendererType": "dom",
   "explorer.confirmDragAndDrop": false,
   "files.insertFinalNewline": true,
   "diffEditor.ignoreTrimWhitespace": false,
@@ -55,10 +57,6 @@
     "**/*.sublime*": true
   },
   "files.trimTrailingWhitespace": true,
-  //-------- Icons --------
-  "vsicons.dontShowNewVersionMessage": true,
-  "vsicons.projectDetection.disableDetect": true,
-  "vsicons.presets.angular": true,
   //-------- GitLens configuration --------
   "gitlens.views.fileHistory.enabled": true,
   "gitlens.views.lineHistory.enabled": true,
@@ -69,7 +67,11 @@
   "eslint.autoFixOnSave": true,
   //-------- TSLint configuration --------
   "tslint.alwaysShowRuleFailuresAsWarnings": false,
-  "tslint.jsEnable": false,
+  "tslint.jsEnable": true,
+  //-------- Markdownlint configuration --------
+  "markdownlint.config": {
+    "MD007": false,
+  },
   //-------- HTMLHint configuration --------
   "htmlhint.enable": true,
   //-------- Python configuration --------
@@ -164,5 +166,5 @@
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
   "css.lint.idSelector": "ignore",
   //-------- LESS configuration --------
-  "less.validate": true,
+  "less.validate": true
 }

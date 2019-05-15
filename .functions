@@ -194,3 +194,13 @@ function getcertnames() {
 function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
+
+# === CLEARBANC ===
+
+function cbkmsd() {
+   gcloud kms decrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml 
+}
+
+function cbkmse() {
+    gcloud kms encrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
+ }

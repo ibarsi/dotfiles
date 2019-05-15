@@ -149,7 +149,13 @@ alias venv='source ${PWD##*/}/bin/activate'
 # Fix system time by matching Apple server time.
 alias fixtime='sudo ntpdate -u time.apple.com'
 
-# === CLEARBANC === #
+# === CLEARBANC ===
 
-# Connect to staging CloudSQL in the background.
-alias cbsql="nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-staging:us-central1:staging=tcp:5433 -credential_file=$HOME/.clearbanc/clearbanc-api-staging-3c6b89301c8e.json &>/dev/null &"
+# Connect to Cloud SQL Proxy.
+alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-staging:us-central1:staging=tcp:5433,clearbanc-api-dev:us-east1:dev=tcp:5434,clearbanc-api-production:us-central1:production=tcp:5431 &>/dev/null &'
+
+# Boot up PubSub emulator.
+alias cbpsem='nohup gcloud beta emulators pubsub start &>/dev/null &'
+
+# Point environment to active PubSub emulator.
+alias cbpsenv='$(gcloud beta emulators pubsub env-init)'
