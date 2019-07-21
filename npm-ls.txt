@@ -2,7 +2,7 @@ babel-eslint
 eslint
 eslint-config-prettier
 eslint-plugin-prettier
-eslint-plugin-react
+gitmoji-cli
 htmlhint
 npm
 prettier

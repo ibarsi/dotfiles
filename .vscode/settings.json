@@ -51,6 +51,14 @@
   "git.promptToSaveFilesBeforeCommit": true,
   "search.showLineNumbers": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "vsicons.dontShowNewVersionMessage": true,
+  //-------- Language configuration --------
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   //-------- Files configuration --------
   "files.exclude": {
     "**/*.pyc": true,
@@ -62,6 +70,8 @@
   "gitlens.views.lineHistory.enabled": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
+  "prettier.eslintIntegration": true,
+  "prettier.tslintIntegration": true,
   //-------- ESLint configuration --------
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
@@ -70,7 +80,7 @@
   "tslint.jsEnable": true,
   //-------- Markdownlint configuration --------
   "markdownlint.config": {
-    "MD007": false,
+    "MD007": false
   },
   //-------- HTMLHint configuration --------
   "htmlhint.enable": true,
@@ -92,9 +102,7 @@
     "suppressWelcomeNotice": true
   },
   //-------- SpellRight configuration --------
-  "spellright.language": [
-    "en"
-  ],
+  "spellright.language": ["en"],
   "spellright.notificationClass": "warning",
   "spellright.documentTypes": [
     "markdown",
