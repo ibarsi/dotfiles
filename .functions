@@ -14,13 +14,6 @@ function killport()
     lsof -i tcp:$1 | awk 'FNR == 2 {print $2}' | xargs kill -9
 }
 
-# Touch and vim a file
-function touchgo()
-{
-    touch $1;
-    vim $1;
-}
-
 # Toggle "focus mode"
 function focus() {
     osascript -e 'tell application "System Events" to keystroke "d" using {command down, option down}'
@@ -198,9 +191,16 @@ function tre() {
 # === CLEARBANC ===
 
 function cbkmsd() {
-   gcloud kms decrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml 
+   gcloud kms decrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
 }
 
 function cbkmse() {
     gcloud kms encrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
- }
+}
+
+function kubectx() {
+    export PROJECT_ID="clearbanc-api-${1}";
+    export CLUSTER_NAME="k8s-${1}-live";
+    gcloud config set project $PROJECT_ID;
+    gcloud container clusters get-credentials $CLUSTER_NAME --zone us-central1;
+}

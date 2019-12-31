@@ -152,7 +152,7 @@ alias fixtime='sudo ntpdate -u time.apple.com'
 # === CLEARBANC ===
 
 # Connect to Cloud SQL Proxy.
-alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-staging:us-central1:staging=tcp:5433,clearbanc-api-dev:us-east1:dev=tcp:5434,clearbanc-api-production:us-central1:production=tcp:5431 &>/dev/null &'
+alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-production:us-central1:production=tcp:5431,clearbanc-api-staging:us-central1:staging-anon=tcp:5433,clearbanc-api-dev:us-east1:dev=tcp:5434,clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436,clearbanc-api-production:us-central1:production-replica=tcp:5437 &>/dev/null &'
 
 # Boot up PubSub emulator.
 alias cbpsem='nohup gcloud beta emulators pubsub start &>/dev/null &'
