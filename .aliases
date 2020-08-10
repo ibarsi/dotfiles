@@ -64,9 +64,6 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[
 # Show active network interfaces
 alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'"
 
-# Flush Directory Service cache
-alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
-
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 
@@ -149,13 +146,19 @@ alias venv='source ${PWD##*/}/bin/activate'
 # Fix system time by matching Apple server time.
 alias fixtime='sudo ntpdate -u time.apple.com'
 
+# Clear DNS cache
+alias flushdns='sudo killall -HUP mDNSResponder'
+
 # === CLEARBANC ===
 
 # Connect to Cloud SQL Proxy.
-alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-api-production:us-central1:production=tcp:5431,clearbanc-api-staging:us-central1:staging-anon=tcp:5433,clearbanc-api-dev:us-east1:dev=tcp:5434,clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436,clearbanc-api-production:us-central1:production-replica=tcp:5437 &>/dev/null &'
+alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436 &>/dev/null &'
 
 # Boot up PubSub emulator.
 alias cbpsem='nohup gcloud beta emulators pubsub start &>/dev/null &'
 
 # Point environment to active PubSub emulator.
 alias cbpsenv='$(gcloud beta emulators pubsub env-init)'
+
+# Run local docker commands for code repo
+alias cb='~/Projects/code/cb'

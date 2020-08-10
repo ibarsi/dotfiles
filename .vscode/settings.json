@@ -174,5 +174,8 @@
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
   "css.lint.idSelector": "ignore",
   //-------- LESS configuration --------
-  "less.validate": true
+  "less.validate": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

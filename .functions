@@ -141,11 +141,6 @@ function json() {
     fi;
 }
 
-# Run `dig` and display the most useful info
-function digga() {
-    dig +nocmd "$1" any +multiline +noall +answer;
-}
-
 # Show all the names (CNs and SANs) listed in the SSL certificate
 # for a given domain
 function getcertnames() {
@@ -190,17 +185,23 @@ function tre() {
 
 # === CLEARBANC ===
 
-function cbkmsd() {
+function kmsd() {
    gcloud kms decrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
 }
 
-function cbkmse() {
+function kmse() {
     gcloud kms encrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
 }
 
 function kubectx() {
-    export PROJECT_ID="clearbanc-api-${1}";
-    export CLUSTER_NAME="k8s-${1}-live";
-    gcloud config set project $PROJECT_ID;
-    gcloud container clusters get-credentials $CLUSTER_NAME --zone us-central1;
+    gcloud config set project clearbanc-api-${1};
+    gcloud container clusters get-credentials k8s-${1}-live --zone us-central1;
+}
+
+function cbl() {
+    gcloud builds list --filter "tags='${2}'" --project clearbanc-api-${1};
+}
+
+function dbssh() {
+    gcloud compute ssh sql-fwder --project=${1} --zone=us-central1-a -- -N -L ${2}:0.0.0.0:5532
 }

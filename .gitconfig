@@ -23,7 +23,7 @@
     di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
     # Show the diff of all changes in the current branch.
-    db = !"git diff $(git merge-base master HEAD)"
+    db = !"f() { git diff $(git merge-base $1 HEAD); }; f"
 
     # Pull in remote changes for the current repository and all its submodules
     p = !"git pull; git submodule foreach git pull origin master"
