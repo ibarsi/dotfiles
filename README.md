@@ -6,6 +6,5 @@ Forked from [Mathias Bynens' excellent repo](https://github.com/mathiasbynens/do
 
 1.  Copy `init.sh` raw from repo and save it somewhere on your local machine.
 2.  `source init.sh`
-3.  Manually install global npm packages listed in `npm-ls.txt` (this will be automated at some point).
-4.  Restart.
+4.  Follow all command prompts throughout script execution.
 5.  Party! 🎉

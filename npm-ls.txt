@@ -1,11 +1,4 @@
-babel-eslint
 eslint
 eslint-config-prettier
 eslint-plugin-prettier
-gitmoji-cli
-htmlhint
-npm
 prettier
-stylelint
-stylelint-config-recommended
-yarn

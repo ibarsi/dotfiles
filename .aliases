@@ -106,7 +106,7 @@ alias spoton="sudo mdutil -a -i on"
 
 # Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
 # (useful when executing time-consuming commands)
-alias badge="tput bel"
+alias ding="tput bel"
 
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
@@ -152,7 +152,7 @@ alias flushdns='sudo killall -HUP mDNSResponder'
 # === CLEARBANC ===
 
 # Connect to Cloud SQL Proxy.
-alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436 &>/dev/null &'
+alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436,clearbanc-marketing-dev:us-central1:dev=tcp:5437 &>/dev/null &'
 
 # Boot up PubSub emulator.
 alias cbpsem='nohup gcloud beta emulators pubsub start &>/dev/null &'

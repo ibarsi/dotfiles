@@ -52,13 +52,13 @@ cd -
 
 echo "Configuring VS Code"
 source ~/Projects/dotfiles/vscode.sh"
-ln -s /Users/Igor/Projects/dotfiles/.vscode/settings.json /Users/Igor/Library/Application\ Support/Code/User
-ln -s /Users/Igor/Projects/dotfiles/.vscode/keybindings.json /Users/Igor/Library/Application\ Support/Code/User
-mkdir /Users/Igor/.config
-ln -s /Users/Igor/Projects/dotfiles/.config/pep8 /Users/Igor/.config
+ln -s ~/Projects/dotfiles/.vscode/settings.json ~/Library/Application\ Support/Code/User
+ln -s ~/Projects/dotfiles/.vscode/keybindings.json ~/Library/Application\ Support/Code/User
+mkdir ~/.config
+ln -s ~/Projects/dotfiles/.config/pep8 ~/.config
 
 echo "Installing NVM"
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 
 echo "Installing Global Node modules"
 cat npm-ls.txt | xargs npm -g i
@@ -66,5 +66,5 @@ cat npm-ls.txt | xargs npm -g i
 echo "Applying OSX configurations"
 source ~/Projects/dotfiles/.macos
 
-echo "All done! Please restart to apply final changes :)"
+echo "All done! Please restart to apply final changes 💃"
 

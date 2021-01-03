@@ -11,8 +11,8 @@
   "workbench.colorTheme": "Abyss",
   "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editor.highlightModifiedTabs": true,
-  "workbench.iconTheme": "vscode-icons",
   "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.iconTheme": "vscode-icons",
   "editor.tokenColorCustomizations": {
     "[Abyss]": {
       "comments": "#225588",
@@ -82,8 +82,6 @@
   "gitlens.views.lineHistory.enabled": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
-  //-------- ESLint configuration --------
-  "eslint.enable": true,
   //-------- TSLint configuration --------
   "tslint.alwaysShowRuleFailuresAsWarnings": false,
   "tslint.jsEnable": true,
@@ -96,6 +94,8 @@
   //-------- Python configuration --------
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": false,
+  //-------- Go configuration --------
+  "go.formatTool": "goimports",
   //-------- GitLens configuration --------
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,

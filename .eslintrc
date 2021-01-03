@@ -1,42 +1,17 @@
 {
-  "parser": "babel-eslint",
-
   "env": {
     "browser": true,
     "node": true,
-    "amd": true,
-    "mocha": true,
-    "jasmine": true,
+    "jest": true,
     "es6": true
   },
-
-  "plugins": ["react", "prettier"],
-
+  "sourceType": "module",
+  "plugins": ["prettier"],
   "extends": [
-    "eslint:all",
-    "plugin:react/recommended",
+    "eslint:recommended",
     "prettier",
-    "prettier/react"
   ],
-
-  "parserOptions": {
-    "sourceType": "module"
-  },
-
   "rules": {
-    "one-var": "off",
-    "no-process-env": "off",
-    "no-ternary": "off",
-    "sort-imports": "off",
-    "sort-keys": "off",
-    "no-magic-numbers": "off",
-
-    "react/prop-types": "off",
-
     "prettier/prettier": "error"
   },
-
-  "settings": {
-    "compiler": "babel"
-  }
 }

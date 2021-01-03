@@ -54,24 +54,22 @@ brew tap caskroom/fonts
 brew cask install font-fira-code        # Fira (Ligatures)
 
 # Development
-brew install git                        # Source control
 brew install git-lfs                    # System for managing large files in source control via Git LFS
-brew install python                     # Python language
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install hub                        # GitHub CLI
 
 # Applications
-brew cask install iterm2                # Improved Mac Terminal
-brew cask install google-chrome         # Chrome browser
-brew cask install firefox               # Firefox browser
-brew cask install visual-studio-code    # VS Code text editor
-brew cask install slack                 # IM team chat application
-brew cask install spotify               # Music subsciption service/player
-brew cask install postman               # API request compose/debugger
-brew cask install spectacle             # Keyboard shortcuts for window sizing
-brew cask install vanilla               # Hide menu bar icons
-brew cask install licecap               # GIF screen capture
-brew cask install caprine               # Facebook Messenger desktop application
+brew install --cask iterm2 \            # Improved Mac Terminal
+    brave-browser /                     # Brave browser
+    google-chrome /                     # Chrome browser
+    firefox /                           # Firefox browser
+    visual-studio-code /                # VS Code text editor
+    slack /                             # IM team chat application
+    spotify /                           # Music subsciption service/player
+    postman /                           # API request compose/debugger
+    spectacle /                         # Keyboard shortcuts for window sizing
+    vanilla /                           # Hide menu bar icons
+    licecap                           # GIF screen capture
 
 # Remove outdated versions from the cellar.
 brew cleanup

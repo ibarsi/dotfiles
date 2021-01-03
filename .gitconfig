@@ -69,7 +69,7 @@
     # Fetch and rebase current branch with upstream's master
     ureb = "!f() { git rebase upstream/${1:-$(git symbolic-ref --short HEAD)}; }; f"
 
-    # Interactively rebase changes in current branch
+    # Interactively rebase changes in current branch against another branch used as the base
     breb = "!f() { git rebase -i `git merge-base $1 HEAD`; }; f"
 
     # Remove the old tag with this name and tag the latest commit with it.

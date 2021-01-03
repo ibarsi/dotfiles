@@ -30,3 +30,6 @@ export GPG_TTY=$(tty);
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
+
+# Hide MacOS message saying the default shell is now zsh
+export BASH_SILENCE_DEPRECATION_WARNING=1
