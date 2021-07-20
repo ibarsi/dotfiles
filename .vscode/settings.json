@@ -1,7 +1,5 @@
 // Place your settings in this file to overwrite the default settings
 {
-  //-------- Editor configuration --------
-  "window.zoomLevel": 0,
   "window.newWindowDimensions": "maximized",
   "window.nativeTabs": false,
   "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}",
@@ -12,7 +10,7 @@
   "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.settings.enableNaturalLanguageSearch": false,
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.iconTheme": "material-icon-theme",
   "editor.tokenColorCustomizations": {
     "[Abyss]": {
       "comments": "#225588",
@@ -49,7 +47,6 @@
   "terminal.integrated.confirmOnExit": true,
   "terminal.integrated.fontFamily": "Fira Code",
   "terminal.integrated.fontSize": 13,
-  "terminal.integrated.rendererType": "dom",
   "telemetry.enableCrashReporter": false,
   "telemetry.enableTelemetry": false,
   "explorer.confirmDragAndDrop": false,
@@ -77,14 +74,8 @@
     "**/*.pyc": true
   },
   "files.trimTrailingWhitespace": true,
-  //-------- GitLens configuration --------
-  "gitlens.views.fileHistory.enabled": true,
-  "gitlens.views.lineHistory.enabled": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
-  //-------- TSLint configuration --------
-  "tslint.alwaysShowRuleFailuresAsWarnings": false,
-  "tslint.jsEnable": true,
   //-------- Markdownlint configuration --------
   "markdownlint.config": {
     "MD007": false
@@ -96,6 +87,9 @@
   "python.linting.pylintEnabled": false,
   //-------- Go configuration --------
   "go.formatTool": "goimports",
+  "go.toolsManagement.autoUpdate": true,
+  //-------- Vue configuration --------
+  "vetur.useWorkspaceDependencies": true,
   //-------- GitLens configuration --------
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
@@ -104,10 +98,6 @@
     "suppressGitVersionWarning": false,
     "suppressLineUncommittedWarning": false,
     "suppressNoRepositoryWarning": false,
-    "suppressResultsExplorerNotice": false,
-    "suppressShowKeyBindingsNotice": true,
-    "suppressUpdateNotice": false,
-    "suppressWelcomeNotice": true
   },
   //-------- CodeSpell configuration --------
   "cSpell.allowCompoundWords": true,
