@@ -1,11 +1,12 @@
+#!/bin/bash
+
 echo "Installing xcode"
 xcode-select --install
-sudo xcodebuild -license accept
 
 echo "Installing Homebrew"
 if test ! $(which brew); then
 echo "Installing homebrew..."
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 echo "Installing Git"
@@ -39,26 +40,18 @@ echo "Generated GPG key has been copied. Please add it to Github before proceedi
 echo "https://github.com/account/ssh \n"
 read -p "Press [Enter] once complete..."
 
-echo "Installing pip"
-curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | sudo python
-
-echo "Installing Python packages"
-source ~/Projects/dotfiles/pip.sh
-
 echo "Boostrapping file system"
 cd ~/Projects/dotfiles
 source bootstrap.sh
 cd -
 
 echo "Configuring VS Code"
-source ~/Projects/dotfiles/vscode.sh"
+$HOME/Projects/dotfiles/vscode.sh
 ln -s ~/Projects/dotfiles/.vscode/settings.json ~/Library/Application\ Support/Code/User
 ln -s ~/Projects/dotfiles/.vscode/keybindings.json ~/Library/Application\ Support/Code/User
-mkdir ~/.config
-ln -s ~/Projects/dotfiles/.config/pep8 ~/.config
 
 echo "Installing NVM"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 echo "Installing Global Node modules"
 cat npm-ls.txt | xargs npm -g i
@@ -67,4 +60,3 @@ echo "Applying OSX configurations"
 source ~/Projects/dotfiles/.macos
 
 echo "All done! Please restart to apply final changes 💃"
-

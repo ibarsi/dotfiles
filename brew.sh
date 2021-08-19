@@ -50,13 +50,16 @@ brew install tree                       # View tree list of folder/file structur
 brew install gnupg gnupg2               # Encrypt and sign data/communication via GnuPG
 
 # Fonts
-brew tap caskroom/fonts
-brew cask install font-fira-code        # Fira (Ligatures)
+brew tap homebrew/cask-fonts
+brew install --cask font-fira-code      # Fira (Ligatures)
 
 # Development
 brew install git-lfs                    # System for managing large files in source control via Git LFS
+git lfs install
+
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install hub                        # GitHub CLI
+brew install --cask docker              # Docker
 
 # Applications
 brew install --cask iterm2 \            # Improved Mac Terminal
@@ -68,8 +71,7 @@ brew install --cask iterm2 \            # Improved Mac Terminal
     spotify /                           # Music subsciption service/player
     postman /                           # API request compose/debugger
     spectacle /                         # Keyboard shortcuts for window sizing
-    vanilla /                           # Hide menu bar icons
-    licecap                           # GIF screen capture
+    licecap                             # GIF screen capture
 
 # Remove outdated versions from the cellar.
 brew cleanup

@@ -3,7 +3,6 @@
 # Install VS Code Extensions.
 
 code --install-extension dbaeumer.vscode-eslint
-code --install-extension ms-python.python
 code --install-extension mkaufman.HTMLHint
 code --install-extension robertohuertasm.vscode-icons
 code --install-extension shinnn.stylelint
