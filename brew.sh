@@ -58,7 +58,7 @@ brew install git-lfs                    # System for managing large files in sou
 git lfs install
 
 brew install nginx                      # High performance load balancer, web server and reverse proxy
-brew install hub                        # GitHub CLI
+brew install gh                         # GitHub CLI
 brew install --cask docker              # Docker
 
 # Applications
