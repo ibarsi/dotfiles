@@ -71,7 +71,8 @@ brew install --cask iterm2 \            # Improved Mac Terminal
     spotify /                           # Music subsciption service/player
     postman /                           # API request compose/debugger
     spectacle /                         # Keyboard shortcuts for window sizing
-    licecap                             # GIF screen capture
+    licecap /                           # GIF screen capture
+    signal                              # Private messenger
 
 # Remove outdated versions from the cellar.
 brew cleanup
