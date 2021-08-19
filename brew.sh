@@ -59,7 +59,8 @@ git lfs install
 
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install gh                         # GitHub CLI
-brew install --cask docker              # Docker
+brew install --cask docker /            # Docker
+    commitizen                          # Standardized commit messages
 
 # Applications
 brew install --cask iterm2 \            # Improved Mac Terminal
