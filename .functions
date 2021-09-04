@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# Randomize desktop background image
-function drand() {
-    path="${HOME}/Projects/desktop-randomizer"
-    source "${path}/desktop-randomizer/bin/activate";
-    python "${path}/main.py"
-    deactivate;
-}
 
 # Kill process by port
 function killport()
@@ -183,6 +176,10 @@ function tre() {
 
 function loc() {
     find $2 -name $1 | xargs wc -l | sort -nr
+}
+
+function mhttp() {
+    while true; do echo "Hello, World!" | nc -l $1; done
 }
 
 # === CLEARBANC ===
