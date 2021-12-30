@@ -25,7 +25,7 @@ brew install gnu-sed
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
 # running `chsh`.
 brew install bash
-brew install bash-completion2
+brew install bash-completion
 
 # Switch to using brew-installed bash as default shell
 if ! fgrep -q '/usr/local/bin/bash' /etc/shells; then
@@ -44,8 +44,6 @@ brew install openssh
 # Install other useful binaries.
 brew install ack                        # Beyond `grep`
 brew install speedtest_cli              # Test your internet connection speed
-brew install ssh-copy-id                # Add ssh identity to remote host for easy login
-brew install testssl                    # Test ssl configuration strength
 brew install tree                       # View tree list of folder/file structures
 brew install gnupg gnupg2               # Encrypt and sign data/communication via GnuPG
 
@@ -59,22 +57,21 @@ git lfs install
 
 brew install nginx                      # High performance load balancer, web server and reverse proxy
 brew install gh                         # GitHub CLI
-brew install --cask docker /            # Docker
-    commitizen                          # Standardized commit messages
+brew commitizen                         # Standardized commit messages
+brew install --cask docker              # Docker
 
 # Applications
-brew install --cask iterm2 \            # Improved Mac Terminal
-    brave-browser /                     # Brave browser
-    google-chrome /                     # Chrome browser
-    firefox /                           # Firefox browser
-    visual-studio-code /                # VS Code text editor
-    slack /                             # IM team chat application
-    spotify /                           # Music subsciption service/player
-    postman /                           # API request compose/debugger
-    spectacle /                         # Keyboard shortcuts for window sizing
-    licecap /                           # GIF screen capture
-    signal                              # Private messenger
+brew install --cask iterm2 \
+    brave-browser \
+    google-chrome \
+    firefox \
+    visual-studio-code \
+    slack \
+    spotify \
+    postman \
+    spectacle \
+    licecap \
+    signal
 
 # Remove outdated versions from the cellar.
 brew cleanup
-brew cask cleanup

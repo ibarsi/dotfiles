@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "Set default shell to bash"
+chsh -s /bin/bash
+exec bash
+
 echo "Installing xcode"
 xcode-select --install
 
@@ -7,6 +11,8 @@ echo "Installing Homebrew"
 if test ! $(which brew); then
 echo "Installing homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/igorbarsi/.zprofile
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 echo "Installing Git"
@@ -14,6 +20,7 @@ brew install git
 
 echo "Generating SSH key"
 ssh-keygen -t rsa -f ~/.ssh/id_rsa
+eval "$(ssh-agent -s)"
 ssh-add
 cat ~/.ssh/id_rsa.pub | pbcopy
 

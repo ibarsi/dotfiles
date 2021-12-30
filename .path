@@ -1,3 +1,6 @@
+# Homebrew (all shells)
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Homebrew's sbin (`brew doctor` suggestion)
 export PATH="/usr/local/sbin:$PATH"
 
