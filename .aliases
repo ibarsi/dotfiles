@@ -148,16 +148,5 @@ alias fixtime='sudo ntpdate -u time.apple.com'
 # Clear DNS cache
 alias flushdns='sudo killall -HUP mDNSResponder'
 
-# === CLEARBANC ===
-
-# Connect to Cloud SQL Proxy.
-alias cbsql='nohup ~/.clearbanc/cloud_sql_proxy -instances=clearbanc-marketing-staging:us-central1:staging=tcp:5435,clearbanc-marketing-production:us-central1:production=tcp:5436,clearbanc-marketing-dev:us-central1:dev=tcp:5437 &>/dev/null &'
-
-# Boot up PubSub emulator.
-alias cbpsem='nohup gcloud beta emulators pubsub start &>/dev/null &'
-
-# Point environment to active PubSub emulator.
-alias cbpsenv='$(gcloud beta emulators pubsub env-init)'
-
-# Run local docker commands for code repo
-alias cb='~/Projects/code/cb'
+# Gitmoji
+alias gm='gitmoji'

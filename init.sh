@@ -58,7 +58,7 @@ ln -s ~/Projects/dotfiles/.vscode/settings.json ~/Library/Application\ Support/C
 ln -s ~/Projects/dotfiles/.vscode/keybindings.json ~/Library/Application\ Support/Code/User
 
 echo "Installing NVM"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 echo "Installing Global Node modules"
 cat npm-ls.txt | xargs npm -g i

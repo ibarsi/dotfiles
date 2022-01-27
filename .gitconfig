@@ -128,6 +128,7 @@
     precomposeunicode = false
 
     autocrlf = false
+	ignorecase = false
 
 [color]
 

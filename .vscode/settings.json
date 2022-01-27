@@ -173,5 +173,11 @@
     "vscode-kubernetes.helm-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/helm/darwin-amd64/helm",
     "vscode-kubernetes.minikube-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/minikube/darwin-amd64/minikube"
   },
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

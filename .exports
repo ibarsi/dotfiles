@@ -28,8 +28,5 @@ export MANPAGER='less -X';
 # https://stackoverflow.com/a/42265848/96656
 export GPG_TTY=$(tty);
 
-# NVM
-export NVM_DIR="$HOME/.nvm"
-
 # Hide MacOS message saying the default shell is now zsh
 export BASH_SILENCE_DEPRECATION_WARNING=1
