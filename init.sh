@@ -60,9 +60,6 @@ ln -s ~/Projects/dotfiles/.vscode/keybindings.json ~/Library/Application\ Suppor
 echo "Installing NVM"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-echo "Installing Global Node modules"
-cat npm-ls.txt | xargs npm -g i
-
 echo "Applying OSX configurations"
 source ~/Projects/dotfiles/.macos
 
