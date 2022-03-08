@@ -22,7 +22,6 @@
   "editor.fontFamily": "Fira Code",
   "editor.fontSize": 13,
   "editor.tabSize": 2,
-  "editor.renderIndentGuides": true,
   "editor.glyphMargin": true,
   "editor.scrollBeyondLastLine": true,
   "editor.mouseWheelZoom": false,
@@ -57,18 +56,35 @@
   "debug.toolBarLocation": "docked",
   "extensions.autoUpdate": true,
   "git.promptToSaveFilesBeforeCommit": "staged",
+  "git.closeDiffOnOperation": true,
   "search.showLineNumbers": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "vsicons.dontShowNewVersionMessage": true,
+  "redhat.telemetry.enabled": false,
+  "vs-kubernetes": {
+    "vscode-kubernetes.helm-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/helm/darwin-amd64/helm",
+    "vscode-kubernetes.minikube-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/minikube/darwin-amd64/minikube"
+  },
   //-------- Language configuration --------
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   //-------- Files configuration --------
   "files.exclude": {
@@ -86,11 +102,6 @@
   //-------- Python configuration --------
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": false,
-  //-------- Go configuration --------
-  "go.formatTool": "goimports",
-  "go.toolsManagement.autoUpdate": true,
-  //-------- Vue configuration --------
-  "vetur.useWorkspaceDependencies": true,
   //-------- GitLens configuration --------
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
@@ -165,19 +176,5 @@
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
   "css.lint.idSelector": "ignore",
   //-------- LESS configuration --------
-  "less.validate": true,
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "vs-kubernetes": {
-    "vscode-kubernetes.helm-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/helm/darwin-amd64/helm",
-    "vscode-kubernetes.minikube-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/minikube/darwin-amd64/minikube"
-  },
-  "redhat.telemetry.enabled": false,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "less.validate": true
 }

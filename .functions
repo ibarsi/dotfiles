@@ -163,33 +163,19 @@ function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
-function loc() {
-    find $2 -name $1 | xargs wc -l | sort -nr
-}
-
+# Spin up a mock HTTP server, listening to the given port, that echos back any POSTed data
 function mhttp() {
     while true; do echo "Hello, World!" | nc -l $1; done
 }
 
-# === CLEARBANC ===
+# POWER
 
-function kmsd() {
-   gcloud kms decrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
-}
-
-function kmse() {
-    gcloud kms encrypt --project clearbanc-api-${1} --keyring storage --key storage-key --location global --ciphertext-file ./config/clearbanc-api-${1}/${2}.yaml.encrypted --plaintext-file ${2}.yaml
-}
-
-function kubectx() {
-    gcloud config set project clearbanc-api-${1};
-    gcloud container clusters get-credentials k8s-${1}-live --zone us-central1;
-}
-
-function cbl() {
-    gcloud builds list --filter "tags='${2}'" --project clearbanc-api-${1};
-}
-
-function dbssh() {
-    gcloud compute ssh sql-fwder --project=${1} --zone=us-central1-a -- -N -L ${2}:0.0.0.0:5532
+# Find all public IPs for the tasks of a given ECS service
+function ecsip() {
+    AWS_CMD_BASE="aws --profile development-admin --region us-east-2"
+    GET_TASKS_BY_SERVICE="$AWS_CMD_BASE ecs list-tasks --cluster card-service --service-name $1 | jq -c '.taskArns[] | \"\\(.)\"'"
+    GET_ENI_ATTACHMENTS_BY_TASKS="$AWS_CMD_BASE ecs describe-tasks --cluster card-service --tasks | jq -c '.tasks[].attachments[] | select(.type==\"ElasticNetworkInterface\") | .details[] | select(.name==\"networkInterfaceId\") | .value'"
+    GET_PUBLIC_IPS_BY_ENIS="$AWS_CMD_BASE ec2 describe-network-interfaces --network-interface-ids | jq -c '.NetworkInterfaces[].Association.PublicIp'"
+    CMD="$GET_TASKS_BY_SERVICE | xargs $GET_ENI_ATTACHMENTS_BY_TASKS | xargs $GET_PUBLIC_IPS_BY_ENIS"
+    eval "$CMD"
 }
