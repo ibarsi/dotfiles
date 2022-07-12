@@ -170,12 +170,7 @@ function mhttp() {
 
 # POWER
 
-# Find all public IPs for the tasks of a given ECS service
-function ecsip() {
-    AWS_CMD_BASE="aws --profile development-admin --region us-east-2"
-    GET_TASKS_BY_SERVICE="$AWS_CMD_BASE ecs list-tasks --cluster card-service --service-name $1 | jq -c '.taskArns[] | \"\\(.)\"'"
-    GET_ENI_ATTACHMENTS_BY_TASKS="$AWS_CMD_BASE ecs describe-tasks --cluster card-service --tasks | jq -c '.tasks[].attachments[] | select(.type==\"ElasticNetworkInterface\") | .details[] | select(.name==\"networkInterfaceId\") | .value'"
-    GET_PUBLIC_IPS_BY_ENIS="$AWS_CMD_BASE ec2 describe-network-interfaces --network-interface-ids | jq -c '.NetworkInterfaces[].Association.PublicIp'"
-    CMD="$GET_TASKS_BY_SERVICE | xargs $GET_ENI_ATTACHMENTS_BY_TASKS | xargs $GET_PUBLIC_IPS_BY_ENIS"
-    eval "$CMD"
+# Find CF request details by ray id
+function cflogs() {
+    curl -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" https://api.cloudflare.com/client/v4/zones/e8900cc9c0e8dc2ade675327b3f634fa/logs/rayids/$1
 }

@@ -52,9 +52,6 @@ alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date
 # TODO: Should also prune un-needed packages, but note that brew cleanup blows away npm for some reason...
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update; sudo gem cleanup'
 
-# Google Chrome
-alias chrome='open -a Google\ Chrome'
-
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias lip="ipconfig getifaddr en0"
@@ -117,13 +114,6 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
     alias "${method}"="lwp-request -m '${method}'"
 done
 
-# Make Grunt print stack traces by default
-command -v grunt > /dev/null && alias grunt="grunt --stack"
-
-# Kill all the tabs in Chrome to free up memory
-# [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
-alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
 # Lock the screen (when going AFK)
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
@@ -136,12 +126,6 @@ alias path='echo -e ${PATH//:/\\n}'
 # List all npm packages installed globally
 alias npmls='npm ls -g --depth=0 --silent --parseable | xargs basename | grep -v lib'
 
-# Store global npm packages in text file
-alias npmst='npmls > ~/npm-ls.txt'
-
-# Activate local virtualenv
-alias venv='source ${PWD##*/}/bin/activate'
-
 # Fix system time by matching Apple server time.
 alias fixtime='sudo ntpdate -u time.apple.com'
 
@@ -150,3 +134,11 @@ alias flushdns='sudo killall -HUP mDNSResponder'
 
 # Gitmoji
 alias gm='gitmoji'
+
+# See what's listening on a given port
+alias whichport='sudo lsof -i -P | grep LISTEN | grep'
+
+# POWER
+
+# Open in IntelliJ
+alias intellij='open -a "IntelliJ IDEA CE.app"'
