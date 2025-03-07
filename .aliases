@@ -141,4 +141,9 @@ alias whichport='sudo lsof -i -P | grep LISTEN | grep'
 # POWER
 
 # Open in IntelliJ
-alias intellij='open -a "IntelliJ IDEA CE.app"'
+alias intellij='open -a "IntelliJ IDEA.app"'
+
+# MQ
+
+# Bootstrap marqeta-jpos
+alias mq-bootstrap='target/bin/stop ; mvn clean install -Denv=ci -DskipTests ; tar -xvf target/mqpay-jcard-1.0.0-SNAPSHOT.tar --directory target ; AWS_PROFILE=marqeta-jpos target/bin/start'

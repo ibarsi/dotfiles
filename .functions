@@ -174,3 +174,4 @@ function mhttp() {
 function cflogs() {
     curl -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" https://api.cloudflare.com/client/v4/zones/e8900cc9c0e8dc2ade675327b3f634fa/logs/rayids/$1
 }
+

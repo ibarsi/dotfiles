@@ -6,7 +6,6 @@
   "workbench.editor.labelFormat": "short",
   "workbench.editor.revealIfOpen": true,
   "workbench.startupEditor": "newUntitledFile",
-  "workbench.colorTheme": "Abyss",
   "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.settings.enableNaturalLanguageSearch": false,
@@ -38,13 +37,12 @@
   "editor.snippetSuggestions": "top",
   "editor.insertSpaces": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": false,
-    "source.fixAll.eslint": true
+    "source.organizeImports": "never",
+    "source.fixAll": "explicit"
   },
-  "editor.formatOnSave": true,
   "editor.smoothScrolling": true,
   "editor.cursorBlinking": "phase",
-  "editor.cursorSmoothCaretAnimation": false,
+  "editor.cursorSmoothCaretAnimation": "off",
   "terminal.integrated.confirmOnExit": "hasChildProcesses",
   "terminal.integrated.fontFamily": "Fira Code",
   "terminal.integrated.fontSize": 13,
@@ -176,5 +174,11 @@
   // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
   "css.lint.idSelector": "ignore",
   //-------- LESS configuration --------
-  "less.validate": true
+  "less.validate": true,
+  "editor.accessibilitySupport": "off",
+
+  //------- MARQETA --------
+
+  "github-actions.use-enterprise": true,
+  "github-enterprise.uri": "https://github.marqeta.com"
 }
