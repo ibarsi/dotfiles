@@ -58,10 +58,6 @@
   "search.showLineNumbers": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "redhat.telemetry.enabled": false,
-  "vs-kubernetes": {
-    "vscode-kubernetes.helm-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/helm/darwin-amd64/helm",
-    "vscode-kubernetes.minikube-path.mac": "/Users/igorbarsi/.vs-kubernetes/tools/minikube/darwin-amd64/minikube"
-  },
   //-------- Language configuration --------
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -85,9 +81,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   //-------- Files configuration --------
-  "files.exclude": {
-    "**/*.pyc": true
-  },
   "files.trimTrailingWhitespace": true,
   //-------- Prettier configuration --------
   "prettier.requireConfig": true,
@@ -95,11 +88,6 @@
   "markdownlint.config": {
     "MD007": false
   },
-  //-------- HTMLHint configuration --------
-  "htmlhint.enable": true,
-  //-------- Python configuration --------
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
   //-------- GitLens configuration --------
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
@@ -111,74 +99,35 @@
   },
   //-------- CodeSpell configuration --------
   "cSpell.allowCompoundWords": true,
-  //-------- HTML configuration --------
-  "emmet.showSuggestionsAsSnippets": true,
-  // Maximum amount of characters per line (0 = disable).
-  "html.format.wrapLineLength": 120,
-  // List of tags, comma separated, that shouldn't be reformatted. 'null' defaults to all tags listed at https://www.w3.org/TR/html5/dom.html#phrasing-content.
-  "html.format.unformatted": "a, abbr, acronym, b, bdo, big, br, button, cite, code, dfn, em, i, img, input, kbd, label, map, object, q, samp, script, select, small, span, strong, sub, sup, textarea, tt, var",
-  // Indent <head> and <body> sections.
-  "html.format.indentInnerHtml": false,
-  // Whether existing line breaks before elements should be preserved. Only works before elements, not inside tags or for text.
-  "html.format.preserveNewLines": true,
-  // Maximum number of line breaks to be preserved in one chunk. Use 'null' for unlimited.
-  "html.format.maxPreserveNewLines": null,
-  // Format and indent {{#foo}} and {{/foo}}.
-  "html.format.indentHandlebars": false,
-  // End with a newline.
-  "html.format.endWithNewline": false,
-  // List of tags, comma separated, that should have an extra newline before them. 'null' defaults to "head, body, /html".
-  "html.format.extraLiners": "head, body, /html",
-  // Wrap attributes.
-  "html.format.wrapAttributes": "force",
-  //-------- JavaScript configuration --------
-  // TODO: Noticed problems with these settings and eslint, consider removing.
-  "javascript.validate.enable": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  //-------- CSS configuration --------
-  "css.validate": true,
-  // When using a vendor-specific prefix make sure to also include all other vendor-specific properties
-  "css.lint.compatibleVendorPrefixes": "warning",
-  // When using a vendor-specific prefix also include the standard property
-  "css.lint.vendorPrefix": "warning",
-  // Do not use duplicate style definitions
-  "css.lint.duplicateProperties": "error",
-  // Do not use empty rulesets
-  "css.lint.emptyRules": "error",
-  // Import statements do not load in parallel
-  "css.lint.importStatement": "warning",
-  // Do not use width or height when using padding or border
-  "css.lint.boxModel": "ignore",
-  // The universal selector (*) is known to be slow
-  "css.lint.universalSelector": "ignore",
-  // No unit for zero needed
-  "css.lint.zeroUnits": "error",
-  // @font-face rule must define 'src' and 'font-family' properties
-  "css.lint.fontFaceProperties": "warning",
-  // Hex colors must consist of three or six hex numbers
-  "css.lint.hexColorLength": "error",
-  // Invalid number of parameters
-  "css.lint.argumentsInColorFunction": "error",
-  // Unknown property.
-  "css.lint.unknownProperties": "error",
-  // IE hacks are only necessary when supporting IE7 and older
-  "css.lint.ieHack": "warning",
-  // Unknown vendor specific property.
-  "css.lint.unknownVendorSpecificProperties": "error",
-  // Property is ignored due to the display. E.g. with 'display: inline', the width, height, margin-top, margin-bottom, and float properties have no effect
-  "css.lint.propertyIgnoredDueToDisplay": "error",
-  // Avoid using !important. It is an indication that the specificity of the entire CSS has gotten out of control and needs to be refactored.
-  "css.lint.important": "warning",
-  // Avoid using 'float'. Floats lead to fragile CSS that is easy to break if one aspect of the layout changes.
-  "css.lint.float": "ignore",
-  // Selectors should not contain IDs because these rules are too tightly coupled with the HTML.
-  "css.lint.idSelector": "ignore",
-  //-------- LESS configuration --------
-  "less.validate": true,
-  "editor.accessibilitySupport": "off",
 
   //------- MARQETA --------
 
-  "github-actions.use-enterprise": true,
-  "github-enterprise.uri": "https://github.marqeta.com"
+  "github-enterprise.uri": "https://github.marqeta.com",
+  "chat.agent.enabled": true,
+  "terminal.integrated.env.osx": {
+    "Q_NEW_SESSION": "1"
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "amazonQ.telemetry": false,
+  "amazonQ.suppressPrompts": {
+    "amazonQChatDisclaimer": true,
+    "amazonQChatPairProgramming": true,
+    "amazonQSessionConfigurationMessage": true
+  },
+  "chat.disableAIFeatures": true,
+  "editor.accessibilitySupport": "off",
+  "eslint.lintTask.enable": true
 }
