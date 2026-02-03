@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# bootstrap.sh - Modern setup for ibarsi
+# bootstrap.sh - Topic-based setup for ibarsi
+
+DOTFILES_ROOT=$(pwd -P)
 
 # 1. Install Homebrew if not present
 if ! command -v brew >/dev/null; then
@@ -18,12 +20,24 @@ fi
 echo "Syncing tools from Brewfile..."
 brew bundle
 
-# 3. Create symlinks for dotfiles
+# 3. Create symlinks
+# We use a simple loop to find files we want to link to $HOME
 echo "Creating symlinks..."
-files=(.zshrc .aliases .exports .functions .path .macos .gitconfig .gitignore .editorconfig)
-for file in "${files[@]}"; do
-  ln -sf "$(pwd)/$file" "$HOME/$file"
-done
+
+# Zsh
+ln -sf "$DOTFILES_ROOT/zsh/.zshrc" "$HOME/.zshrc"
+
+# Git
+ln -sf "$DOTFILES_ROOT/git/.gitconfig" "$HOME/.gitconfig"
+ln -sf "$DOTFILES_ROOT/git/.gitignore" "$HOME/.gitignore"
+ln -sf "$DOTFILES_ROOT/git/.gitattributes" "$HOME/.gitattributes"
+
+# System
+ln -sf "$DOTFILES_ROOT/system/.editorconfig" "$HOME/.editorconfig"
+ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
+
+# Vim
+ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
 
 # 4. Set Zsh as default shell
 if [ "$SHELL" != "$(which zsh)" ]; then
@@ -33,6 +47,6 @@ fi
 
 # 5. Apply macOS defaults
 echo "Applying macOS defaults (requires sudo)..."
-./.macos
+./macos/.macos
 
 echo "Setup complete! Restart your terminal to see changes."

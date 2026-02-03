@@ -4,7 +4,7 @@
 tap "homebrew/bundle"
 tap "homebrew/cask-versions"
 
-# CLI Tools
+# CLI Tools (Core)
 brew "coreutils"
 brew "moreutils"
 brew "findutils"
@@ -20,13 +20,16 @@ brew "git"
 brew "git-lfs"
 brew "gh"
 brew "commitizen"
+
+# Modern CLI Enhancements
 brew "fzf"              # Fuzzy finder
 brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
-brew "mise"             # Universal version manager (Node, Ruby, Python, etc.)
+brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
 brew "speedtest-cli"
+brew "gh-dash"          # GitHub CLI dashboard extension
 
 # Casks (Apps)
 cask "iterm2"
@@ -36,12 +39,8 @@ cask "visual-studio-code"
 cask "slack"
 cask "spotify"
 cask "postman"
-cask "rectangle"        # Modern window manager (replaces Spectacle)
+cask "rectangle"        # Window manager
 cask "signal"
 cask "docker"
-cask "raycast"          # Productivity launcher (Spotlight replacement)
-cask "font-fira-code"
-
-# Mac App Store (requires 'mas' CLI, but keeping commented for now)
-# brew "mas"
-# mas "Xcode", id: 497799835
+cask "raycast"          # Productivity launcher
+cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
