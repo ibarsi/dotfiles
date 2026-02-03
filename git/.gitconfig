@@ -103,6 +103,16 @@
     # Delete current branch from origin
     unpub = "!git push origin :$(git b)"
 
+    # Advanced visualization
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Root directory
+    root = rev-parse --show-toplevel
+
+    # Browse on GitHub
+    browse = !gh repo view --web
+
+
 [apply]
 
     # Detect whitespace errors when applying a patch

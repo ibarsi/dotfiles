@@ -40,6 +40,14 @@ function cdf() { # short for `cdfinder`
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
 }
 
+# Reload dotfiles
+function reload-dotfiles() {
+    if [ -d "$HOME/dotfiles" ]; then
+        (cd "$HOME/dotfiles" && git pull origin master && ./bootstrap.sh)
+        source "$HOME/.zshrc"
+    fi
+}
+
 # Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
 function targz() {
     local tmpFile="${@%/}.tar";
