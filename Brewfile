@@ -22,7 +22,6 @@ brew "gh"
 brew "commitizen"
 
 # Modern CLI Enhancements
-brew "chezmoi"          # Dotfile manager
 brew "fzf"              # Fuzzy finder
 brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
