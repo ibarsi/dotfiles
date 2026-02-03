@@ -1,31 +1,38 @@
 #!/usr/bin/env bash
 
-git pull;
+# bootstrap.sh - Modern setup for ibarsi
 
-# Remove all files that exist in current directory from root and create symlinks to replace them.
-function doIt() {
-    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+# 1. Install Homebrew if not present
+if ! command -v brew >/dev/null; then
+  echo "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  
+  if [[ $(uname -m) == "arm64" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
 
-    # Currently only links one level deep :(
-    find . -mindepth 1 -maxdepth 1 -type f \( -iname "*" ! -iname ".DS_Store" ! -iname "README.md" ! -iname "bootstrap.sh" ! -iname "brew.sh" \) -not -path "./.git/*" | sed 's#.*/##' | while read file; do
-        echo "Removing $file from $HOME."
-        rm "$HOME/$file"
+# 2. Install all tools and apps from Brewfile
+echo "Syncing tools from Brewfile..."
+brew bundle
 
-        # TODO: Does not create directory for link if it is missing.
-        echo "Linking $file from $DIR to $HOME."
-        ln -s "$DIR/$file" $HOME/.
-    done
+# 3. Create symlinks for dotfiles
+echo "Creating symlinks..."
+files=(.zshrc .aliases .exports .functions .path .macos .gitconfig .gitignore .editorconfig)
+for file in "${files[@]}"; do
+  ln -sf "$(pwd)/$file" "$HOME/$file"
+done
 
-    source ~/.bash_profile;
-}
+# 4. Set Zsh as default shell
+if [ "$SHELL" != "$(which zsh)" ]; then
+  echo "Setting Zsh as default shell..."
+  chsh -s "$(which zsh)"
+fi
 
-if [ "$1" == "--force" -o "$1" == "-f" ]; then
-    doIt;
-else
-    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
-    echo "";
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        doIt;
-    fi;
-fi;
-unset doIt;
+# 5. Apply macOS defaults
+echo "Applying macOS defaults (requires sudo)..."
+./.macos
+
+echo "Setup complete! Restart your terminal to see changes."
