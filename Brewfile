@@ -44,3 +44,7 @@ cask "signal"
 cask "docker"
 cask "raycast"          # Productivity launcher
 cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
+
+# Catppuccin Theme Tools
+brew "starship"         # Prompt theming (already listed above)
+# VS Code extension: Catppuccin for VSCode (install via marketplace)
