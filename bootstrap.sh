@@ -39,13 +39,21 @@ ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
 # Vim
 ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
 
-# 4. Set Zsh as default shell
+# 4. Install Catppuccin theme
+if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
+  echo "Installing Catppuccin theme..."
+  bash "$DOTFILES_ROOT/theme/install.sh"
+else
+  echo "Theme install script not found, skipping..."
+fi
+
+# 5. Set Zsh as default shell
 if [ "$SHELL" != "$(which zsh)" ]; then
   echo "Setting Zsh as default shell..."
   chsh -s "$(which zsh)"
 fi
 
-# 5. Apply macOS defaults
+# 6. Apply macOS defaults
 echo "Applying macOS defaults (requires sudo)..."
 ./macos/.macos
 

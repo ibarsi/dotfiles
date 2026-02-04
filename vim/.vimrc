@@ -141,9 +141,12 @@ set foldcolumn=1
 " Enable syntax highlighting
 syntax enable
 
+" Try Catppuccin first, fall back to desert
 try
-    colorscheme desert
+    set termguicolors
+    colorscheme catppuccin_mocha
 catch
+    colorscheme desert
 endtry
 
 set background=dark
