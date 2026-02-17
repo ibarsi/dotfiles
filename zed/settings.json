@@ -1,6 +1,4 @@
-// ~/.config/zed/settings.json
 {
-  // === Appearance ===
   "theme": {
     "mode": "system",
     "dark": "Catppuccin Mocha",
@@ -14,7 +12,6 @@
   "ui_font_family": "Fira Code",
   "ui_font_size": 14,
 
-  // === Editor Behavior ===
   "tab_size": 2,
   "hard_tabs": false,
   "word_wrap": "none",
@@ -33,14 +30,12 @@
   "remove_trailing_whitespace_on_save": true,
   "restore_on_startup": "last_session",
 
-  // === Bracket / Pairs ===
   "indent_guides": {
     "enabled": true,
     "coloring": "indent_aware"
   },
   "auto_close_brackets": "always",
 
-  // === Git ===
   "git": {
     "enabled": true,
     "git_gutter": "tracked_files",
@@ -50,13 +45,11 @@
     }
   },
 
-  // === Telemetry ===
   "telemetry": {
     "diagnostics": false,
     "metrics": false
   },
 
-  // === Terminal ===
   "terminal": {
     "font_family": "Fira Code",
     "font_size": 13,
@@ -64,7 +57,6 @@
     "blinking": "on"
   },
 
-  // === Language-Specific ===
   "languages": {
     "JavaScript": {
       "tab_size": 2,
@@ -134,7 +126,6 @@
     }
   },
 
-  // === Extensions ===
   "auto_install_extensions": {
     "catppuccin": true,
     "prettier": true,
@@ -146,17 +137,14 @@
     "env": true
   },
 
-  // === AI / Agent ===
   "features": {
     "edit_prediction_provider": "none"
   },
 
-  // === Search ===
   "search": {
     "line_numbers_in_results": true
   },
 
-  // === Project Panel ===
   "project_panel": {
     "dock": "left",
     "file_icons": true,
@@ -166,7 +154,6 @@
     "auto_reveal_entries": true
   },
 
-  // === Collaboration ===
   "collaboration_panel": {
     "dock": "left"
   }
