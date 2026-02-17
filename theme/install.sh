@@ -25,9 +25,8 @@ if [[ -d "$HOME/Library/Application Support/iTerm2/DynamicProfiles" ]]; then
   ln -sf "$DOTFILES/theme/iterm2-catppuccin.json" "$HOME/Library/Application Support/iTerm2/DynamicProfiles/catppuccin.json"
 fi
 
-# VS Code settings - manual note
-echo "→ VS Code: Install 'Catppuccin for VSCode' extension from marketplace"
-echo "  Then set theme to 'Catppuccin Mocha' in settings"
+# Zed theme - auto-installed via settings
+echo "→ Zed: Catppuccin theme auto-installs via auto_install_extensions in zed/settings.json"
 
 # Vim setup
 echo "→ Setting up Vim Catppuccin..."
@@ -41,6 +40,6 @@ fi
 echo "✅ Catppuccin theme installed!"
 echo ""
 echo "Manual steps:"
-echo "  1. Install VS Code extension: 'Catppuccin for VSCode'"
+echo "  1. Open Zed - Catppuccin theme installs automatically"
 echo "  2. In iTerm2: Preferences → Profiles → Colors → Color Presets → Catppuccin Mocha"
 echo "  3. Restart your terminal"

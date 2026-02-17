@@ -35,7 +35,8 @@ brew "gh-dash"          # GitHub CLI dashboard extension
 cask "iterm2"
 cask "brave-browser"
 cask "google-chrome"
-cask "visual-studio-code"
+# cask "visual-studio-code"  # Replaced by Zed
+cask "zed"
 cask "slack"
 cask "spotify"
 cask "postman"
@@ -47,4 +48,4 @@ cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
 
 # Catppuccin Theme Tools
 brew "starship"         # Prompt theming (already listed above)
-# VS Code extension: Catppuccin for VSCode (install via marketplace)
+# Zed extension: Catppuccin (auto-installs via zed/settings.json auto_install_extensions)

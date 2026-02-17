@@ -1,0 +1,173 @@
+// ~/.config/zed/settings.json
+{
+  // === Appearance ===
+  "theme": {
+    "mode": "system",
+    "dark": "Catppuccin Mocha",
+    "light": "Catppuccin Latte"
+  },
+  "buffer_font_family": "Fira Code",
+  "buffer_font_size": 13,
+  "buffer_font_features": {
+    "calt": true
+  },
+  "ui_font_family": "Fira Code",
+  "ui_font_size": 14,
+
+  // === Editor Behavior ===
+  "tab_size": 2,
+  "hard_tabs": false,
+  "word_wrap": "none",
+  "show_whitespaces": "all",
+  "scrollbar": {
+    "show": "never"
+  },
+  "minimap": {
+    "enabled": false
+  },
+  "scroll_beyond_last_line": "one_page",
+  "autosave": "off",
+  "format_on_save": "on",
+  "auto_indent": "none",
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "restore_on_startup": "last_session",
+
+  // === Bracket / Pairs ===
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  },
+  "auto_close_brackets": "always",
+
+  // === Git ===
+  "git": {
+    "enabled": true,
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true,
+      "delay_ms": 600
+    }
+  },
+
+  // === Telemetry ===
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+
+  // === Terminal ===
+  "terminal": {
+    "font_family": "Fira Code",
+    "font_size": 13,
+    "cursor_shape": "bar",
+    "blinking": "on"
+  },
+
+  // === Language-Specific ===
+  "languages": {
+    "JavaScript": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "TypeScript": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "TSX": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "JSON": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "HTML": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "Markdown": {
+      "tab_size": 2,
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    },
+    "YAML": {
+      "tab_size": 2
+    },
+    "Dockerfile": {
+      "tab_size": 2
+    }
+  },
+
+  // === Extensions ===
+  "auto_install_extensions": {
+    "catppuccin": true,
+    "prettier": true,
+    "eslint": true,
+    "dockerfile": true,
+    "docker-compose": true,
+    "html": true,
+    "toml": true,
+    "env": true
+  },
+
+  // === AI / Agent ===
+  "features": {
+    "edit_prediction_provider": "none"
+  },
+
+  // === Search ===
+  "search": {
+    "line_numbers_in_results": true
+  },
+
+  // === Project Panel ===
+  "project_panel": {
+    "dock": "left",
+    "file_icons": true,
+    "folder_icons": true,
+    "git_status": true,
+    "indent_size": 20,
+    "auto_reveal_entries": true
+  },
+
+  // === Collaboration ===
+  "collaboration_panel": {
+    "dock": "left"
+  }
+}
