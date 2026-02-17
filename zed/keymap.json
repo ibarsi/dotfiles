@@ -1,0 +1,22 @@
+[
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-]": "terminal_panel::MoveTerminalRight",
+      "cmd-[": "terminal_panel::MoveTerminalLeft"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-d": "workspace::NewTerminal",
+      "cmd-w": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-k cmd-z": "workspace::ToggleCenteredLayout"
+    }
+  }
+]

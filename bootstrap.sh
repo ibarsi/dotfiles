@@ -39,6 +39,11 @@ ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
 # Vim
 ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
 
+# Zed
+mkdir -p "$HOME/.config/zed"
+ln -sf "$DOTFILES_ROOT/zed/settings.json" "$HOME/.config/zed/settings.json"
+ln -sf "$DOTFILES_ROOT/zed/keymap.json" "$HOME/.config/zed/keymap.json"
+
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
   echo "Installing Catppuccin theme..."
