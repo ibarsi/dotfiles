@@ -32,7 +32,7 @@ brew "speedtest-cli"
 brew "gh-dash"          # GitHub CLI dashboard extension
 
 # Casks (Apps)
-cask "iterm2"
+cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "brave-browser"
 cask "google-chrome"
 cask "zed"

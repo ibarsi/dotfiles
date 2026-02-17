@@ -18,12 +18,7 @@ mkdir -p "$(bat --config-dir)/themes"
 wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
 bat cache --build
 
-# Install iTerm2 color preset
-echo "→ Installing iTerm2 color preset..."
-if [[ -d "$HOME/Library/Application Support/iTerm2/DynamicProfiles" ]]; then
-  mkdir -p "$HOME/Library/Application Support/iTerm2/DynamicProfiles"
-  ln -sf "$DOTFILES/theme/iterm2-catppuccin.json" "$HOME/Library/Application Support/iTerm2/DynamicProfiles/catppuccin.json"
-fi
+echo "→ Ghostty: Catppuccin theme is built-in (configured via ghostty/config)"
 
 # Vim setup
 echo "→ Setting up Vim Catppuccin..."
@@ -37,5 +32,5 @@ fi
 echo "✅ Catppuccin theme installed!"
 echo ""
 echo "Manual steps:"
-echo "  1. In iTerm2: Preferences → Profiles → Colors → Color Presets → Catppuccin Mocha"
+echo "  1. Ghostty: Catppuccin Mocha theme is applied automatically via config symlink"
 echo "  2. Restart your terminal"
