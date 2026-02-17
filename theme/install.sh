@@ -20,7 +20,6 @@ bat cache --build
 
 # Ghostty theme — built-in Catppuccin, no extra install needed
 echo "→ Ghostty: Catppuccin theme is built-in (configured via ghostty/config)"
-# Note: theme/iterm2-catppuccin.json is kept for reference but no longer used
 
 # Vim setup
 echo "→ Setting up Vim Catppuccin..."
