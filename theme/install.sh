@@ -18,7 +18,6 @@ mkdir -p "$(bat --config-dir)/themes"
 wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
 bat cache --build
 
-# Ghostty theme — built-in Catppuccin, no extra install needed
 echo "→ Ghostty: Catppuccin theme is built-in (configured via ghostty/config)"
 
 # Vim setup
