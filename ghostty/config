@@ -1,0 +1,87 @@
+# Ghostty Configuration
+# Symlinked to ~/.config/ghostty/config by bootstrap.sh
+
+# =============================================================================
+# Appearance
+# =============================================================================
+
+# Catppuccin Mocha (dark) / Latte (light) — both built-in to Ghostty
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+
+# Font — Fira Code with ligatures
+font-family = Fira Code
+font-size = 13
+font-feature = calt
+font-feature = liga
+
+# Window
+window-decoration = true
+window-padding-x = 8
+window-padding-y = 8
+window-padding-balance = true
+
+# Cursor
+cursor-style = bar
+cursor-style-blink = true
+
+# =============================================================================
+# Behavior
+# =============================================================================
+
+# Keep native macOS title bar
+macos-titlebar-style = native
+
+# Option key as Alt (useful for shell shortcuts)
+macos-option-as-alt = left
+
+# Confirm before closing a window with running processes
+confirm-close-surface = true
+
+# Undo close timeout
+undo-timeout = 10s
+
+# Shell integration (enables features like semantic zones, prompt detection)
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# =============================================================================
+# Tabs & Splits
+# =============================================================================
+
+tab-overview = false
+window-new-tab-position = end
+
+# =============================================================================
+# Keybindings
+# =============================================================================
+
+# Navigate tabs (mirrors former iTerm2 / VS Code terminal bindings)
+keybind = cmd+right_bracket=next_tab
+keybind = cmd+left_bracket=previous_tab
+
+# Split pane (replaces cmd+d in VS Code terminal)
+keybind = cmd+d=new_split:right
+
+# Close pane / tab
+keybind = cmd+w=close_surface
+
+# Zen / distraction-free (toggle fullscreen)
+keybind = cmd+k>cmd+z=toggle_fullscreen
+
+# Quick font size adjustments
+keybind = cmd+equal=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+zero=reset_font_size
+
+# =============================================================================
+# Performance & Privacy
+# =============================================================================
+
+# Disable telemetry / crash reporting
+crash-report = false
+
+# Scrollback lines
+scrollback-limit = 10000
+
+# Copy on select (like iTerm2 default)
+copy-on-select = clipboard

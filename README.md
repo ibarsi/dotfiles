@@ -18,6 +18,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `macos/`: macOS system defaults and UI/UX settings.
 - `system/`: Global environment variables, paths, and generic aliases.
 - `vim/`: Vim configuration.
+- `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 
@@ -29,7 +30,36 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Blazing fast management for Node, Ruby, Python, and more.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
+- **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
+
+## Ghostty Terminal
+
+[Ghostty](https://ghostty.org) is configured as the primary terminal. Config lives in `ghostty/` and is symlinked to `~/.config/ghostty/` by `bootstrap.sh`.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `ghostty/config` | `~/.config/ghostty/config` | Terminal settings, theme, keybindings |
+
+**Key settings:**
+- **Theme**: Catppuccin Mocha (dark) / Catppuccin Latte (light), follows system appearance — built-in to Ghostty, no extra install needed
+- **Font**: Fira Code 13px with ligatures (`calt`, `liga`)
+- **Cursor**: Blinking bar (ported from iTerm2)
+- **Shell integration**: Auto-detected — enables semantic zones, prompt detection, sudo passthrough
+- **Privacy**: Crash reporting disabled
+
+**Keybindings (ported from iTerm2 / VS Code terminal):**
+
+| Shortcut | Action |
+|----------|--------|
+| `cmd+]` / `cmd+[` | Next / previous tab |
+| `cmd+d` | Split pane right |
+| `cmd+w` | Close pane / tab |
+| `cmd+k cmd+z` | Toggle fullscreen (zen mode) |
+| `cmd+=` / `cmd+-` | Increase / decrease font size |
+| `cmd+0` | Reset font size |
+
+> **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
 
 ## Zed Editor
 
