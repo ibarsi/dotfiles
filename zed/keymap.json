@@ -1,6 +1,4 @@
-// ~/.config/zed/keymap.json
 [
-  // Terminal: navigate panes with cmd+] / cmd+[
   {
     "context": "Terminal",
     "bindings": {
@@ -8,7 +6,6 @@
       "cmd-[": "terminal_panel::MoveTerminalLeft"
     }
   },
-  // Terminal: split / close
   {
     "context": "Terminal",
     "bindings": {
@@ -16,7 +13,6 @@
       "cmd-w": "pane::CloseActiveItem"
     }
   },
-  // Zen mode toggle
   {
     "context": "Workspace",
     "bindings": {
