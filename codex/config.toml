@@ -1,0 +1,28 @@
+# Codex CLI defaults
+# Symlinked to ~/.codex/config.toml by bootstrap.sh
+# Docs: https://developers.openai.com/codex/config-basic
+
+# Keep a coding-focused default model.
+model = "gpt-5.3-codex"
+
+# Safe-by-default execution posture.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# Use cached web search results by default to reduce injection exposure.
+web_search = "cached"
+
+# Keep responses direct for terminal workflows.
+personality = "pragmatic"
+
+# Increase reasoning depth for non-trivial coding tasks.
+model_reasoning_effort = "high"
+
+# Use a stronger model for /review runs.
+review_model = "gpt-5.3-codex"
+
+# Experimental features that are useful for daily coding workflows.
+[features]
+shell_snapshot = true
+unified_exec = true
+undo = true

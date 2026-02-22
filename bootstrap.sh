@@ -48,6 +48,10 @@ ln -sf "$DOTFILES_ROOT/zed/keymap.json" "$HOME/.config/zed/keymap.json"
 mkdir -p "$HOME/.config/ghostty"
 ln -sf "$DOTFILES_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
 
+# Codex CLI
+mkdir -p "$HOME/.codex"
+ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
+
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
   echo "Installing Catppuccin theme..."
