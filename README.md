@@ -21,6 +21,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
+- `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 
 ## Features
@@ -34,6 +35,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
+- **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 
 ## Ghostty Terminal
 
@@ -98,6 +100,35 @@ npm i -g @openai/codex  # cross-platform alternative
 - `cxup` → upgrade Codex CLI (uses Homebrew cask when Codex was installed with brew; otherwise npm)
 
 > Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults.
+
+## Claude Code Workflow
+
+[Claude Code](https://code.claude.com/docs/en/setup) is configured for a reliable daily-driver workflow that can coexist with Codex.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `claude/settings.json` | `~/.claude/settings.json` | Update channel and attribution preferences |
+
+**Install Claude Code CLI:**
+
+```bash
+brew install --cask claude-code
+# or native installer (recommended by Anthropic):
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**Key defaults in this repo:**
+- `$schema` enabled for editor validation/autocomplete
+- `autoUpdatesChannel = "stable"` to reduce surprise regressions
+- `attribution.commit` / `attribution.pr` are blanked to avoid automatic AI bylines in commits/PRs
+
+**Zsh shortcuts:**
+- `cc` → `claude`
+- `ccr` → `claude --resume`
+- `ccdoctor` → `claude doctor`
+- `ccupdate` → upgrade Claude Code (brew cask if installed via Homebrew, otherwise `claude update`)
+
+> Workflow note: Codex and Claude configs are independent (`~/.codex/` and `~/.claude/`), so switching between them is frictionless.
 
 ## Zed Editor
 

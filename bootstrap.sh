@@ -52,6 +52,10 @@ ln -sf "$DOTFILES_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
 mkdir -p "$HOME/.codex"
 ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
 
+# Claude Code CLI
+mkdir -p "$HOME/.claude"
+ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
+
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
   echo "Installing Catppuccin theme..."
