@@ -9,7 +9,8 @@ model = "gpt-5.3-codex"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
-# Use cached web search results by default to reduce injection exposure.
+# Use only cached/indexed web search snippets by default (no direct page fetches).
+# This reduces prompt-injection risk from arbitrary live web content.
 web_search = "cached"
 
 # Keep responses direct for terminal workflows.
