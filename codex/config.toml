@@ -5,7 +5,9 @@
 # Keep a coding-focused default model.
 model = "gpt-5.3-codex"
 
-# Safe-by-default execution posture.
+# Safe-by-default execution posture:
+# - approval_policy="on-request": prompt before running commands outside the sandbox or with elevated risk.
+# - sandbox_mode="workspace-write": allow edits only in the workspace; block writes elsewhere by default.
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 
