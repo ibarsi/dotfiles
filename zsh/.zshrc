@@ -64,6 +64,11 @@ setopt HIST_REDUCE_BLANKS
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
+# Codex CLI completion (safe no-op when codex isn't installed yet)
+if command -v codex >/dev/null; then
+  eval "$(codex completion zsh 2>/dev/null)"
+fi
+
 # Case-insensitive globbing
 setopt nocaseglob
 

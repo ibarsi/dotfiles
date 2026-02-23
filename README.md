@@ -20,6 +20,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `vim/`: Vim configuration.
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
+- `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 
 ## Features
@@ -32,6 +33,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
+- **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 
 ## Ghostty Terminal
 
@@ -60,6 +62,42 @@ The repository is organized into **topics**, making it easy to modularize your c
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## Codex CLI Workflow
+
+[Codex CLI](https://developers.openai.com/codex/cli/) is configured for a secure, fast terminal-first AI coding flow.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `codex/config.toml` | `~/.codex/config.toml` | Default model, approvals/sandbox, search mode, feature toggles |
+
+**Install Codex CLI:**
+
+```bash
+brew install --cask codex
+npm i -g @openai/codex  # cross-platform alternative
+```
+
+**Key defaults in this repo:**
+- `model = "gpt-5.3-codex"`
+- `approval_policy = "on-request"`
+- `sandbox_mode = "workspace-write"`
+- `web_search = "cached"` (safer default than live web)
+- `/review` uses `review_model = "gpt-5.3-codex"`
+
+**Enabled quality-of-life features:**
+- `shell_snapshot` (faster repeated command runs)
+- `unified_exec` (improved command execution path)
+- `undo` (safer edit iteration)
+
+**Zsh shortcuts:**
+- `cx` → `codex`
+- `cxe` → `codex exec`
+- `cxr` → `codex resume --last`
+- `cxreview` → start Codex with `/review`
+- `cxup` → upgrade Codex CLI (uses Homebrew cask when Codex was installed with brew; otherwise npm)
+
+> Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults.
 
 ## Zed Editor
 
