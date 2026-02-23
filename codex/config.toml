@@ -21,7 +21,8 @@ personality = "pragmatic"
 # Increase reasoning depth for non-trivial coding tasks.
 model_reasoning_effort = "high"
 
-# Use a stronger model for /review runs.
+# Used when running `codex /review` (PR/diff review mode).
+# Normal coding/chat requests continue using `model` above.
 review_model = "gpt-5.3-codex"
 
 # Experimental features that are useful for daily coding workflows.
