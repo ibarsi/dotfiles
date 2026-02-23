@@ -74,6 +74,10 @@ The repository is organized into **topics**, making it easy to modularize your c
 **Install Codex CLI:**
 
 ```bash
+# macOS (preferred in this repo)
+brew install --cask codex
+
+# cross-platform alternative
 npm i -g @openai/codex
 ```
 
@@ -94,7 +98,7 @@ npm i -g @openai/codex
 - `cxe` → `codex exec`
 - `cxr` → `codex resume --last`
 - `cxreview` → start Codex with `/review`
-- `cxup` → upgrade Codex CLI
+- `cxup` → upgrade Codex CLI (uses Homebrew cask when Codex was installed with brew; otherwise npm)
 
 > Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults.
 

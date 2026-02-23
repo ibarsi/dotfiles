@@ -11,4 +11,4 @@ alias cx="codex"
 alias cxe="codex exec"
 alias cxr="codex resume --last"
 alias cxreview='codex "/review"'
-alias cxup='npm i -g @openai/codex@latest'
+alias cxup='if command -v brew >/dev/null && brew list --cask codex >/dev/null 2>&1; then brew upgrade --cask codex; else npm i -g @openai/codex@latest; fi'
