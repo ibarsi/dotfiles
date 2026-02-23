@@ -1,8 +1,25 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "autoUpdatesChannel": "stable",
+  "cleanupPeriodDays": 30,
+  "respectGitignore": true,
   "attribution": {
     "commit": "",
     "pr": ""
+  },
+  "permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "ask": [
+      "Bash(git push *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Read(./.env)",
+      "Read(./secrets/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo *)"
+    ]
   }
 }

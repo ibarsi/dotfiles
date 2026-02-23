@@ -120,6 +120,11 @@ curl -fsSL https://claude.ai/install.sh | bash
 **Key defaults in this repo:**
 - `$schema` enabled for editor validation/autocomplete
 - `autoUpdatesChannel = "stable"` to reduce surprise regressions
+- `cleanupPeriodDays = 30` to avoid keeping transcripts indefinitely
+- `respectGitignore = true` to keep ignored/private files out of file suggestions
+- `permissions.disableBypassPermissionsMode = "disable"` to block bypass mode
+- `permissions.ask` prompts on high-risk network/sensitive reads (`git push`, `curl`, `wget`, `.env`, `./secrets/**`)
+- `permissions.deny` blocks obviously dangerous shell patterns (`sudo *`, `rm -rf /`)
 - `attribution.commit` / `attribution.pr` are blanked to avoid automatic AI bylines in commits/PRs
 
 **Zsh shortcuts:**
