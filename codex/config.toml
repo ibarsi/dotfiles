@@ -24,6 +24,9 @@ review_model = "gpt-5.3-codex"
 
 # Experimental features that are useful for daily coding workflows.
 [features]
+# Include a lightweight shell state snapshot with command/tool context when useful.
 shell_snapshot = true
+# Route shell operations through the unified exec path for more consistent behavior.
 unified_exec = true
+# Enable local undo support for reversible edit operations in the CLI.
 undo = true
