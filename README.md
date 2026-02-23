@@ -74,11 +74,8 @@ The repository is organized into **topics**, making it easy to modularize your c
 **Install Codex CLI:**
 
 ```bash
-# macOS (preferred in this repo)
 brew install --cask codex
-
-# cross-platform alternative
-npm i -g @openai/codex
+npm i -g @openai/codex  # cross-platform alternative
 ```
 
 **Key defaults in this repo:**

@@ -33,6 +33,7 @@ brew "gh-dash"          # GitHub CLI dashboard extension
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
+cask "codex"             # OpenAI Codex CLI
 cask "brave-browser"
 cask "google-chrome"
 cask "zed"
