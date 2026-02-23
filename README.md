@@ -99,7 +99,7 @@ npm i -g @openai/codex  # cross-platform alternative
 - `cxreview` → start Codex with `/review`
 - `cxup` → upgrade Codex CLI (uses Homebrew cask when Codex was installed with brew; otherwise npm)
 
-> Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults.
+> Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults, and `sandbox_mode = "workspace-write"` prevents destructive commands like `rm -rf ~/` from writing outside the workspace.
 
 ## Claude Code Workflow
 
@@ -124,7 +124,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 - `respectGitignore = true` to keep ignored/private files out of file suggestions
 - `permissions.disableBypassPermissionsMode = "disable"` to block bypass mode
 - `permissions.ask` prompts on high-risk network/sensitive reads (`git push`, `curl`, `wget`, `.env`, `./secrets/**`)
-- `permissions.deny` blocks obviously dangerous shell patterns (`sudo *`, `rm -rf /`)
+- `permissions.deny` blocks obviously dangerous shell patterns (`sudo *`, `rm -rf /`, `rm -rf ~/`)
 - `attribution.commit` / `attribution.pr` are blanked to avoid automatic AI bylines in commits/PRs
 
 **Zsh shortcuts:**
