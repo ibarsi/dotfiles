@@ -44,4 +44,5 @@ cask "rectangle"        # Window manager
 cask "signal"
 cask "docker"
 cask "raycast"          # Productivity launcher
+cask "claude-code"      # Claude Code CLI (Anthropic)
 cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
