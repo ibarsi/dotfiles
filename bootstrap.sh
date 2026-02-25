@@ -48,6 +48,10 @@ ln -sf "$DOTFILES_ROOT/zed/keymap.json" "$HOME/.config/zed/keymap.json"
 mkdir -p "$HOME/.config/ghostty"
 ln -sf "$DOTFILES_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
 
+# Mise
+mkdir -p "$HOME/.config/mise"
+ln -sf "$DOTFILES_ROOT/mise/config.toml" "$HOME/.config/mise/config.toml"
+
 # Codex CLI
 mkdir -p "$HOME/.codex"
 ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"

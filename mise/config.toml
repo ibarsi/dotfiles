@@ -1,0 +1,13 @@
+# Global mise settings (symlinked to ~/.config/mise/config.toml)
+# Docs: https://mise.jdx.dev/configuration/settings.html
+
+[settings]
+# Automatically install missing tools for `mise run` / `mise exec` workflows.
+auto_install = true
+
+# Cache resolved environment for faster prompt/hooks in large repos.
+env_cache = true
+env_cache_ttl = "2h"
+
+# Match terminal theme family used across this dotfiles repo.
+color_theme = "catppuccin"

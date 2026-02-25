@@ -20,6 +20,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `vim/`: Vim configuration.
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
+- `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
@@ -30,7 +31,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Modern CLI tools**: Integrated with `eza`, `bat`, `fzf`, `zoxide`, and `starship`.
 - **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
-- **Mise integration**: Blazing fast management for Node, Ruby, Python, and more.
+- **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
@@ -64,6 +65,36 @@ The repository is organized into **topics**, making it easy to modularize your c
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## Mise Workflow
+
+[mise](https://mise.jdx.dev/) is now wired as an active part of this repo instead of just being installed.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `mise/config.toml` | `~/.config/mise/config.toml` | Global mise behavior/settings |
+| `mise.toml` | `~/dotfiles/mise.toml` | Project tools + tasks for dotfiles maintenance |
+
+**Best-practice defaults applied (from official mise docs):**
+- `auto_install = true` for smoother `mise run` / `mise exec` workflows
+- `env_cache = true` and `env_cache_ttl = "2h"` for faster repeated prompt/env resolution
+- `color_theme = "catppuccin"` to match terminal/editor theme choices
+- `min_version` soft floor in project config to reduce config drift
+
+**Project tools managed by mise:**
+- `shellcheck`
+- `shfmt`
+
+**Project tasks:**
+- `mise run mise-install` → install configured tools
+- `mise run lint-shell` → lint shell scripts
+- `mise run fmt-shell` → format shell scripts
+- `mise run doctor` → run diagnostics
+
+**Shell helpers:**
+- `ms` / `msi` / `msu` / `msr` / `msd`
+
+> Note: `mise activate zsh` is intentionally loaded near the end of `.zshrc` so later PATH edits don’t override mise-managed tool versions.
 
 ## Codex CLI Workflow
 
