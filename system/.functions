@@ -183,3 +183,78 @@ function cflogs() {
     curl -H "Authorization: Bearer ${CLOUDFLARE_TOKEN}" https://api.cloudflare.com/client/v4/zones/e8900cc9c0e8dc2ade675327b3f634fa/logs/rayids/$1
 }
 
+# FZF WORKFLOWS
+
+# Fuzzy-find file and open in Zed
+function ff() {
+    local file
+    file=$(find . -type f \
+        -not -path '*/.git/*' \
+        -not -path '*/node_modules/*' \
+        -not -path '*/.mise/*' \
+        2>/dev/null | fzf --height=50% --layout=reverse --border --preview 'bat --style=numbers --color=always --line-range=:200 {}' --preview-window=right:60%) || return 1
+
+    if command -v zed >/dev/null; then
+        zed "$file"
+    elif command -v code >/dev/null; then
+        code "$file"
+    else
+        ${EDITOR:-vim} "$file"
+    fi
+}
+
+# Fuzzy-find directory and cd into it
+function fcd() {
+    local dir
+    dir=$(find . -type d \
+        -not -path '*/.git/*' \
+        -not -path '*/node_modules/*' \
+        -not -path '*/.mise/*' \
+        2>/dev/null | fzf --height=50% --layout=reverse --border) || return 1
+    cd "$dir" || return 1
+}
+
+# Fuzzy-switch git branch
+function fbr() {
+    local branch
+    branch=$(git for-each-ref --sort=-committerdate refs/heads refs/remotes --format='%(refname:short)' \
+        | grep -v '^origin/HEAD$' \
+        | fzf --height=50% --layout=reverse --border --preview 'git log --oneline --decorate -n 20 {}') || return 1
+
+    # If selecting a remote branch, create/tracking checkout
+    if [[ "$branch" == origin/* ]]; then
+        git checkout --track "$branch"
+    else
+        git checkout "$branch"
+    fi
+}
+
+# Fuzzy-search ripgrep results and open selected file:line
+function frg() {
+    local query selected file line
+    query="${1:-}"
+    selected=$(rg --line-number --no-heading --color=always --smart-case "$query" . \
+        | fzf --ansi --height=60% --layout=reverse --border \
+              --delimiter ':' \
+              --preview 'bat --style=numbers --color=always {1} --highlight-line {2}' \
+              --preview-window=right:60%) || return 1
+
+    file=$(echo "$selected" | awk -F: '{print $1}')
+    line=$(echo "$selected" | awk -F: '{print $2}')
+
+    if command -v zed >/dev/null; then
+        zed "$file:$line"
+    elif command -v code >/dev/null; then
+        code -g "$file:$line"
+    else
+        ${EDITOR:-vim} "+$line" "$file"
+    fi
+}
+
+# Fuzzy pick process and kill it
+function fkill() {
+    local pid
+    pid=$(ps -ef | sed 1d | fzf --height=50% --layout=reverse --border --preview 'echo {}' | awk '{print $2}') || return 1
+    kill -9 "$pid"
+}
+

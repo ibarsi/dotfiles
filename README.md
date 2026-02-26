@@ -29,6 +29,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 
 - **Topic-based organization**: Modular and easy to maintain.
 - **Modern CLI tools**: Integrated with `eza`, `bat`, `fzf`, `zoxide`, and `starship`.
+- **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
 - **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
@@ -65,6 +66,19 @@ The repository is organized into **topics**, making it easy to modularize your c
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## FZF Workflow
+
+`fzf` is already installed via Brewfile; this repo now includes practical shell functions in `system/.functions` tailored for your setup (`bat`, `rg`, `zed`, git-heavy workflow).
+
+**Included functions:**
+- `ff` → fuzzy-find file and open in Zed (fallback: VS Code / `$EDITOR`)
+- `fcd` → fuzzy-find directory and `cd` into it
+- `fbr` → fuzzy-switch git branches (supports remote tracking branches)
+- `frg [query]` → fuzzy-select from `rg` results and jump to file+line
+- `fkill` → fuzzy-select running process and kill it
+
+These are designed for daily terminal usage with your current tooling stack and should work across your repos out of the box.
 
 ## Mise Workflow
 
