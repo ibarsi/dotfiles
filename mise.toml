@@ -1,0 +1,29 @@
+# Project-specific mise config for this dotfiles repository
+# Docs: https://mise.jdx.dev/configuration.html
+
+min_version = { soft = "2025.1.0" }
+
+[tools]
+# Shell tooling used for dotfiles maintenance
+shellcheck = "latest"
+shfmt = "latest"
+
+[tasks.mise-install]
+description = "Install tools from mise.toml"
+run = "mise install"
+
+[tasks.lint-shell]
+description = "Lint shell scripts in this repo"
+run = [
+  "shellcheck bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh",
+]
+
+[tasks.fmt-shell]
+description = "Format shell scripts in this repo"
+run = [
+  "shfmt -w bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh",
+]
+
+[tasks.doctor]
+description = "Run mise diagnostics"
+run = "mise doctor"

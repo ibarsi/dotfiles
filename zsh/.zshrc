@@ -20,12 +20,7 @@ for file in $DOTFILES/**/*.path; do
     source "$file"
 done
 
-# 2. Load mise (version manager)
-if command -v mise >/dev/null; then
-  eval "$(mise activate zsh)"
-fi
-
-# 3. Load all other .zsh files (except plugins/completion)
+# 2. Load all other .zsh files (except plugins/completion)
 for file in $DOTFILES/**/*.zsh(N); do
     if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* ]]; then
         source "$file"
@@ -50,6 +45,12 @@ fi
 
 # plugins
 source "$DOTFILES/zsh/plugins.zsh"
+
+# mise (version manager)
+# Keep activation near the end so later PATH edits don't override mise tools.
+if command -v mise >/dev/null; then
+  eval "$(mise activate zsh)"
+fi
 
 # --- Zsh Specifics ---
 HISTFILE=~/.zsh_history
