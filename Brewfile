@@ -3,6 +3,7 @@
 # Taps
 tap "homebrew/bundle"
 tap "homebrew/cask-versions"
+tap "matheusml/zsh-ai"
 
 # CLI Tools (Core)
 brew "coreutils"
@@ -22,7 +23,8 @@ brew "gh"
 brew "commitizen"
 
 # Modern CLI Enhancements
-brew "fzf"              # Fuzzy finder
+brew "fzf"              # Interactive fuzzy selector (pick from lists)
+brew "fd"               # Fast file discovery (complements fzf; not a replacement)
 brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
@@ -30,6 +32,7 @@ brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
 brew "speedtest-cli"
 brew "gh-dash"          # GitHub CLI dashboard extension
+brew "zsh-ai"           # Natural language → shell command helper
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
