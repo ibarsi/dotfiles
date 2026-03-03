@@ -23,8 +23,8 @@ brew "gh"
 brew "commitizen"
 
 # Modern CLI Enhancements
-brew "fzf"              # Fuzzy finder
-brew "fd"               # Better 'find'
+brew "fzf"              # Interactive fuzzy selector (pick from lists)
+brew "fd"               # Fast file discovery (complements fzf; not a replacement)
 brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
