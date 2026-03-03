@@ -43,6 +43,11 @@ if command -v starship >/dev/null; then
   eval "$(starship init zsh)"
 fi
 
+# zsh-ai plugin (Homebrew install path)
+if command -v brew >/dev/null && [[ -r "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh" ]]; then
+  source "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh"
+fi
+
 # plugins
 source "$DOTFILES/zsh/plugins.zsh"
 

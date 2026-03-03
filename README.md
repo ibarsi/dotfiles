@@ -38,6 +38,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
+- **zsh-ai workflow**: Natural-language command generation in terminal using Anthropic by default.
 
 ## Ghostty Terminal
 
@@ -79,6 +80,33 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `fkill` → fuzzy-select running process and kill it
 
 These are designed for daily terminal usage with your current tooling stack and should work across your repos out of the box.
+
+## zsh-ai Workflow
+
+[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with Anthropic defaults tuned for your existing CLI stack.
+
+| File | Purpose |
+|------|---------|
+| `zsh/zsh-ai.zsh` | Provider/model defaults, prompt preferences, API key loading |
+
+**Install path**
+- Homebrew tap: `matheusml/zsh-ai`
+- Formula: `zsh-ai`
+- Plugin sourced from: `$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh`
+
+**Defaults configured:**
+- `ZSH_AI_PROVIDER="anthropic"`
+- `ZSH_AI_ANTHROPIC_MODEL="claude-haiku-4-5"`
+- `ZSH_AI_ANTHROPIC_URL="https://api.anthropic.com/v1/messages"`
+- `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
+
+**API key handling (secure-by-default):**
+- Uses existing `ANTHROPIC_API_KEY` if already set
+- Otherwise loads from `~/.config/anthropic/api_key` (single-line key file)
+- No API key is stored in git or committed dotfiles
+
+**Usage:**
+- Type `# what you want` and press Enter, or run `zsh-ai "your request"`
 
 ## Mise Workflow
 
