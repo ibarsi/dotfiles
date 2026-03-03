@@ -23,7 +23,9 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
+- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`, `pr-ready`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
+- `AGENTS.md`: Agent operating guidance for this repository.
 
 ## Features
 
@@ -33,6 +35,8 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
+- **AI workflow diagnostics**: One-command checks for toolchain health, bootstrap verification, and PR readiness.
+- **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format and basic hygiene checks.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
@@ -108,6 +112,35 @@ These are designed for daily terminal usage with your current tooling stack and 
 **Usage:**
 - Type `# what you want` and press Enter, or run `zsh-ai "your request"`
 
+## Unified AI Shell Wrappers
+
+Added wrappers in `zsh/aliases.zsh` for consistent day-to-day flows:
+- `ai-plan` → launch Claude in plan mode
+- `ai-review` → run Codex review against local git diff
+- `ai-fix "..."` → request a focused fix with a minimal-change prompt
+- `prready` → shortcut for `mise run pr-ready`
+
+## AI Diagnostics and PR Readiness
+
+Scripts under `scripts/`:
+- `doctor-ai.sh` → checks binaries, config presence, env presence, endpoint reachability
+- `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files
+- `pr-ready.sh` → runs checks and prints a PR body scaffold from branch diff
+
+## Deterministic Checks (Pre-commit)
+
+Optional pre-commit config is included in `.pre-commit-config.yaml`:
+- merge conflict checks
+- trailing whitespace / EOF hygiene
+- `shellcheck`
+- `shfmt`
+
+Setup:
+```bash
+pre-commit install
+pre-commit run --all-files
+```
+
 ## Mise Workflow
 
 [mise](https://mise.jdx.dev/) is now wired as an active part of this repo instead of just being installed.
@@ -131,12 +164,23 @@ These are designed for daily terminal usage with your current tooling stack and 
 - `mise run mise-install` → install configured tools
 - `mise run lint-shell` → lint shell scripts
 - `mise run fmt-shell` → format shell scripts
-- `mise run doctor` → run diagnostics
+- `mise run fmt-check` → check formatting without writing
+- `mise run check` → full local validation pipeline
+- `mise run bootstrap-verify` → verify expected post-bootstrap links/files
+- `mise run ai-smoke` → verify AI toolchain binaries/config/env
+- `mise run pr-ready` → run checks and generate PR summary scaffold
+- `mise run doctor` → run mise diagnostics
 
 **Shell helpers:**
 - `ms` / `msi` / `msu` / `msr` / `msd`
 
 > Note: `mise activate zsh` is intentionally loaded near the end of `.zshrc` so later PATH edits don’t override mise-managed tool versions.
+
+## Local Environment Conventions
+
+- Use `.env.example` as the reference for expected local AI environment variables.
+- Keep real values in untracked local files/shell env (for example `.env.local` or your shell profile).
+- Preferred Anthropic key file path for local loading: `~/.config/anthropic/api_key`.
 
 ## Codex CLI Workflow
 

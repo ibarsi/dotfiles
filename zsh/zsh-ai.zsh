@@ -11,7 +11,7 @@ export ZSH_AI_ANTHROPIC_MODEL="claude-haiku-4-5"
 export ZSH_AI_ANTHROPIC_URL="https://api.anthropic.com/v1/messages"
 
 # Make generated commands align with this dotfiles stack
-export ZSH_AI_PROMPT_EXTEND="Prefer modern tools available on this machine: rg over grep, fd over find when appropriate, bat over cat, eza over ls, and zed for opening files."
+export ZSH_AI_PROMPT_EXTEND="Prefer modern tools available on this machine: rg over grep, fd over find when appropriate, bat over cat, eza over ls, and zed for opening files. Avoid destructive commands (rm -rf, sudo rm, disk wipe actions) unless explicitly requested. Prefer dry-run flags first when supported."
 
 # API key loading strategy (in priority order):
 # 1) Existing ANTHROPIC_API_KEY in environment

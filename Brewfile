@@ -21,6 +21,7 @@ brew "git"
 brew "git-lfs"
 brew "gh"
 brew "commitizen"
+brew "pre-commit"       # Deterministic pre-commit checks
 
 # Modern CLI Enhancements
 brew "fzf"              # Interactive fuzzy selector (pick from lists)
