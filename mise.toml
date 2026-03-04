@@ -15,14 +15,48 @@ run = "mise install"
 [tasks.lint-shell]
 description = "Lint shell scripts in this repo"
 run = [
-  "shellcheck bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh",
+  "shellcheck bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
 ]
 
 [tasks.fmt-shell]
 description = "Format shell scripts in this repo"
 run = [
-  "shfmt -w bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh",
+  "shfmt -w bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
 ]
+
+[tasks.fmt-check]
+description = "Check shell formatting without writing"
+run = [
+  "shfmt -d bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
+]
+
+[tasks.check]
+description = "Run core validation for this repo"
+run = [
+  "mise run lint-shell",
+  "mise run fmt-check",
+  "bash -n bootstrap.sh",
+  "bash -n theme/install.sh",
+  "bash -n scripts/doctor-ai.sh",
+  "bash -n scripts/bootstrap-verify.sh",
+]
+
+[tasks.bootstrap-verify]
+description = "Verify expected post-bootstrap config links/files"
+run = "./scripts/bootstrap-verify.sh"
+
+[tasks.ai-smoke]
+description = "Check AI toolchain binaries/config/env"
+run = "./scripts/doctor-ai.sh"
+
+
+[tasks.precommit-install]
+description = "Install git pre-commit hooks"
+run = "pre-commit install"
+
+[tasks.precommit-run]
+description = "Run pre-commit hooks across all files"
+run = "pre-commit run --all-files"
 
 [tasks.doctor]
 description = "Run mise diagnostics"
