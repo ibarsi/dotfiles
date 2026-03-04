@@ -26,22 +26,3 @@ alias msu="mise upgrade"
 alias msr="mise run"
 alias msd="mise doctor"
 
-# Unified AI wrappers
-# ai-plan: safe planning flow (no edits) using Claude plan mode
-function ai-plan() {
-  claude --permission-mode plan "$@"
-}
-
-# ai-review: review current local changes with Codex
-function ai-review() {
-  codex "/review the current git diff for correctness, security, and maintainability"
-}
-
-# ai-fix: targeted minimal fix flow with Codex
-function ai-fix() {
-  if [[ -z "$*" ]]; then
-    echo "Usage: ai-fix \"what to fix\""
-    return 1
-  fi
-  codex "Apply a minimal, focused fix for: $* . Keep changes small, run relevant checks, and explain what changed."
-}
