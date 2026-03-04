@@ -112,13 +112,6 @@ These are designed for daily terminal usage with your current tooling stack and 
 **Usage:**
 - Type `# what you want` and press Enter, or run `zsh-ai "your request"`
 
-## Unified AI Shell Wrappers
-
-Added wrappers in `zsh/aliases.zsh` for consistent day-to-day flows:
-- `ai-plan` → launch Claude in plan mode
-- `ai-review` → run Codex review against local git diff
-- `ai-fix "..."` → request a focused fix with a minimal-change prompt
-
 ## AI Diagnostics
 
 Scripts under `scripts/`:
