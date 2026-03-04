@@ -25,7 +25,6 @@ alias msi="mise install"
 alias msu="mise upgrade"
 alias msr="mise run"
 alias msd="mise doctor"
-alias prready="mise run pr-ready"
 
 # Unified AI wrappers
 # ai-plan: safe planning flow (no edits) using Claude plan mode

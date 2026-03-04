@@ -39,7 +39,6 @@ run = [
   "bash -n theme/install.sh",
   "bash -n scripts/doctor-ai.sh",
   "bash -n scripts/bootstrap-verify.sh",
-  "bash -n scripts/pr-ready.sh",
 ]
 
 [tasks.bootstrap-verify]
@@ -50,9 +49,6 @@ run = "./scripts/bootstrap-verify.sh"
 description = "Check AI toolchain binaries/config/env"
 run = "./scripts/doctor-ai.sh"
 
-[tasks.pr-ready]
-description = "Run checks and print a PR body template"
-run = "./scripts/pr-ready.sh"
 
 [tasks.precommit-install]
 description = "Install git pre-commit hooks"

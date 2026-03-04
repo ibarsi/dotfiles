@@ -23,7 +23,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
-- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`, `pr-ready`).
+- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 - `AGENTS.md`: Agent operating guidance for this repository.
 
@@ -35,7 +35,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
-- **AI workflow diagnostics**: One-command checks for toolchain health, bootstrap verification, and PR readiness.
+- **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format and basic hygiene checks.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
@@ -118,14 +118,12 @@ Added wrappers in `zsh/aliases.zsh` for consistent day-to-day flows:
 - `ai-plan` → launch Claude in plan mode
 - `ai-review` → run Codex review against local git diff
 - `ai-fix "..."` → request a focused fix with a minimal-change prompt
-- `prready` → shortcut for `mise run pr-ready`
 
-## AI Diagnostics and PR Readiness
+## AI Diagnostics
 
 Scripts under `scripts/`:
 - `doctor-ai.sh` → checks binaries, config presence, env presence, endpoint reachability
 - `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files
-- `pr-ready.sh` → runs checks and prints a PR body scaffold from branch diff
 
 ## Deterministic Checks (Pre-commit)
 
@@ -168,7 +166,6 @@ pre-commit run --all-files
 - `mise run check` → full local validation pipeline
 - `mise run bootstrap-verify` → verify expected post-bootstrap links/files
 - `mise run ai-smoke` → verify AI toolchain binaries/config/env
-- `mise run pr-ready` → run checks and generate PR summary scaffold
 - `mise run doctor` → run mise diagnostics
 
 **Shell helpers:**
