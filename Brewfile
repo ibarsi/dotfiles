@@ -34,6 +34,9 @@ brew "starship"         # Fast, minimal shell prompt
 brew "speedtest-cli"
 brew "gh-dash"          # GitHub CLI dashboard extension
 brew "zsh-ai"           # Natural language → shell command helper
+brew "doggo"            # Modern DNS client (dig replacement for daily use)
+brew "mtr"              # Traceroute + ping in one view
+brew "iperf3"           # Throughput testing
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
