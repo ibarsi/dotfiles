@@ -119,6 +119,7 @@ A lightweight startup tip appears once per new interactive terminal session, sug
 - File: `zsh/startup-tip.zsh`
 - Behavior: one random tip at shell start
 - Opt-out: `export DOTFILES_STARTUP_TIPS=0`
+- Optional AI mode: `export DOTFILES_STARTUP_TIPS_AI=1` (uses `zsh-ai` and caches one generated tip per day)
 
 ## zsh-ai Workflow
 
