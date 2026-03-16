@@ -9,6 +9,7 @@ alias -- -="cd -"
 
 # Shortcuts
 alias cdd="cd ~/Desktop"
+alias cdl="cd ~/Downloads"
 alias cdp="cd ~/Projects"
 
 # Detect which `ls` flavor is in use
