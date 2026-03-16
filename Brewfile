@@ -23,7 +23,6 @@ brew "gh"
 brew "commitizen"
 brew "pre-commit"       # Deterministic pre-commit checks
 brew "cloudflared"
-brew "docker"
 brew "gitmoji"
 brew "go"
 brew "jq"
@@ -49,6 +48,7 @@ brew "iperf3"           # Throughput testing
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
+# Optional/newer casks (higher rename/churn risk over time)
 cask "chatgpt-atlas"
 cask "comet"
 cask "discord"

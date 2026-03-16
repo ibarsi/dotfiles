@@ -18,6 +18,16 @@ function killport() {
     echo "$pids" | xargs kill -9
 }
 
+# Show process(es) listening on a given port
+function whichport() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: whichport <port>"
+        return 1
+    fi
+
+    sudo lsof -nP -iTCP:"$1" -sTCP:LISTEN
+}
+
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$_";
