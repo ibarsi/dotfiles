@@ -44,8 +44,6 @@ alias egrep='egrep --color=auto'
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
-# Get macOS Software Updates, and update installed Homebrew, npm, and their installed packages.
-
 # IP addresses
 alias ip="curl -s https://ifconfig.me"
 alias lip="ipconfig getifaddr en0"
@@ -66,6 +64,4 @@ alias gm='gitmoji'
 
 # See what's listening on a given port
 alias whichport='sudo lsof -i -P | grep LISTEN | grep'
-
-# POWER
 
