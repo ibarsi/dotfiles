@@ -46,6 +46,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 - **zsh-ai workflow**: Natural-language command generation in terminal using Anthropic by default.
+- **Startup smart tips**: On new terminal sessions, show one practical alias/function tip (can be disabled).
 
 ## Ghostty Terminal
 
@@ -110,6 +111,14 @@ This keeps the setup lean: mostly thin wrappers over proven tools, with sensible
 - `fkill` → fuzzy-select running process and kill it
 
 These are designed for daily terminal usage with your current tooling stack and should work across your repos out of the box.
+
+## Startup Smart Tips
+
+A lightweight startup tip appears once per new interactive terminal session, suggesting one useful alias/function from your actual setup.
+
+- File: `zsh/startup-tip.zsh`
+- Behavior: one random tip at shell start
+- Opt-out: `export DOTFILES_STARTUP_TIPS=0`
 
 ## zsh-ai Workflow
 
