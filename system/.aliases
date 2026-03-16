@@ -62,6 +62,4 @@ alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 # Gitmoji
 alias gm='gitmoji'
 
-# See what's listening on a given port
-# (implemented as function `whichport` in system/.functions)
 
