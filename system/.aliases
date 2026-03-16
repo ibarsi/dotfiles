@@ -134,21 +134,6 @@ alias gm='gitmoji'
 # See what's listening on a given port
 alias whichport='sudo lsof -i -P | grep LISTEN | grep'
 
-# Networking shortcuts
-alias myip='curl -s https://ifconfig.me'
-alias localip='ipconfig getifaddr en0'
-alias dnsflush='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
-
-# DNS + HTTP helpers (lean modern defaults)
-alias dns='doggo'
-alias dnsa='doggo A'
-alias dnsaaaa='doggo AAAA'
-alias dnsmx='doggo MX'
-alias dnstxt='doggo TXT'
-alias dnsns='doggo NS'
-alias httphead='curl -sS -I'
-alias httpjson='curl -sS | jq .'
-
 # POWER
 
 # Open in IntelliJ

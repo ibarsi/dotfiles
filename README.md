@@ -82,20 +82,16 @@ This repo now includes a lightweight, practical network-debug toolkit for daily 
 - `mtr` — traceroute + ping combined
 - `iperf3` — throughput testing
 
-**Network aliases (`system/.aliases`):**
-- `myip` / `localip`
-- `dns`, `dnsa`, `dnsaaaa`, `dnsmx`, `dnstxt`, `dnsns`
-- `httphead`, `httpjson`
-- `dnsflush`
+Use your existing aliases for basics (`ip`, `lip`, `ips`, `flushdns`), and call modern tools directly (`doggo`, `curl`, `tcpdump`).
 
 **Network functions (`system/.functions`):**
 - `dnstrace <domain>` — DNS trace path
 - `httptime <url>` — DNS/connect/TLS/TTFB/total timing
 - `listeners` — compact open listener view
 - `nclisten [port]` / `ncprobe <host> <port>` — netcat helpers
-- `pcap [iface] [file] [filter...]` — capture packets to `.pcap`
-- `sniffweb [iface]` — live web traffic sniff
-- `netpath <host>` — MTR report (20 cycles)
+- `pcap [iface] [file] [filter...]` — capture packets to `.pcap` (for Wireshark/offline analysis)
+- `sniffweb [iface]` — quick live console view for web ports (80/443), no file output
+- `netpath <host>` — MTR report (20 cycles, quick path/latency snapshot)
 - `netspeed <iperf3-server> [seconds]` — iperf3 client run
 
 This keeps the setup lean: mostly thin wrappers over proven tools, with sensible defaults.
