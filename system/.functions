@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
 
 # Kill process by port
-function killport()
-{
-    lsof -i tcp:$1 | awk 'FNR == 2 {print $2}' | xargs kill -9
+function killport() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: killport <port>"
+        return 1
+    fi
+
+    local pids
+    pids=$(lsof -ti tcp:"$1")
+
+    if [[ -z "$pids" ]]; then
+        echo "No process is listening on TCP port $1"
+        return 0
+    fi
+
+    echo "$pids" | xargs kill -9
 }
 
 # Toggle "focus mode"
