@@ -50,6 +50,7 @@ cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
 cask "chatgpt-atlas"
+cask "comet"
 cask "discord"
 cask "docker-desktop"
 cask "grandperspective"
