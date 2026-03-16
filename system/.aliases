@@ -5,7 +5,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias -- -="cd -"
 
 # Shortcuts
 alias cdd="cd ~/Desktop"
@@ -64,5 +63,5 @@ alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 alias gm='gitmoji'
 
 # See what's listening on a given port
-alias whichport='sudo lsof -i -P | grep LISTEN | grep'
+# (implemented as function `whichport` in system/.functions)
 
