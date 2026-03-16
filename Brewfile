@@ -22,6 +22,13 @@ brew "git-lfs"
 brew "gh"
 brew "commitizen"
 brew "pre-commit"       # Deterministic pre-commit checks
+brew "cloudflared"
+brew "docker"
+brew "gitmoji"
+brew "go"
+brew "jq"
+brew "oath-toolkit"
+brew "openvpn"
 
 # Modern CLI Enhancements
 brew "fzf"              # Interactive fuzzy selector (pick from lists)
@@ -31,7 +38,7 @@ brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
-brew "speedtest-cli"
+brew "speedtest"
 brew "gh-dash"          # GitHub CLI dashboard extension
 brew "zsh-ai"           # Natural language → shell command helper
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
@@ -41,6 +48,15 @@ brew "iperf3"           # Throughput testing
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "codex"             # OpenAI Codex CLI
+cask "1password-cli"
+cask "chatgpt-atlas"
+cask "discord"
+cask "docker-desktop"
+cask "grandperspective"
+cask "lulu"
+cask "raindropio"
+cask "tradingview"
+cask "wribe"
 cask "brave-browser"
 cask "google-chrome"
 cask "zed"
@@ -49,7 +65,6 @@ cask "spotify"
 cask "postman"
 cask "rectangle"        # Window manager
 cask "signal"
-cask "docker"
 cask "wireshark"        # GUI packet analysis
 cask "raycast"          # Productivity launcher
 cask "claude-code"      # Claude Code CLI (Anthropic)
