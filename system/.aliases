@@ -126,7 +126,7 @@ alias npmls='npm ls -g --depth=0 --silent --parseable | xargs basename | grep -v
 alias fixtime='sudo ntpdate -u time.apple.com'
 
 # Clear DNS cache
-alias flushdns='sudo killall -HUP mDNSResponder'
+alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # Gitmoji
 alias gm='gitmoji'

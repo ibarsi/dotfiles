@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # bootstrap.sh - Topic-based setup for ibarsi
 
-DOTFILES_ROOT=$(pwd -P)
+DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+cd "$DOTFILES_ROOT"
 
 # 1. Install Homebrew if not present
-if ! command -v brew >/dev/null; then
+if ! command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   
@@ -18,7 +20,7 @@ fi
 
 # 2. Install all tools and apps from Brewfile
 echo "Syncing tools from Brewfile..."
-brew bundle
+brew bundle --file "$DOTFILES_ROOT/Brewfile"
 
 # 3. Create symlinks
 # We use a simple loop to find files we want to link to $HOME
@@ -69,13 +71,18 @@ else
 fi
 
 # 5. Set Zsh as default shell
-if [ "$SHELL" != "$(which zsh)" ]; then
+ZSH_PATH="$(command -v zsh || true)"
+if [ -n "$ZSH_PATH" ] && [ "$SHELL" != "$ZSH_PATH" ]; then
   echo "Setting Zsh as default shell..."
-  chsh -s "$(which zsh)"
+  chsh -s "$ZSH_PATH"
 fi
 
 # 6. Apply macOS defaults
-echo "Applying macOS defaults (requires sudo)..."
-./macos/.macos
+if [ -f "$DOTFILES_ROOT/macos/.macos" ]; then
+  echo "Applying macOS defaults (requires sudo)..."
+  bash "$DOTFILES_ROOT/macos/.macos"
+else
+  echo "macOS defaults script not found, skipping..."
+fi
 
 echo "Setup complete! Restart your terminal to see changes."

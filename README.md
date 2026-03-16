@@ -10,6 +10,8 @@ cd ~/dotfiles
 ./bootstrap.sh
 ```
 
+`bootstrap.sh` is path-safe and uses the repository root internally, so it can be re-run reliably even when invoked from different working directories.
+
 ## Structure
 
 The repository is organized into **topics**, making it easy to modularize your configuration:
@@ -82,7 +84,7 @@ This repo now includes a lightweight, practical network-debug toolkit for daily 
 - `mtr` — traceroute + ping combined
 - `iperf3` — throughput testing
 
-Use your existing aliases for basics (`ip`, `lip`, `ips`, `flushdns`), and call modern tools directly (`doggo`, `curl`, `tcpdump`).
+Use your existing aliases for basics (`ip`, `lip`, `ips`, `flushdns`), and call modern tools directly (`doggo`, `curl`, `tcpdump`). (`flushdns` runs both `dscacheutil` and `mDNSResponder` refresh.)
 
 **Network functions (`system/.functions`):**
 - `dnstrace <domain>` — DNS trace path
