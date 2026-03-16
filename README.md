@@ -31,6 +31,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 
 - **Topic-based organization**: Modular and easy to maintain.
 - **Modern CLI tools**: Integrated with `eza`, `bat`, `fzf`, `zoxide`, and `starship`.
+- **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
 - **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
@@ -71,6 +72,29 @@ The repository is organized into **topics**, making it easy to modularize your c
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## Networking Workflow
+
+This repo now includes a lightweight, practical network-debug toolkit for daily use.
+
+**Added tools (Brewfile):**
+- `doggo` — modern DNS client (`dig` alternative)
+- `mtr` — traceroute + ping combined
+- `iperf3` — throughput testing
+
+Use your existing aliases for basics (`ip`, `lip`, `ips`, `flushdns`), and call modern tools directly (`doggo`, `curl`, `tcpdump`).
+
+**Network functions (`system/.functions`):**
+- `dnstrace <domain>` — DNS trace path
+- `httptime <url>` — DNS/connect/TLS/TTFB/total timing
+- `listeners` — compact open listener view
+- `nclisten [port]` / `ncprobe <host> <port>` — netcat helpers
+- `pcap [iface] [file] [filter...]` — capture packets to `.pcap` (for Wireshark/offline analysis)
+- `sniffweb [iface]` — quick live console view for web ports (80/443), no file output
+- `netpath <host>` — MTR report (20 cycles, quick path/latency snapshot)
+- `netspeed <iperf3-server> [seconds]` — iperf3 client run
+
+This keeps the setup lean: mostly thin wrappers over proven tools, with sensible defaults.
 
 ## FZF Workflow
 

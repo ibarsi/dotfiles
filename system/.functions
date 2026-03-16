@@ -258,3 +258,78 @@ function fkill() {
     kill -9 "$pid"
 }
 
+# NETWORK WORKFLOWS
+
+# Quick DNS trace (A + AAAA + CNAME + NS path)
+function dnstrace() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: dnstrace <domain>"
+        return 1
+    fi
+    doggo "$1" --trace
+}
+
+# Quick HTTP timing breakdown
+function httptime() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: httptime <url>"
+        return 1
+    fi
+    curl -sS -o /dev/null -w 'dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s ttfb=%{time_starttransfer}s total=%{time_total}s\n' "$1"
+}
+
+# Check open TCP/UDP listeners in a compact view
+function listeners() {
+    sudo lsof -nP -iTCP -sTCP:LISTEN -iUDP
+}
+
+# Netcat listener helper (TCP)
+function nclisten() {
+    local port="${1:-8080}"
+    echo "Listening on TCP :$port (Ctrl+C to stop)"
+    nc -lk "$port"
+}
+
+# Netcat connectivity check helper
+function ncprobe() {
+    if [[ -z "${1:-}" || -z "${2:-}" ]]; then
+        echo "Usage: ncprobe <host> <port>"
+        return 1
+    fi
+    nc -vz "$1" "$2"
+}
+
+# tcpdump helper: capture to file with optional filter expression
+function pcap() {
+    local iface="${1:-any}"
+    local out="${2:-capture-$(date +%Y%m%d-%H%M%S).pcap}"
+    shift 2 || true
+    echo "Capturing on $iface -> $out"
+    sudo tcpdump -i "$iface" -nn -s0 -w "$out" "$@"
+}
+
+# Live HTTP-ish packet view (ports 80/443)
+function sniffweb() {
+    local iface="${1:-any}"
+    sudo tcpdump -i "$iface" -nn 'tcp port 80 or tcp port 443'
+}
+
+# MTR wrapper with sane defaults
+function netpath() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: netpath <host>"
+        return 1
+    fi
+    mtr --report --report-cycles 20 "$1"
+}
+
+# iperf3 client helper
+function netspeed() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: netspeed <iperf3-server-host> [seconds]"
+        return 1
+    fi
+    local duration="${2:-10}"
+    iperf3 -c "$1" -t "$duration"
+}
+

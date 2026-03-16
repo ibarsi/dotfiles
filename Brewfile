@@ -34,6 +34,9 @@ brew "starship"         # Fast, minimal shell prompt
 brew "speedtest-cli"
 brew "gh-dash"          # GitHub CLI dashboard extension
 brew "zsh-ai"           # Natural language → shell command helper
+brew "doggo"            # Modern DNS client (dig replacement for daily use)
+brew "mtr"              # Traceroute + ping in one view
+brew "iperf3"           # Throughput testing
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
@@ -47,6 +50,7 @@ cask "postman"
 cask "rectangle"        # Window manager
 cask "signal"
 cask "docker"
+cask "wireshark"        # GUI packet analysis
 cask "raycast"          # Productivity launcher
 cask "claude-code"      # Claude Code CLI (Anthropic)
 cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
