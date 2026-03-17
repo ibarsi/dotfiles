@@ -20,6 +20,7 @@ brew "gnupg"
 brew "git"
 brew "git-lfs"
 brew "gh"
+brew "tmux"
 brew "commitizen"
 brew "pre-commit"       # Deterministic pre-commit checks
 brew "gitleaks"         # Secret scanning for commits/PRs

@@ -34,6 +34,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `macos/`: macOS system defaults and UI/UX settings.
 - `system/`: Global environment variables, paths, and generic aliases.
 - `vim/`: Vim configuration.
+- `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
@@ -50,6 +51,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
 - **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
+- **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
@@ -94,6 +96,32 @@ The repository is organized into **topics**, making it easy to modularize your c
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## tmux Workflow
+
+`tmux` is configured for a keyboard-first, AI-session-friendly terminal workflow.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `tmux/.tmux.conf` | `~/.tmux.conf` | Session/window/pane behavior + statusline |
+
+**Key choices:**
+- Prefix: `Ctrl+a`
+- Split panes in current working directory
+- Vim-style pane movement (`h/j/k/l`)
+- Fast pane resizing (`Shift+Arrow`)
+- Catppuccin-inspired statusline and borders
+- Copy mode with vim keys
+
+**Claude Teams fit:**
+- Includes a quiet-window notification hook (`alert-silence`) for windows using `monitor-silence`.
+- Useful pattern per Claude window:
+  - `tmux setw monitor-silence 15`
+
+**tmux aliases:**
+- `tl` → list sessions
+- `ta <name>` → attach session
+- `tn <name>` → create new named session
 
 ## Networking Workflow
 
