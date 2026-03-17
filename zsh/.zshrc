@@ -64,11 +64,20 @@ SAVEHIST=10000
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
+setopt EXTENDED_HISTORY
 
-# Completion
-autoload -Uz compinit && compinit
+# Completion (cached for faster startup; full refresh roughly once per day)
+autoload -Uz compinit
+if [[ -n "$HOME/.zcompdump"(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 
 # Codex CLI completion (safe no-op when codex isn't installed yet)
 if command -v codex >/dev/null; then

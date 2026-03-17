@@ -45,7 +45,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Modern CLI tools**: Integrated with `eza`, `bat`, `fzf`, `zoxide`, and `starship`.
 - **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
-- **Zsh Power-ups**: Syntax highlighting and autosuggestions out of the box.
+- **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
@@ -56,6 +56,11 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 - **zsh-ai workflow**: Natural-language command generation in terminal using Anthropic by default.
+
+### Shell quality-of-life defaults
+- Completion caching via `.zcompdump` (faster shell startup)
+- Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
+- Interactive completion menu + clearer completion descriptions
 - **Startup smart tips**: On new terminal sessions, generate one practical AI tip from your dotfiles context (can be disabled).
 
 ## Ghostty Terminal
