@@ -26,11 +26,6 @@ Or apply manually to each tool:
 2. Color Presets → Import → Select `theme/iterm2-catppuccin.json`
 3. Select "Catppuccin Mocha"
 
-### VS Code
-1. Install extension: **Catppuccin for VSCode**
-2. Command Palette → `Color Theme` → `Catppuccin Mocha`
-3. Settings sync will handle the rest
-
 ### Vim
 Install the colorscheme:
 
@@ -57,7 +52,7 @@ eval "$(starship init zsh)"
 
 - ✅ iTerm2 terminal colors
 - ✅ Starship prompt
-- ✅ VS Code editor theme
+- ✅ Ghostty editor theme
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
 - ✅ FZF fuzzy finder
@@ -73,7 +68,6 @@ theme/
 ├── iterm2-catppuccin.json # iTerm2 color preset
 ├── install.sh            # One-command setup
 ├── vim-colors.vim        # Vim colorscheme config
-├── vscode-settings.json  # VS Code theme settings
 └── README.md             # This file
 ```
 
@@ -83,7 +77,7 @@ To use a different flavor (e.g., Macchiato):
 
 1. Edit `catppuccin.zsh`: Change `CATPPUCCIN_FLAVOR="mocha"` to `"macchiato"`
 2. Update colors in the export statements
-3. For VS Code: Command Palette → Color Theme → Catppuccin Macchiato
+3. For Ghostty: Already included (no extra setup)
 4. For iTerm2: Import the Macchiato variant (see catppuccin.org for downloads)
 
 ## Credits

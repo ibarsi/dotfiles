@@ -84,7 +84,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Shell integration**: Auto-detected — enables semantic zones, prompt detection, sudo passthrough
 - **Privacy**: Crash reporting disabled
 
-**Keybindings (ported from iTerm2 / VS Code terminal):**
+**Keybindings (ported from iTerm2):**
 
 | Shortcut | Action |
 |----------|--------|
@@ -151,7 +151,7 @@ This keeps the setup lean: mostly thin wrappers over proven tools, with sensible
 `fzf` is already installed via Brewfile; this repo now includes practical shell functions in `system/.functions` tailored for your setup (`bat`, `rg`, `zed`, git-heavy workflow).
 
 **Included functions:**
-- `ff` → fuzzy-find file and open in Zed (fallback: VS Code / `$EDITOR`)
+- `ff` → fuzzy-find file and open in Zed (fallback: `$EDITOR`)
 - `fcd` → fuzzy-find directory and `cd` into it
 - `fbr` → fuzzy-switch git branches (supports remote tracking branches)
 - `frg [query]` → fuzzy-select from `rg` results and jump to file+line
@@ -343,7 +343,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 - **Extensions**: Auto-installed on first launch (Catppuccin, Prettier, ESLint, Dockerfile, etc.)
 - **Telemetry**: Disabled
 
-**Keybindings (ported from VS Code):**
+**Keybindings:**
 
 | Shortcut | Action |
 |----------|--------|

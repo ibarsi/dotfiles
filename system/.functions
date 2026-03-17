@@ -111,8 +111,6 @@ function ff() {
 
     if command -v zed >/dev/null; then
         zed "$file"
-    elif command -v code >/dev/null; then
-        code "$file"
     else
         ${EDITOR:-vim} "$file"
     fi
@@ -159,8 +157,6 @@ function frg() {
 
     if command -v zed >/dev/null; then
         zed "$file:$line"
-    elif command -v code >/dev/null; then
-        code -g "$file:$line"
     else
         ${EDITOR:-vim} "+$line" "$file"
     fi
