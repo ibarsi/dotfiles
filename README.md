@@ -21,6 +21,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run ai-doctor` → AI CLI/tooling health check
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
+- `mise run secrets-scan` → run explicit repo secret scan
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
 - `groot` → jump to git repo root quickly
 - `pr` → open existing PR in browser or create one
@@ -52,7 +53,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
-- **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format and basic hygiene checks.
+- **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
@@ -179,6 +180,7 @@ Optional pre-commit config is included in `.pre-commit-config.yaml`:
 - trailing whitespace / EOF hygiene
 - `shellcheck`
 - `shfmt`
+- `gitleaks` secret scanning on staged changes
 
 Setup:
 ```bash

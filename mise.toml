@@ -7,6 +7,7 @@ min_version = { soft = "2025.1.0" }
 # Shell tooling used for dotfiles maintenance
 shellcheck = "latest"
 shfmt = "latest"
+gitleaks = "latest"
 
 [tasks.mise-install]
 description = "Install tools from mise.toml"
@@ -63,6 +64,10 @@ run = "pre-commit install"
 [tasks.precommit-run]
 description = "Run pre-commit hooks across all files"
 run = "pre-commit run --all-files"
+
+[tasks.secrets-scan]
+description = "Run gitleaks against repository"
+run = "gitleaks detect --source . --verbose"
 
 [tasks.doctor]
 description = "Run mise diagnostics"

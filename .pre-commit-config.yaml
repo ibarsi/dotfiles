@@ -15,3 +15,8 @@ repos:
     hooks:
       - id: shfmt
         args: ["-w", "-i", "2", "-ci"]
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+        args: ["protect", "--staged", "--verbose"]
