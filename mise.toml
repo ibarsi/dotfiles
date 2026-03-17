@@ -45,10 +45,16 @@ run = [
 description = "Verify expected post-bootstrap config links/files"
 run = "./scripts/bootstrap-verify.sh"
 
-[tasks.ai-smoke]
+[tasks.ai-doctor]
 description = "Check AI toolchain binaries/config/env"
 run = "./scripts/doctor-ai.sh"
 
+[tasks.verify]
+description = "Run AI doctor + bootstrap verification"
+run = [
+  "mise run ai-doctor",
+  "mise run bootstrap-verify",
+]
 
 [tasks.precommit-install]
 description = "Install git pre-commit hooks"

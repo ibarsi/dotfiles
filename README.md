@@ -12,6 +12,16 @@ cd ~/dotfiles
 
 `bootstrap.sh` is path-safe and uses the repository root internally, so it can be re-run reliably even when invoked from different working directories.
 
+## Quick Commands
+
+Use `mise run ...` directly for project workflows:
+
+- `mise run check` → full validation pipeline
+- `mise run verify` → AI doctor + bootstrap link verification
+- `mise run ai-doctor` → AI CLI/tooling health check
+- `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
+- `mise run precommit-install` / `mise run precommit-run`
+
 ## Structure
 
 The repository is organized into **topics**, making it easy to modularize your configuration:
@@ -194,7 +204,8 @@ pre-commit run --all-files
 - `mise run fmt-check` → check formatting without writing
 - `mise run check` → full local validation pipeline
 - `mise run bootstrap-verify` → verify expected post-bootstrap links/files
-- `mise run ai-smoke` → verify AI toolchain binaries/config/env
+- `mise run ai-doctor` → verify AI toolchain binaries/config/env
+- `mise run verify` → run both AI doctor + bootstrap verification
 - `mise run doctor` → run mise diagnostics
 
 **Shell helpers:**
