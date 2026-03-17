@@ -33,12 +33,35 @@ function mkd() {
     mkdir -p "$@" && cd "$_";
 }
 
-# Reload dotfiles
-function reload-dotfiles() {
-    if [ -d "$HOME/dotfiles" ]; then
-        (cd "$HOME/dotfiles" && git pull origin master && ./bootstrap.sh)
-        source "$HOME/.zshrc"
+# Sync dotfiles safely (fetch + status + optional update)
+function dotfiles-sync() {
+    local repo="$HOME/dotfiles"
+
+    if [[ ! -d "$repo/.git" ]]; then
+        echo "Dotfiles repo not found at $repo"
+        return 1
     fi
+
+    (
+      cd "$repo" || exit 1
+      git fetch origin master --prune
+      echo "--- dotfiles status ---"
+      git status -sb
+      echo ""
+      echo "Recent upstream commits:"
+      git log --oneline --decorate HEAD..origin/master | head -20
+      echo ""
+      echo "Run these when ready:"
+      echo "  cd ~/dotfiles"
+      echo "  git pull --ff-only origin master"
+      echo "  ./bootstrap.sh"
+    )
+}
+
+# Reload shell only (no git/network side effects)
+function reload-dotfiles() {
+    source "$HOME/.zshrc"
+    echo "Reloaded ~/.zshrc"
 }
 
 # Determine size of a file or total size of a directory
