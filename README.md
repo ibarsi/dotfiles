@@ -21,6 +21,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run ai-doctor` → AI CLI/tooling health check
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
+- `dsync` → safe dotfiles update preview (fetch/status + next commands)
 
 ## Structure
 

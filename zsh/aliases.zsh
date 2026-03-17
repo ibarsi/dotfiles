@@ -2,6 +2,7 @@
 
 # Navigation
 alias dtf="cd $DOTFILES"
+alias dsync="dotfiles-sync"
 
 # Reload shell
 alias reload="exec zsh -l"
