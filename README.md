@@ -22,6 +22,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
+- `mise run pr-ready` / `prready` → run checks and print PR body scaffold
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
 - `groot` → jump to git repo root quickly
 - `pr` → open existing PR in browser or create one
@@ -39,7 +40,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
-- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
+- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`, `pr-ready`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 - `AGENTS.md`: Agent operating guidance for this repository.
 

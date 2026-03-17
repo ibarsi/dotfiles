@@ -65,6 +65,10 @@ run = "pre-commit install"
 description = "Run pre-commit hooks across all files"
 run = "pre-commit run --all-files"
 
+[tasks.pr-ready]
+description = "Run checks and print a PR body scaffold"
+run = "./scripts/pr-ready.sh"
+
 [tasks.secrets-scan]
 description = "Run gitleaks against repository"
 run = "gitleaks detect --source . --verbose"
