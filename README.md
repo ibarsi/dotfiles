@@ -22,6 +22,8 @@ Use `mise run ...` directly for project workflows:
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
+- `groot` → jump to git repo root quickly
+- `pr` → open existing PR in browser or create one
 
 ## Structure
 
