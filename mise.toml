@@ -45,18 +45,14 @@ run = [
 description = "Verify expected post-bootstrap config links/files"
 run = "./scripts/bootstrap-verify.sh"
 
-[tasks.ai-smoke]
+[tasks.ai-doctor]
 description = "Check AI toolchain binaries/config/env"
 run = "./scripts/doctor-ai.sh"
 
-[tasks.ai-doctor]
-description = "Alias for ai-smoke"
-run = "mise run ai-smoke"
-
 [tasks.verify]
-description = "Run AI smoke + bootstrap verification"
+description = "Run AI doctor + bootstrap verification"
 run = [
-  "mise run ai-smoke",
+  "mise run ai-doctor",
   "mise run bootstrap-verify",
 ]
 
