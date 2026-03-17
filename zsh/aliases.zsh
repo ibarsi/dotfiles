@@ -27,3 +27,8 @@ alias msu="mise upgrade"
 alias msr="mise run"
 alias msd="mise doctor"
 
+# tmux
+alias tl="tmux ls"
+alias ta="tmux attach -t"
+alias tn="tmux new -s"
+

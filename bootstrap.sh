@@ -41,6 +41,9 @@ ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
 # Vim
 ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
 
+# tmux
+ln -sf "$DOTFILES_ROOT/tmux/.tmux.conf" "$HOME/.tmux.conf"
+
 # Zed
 mkdir -p "$HOME/.config/zed"
 ln -sf "$DOTFILES_ROOT/zed/settings.json" "$HOME/.config/zed/settings.json"
