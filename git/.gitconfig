@@ -1,6 +1,7 @@
 [user]
     name = Igor Barsi
     email = ibarsi92@gmail.com
+    signingkey = ~/.ssh/id_ed25519.pub
 
 [alias]
 
@@ -167,8 +168,13 @@
 
 [commit]
 
-    # https://help.github.com/articles/signing-commits-using-gpg/
+    # Sign commits by default using the configured SSH signing key.
     gpgsign = true
+
+[gpg]
+
+    # Use SSH commit signing instead of classic GPG.
+    format = ssh
 
 [diff]
 

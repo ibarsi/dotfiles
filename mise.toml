@@ -16,19 +16,19 @@ run = "mise install"
 [tasks.lint-shell]
 description = "Lint shell scripts in this repo"
 run = [
-  "shellcheck bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
+  "shellcheck bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
 ]
 
 [tasks.fmt-shell]
 description = "Format shell scripts in this repo"
 run = [
-  "shfmt -w bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
+  "shfmt -w bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
 ]
 
 [tasks.fmt-check]
 description = "Check shell formatting without writing"
 run = [
-  "shfmt -d bootstrap.sh theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
+  "shfmt -d bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh system/auto-update.zsh scripts/*.sh",
 ]
 
 [tasks.check]
@@ -37,6 +37,7 @@ run = [
   "mise run lint-shell",
   "mise run fmt-check",
   "bash -n bootstrap.sh",
+  "bash -n macos/.macos",
   "bash -n theme/install.sh",
   "bash -n scripts/doctor-ai.sh",
   "bash -n scripts/bootstrap-verify.sh",

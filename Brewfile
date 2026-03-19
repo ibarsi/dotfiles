@@ -1,8 +1,6 @@
 # Brewfile - Modernized Setup for ibarsi
 
 # Taps
-tap "homebrew/bundle"
-tap "homebrew/cask-versions"
 tap "matheusml/zsh-ai"
 
 # CLI Tools (Core)
@@ -17,7 +15,6 @@ brew "openssh"
 brew "ack"
 brew "tree"
 brew "gnupg"
-brew "git"
 brew "git-lfs"
 brew "gh"
 brew "tmux"
@@ -28,6 +25,7 @@ brew "cloudflared"
 brew "gitmoji"
 brew "go"
 brew "jq"
+brew "ollama"
 brew "oath-toolkit"
 brew "openvpn"
 
@@ -39,8 +37,6 @@ brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
-brew "speedtest"
-brew "gh-dash"          # GitHub CLI dashboard extension
 brew "zsh-ai"           # Natural language → shell command helper
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
 brew "mtr"              # Traceroute + ping in one view
@@ -59,7 +55,6 @@ cask "grandperspective"
 cask "lulu"
 cask "raindropio"
 cask "tradingview"
-cask "wribe"
 cask "brave-browser"
 cask "google-chrome"
 cask "zed"

@@ -23,7 +23,7 @@ Applies to the entire dotfiles repo.
 ## Validation before PR
 Run:
 - `mise run check`
-- `mise run ai-smoke`
+- `mise run ai-doctor`
 - `mise run bootstrap-verify`
 
 ## PR expectations

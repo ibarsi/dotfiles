@@ -1,4 +1,8 @@
 {
+  "icon_theme": "Catppuccin Mocha",
+  "edit_predictions": {
+    "provider": "none"
+  },
   "theme": {
     "mode": "system",
     "dark": "Catppuccin Mocha",
@@ -128,9 +132,6 @@
     "html": true,
     "toml": true,
     "env": true
-  },
-  "features": {
-    "edit_prediction_provider": "none"
   },
   "search": {
     "line_numbers_in_results": true

@@ -53,15 +53,17 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
+- **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, and disables press-and-hold accent popups.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
+- **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
-- **zsh-ai workflow**: Natural-language command generation in terminal using Anthropic by default.
+- **zsh-ai workflow**: Natural-language command generation in terminal using a local Ollama model by default.
 
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
@@ -170,11 +172,12 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 
 ## zsh-ai Workflow
 
-[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with Anthropic defaults tuned for your existing CLI stack.
+[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with local Ollama defaults tuned for your existing CLI stack.
 
 | File | Purpose |
 |------|---------|
-| `zsh/zsh-ai.zsh` | Provider/model defaults, prompt preferences, API key loading |
+| `zsh/zsh-ai.zsh` | Provider/model defaults and prompt preferences |
+| `ollama/gpt-oss-20b-local.Modelfile` | Imports the llmfit-downloaded GGUF into Ollama as `gpt-oss-20b-local` |
 
 **Install path**
 - Homebrew tap: `matheusml/zsh-ai`
@@ -182,15 +185,17 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 - Plugin sourced from: `$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh`
 
 **Defaults configured:**
-- `ZSH_AI_PROVIDER="anthropic"`
-- `ZSH_AI_ANTHROPIC_MODEL="claude-haiku-4-5"`
-- `ZSH_AI_ANTHROPIC_URL="https://api.anthropic.com/v1/messages"`
+- `ZSH_AI_PROVIDER="ollama"`
+- `ZSH_AI_OLLAMA_MODEL="gpt-oss-20b-local"`
+- `ZSH_AI_OLLAMA_URL="http://localhost:11434"`
 - `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
 
-**API key handling (secure-by-default):**
-- Uses existing `ANTHROPIC_API_KEY` if already set
-- Otherwise loads from `~/.config/anthropic/api_key` (single-line key file)
-- No API key is stored in git or committed dotfiles
+**Local model setup:**
+- Bootstrap registers Ollama with `brew services` so it starts on login
+- Start/register it manually anytime with: `brew services start ollama`
+- Verify launchd registration with: `brew services list | rg ollama`
+- Import the downloaded GGUF: `ollama create gpt-oss-20b-local -f ollama/gpt-oss-20b-local.Modelfile`
+- No API key is required for local Ollama usage
 
 **Usage:**
 - Type `# what you want` and press Enter, or run `zsh-ai "your request"`

@@ -16,7 +16,7 @@ export DOTFILES="$HOME/dotfiles"
 # This finds all *.zsh files in the topic directories and sources them.
 
 # 1. First, load all .path files
-for file in $DOTFILES/**/*.path; do
+for file in $DOTFILES/**/*.path(N); do
     source "$file"
 done
 

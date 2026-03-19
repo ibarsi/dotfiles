@@ -1,21 +1,16 @@
 # zsh-ai defaults
 # Docs: https://github.com/matheusml/zsh-ai
 
-# Use Anthropic by default
-export ZSH_AI_PROVIDER="anthropic"
+# Use local Ollama by default
+export ZSH_AI_PROVIDER="ollama"
 
-# Fast + capable default model for shell command generation
-export ZSH_AI_ANTHROPIC_MODEL="claude-haiku-4-5"
+# Local Ollama model imported from llmfit GGUF
+export ZSH_AI_OLLAMA_MODEL="gpt-oss-20b-local"
 
-# Official API endpoint (override if needed)
-export ZSH_AI_ANTHROPIC_URL="https://api.anthropic.com/v1/messages"
+# Default local Ollama endpoint
+export ZSH_AI_OLLAMA_URL="http://localhost:11434"
 
 # Make generated commands align with this dotfiles stack
 export ZSH_AI_PROMPT_EXTEND="Prefer modern tools available on this machine: rg over grep, fd over find when appropriate, bat over cat, eza over ls, and zed for opening files. Avoid destructive commands (rm -rf, sudo rm, disk wipe actions) unless explicitly requested. Prefer dry-run flags first when supported."
 
-# API key loading strategy (in priority order):
-# 1) Existing ANTHROPIC_API_KEY in environment
-# 2) ~/.config/anthropic/api_key file (single-line key)
-if [[ -z "$ANTHROPIC_API_KEY" && -f "$HOME/.config/anthropic/api_key" ]]; then
-  export ANTHROPIC_API_KEY="$(<"$HOME/.config/anthropic/api_key")"
-fi
+# Local Ollama mode requires no API key.

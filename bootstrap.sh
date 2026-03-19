@@ -22,6 +22,12 @@ fi
 echo "Syncing tools from Brewfile..."
 brew bundle --file "$DOTFILES_ROOT/Brewfile"
 
+# Ensure Ollama is registered with launchd so it starts on login.
+if brew list ollama >/dev/null 2>&1; then
+  echo "Ensuring Ollama brew service starts at login..."
+  brew services start ollama >/dev/null
+fi
+
 # 3. Create symlinks
 # We use a simple loop to find files we want to link to $HOME
 echo "Creating symlinks..."

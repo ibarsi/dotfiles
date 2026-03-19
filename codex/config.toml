@@ -3,7 +3,7 @@
 # Docs: https://developers.openai.com/codex/config-basic
 
 # Keep a coding-focused default model.
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 
 # Safe-by-default execution posture:
 # - approval_policy="on-request": prompt before running commands outside the sandbox or with elevated risk.
@@ -19,7 +19,7 @@ web_search = "cached"
 personality = "pragmatic"
 
 # Increase reasoning depth for non-trivial coding tasks.
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 
 # Used when running `codex /review` (PR/diff review mode).
 # Normal coding/chat requests continue using `model` above.
@@ -33,3 +33,9 @@ shell_snapshot = true
 unified_exec = true
 # Enable local undo support for reversible edit operations in the CLI.
 undo = true
+
+[projects."/Users/igorbarsi/dotfiles"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"

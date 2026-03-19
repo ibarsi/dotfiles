@@ -48,7 +48,6 @@ shell-integration-features = cursor,sudo,title
 # Tabs & Splits
 # =============================================================================
 
-tab-overview = false
 window-new-tab-position = end
 
 # =============================================================================
@@ -76,9 +75,6 @@ keybind = cmd+zero=reset_font_size
 # =============================================================================
 # Performance & Privacy
 # =============================================================================
-
-# Disable telemetry / crash reporting
-crash-report = false
 
 # Scrollback lines
 scrollback-limit = 10000
