@@ -47,6 +47,10 @@ ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
 # Vim
 ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
 
+# SSH
+mkdir -p "$HOME/.ssh"
+ln -sf "$DOTFILES_ROOT/ssh/config" "$HOME/.ssh/config"
+
 # tmux
 ln -sf "$DOTFILES_ROOT/tmux/.tmux.conf" "$HOME/.tmux.conf"
 

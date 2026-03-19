@@ -31,6 +31,7 @@ Use `mise run ...` directly for project workflows:
 The repository is organized into **topics**, making it easy to modularize your configuration:
 
 - `git/`: Git configuration and aliases.
+- `ssh/`: SSH client configuration for GitHub and related tooling.
 - `macos/`: macOS system defaults and UI/UX settings.
 - `system/`: Global environment variables, paths, and generic aliases.
 - `vim/`: Vim configuration.
