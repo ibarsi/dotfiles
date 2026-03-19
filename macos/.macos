@@ -100,6 +100,17 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # Set a blazingly fast keyboard repeat rate
 defaults write NSGlobalDomain KeyRepeat -int 1
 
+# Remap Caps Lock to Control globally.
+# This removes Caps Lock toggle behavior, so the Caps Lock LED no longer flips on/off when the key is pressed.
+hidutil property --set '{
+  "UserKeyMapping": [
+    {
+      "HIDKeyboardModifierMappingSrc": 0x700000039,
+      "HIDKeyboardModifierMappingDst": 0x7000000E0
+    }
+  ]
+}'
+
 ###############################################################################
 # Screen                                                                      #
 ###############################################################################
