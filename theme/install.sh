@@ -24,9 +24,9 @@ echo "→ Ghostty: Catppuccin theme is built-in (configured via ghostty/config)"
 echo "→ Setting up Vim Catppuccin..."
 mkdir -p "$HOME/.vim/pack/catppuccin/start"
 if [[ ! -d "$HOME/.vim/pack/catppuccin/start/vim" ]]; then
-  git clone https://github.com/catppuccin/vim.git "$HOME/.vim/pack/catppuccin/start/vim"
+	git clone https://github.com/catppuccin/vim.git "$HOME/.vim/pack/catppuccin/start/vim"
 else
-  echo "  Catppuccin vim already installed"
+	echo "  Catppuccin vim already installed"
 fi
 
 echo "✅ Catppuccin theme installed!"

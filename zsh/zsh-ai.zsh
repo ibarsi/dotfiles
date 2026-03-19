@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # zsh-ai defaults
 # Docs: https://github.com/matheusml/zsh-ai
 

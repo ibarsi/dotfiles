@@ -53,10 +53,7 @@ run = "./scripts/doctor-ai.sh"
 
 [tasks.verify]
 description = "Run AI doctor + bootstrap verification"
-run = [
-  "mise run ai-doctor",
-  "mise run bootstrap-verify",
-]
+run = ["mise run ai-doctor", "mise run bootstrap-verify"]
 
 [tasks.precommit-install]
 description = "Install git pre-commit hooks"

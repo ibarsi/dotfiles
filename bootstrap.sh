@@ -8,25 +8,19 @@ cd "$DOTFILES_ROOT"
 
 # 1. Install Homebrew if not present
 if ! command -v brew >/dev/null 2>&1; then
-  echo "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  
-  if [[ $(uname -m) == "arm64" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  else
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
+	echo "Installing Homebrew..."
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+	if [[ $(uname -m) == "arm64" ]]; then
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+	else
+		eval "$(/usr/local/bin/brew shellenv)"
+	fi
 fi
 
 # 2. Install all tools and apps from Brewfile
 echo "Syncing tools from Brewfile..."
 brew bundle --file "$DOTFILES_ROOT/Brewfile"
-
-# Ensure Ollama is registered with launchd so it starts on login.
-if brew list ollama >/dev/null 2>&1; then
-  echo "Ensuring Ollama brew service starts at login..."
-  brew services start ollama >/dev/null
-fi
 
 # 3. Create symlinks
 # We use a simple loop to find files we want to link to $HOME
@@ -77,25 +71,25 @@ ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
 
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
-  echo "Installing Catppuccin theme..."
-  bash "$DOTFILES_ROOT/theme/install.sh"
+	echo "Installing Catppuccin theme..."
+	bash "$DOTFILES_ROOT/theme/install.sh"
 else
-  echo "Theme install script not found, skipping..."
+	echo "Theme install script not found, skipping..."
 fi
 
 # 5. Set Zsh as default shell
 ZSH_PATH="$(command -v zsh || true)"
 if [ -n "$ZSH_PATH" ] && [ "$SHELL" != "$ZSH_PATH" ]; then
-  echo "Setting Zsh as default shell..."
-  chsh -s "$ZSH_PATH"
+	echo "Setting Zsh as default shell..."
+	chsh -s "$ZSH_PATH"
 fi
 
 # 6. Apply macOS defaults
 if [ -f "$DOTFILES_ROOT/macos/.macos" ]; then
-  echo "Applying macOS defaults (requires sudo)..."
-  bash "$DOTFILES_ROOT/macos/.macos"
+	echo "Applying macOS defaults (requires sudo)..."
+	bash "$DOTFILES_ROOT/macos/.macos"
 else
-  echo "macOS defaults script not found, skipping..."
+	echo "macOS defaults script not found, skipping..."
 fi
 
 echo "Setup complete! Restart your terminal to see changes."

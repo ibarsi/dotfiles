@@ -25,7 +25,6 @@ brew "cloudflared"
 brew "gitmoji"
 brew "go"
 brew "jq"
-brew "ollama"
 brew "oath-toolkit"
 brew "openvpn"
 

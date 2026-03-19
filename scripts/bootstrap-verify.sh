@@ -4,12 +4,12 @@ set -euo pipefail
 echo "== Bootstrap Verify =="
 
 check_link() {
-  local path="$1"
-  if [ -L "$path" ] || [ -f "$path" ]; then
-    echo "✅ $path"
-  else
-    echo "⚠️  missing: $path"
-  fi
+	local path="$1"
+	if [ -L "$path" ] || [ -f "$path" ]; then
+		echo "✅ $path"
+	else
+		echo "⚠️  missing: $path"
+	fi
 }
 
 check_link "$HOME/.config/ghostty/config"

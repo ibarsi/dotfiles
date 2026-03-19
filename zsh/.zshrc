@@ -1,10 +1,11 @@
+# shellcheck shell=bash disable=SC1090,SC1091,SC2034
 # .zshrc - Modular Zsh configuration for ibarsi
 
 # --- Path & Environment ---
 if [[ $(uname -m) == "arm64" ]]; then
-    export HOMEBREW_PREFIX="/opt/homebrew"
+	export HOMEBREW_PREFIX="/opt/homebrew"
 else
-    export HOMEBREW_PREFIX="/usr/local"
+	export HOMEBREW_PREFIX="/usr/local"
 fi
 export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
 
@@ -16,36 +17,36 @@ export DOTFILES="$HOME/dotfiles"
 # This finds all *.zsh files in the topic directories and sources them.
 
 # 1. First, load all .path files
-for file in $DOTFILES/**/*.path(N); do
-    source "$file"
-done
+while IFS= read -r file; do
+	source "$file"
+done < <(find "$DOTFILES" -type f -name '*.path' | sort)
 
 # 2. Load all other .zsh files (except plugins/completion)
-for file in $DOTFILES/**/*.zsh(N); do
-    if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* ]]; then
-        source "$file"
-    fi
-done
+while IFS= read -r file; do
+	if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* ]]; then
+		source "$file"
+	fi
+done < <(find "$DOTFILES" -type f -name '*.zsh' | sort)
 
 # 4. Load legacy bash-style files from system topic
 for file in $DOTFILES/system/.{exports,aliases,functions,extra}; do
-    [ -r "$file" ] && [ -f "$file" ] && source "$file"
+	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 
 # --- Tool Init ---
 # zoxide (better cd)
 if command -v zoxide >/dev/null; then
-  eval "$(zoxide init zsh)"
+	eval "$(zoxide init zsh)"
 fi
 
 # starship (prompt)
 if command -v starship >/dev/null; then
-  eval "$(starship init zsh)"
+	eval "$(starship init zsh)"
 fi
 
 # zsh-ai plugin (Homebrew install path)
 if command -v brew >/dev/null && [[ -r "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh" ]]; then
-  source "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh"
+	source "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh"
 fi
 
 # plugins
@@ -54,7 +55,7 @@ source "$DOTFILES/zsh/plugins.zsh"
 # mise (version manager)
 # Keep activation near the end so later PATH edits don't override mise tools.
 if command -v mise >/dev/null; then
-  eval "$(mise activate zsh)"
+	eval "$(mise activate zsh)"
 fi
 
 # --- Zsh Specifics ---
@@ -70,10 +71,10 @@ setopt EXTENDED_HISTORY
 
 # Completion (cached for faster startup; full refresh roughly once per day)
 autoload -Uz compinit
-if [[ -n "$HOME/.zcompdump"(#qN.mh+24) ]]; then
-  compinit
+if find "$HOME/.zcompdump" -prune -mtime +0 -print 2>/dev/null | grep -q .; then
+	compinit
 else
-  compinit -C
+	compinit -C
 fi
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' menu select
@@ -81,7 +82,7 @@ zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 
 # Codex CLI completion (safe no-op when codex isn't installed yet)
 if command -v codex >/dev/null; then
-  eval "$(codex completion zsh 2>/dev/null)"
+	eval "$(codex completion zsh 2>/dev/null)"
 fi
 
 # Case-insensitive globbing

@@ -1,7 +1,8 @@
+# shellcheck shell=bash
 # zsh/aliases.zsh
 
 # Navigation
-alias dtf="cd $DOTFILES"
+alias dtf='cd "$DOTFILES"'
 alias dsync="dotfiles-sync"
 
 # Reload shell
@@ -31,4 +32,3 @@ alias msd="mise doctor"
 alias tl="tmux ls"
 alias ta="tmux attach -t"
 alias tn="tmux new -s"
-

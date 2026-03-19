@@ -6,8 +6,8 @@ warn() { printf "⚠️  %s\n" "$1"; }
 err() { printf "❌ %s\n" "$1"; }
 
 check_bin() {
-  local name="$1"
-  if command -v "$name" >/dev/null 2>&1; then ok "$name installed"; else warn "$name missing"; fi
+	local name="$1"
+	if command -v "$name" >/dev/null 2>&1; then ok "$name installed"; else warn "$name missing"; fi
 }
 
 echo "== AI Toolchain Doctor =="
@@ -20,16 +20,16 @@ check_bin rg
 check_bin fd
 check_bin bat
 
-[ -f "$HOME/.codex/config.toml" ] && ok "~/.codex/config.toml present" || warn "~/.codex/config.toml missing"
-[ -f "$HOME/.claude/settings.json" ] && ok "~/.claude/settings.json present" || warn "~/.claude/settings.json missing"
-[ -f "$HOME/.config/anthropic/api_key" ] && ok "~/.config/anthropic/api_key present" || warn "~/.config/anthropic/api_key missing"
+if [ -f "$HOME/.codex/config.toml" ]; then ok "$HOME/.codex/config.toml present"; else warn "$HOME/.codex/config.toml missing"; fi
+if [ -f "$HOME/.claude/settings.json" ]; then ok "$HOME/.claude/settings.json present"; else warn "$HOME/.claude/settings.json missing"; fi
+if [ -f "$HOME/.config/anthropic/api_key" ]; then ok "$HOME/.config/anthropic/api_key present"; else warn "$HOME/.config/anthropic/api_key missing"; fi
 
 if [ -n "${ANTHROPIC_API_KEY:-}" ]; then ok "ANTHROPIC_API_KEY is set"; else warn "ANTHROPIC_API_KEY is not set"; fi
 if [ -n "${OPENAI_API_KEY:-}" ]; then ok "OPENAI_API_KEY is set"; else warn "OPENAI_API_KEY is not set (optional)"; fi
 
 # Endpoint reachability (status only, no secrets)
 for url in "https://api.anthropic.com" "https://api.openai.com"; do
-  if curl -sS -I --max-time 5 "$url" >/dev/null; then ok "Reachable: $url"; else warn "Cannot reach: $url"; fi
+	if curl -sS -I --max-time 5 "$url" >/dev/null; then ok "Reachable: $url"; else warn "Cannot reach: $url"; fi
 done
 
 echo "Done."

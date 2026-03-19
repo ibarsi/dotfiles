@@ -192,9 +192,9 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 - `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
 
 **Local model setup:**
-- Bootstrap registers Ollama with `brew services` so it starts on login
-- Start/register it manually anytime with: `brew services start ollama`
-- Verify launchd registration with: `brew services list | rg ollama`
+- Ollama is installed via the direct macOS app, not Homebrew
+- Login startup is managed by `~/Library/LaunchAgents/com.igorbarsi.ollama.plist`
+- Verify the launch agent with: `launchctl print gui/$(id -u)/com.igorbarsi.ollama`
 - Import the downloaded GGUF: `ollama create gpt-oss-20b-local -f ollama/gpt-oss-20b-local.Modelfile`
 - No API key is required for local Ollama usage
 
