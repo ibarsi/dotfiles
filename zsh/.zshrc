@@ -23,7 +23,7 @@ done < <(find "$DOTFILES" -type f -name '*.path' | sort)
 
 # 2. Load all other .zsh files (except plugins/completion)
 while IFS= read -r file; do
-	if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* ]]; then
+	if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* && "$file" != *"startup-tip.zsh"* ]]; then
 		source "$file"
 	fi
 done < <(find "$DOTFILES" -type f -name '*.zsh' | sort)

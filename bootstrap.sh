@@ -69,6 +69,10 @@ ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
 mkdir -p "$HOME/.claude"
 ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
 
+# OpenCode
+mkdir -p "$HOME/.config/opencode"
+ln -sf "$DOTFILES_ROOT/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
 	echo "Installing Catppuccin theme..."

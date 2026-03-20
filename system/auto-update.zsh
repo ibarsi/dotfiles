@@ -35,5 +35,5 @@ function check_dotfiles_update() {
 	echo "$current_time" >"$last_check_file"
 }
 
-# Run check detached so shell startup stays quiet
-check_dotfiles_update >/dev/null 2>&1 &!
+# Run in background so shell startup stays quiet.
+check_dotfiles_update >/dev/null 2>&1 &

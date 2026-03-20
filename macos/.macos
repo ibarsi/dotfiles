@@ -102,7 +102,7 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Set a blazingly fast keyboard repeat rate and short repeat delay
 defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+defaults write NSGlobalDomain InitialKeyRepeat -int 20
 
 # Remap Caps Lock to Control globally.
 # This removes Caps Lock toggle behavior, so the Caps Lock LED no longer flips on/off when the key is pressed.

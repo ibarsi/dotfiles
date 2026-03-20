@@ -48,7 +48,7 @@ _dotfiles_generate_ai_tip() {
 
 	prompt="Generate ONE short startup tip (max 120 chars) for this shell setup. Be practical and specific. No markdown, no quotes, no preface. Use these available commands as context. Aliases: ${aliases_preview:-unknown}. Functions: ${functions_preview:-unknown}."
 
-	ai_tip="$(zsh-ai "$prompt" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]"'\''-]+//; s/[[:space:]"'\''-]+$//')"
+	ai_tip="$(_zsh_ai_execute_command "$prompt" 2>/dev/null | head -n 1 | sed -E 's/^[[:space:]"'\''-]+//; s/[[:space:]"'\''-]+$//')"
 	[[ -n "$ai_tip" ]] || return 1
 
 	mkdir -p "$cache_dir" 2>/dev/null || true

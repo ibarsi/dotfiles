@@ -41,6 +41,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
+- `opencode/`: OpenCode configuration (symlinked to `~/.config/opencode/`).
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 - `AGENTS.md`: Agent operating guidance for this repository.
@@ -64,6 +65,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
+- **OpenCode workflow**: Local Ollama-backed OpenCode config managed in dotfiles.
 - **zsh-ai workflow**: Natural-language command generation in terminal using a local Ollama model by default.
 
 ### Shell quality-of-life defaults
@@ -178,7 +180,6 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 | File | Purpose |
 |------|---------|
 | `zsh/zsh-ai.zsh` | Provider/model defaults and prompt preferences |
-| `ollama/gpt-oss-20b-local.Modelfile` | Imports the llmfit-downloaded GGUF into Ollama as `gpt-oss-20b-local` |
 
 **Install path**
 - Homebrew tap: `matheusml/zsh-ai`
@@ -187,7 +188,7 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 
 **Defaults configured:**
 - `ZSH_AI_PROVIDER="ollama"`
-- `ZSH_AI_OLLAMA_MODEL="gpt-oss-20b-local"`
+- `ZSH_AI_OLLAMA_MODEL="deepseek-coder-v2:16b"`
 - `ZSH_AI_OLLAMA_URL="http://localhost:11434"`
 - `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
 
@@ -195,11 +196,33 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 - Ollama is installed via the direct macOS app, not Homebrew
 - Login startup is managed by `~/Library/LaunchAgents/com.igorbarsi.ollama.plist`
 - Verify the launch agent with: `launchctl print gui/$(id -u)/com.igorbarsi.ollama`
-- Import the downloaded GGUF: `ollama create gpt-oss-20b-local -f ollama/gpt-oss-20b-local.Modelfile`
+- Pull the configured model in Ollama: `ollama pull deepseek-coder-v2:16b`
 - No API key is required for local Ollama usage
 
 **Usage:**
 - Type `# what you want` and press Enter, or run `zsh-ai "your request"`
+
+## OpenCode Workflow
+
+[OpenCode](https://opencode.ai) is configured to use your local Ollama instance through the OpenAI-compatible `/v1` endpoint.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for Ollama-backed OpenCode |
+
+**Defaults configured:**
+- Provider: local `ollama`
+- Endpoint: `http://localhost:11434/v1`
+- Model: `deepseek-coder-v2:16b`
+
+**Local model setup:**
+- Ensure Ollama is running locally on port `11434`
+- Pull the configured model: `ollama pull deepseek-coder-v2:16b`
+- Re-run `./bootstrap.sh` to install the symlinked config
+
+**Usage:**
+- Start OpenCode normally with `opencode`
+- If you prefer guided setup instead, run `ollama launch opencode`
 
 ## AI Diagnostics
 
