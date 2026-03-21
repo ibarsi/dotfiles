@@ -1,15 +1,16 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "lmstudio/qwen2.5-coder-7b-instruct-mlx",
   "provider": {
-    "ollama": {
+    "lmstudio": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
+      "name": "LM Studio (local)",
       "options": {
-        "baseURL": "http://localhost:11434/v1"
+        "baseURL": "http://localhost:1234/v1"
       },
       "models": {
-        "deepseek-coder-v2:16b": {
-          "name": "deepseek-coder-v2:16b"
+        "qwen2.5-coder-7b-instruct-mlx": {
+          "name": "qwen2.5-coder-7b-instruct-mlx"
         }
       }
     }

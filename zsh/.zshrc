@@ -90,3 +90,8 @@ setopt nocaseglob
 
 # --- Keybindings ---
 bindkey -e
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/igorbarsi/.lmstudio/bin"
+# End of LM Studio CLI section
+

@@ -65,8 +65,8 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
-- **OpenCode workflow**: Local Ollama-backed OpenCode config managed in dotfiles.
-- **zsh-ai workflow**: Natural-language command generation in terminal using a local Ollama model by default.
+- **OpenCode workflow**: Local LM Studio-backed OpenCode config managed in dotfiles.
+- **zsh-ai workflow**: Natural-language command generation in terminal using a local LM Studio model by default.
 
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
@@ -175,7 +175,7 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 
 ## zsh-ai Workflow
 
-[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with local Ollama defaults tuned for your existing CLI stack.
+[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with local LM Studio defaults tuned for your existing CLI stack.
 
 | File | Purpose |
 |------|---------|
@@ -187,42 +187,39 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 - Plugin sourced from: `$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh`
 
 **Defaults configured:**
-- `ZSH_AI_PROVIDER="ollama"`
-- `ZSH_AI_OLLAMA_MODEL="deepseek-coder-v2:16b"`
-- `ZSH_AI_OLLAMA_URL="http://localhost:11434"`
+- `ZSH_AI_PROVIDER="openai"`
+- `ZSH_AI_OPENAI_MODEL="qwen2.5-coder-7b-instruct-mlx"`
+- `ZSH_AI_OPENAI_URL="http://localhost:1234/v1/chat/completions"`
 - `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
 
 **Local model setup:**
-- Ollama is installed via the direct macOS app, not Homebrew
-- Login startup is managed by `~/Library/LaunchAgents/com.igorbarsi.ollama.plist`
-- Verify the launch agent with: `launchctl print gui/$(id -u)/com.igorbarsi.ollama`
-- Pull the configured model in Ollama: `ollama pull deepseek-coder-v2:16b`
-- No API key is required for local Ollama usage
+- LM Studio local server should be running at `http://localhost:1234`
+- Load `qwen2.5-coder-7b-instruct-mlx` in LM Studio before using `zsh-ai`
+- No API key is required for local LM Studio usage with the custom `ZSH_AI_OPENAI_URL`
 
 **Usage:**
 - Type `# what you want` and press Enter, or run `zsh-ai "your request"`
 
 ## OpenCode Workflow
 
-[OpenCode](https://opencode.ai) is configured to use your local Ollama instance through the OpenAI-compatible `/v1` endpoint.
+[OpenCode](https://opencode.ai) is configured to use your local LM Studio instance through the OpenAI-compatible `/v1` endpoint.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
-| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for Ollama-backed OpenCode |
+| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for LM Studio-backed OpenCode |
 
 **Defaults configured:**
-- Provider: local `ollama`
-- Endpoint: `http://localhost:11434/v1`
-- Model: `deepseek-coder-v2:16b`
+- Provider: local `lmstudio`
+- Endpoint: `http://localhost:1234/v1`
+- Model: `qwen2.5-coder-7b-instruct-mlx`
 
 **Local model setup:**
-- Ensure Ollama is running locally on port `11434`
-- Pull the configured model: `ollama pull deepseek-coder-v2:16b`
+- Ensure LM Studio's local server is running on port `1234`
+- Load the configured model in LM Studio before starting OpenCode
 - Re-run `./bootstrap.sh` to install the symlinked config
 
 **Usage:**
 - Start OpenCode normally with `opencode`
-- If you prefer guided setup instead, run `ollama launch opencode`
 
 ## AI Diagnostics
 
