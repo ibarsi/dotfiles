@@ -15,6 +15,7 @@ Applies to the entire dotfiles repo.
 - Follow existing patterns in `Brewfile`, `bootstrap.sh`, `zsh/`, and `system/`.
 - Prefer deterministic checks over stylistic guesswork.
 - Update README when user-facing behavior changes.
+- Regenerate `docs/site-data.json` and keep the `docs/` site accurate when aliases, functions, tasks, bootstrap links, or user-visible features change.
 
 ## Safety
 - Never commit API keys, tokens, passwords, or local secret files.
@@ -23,6 +24,7 @@ Applies to the entire dotfiles repo.
 ## Validation before PR
 Run:
 - `mise run check`
+- `mise run docs-check`
 - `mise run ai-doctor`
 - `mise run bootstrap-verify`
 

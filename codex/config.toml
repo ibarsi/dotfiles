@@ -25,6 +25,9 @@ model_reasoning_effort = "medium"
 # Normal coding/chat requests continue using `model` above.
 review_model = "gpt-5.3-codex"
 
+# Ignore warnings for experimental features since I mindfully turn those on
+suppress_unstable_features_warning = true
+
 # Experimental features that are useful for daily coding workflows.
 [features]
 # Include a lightweight shell state snapshot with command/tool context when useful.
@@ -33,9 +36,11 @@ shell_snapshot = true
 unified_exec = true
 # Enable local undo support for reversible edit operations in the CLI.
 undo = true
+# Enable push-to-talk voice transcription in supported Codex CLI builds.
+voice_transcription = true
 
 [projects."/Users/igorbarsi/dotfiles"]
 trust_level = "trusted"
 
-[notice.model_migrations]
-"gpt-5.3-codex" = "gpt-5.4"
+[projects."/Users/igorbarsi/Projects"]
+trust_level = "trusted"

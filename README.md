@@ -19,6 +19,9 @@ Use `mise run ...` directly for project workflows:
 - `mise run check` → full validation pipeline
 - `mise run verify` → AI doctor + bootstrap link verification
 - `mise run ai-doctor` → AI CLI/tooling health check
+- `mise run docs-build` → regenerate the docs site data from repo sources
+- `mise run docs-check` → fail if `docs/site-data.json` is stale
+- `mise run docs-serve` → serve the docs site locally with mise-managed Python
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
@@ -42,6 +45,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `opencode/`: OpenCode configuration (symlinked to `~/.config/opencode/`).
+- `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 - `AGENTS.md`: Agent operating guidance for this repository.
@@ -58,6 +62,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, and disables press-and-hold accent popups.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
+- **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, mise tasks, bootstrap links, and major repo capabilities from source files.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
@@ -73,6 +78,29 @@ The repository is organized into **topics**, making it easy to modularize your c
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
 - Interactive completion menu + clearer completion descriptions
 - **Startup smart tips**: On new terminal sessions, generate one practical AI tip from your dotfiles context (can be disabled).
+
+## Docs Site
+
+The repo includes a lightweight static docs app in `docs/` for browsing the current shell surface area and major dotfiles capabilities.
+
+- Source-driven generator: `scripts/generate-docs.py`
+- Generated data file: `docs/site-data.json`
+- Includes: aliases, functions, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
+
+Refresh the docs after any feature, alias, function, task, or bootstrap link change:
+
+```bash
+mise run docs-build
+```
+
+Serve the site locally from the repo root:
+
+```bash
+mise install
+mise run docs-serve
+```
+
+Then open `http://localhost:4173`.
 
 ## Ghostty Terminal
 
@@ -309,6 +337,7 @@ npm i -g @openai/codex  # cross-platform alternative
 - `shell_snapshot` (faster repeated command runs)
 - `unified_exec` (improved command execution path)
 - `undo` (safer edit iteration)
+- `voice_transcription` (hold Space to speak in supported Codex CLI builds)
 
 **Zsh shortcuts:**
 - `cx` → `codex`

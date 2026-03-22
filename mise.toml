@@ -5,6 +5,7 @@ min_version = { soft = "2025.1.0" }
 
 [tools]
 # Shell tooling used for dotfiles maintenance
+python = "3.13.11"
 shellcheck = "latest"
 shfmt = "latest"
 gitleaks = "latest"
@@ -36,6 +37,7 @@ description = "Run core validation for this repo"
 run = [
   "mise run lint-shell",
   "mise run fmt-check",
+  "mise run docs-check",
   "bash -n bootstrap.sh",
   "bash -n macos/.macos",
   "bash -n theme/install.sh",
@@ -50,6 +52,21 @@ run = "./scripts/bootstrap-verify.sh"
 [tasks.ai-doctor]
 description = "Check AI toolchain binaries/config/env"
 run = "./scripts/doctor-ai.sh"
+
+[tasks.docs-build]
+description = "Regenerate the docs site data from repo sources"
+run = "python3 ./scripts/generate-docs.py"
+
+[tasks.docs-check]
+description = "Ensure generated docs data is up to date"
+run = [
+  "python3 ./scripts/generate-docs.py",
+  "git diff --exit-code -- docs/site-data.json docs/site-data.js",
+]
+
+[tasks.docs-serve]
+description = "Serve the docs site locally with mise-managed Python"
+run = "python3 -m http.server 4173 --directory docs"
 
 [tasks.verify]
 description = "Run AI doctor + bootstrap verification"

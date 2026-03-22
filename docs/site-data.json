@@ -1,0 +1,912 @@
+{
+  "git_revision": "de8cff073f910992bf6b4928438657253b8d7cb8",
+  "source_hash": "946e544bd1b5",
+  "stats": {
+    "aliases": 48,
+    "functions": 23,
+    "features": 12,
+    "tasks": 15,
+    "bootstrap_links": 16,
+    "brews": 34,
+    "casks": 23
+  },
+  "aliases": [
+    {
+      "name": "..",
+      "command": "cd ..",
+      "group": "Easier navigation",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "...",
+      "command": "cd ../..",
+      "group": "Easier navigation",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "....",
+      "command": "cd ../../..",
+      "group": "Easier navigation",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": ".....",
+      "command": "cd ../../../..",
+      "group": "Easier navigation",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "cat",
+      "command": "bat",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "cc",
+      "command": "claude",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "ccdoctor",
+      "command": "claude doctor",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "ccr",
+      "command": "claude --resume",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "ccupdate",
+      "command": "if command -v brew >/dev/null && brew list --cask claude-code >/dev/null 2>&1; then brew upgrade --cask claude-code; else claude update; fi",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "cdd",
+      "command": "cd ~/Desktop",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "cdl",
+      "command": "cd ~/Downloads",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "cdp",
+      "command": "cd ~/Projects",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "cx",
+      "command": "codex",
+      "group": "Codex CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "cxe",
+      "command": "codex exec",
+      "group": "Codex CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "cxr",
+      "command": "codex resume --last",
+      "group": "Codex CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "cxreview",
+      "command": "codex \"/review\"",
+      "group": "Codex CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "cxup",
+      "command": "if command -v brew >/dev/null && brew list --cask codex >/dev/null 2>&1; then brew upgrade --cask codex; else npm i -g @openai/codex@latest; fi",
+      "group": "Codex CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "dsync",
+      "command": "dotfiles-sync",
+      "group": "Navigation",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "dtf",
+      "command": "cd \"$DOTFILES\"",
+      "group": "Navigation",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "egrep",
+      "command": "egrep --color=auto",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "fgrep",
+      "command": "fgrep --color=auto",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "flushdns",
+      "command": "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "gm",
+      "command": "gitmoji",
+      "group": "Gitmoji",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "grep",
+      "command": "grep --color=auto",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ip",
+      "command": "curl -s https://ifconfig.me",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ips",
+      "command": "ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \\\"\\\"); print }'",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "l",
+      "command": "eza -lF --icons",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "l",
+      "command": "ls -lF ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "l",
+      "command": "ls -lF ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "la",
+      "command": "eza -laF --icons",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "la",
+      "command": "ls -laF ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "la",
+      "command": "ls -laF ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "lip",
+      "command": "ipconfig getifaddr en0",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ls",
+      "command": "eza --icons",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ls",
+      "command": "command ls ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ls",
+      "command": "command ls ${colorflag}",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ms",
+      "command": "mise",
+      "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "msd",
+      "command": "mise doctor",
+      "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "msi",
+      "command": "mise install",
+      "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "msr",
+      "command": "mise run",
+      "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "msu",
+      "command": "mise upgrade",
+      "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "path",
+      "command": "echo -e ${PATH//:/\\\\n}",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "reload",
+      "command": "exec ${SHELL} -l",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "reload",
+      "command": "exec zsh -l",
+      "group": "Reload shell",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "sudo",
+      "command": "sudo ",
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ta",
+      "command": "tmux attach -t",
+      "group": "tmux",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "tl",
+      "command": "tmux ls",
+      "group": "tmux",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "tn",
+      "command": "tmux new -s",
+      "group": "tmux",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    }
+  ],
+  "functions": [
+    {
+      "name": "dnstrace",
+      "summary": "Quick DNS trace (A + AAAA + CNAME + NS path)",
+      "usage": "dnstrace <domain>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "dotfiles-sync",
+      "summary": "Sync dotfiles safely (fetch + status + optional update)",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fbr",
+      "summary": "Fuzzy-switch git branch",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fcd",
+      "summary": "Fuzzy-find directory and cd into it",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "ff",
+      "summary": "Fuzzy-find file and open in Zed",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fkill",
+      "summary": "Fuzzy pick process and kill it",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "frg",
+      "summary": "Fuzzy-search ripgrep results and open selected file:line",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fs",
+      "summary": "Determine size of a file or total size of a directory",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "groot",
+      "summary": "Jump to the current git repository root",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "httptime",
+      "summary": "Quick HTTP timing breakdown",
+      "usage": "httptime <url>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "killport",
+      "summary": "Kill process by port",
+      "usage": "killport <port>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "listeners",
+      "summary": "Check open TCP/UDP listeners in a compact view",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "mkd",
+      "summary": "Create a new directory and enter it",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "nclisten",
+      "summary": "Netcat listener helper (TCP)",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "ncprobe",
+      "summary": "Netcat connectivity check helper",
+      "usage": "ncprobe <host> <port>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "netpath",
+      "summary": "MTR wrapper with sane defaults",
+      "usage": "netpath <host>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "netspeed",
+      "summary": "iperf3 client helper",
+      "usage": "netspeed <iperf3-server-host> [seconds]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "pcap",
+      "summary": "tcpdump helper: capture to file with optional filter expression",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "pr",
+      "summary": "Open existing PR in browser, or create one if missing",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "reload-dotfiles",
+      "summary": "Reload shell only (no git/network side effects)",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "sniffweb",
+      "summary": "Live HTTP-ish packet view (ports 80/443)",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "tre",
+      "summary": "`tre` is a shorthand for `tree` with hidden files and color enabled, ignoring the `.git` directory, listing directories first. The output gets piped into `less` with options to preserve color and line numbers, unless the output is small enough for one screen.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "whichport",
+      "summary": "Show process(es) listening on a given port",
+      "usage": "whichport <port>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    }
+  ],
+  "features": [
+    {
+      "slug": "bootstrap",
+      "title": "Bootstrap workflow",
+      "summary": "Installs Homebrew dependencies, creates config symlinks, applies themes, and runs macOS setup.",
+      "details": [
+        "Installs Homebrew when missing and reuses the repo root for path-safe runs.",
+        "Uses Brewfile as the package source of truth.",
+        "Installs the theme, sets zsh as the default shell, and applies macOS defaults."
+      ],
+      "source": "bootstrap.sh"
+    },
+    {
+      "slug": "shell",
+      "title": "Modular zsh shell",
+      "summary": "Loads path, zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.",
+      "details": [
+        "Sources topic files from the repo instead of duplicating config into the home directory.",
+        "Enables history sharing, cached completion, case-insensitive globbing, and tool init for zoxide, starship, and mise.",
+        "Loads Codex shell completion and the optional zsh-ai plugin when available."
+      ],
+      "source": "zsh/.zshrc"
+    },
+    {
+      "slug": "plugins",
+      "title": "Shell plugin integrations",
+      "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
+      "details": [
+        "Loads zsh-autosuggestions when installed.",
+        "Loads zsh-syntax-highlighting when installed.",
+        "Sources ~/.fzf.zsh for shell keybindings and completion."
+      ],
+      "source": "zsh/plugins.zsh"
+    },
+    {
+      "slug": "startup_tips",
+      "title": "AI startup tips",
+      "summary": "Shows one cached daily tip generated from the repo's actual aliases and functions.",
+      "details": [
+        "Interactive shells only.",
+        "Can be disabled with DOTFILES_STARTUP_TIPS=0.",
+        "Uses zsh-ai and caches the generated tip per day."
+      ],
+      "source": "zsh/startup-tip.zsh"
+    },
+    {
+      "slug": "zsh_ai",
+      "title": "Local zsh-ai defaults",
+      "summary": "Targets LM Studio's OpenAI-compatible endpoint and steers generated commands toward the repo's preferred CLI tools.",
+      "details": [
+        "Defaults to qwen2.5-coder-7b-instruct-mlx on http://localhost:1234.",
+        "Biases command suggestions toward eza, fd, rg, bat, and zed.",
+        "Avoids destructive commands unless explicitly requested."
+      ],
+      "source": "zsh/zsh-ai.zsh"
+    },
+    {
+      "slug": "theme",
+      "title": "Catppuccin terminal theme",
+      "summary": "Installs the repository-managed shell prompt and terminal theming assets.",
+      "details": [
+        "Bootstraps the theme during setup when the installer script is present.",
+        "Pairs with starship and the theme assets stored in theme/."
+      ],
+      "source": "theme/install.sh"
+    },
+    {
+      "slug": "ghostty",
+      "title": "Ghostty terminal config",
+      "summary": "Ships a managed Ghostty configuration with Catppuccin styling, keybindings, and shell integration defaults.",
+      "details": [
+        "Symlinked into ~/.config/ghostty/config during bootstrap."
+      ],
+      "source": "ghostty/config"
+    },
+    {
+      "slug": "zed",
+      "title": "Zed editor config",
+      "summary": "Stores editor settings and keybindings in-repo and links them into ~/.config/zed.",
+      "details": [
+        "Bootstrap links both settings.json and keymap.json."
+      ],
+      "source": "zed/settings.json"
+    },
+    {
+      "slug": "codex",
+      "title": "Codex CLI config",
+      "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
+      "details": [
+        "Bootstrap links ~/.codex/config.toml to the repository-managed file."
+      ],
+      "source": "codex/config.toml"
+    },
+    {
+      "slug": "claude",
+      "title": "Claude Code config",
+      "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
+      "details": [
+        "AI doctor validates both the config path and API key presence."
+      ],
+      "source": "claude/settings.json"
+    },
+    {
+      "slug": "opencode",
+      "title": "OpenCode local model config",
+      "summary": "Targets a local LM Studio endpoint through the OpenAI-compatible /v1 interface.",
+      "details": [
+        "Bootstrap links ~/.config/opencode/opencode.json."
+      ],
+      "source": "opencode/opencode.json"
+    },
+    {
+      "slug": "validation",
+      "title": "Validation scripts",
+      "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
+      "details": [
+        "doctor-ai checks binaries, config files, env vars, and endpoint reachability.",
+        "bootstrap-verify checks expected post-bootstrap files and symlinks."
+      ],
+      "source": "scripts/doctor-ai.sh"
+    }
+  ],
+  "tasks": [
+    {
+      "name": "ai-doctor",
+      "description": "Check AI toolchain binaries/config/env",
+      "run": [
+        "./scripts/doctor-ai.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "bootstrap-verify",
+      "description": "Verify expected post-bootstrap config links/files",
+      "run": [
+        "./scripts/bootstrap-verify.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "check",
+      "description": "Run core validation for this repo",
+      "run": [
+        "mise run lint-shell",
+        "mise run fmt-check",
+        "mise run docs-check",
+        "bash -n bootstrap.sh",
+        "bash -n macos/.macos",
+        "bash -n theme/install.sh",
+        "bash -n scripts/doctor-ai.sh",
+        "bash -n scripts/bootstrap-verify.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "docs-build",
+      "description": "Regenerate the docs site data from repo sources",
+      "run": [
+        "python3 ./scripts/generate-docs.py"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "docs-check",
+      "description": "Ensure generated docs data is up to date",
+      "run": [
+        "python3 ./scripts/generate-docs.py",
+        "git diff --exit-code -- docs/site-data.json docs/site-data.js"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "docs-serve",
+      "description": "Serve the docs site locally with mise-managed Python",
+      "run": [
+        "python3 -m http.server 4173 --directory docs"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "doctor",
+      "description": "Run mise diagnostics",
+      "run": [
+        "mise doctor"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "fmt-check",
+      "description": "Check shell formatting without writing",
+      "run": [
+        "shfmt -d bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "fmt-shell",
+      "description": "Format shell scripts in this repo",
+      "run": [
+        "shfmt -w bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "lint-shell",
+      "description": "Lint shell scripts in this repo",
+      "run": [
+        "shellcheck bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "mise-install",
+      "description": "Install tools from mise.toml",
+      "run": [
+        "mise install"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "precommit-install",
+      "description": "Install git pre-commit hooks",
+      "run": [
+        "pre-commit install"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "precommit-run",
+      "description": "Run pre-commit hooks across all files",
+      "run": [
+        "pre-commit run --all-files"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "secrets-scan",
+      "description": "Run gitleaks against repository",
+      "run": [
+        "gitleaks detect --source . --verbose"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "verify",
+      "description": "Run AI doctor + bootstrap verification",
+      "run": [],
+      "source": "mise.toml"
+    }
+  ],
+  "bootstrap_links": [
+    {
+      "source_path": "claude/settings.json",
+      "target_path": "~/.claude/settings.json",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "codex/config.toml",
+      "target_path": "~/.codex/config.toml",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "ghostty/config",
+      "target_path": "~/.config/ghostty/config",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "mise/config.toml",
+      "target_path": "~/.config/mise/config.toml",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "opencode/opencode.json",
+      "target_path": "~/.config/opencode/opencode.json",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "zed/keymap.json",
+      "target_path": "~/.config/zed/keymap.json",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "zed/settings.json",
+      "target_path": "~/.config/zed/settings.json",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "system/.curlrc",
+      "target_path": "~/.curlrc",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "system/.editorconfig",
+      "target_path": "~/.editorconfig",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "git/.gitattributes",
+      "target_path": "~/.gitattributes",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "git/.gitconfig",
+      "target_path": "~/.gitconfig",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "git/.gitignore",
+      "target_path": "~/.gitignore",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "ssh/config",
+      "target_path": "~/.ssh/config",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "tmux/.tmux.conf",
+      "target_path": "~/.tmux.conf",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "vim/.vimrc",
+      "target_path": "~/.vimrc",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "zsh/.zshrc",
+      "target_path": "~/.zshrc",
+      "source": "bootstrap.sh"
+    }
+  ],
+  "packages": {
+    "taps": [
+      "matheusml/zsh-ai"
+    ],
+    "brews": [
+      "coreutils",
+      "moreutils",
+      "findutils",
+      "gnu-sed",
+      "wget",
+      "vim",
+      "grep",
+      "openssh",
+      "ack",
+      "tree",
+      "gnupg",
+      "git-lfs",
+      "gh",
+      "tmux",
+      "commitizen",
+      "pre-commit\"       # Deterministic pre-commit checks",
+      "gitleaks\"         # Secret scanning for commits/PRs",
+      "cloudflared",
+      "gitmoji",
+      "go",
+      "jq",
+      "oath-toolkit",
+      "openvpn",
+      "fzf\"              # Interactive fuzzy selector (pick from lists)",
+      "fd\"               # Fast file discovery (complements fzf; not a replacement)",
+      "zoxide\"           # Better 'cd",
+      "bat\"              # Better 'cat",
+      "eza\"              # Better 'ls",
+      "mise\"             # Universal version manager",
+      "starship\"         # Fast, minimal shell prompt",
+      "zsh-ai\"           # Natural language \u2192 shell command helper",
+      "doggo\"            # Modern DNS client (dig replacement for daily use)",
+      "mtr\"              # Traceroute + ping in one view",
+      "iperf3\"           # Throughput testing"
+    ],
+    "casks": [
+      "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
+      "codex\"             # OpenAI Codex CLI",
+      "1password-cli",
+      "chatgpt-atlas",
+      "comet",
+      "discord",
+      "docker-desktop",
+      "grandperspective",
+      "lulu",
+      "raindropio",
+      "tradingview",
+      "brave-browser",
+      "google-chrome",
+      "zed",
+      "slack",
+      "spotify",
+      "postman",
+      "rectangle\"        # Window manager",
+      "signal",
+      "wireshark\"        # GUI packet analysis",
+      "raycast\"          # Productivity launcher",
+      "claude-code\"      # Claude Code CLI (Anthropic)",
+      "font-fira-code-nerd-font\" # Nerd font for icons (eza/starship)"
+    ]
+  }
+}

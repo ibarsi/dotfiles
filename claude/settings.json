@@ -1,15 +1,20 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "autoUpdatesChannel": "stable",
-  "cleanupPeriodDays": 30,
   "respectGitignore": true,
+  "cleanupPeriodDays": 30,
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
-    "defaultMode": "default",
-    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~/)",
+      "Bash(sudo *)"
+    ],
     "ask": [
       "Bash(git push *)",
       "Bash(curl *)",
@@ -17,10 +22,23 @@
       "Read(./.env)",
       "Read(./secrets/**)"
     ],
-    "deny": [
-      "Bash(rm -rf /)",
-      "Bash(rm -rf ~/)",
-      "Bash(sudo *)"
-    ]
-  }
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "claude-hud@claude-hud": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-hud": {
+      "source": {
+        "source": "github",
+        "repo": "jarrodwatts/claude-hud"
+      }
+    }
+  },
+  "autoUpdatesChannel": "stable"
 }

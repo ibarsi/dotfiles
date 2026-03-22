@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dotfiles Reference</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Dotfiles Docs</p>
+        <h1>Reference for aliases, functions, tasks, bootstrap links, and repo features.</h1>
+        <p class="hero-copy">
+          Generated from repository source files so the docs site stays tied to the actual shell and bootstrap behavior.
+        </p>
+        <div class="hero-actions">
+          <label class="search">
+            <span>Search</span>
+            <input id="search" type="search" placeholder="Find aliases, functions, tasks, or features" />
+          </label>
+          <select id="section-filter" aria-label="Filter by section">
+            <option value="all">All sections</option>
+            <option value="aliases">Aliases</option>
+            <option value="functions">Functions</option>
+            <option value="features">Features</option>
+            <option value="tasks">Mise tasks</option>
+            <option value="bootstrap_links">Bootstrap links</option>
+          </select>
+        </div>
+        <div class="stats" id="stats"></div>
+      </header>
+
+      <main id="content" class="content" aria-live="polite"></main>
+    </div>
+
+    <template id="section-template">
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker"></p>
+            <h2></h2>
+          </div>
+          <p class="section-count"></p>
+        </div>
+        <div class="cards"></div>
+      </section>
+    </template>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card-header">
+          <h3></h3>
+          <span class="badge"></span>
+        </div>
+        <p class="summary"></p>
+        <pre class="command"></pre>
+        <ul class="detail-list"></ul>
+        <p class="meta"></p>
+      </article>
+    </template>
+
+    <script src="./site-data.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
