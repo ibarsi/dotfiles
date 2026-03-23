@@ -2,14 +2,35 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "respectGitignore": true,
   "cleanupPeriodDays": 30,
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
   },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
   "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(git:*)",
+      "Bash(go:*)",
+      "Bash(mise:*)",
+      "Bash(jq:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(which:*)",
+      "Bash(echo:*)",
+      "Bash(pwd)",
+      "Bash(cd:*)",
+      "Bash(buf:*)",
+      "Bash(docker compose:*)",
+      "Bash(gh:*)"
+    ],
     "deny": [
       "Bash(rm -rf /)",
       "Bash(rm -rf ~/)",
@@ -30,15 +51,12 @@
     "superpowers@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "claude-hud@claude-hud": true
+    "linear@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "claude-hud": {
-      "source": {
-        "source": "github",
-        "repo": "jarrodwatts/claude-hud"
-      }
-    }
-  },
-  "autoUpdatesChannel": "stable"
+  "extraKnownMarketplaces": {},
+  "autoUpdatesChannel": "stable",
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/igorbarsi/.claude/statusline-command.sh"
+  }
 }

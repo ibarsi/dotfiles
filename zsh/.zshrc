@@ -8,6 +8,7 @@ else
 	export HOMEBREW_PREFIX="/usr/local"
 fi
 export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # Define dotfiles location
 export DOTFILES="$HOME/dotfiles"
@@ -94,3 +95,13 @@ bindkey -e
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/igorbarsi/.lmstudio/bin"
 # End of LM Studio CLI section
+
+# Claude Code - GCP Vertex AI Configuration
+# Added by dev-tooling setup gcp
+export CLAUDE_CODE_USE_VERTEX=1
+export ANTHROPIC_MODEL=claude-opus-4-6
+export ANTHROPIC_DEFAULT_SONNET_MODEL='claude-sonnet-4-6'
+export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5@20251001'
+export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-6'
+export ANTHROPIC_VERTEX_PROJECT_ID=vertex-internal-490520
+export CLOUD_ML_REGION=us-east5

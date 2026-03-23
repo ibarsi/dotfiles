@@ -81,3 +81,7 @@ scrollback-limit = 10000
 
 # Copy on select (like iTerm2 default)
 copy-on-select = clipboard
+
+# Trackpad scrolling controls terminal viewport, not shell history
+mouse-scroll-multiplier = 3
+scroll-passthrough = false
