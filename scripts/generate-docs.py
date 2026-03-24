@@ -114,6 +114,15 @@ FEATURE_NOTES = {
             "Bootstrap links ~/.config/opencode/opencode.json.",
         ],
     },
+    "lmstudio_launchagent": {
+        "title": "LM Studio boot LaunchAgent",
+        "summary": "Provides a LaunchAgent plist that starts the local LM Studio server and preloads the default qwen model at login.",
+        "source": "launchagents/com.ibarsi.lms-server.plist",
+        "details": [
+            "Uses the lms CLI rather than launching the full LM Studio UI manually.",
+            "Starts the server on 127.0.0.1:1234, then loads qwen2.5-coder-7b-instruct-mlx.",
+        ],
+    },
     "validation": {
         "title": "Validation scripts",
         "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
@@ -383,6 +392,7 @@ def main() -> None:
                 ROOT / "zsh/plugins.zsh",
                 ROOT / "zsh/startup-tip.zsh",
                 ROOT / "zsh/zsh-ai.zsh",
+                ROOT / "launchagents/com.ibarsi.lms-server.plist",
                 ROOT / "scripts/doctor-ai.sh",
                 ROOT / "scripts/bootstrap-verify.sh",
             ]

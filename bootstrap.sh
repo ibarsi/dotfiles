@@ -73,6 +73,15 @@ ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
 mkdir -p "$HOME/.config/opencode"
 ln -sf "$DOTFILES_ROOT/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
 
+# LaunchAgents
+mkdir -p "$HOME/Library/LaunchAgents"
+ln -sf "$DOTFILES_ROOT/launchagents/com.ibarsi.lms-server.plist" "$HOME/Library/LaunchAgents/com.ibarsi.lms-server.plist"
+if command -v launchctl >/dev/null 2>&1; then
+	launchctl bootout "gui/$(id -u)/com.ibarsi.lms-server" >/dev/null 2>&1 || true
+	launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ibarsi.lms-server.plist" >/dev/null 2>&1 || true
+	launchctl kickstart -k "gui/$(id -u)/com.ibarsi.lms-server" >/dev/null 2>&1 || true
+fi
+
 # 4. Install Catppuccin theme
 if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
 	echo "Installing Catppuccin theme..."
