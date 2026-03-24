@@ -1,14 +1,14 @@
 {
-  "git_revision": "de8cff073f910992bf6b4928438657253b8d7cb8",
-  "source_hash": "946e544bd1b5",
+  "git_revision": "6355bc3f78695421582053417e12f386813c31ae",
+  "source_hash": "506991996a66",
   "stats": {
     "aliases": 48,
     "functions": 23,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 16,
-    "brews": 34,
-    "casks": 23
+    "brews": 35,
+    "casks": 24
   },
   "aliases": [
     {
@@ -879,6 +879,7 @@
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
       "zsh-ai\"           # Natural language \u2192 shell command helper",
+      "k9s\"              # Kubernetes cluster TUI",
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
       "mtr\"              # Traceroute + ping in one view",
       "iperf3\"           # Throughput testing"
@@ -893,6 +894,7 @@
       "docker-desktop",
       "grandperspective",
       "lulu",
+      "obsidian",
       "raindropio",
       "tradingview",
       "brave-browser",

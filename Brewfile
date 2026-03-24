@@ -37,6 +37,7 @@ brew "eza"              # Better 'ls'
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
 brew "zsh-ai"           # Natural language → shell command helper
+brew "k9s"              # Kubernetes cluster TUI
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
 brew "mtr"              # Traceroute + ping in one view
 brew "iperf3"           # Throughput testing
@@ -52,6 +53,7 @@ cask "discord"
 cask "docker-desktop"
 cask "grandperspective"
 cask "lulu"
+cask "obsidian"
 cask "raindropio"
 cask "tradingview"
 cask "brave-browser"

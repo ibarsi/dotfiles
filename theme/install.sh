@@ -29,6 +29,24 @@ else
 	echo "  Catppuccin vim already installed"
 fi
 
+# k9s skin (macOS uses ~/Library/Application Support/k9s/)
+echo "→ Installing k9s Catppuccin skin..."
+K9S_DIR="$HOME/Library/Application Support/k9s"
+mkdir -p "$K9S_DIR/skins"
+curl -fsSL https://github.com/catppuccin/k9s/raw/main/dist/catppuccin-mocha.yaml \
+	-o "$K9S_DIR/skins/catppuccin-mocha.yaml"
+K9S_CONFIG="$K9S_DIR/config.yaml"
+if [[ ! -f "$K9S_CONFIG" ]]; then
+	cat > "$K9S_CONFIG" <<-'YAML'
+	k9s:
+	  ui:
+	    skin: catppuccin-mocha
+	YAML
+elif ! grep -q 'skin:' "$K9S_CONFIG"; then
+	sed -i '' '/ui:/a\
+\    skin: catppuccin-mocha' "$K9S_CONFIG"
+fi
+
 echo "✅ Catppuccin theme installed!"
 echo ""
 echo "Manual steps:"

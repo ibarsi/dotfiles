@@ -1,29 +1,30 @@
 {
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
   "icon_theme": "Catppuccin Mocha",
   "edit_predictions": {
-    "provider": "none"
+    "provider": "none",
   },
   "theme": {
     "mode": "system",
     "dark": "Catppuccin Mocha",
-    "light": "Catppuccin Latte"
+    "light": "Catppuccin Latte",
   },
-  "buffer_font_family": "Fira Code",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
   "buffer_font_size": 13,
   "buffer_font_features": {
-    "calt": true
+    "calt": true,
   },
-  "ui_font_family": "Fira Code",
+  "ui_font_family": "FiraCode Nerd Font Mono",
   "ui_font_size": 14,
   "tab_size": 2,
   "hard_tabs": false,
-  "word_wrap": "none",
   "show_whitespaces": "all",
   "scrollbar": {
-    "show": "never"
-  },
-  "minimap": {
-    "enabled": false
+    "show": "never",
   },
   "scroll_beyond_last_line": "one_page",
   "autosave": "off",
@@ -34,26 +35,24 @@
   "restore_on_startup": "last_session",
   "indent_guides": {
     "enabled": true,
-    "coloring": "indent_aware"
+    "coloring": "indent_aware",
   },
-  "auto_close_brackets": "always",
   "git": {
-    "enabled": true,
     "git_gutter": "tracked_files",
     "inline_blame": {
       "enabled": true,
-      "delay_ms": 600
-    }
+      "delay_ms": 600,
+    },
   },
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "terminal": {
-    "font_family": "Fira Code",
+    "font_family": "FiraCode Nerd Font Mono",
     "font_size": 13,
     "cursor_shape": "bar",
-    "blinking": "on"
+    "blinking": "on",
   },
   "languages": {
     "JavaScript": {
@@ -62,9 +61,9 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "TypeScript": {
       "tab_size": 2,
@@ -72,9 +71,9 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "TSX": {
       "tab_size": 2,
@@ -82,9 +81,9 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "JSON": {
       "tab_size": 2,
@@ -92,9 +91,9 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "HTML": {
       "tab_size": 2,
@@ -102,9 +101,9 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "Markdown": {
       "tab_size": 2,
@@ -112,16 +111,16 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      }
+          "arguments": ["--stdin-filepath", "{buffer_path}"],
+        },
+      },
     },
     "YAML": {
-      "tab_size": 2
+      "tab_size": 2,
     },
     "Dockerfile": {
-      "tab_size": 2
-    }
+      "tab_size": 2,
+    },
   },
   "auto_install_extensions": {
     "catppuccin": true,
@@ -131,10 +130,7 @@
     "docker-compose": true,
     "html": true,
     "toml": true,
-    "env": true
-  },
-  "search": {
-    "line_numbers_in_results": true
+    "env": true,
   },
   "project_panel": {
     "dock": "left",
@@ -142,9 +138,9 @@
     "folder_icons": true,
     "git_status": true,
     "indent_size": 20,
-    "auto_reveal_entries": true
+    "auto_reveal_entries": true,
   },
   "collaboration_panel": {
-    "dock": "left"
-  }
+    "dock": "left",
+  },
 }
