@@ -1,12 +1,12 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "a7029fe0d49c2cbfc6cf604b4fea54e64f4cb8f4",
-  "source_hash": "f9c64f693d5d",
+  "git_revision": "1c9a6d3e3bf99e08d9ce430be351dfe5e73a8e9f",
+  "source_hash": "b3adaa7b5ad8",
   "stats": {
     "aliases": 48,
     "functions": 23,
     "features": 13,
     "tasks": 15,
-    "bootstrap_links": 17,
+    "bootstrap_links": 18,
     "brews": 35,
     "casks": 24
   },
@@ -850,6 +850,11 @@ window.DOTFILES_DOCS_DATA = {
     {
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "launchagents/com.ibarsi.capslock-control.plist",
+      "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
       "source": "bootstrap.sh"
     },
     {

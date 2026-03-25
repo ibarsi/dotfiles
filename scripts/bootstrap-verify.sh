@@ -20,5 +20,6 @@ check_link "$HOME/.codex/config.toml"
 check_link "$HOME/.claude/settings.json"
 check_link "$HOME/.config/opencode/opencode.json"
 check_link "$HOME/Library/LaunchAgents/com.ibarsi.lms-server.plist"
+check_link "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist"
 
 echo "Done."

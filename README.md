@@ -59,7 +59,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
-- **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, and disables press-and-hold accent popups.
+- **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, disables press-and-hold accent popups, and reloads a Caps Lock to Control remap at login.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
 - **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, mise tasks, bootstrap links, and major repo capabilities from source files.
@@ -155,7 +155,7 @@ obsidian theme:set name=Catppuccin
 **Key choices:**
 - Prefix: `Ctrl+a`
 - Split panes in current working directory
-- Vim-style pane movement (`h/j/k/l`)
+- Pane movement with arrow keys
 - Fast pane resizing (`Shift+Arrow`)
 - Catppuccin-inspired statusline and borders
 - Copy mode with vim keys

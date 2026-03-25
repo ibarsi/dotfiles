@@ -76,10 +76,14 @@ ln -sf "$DOTFILES_ROOT/opencode/opencode.json" "$HOME/.config/opencode/opencode.
 # LaunchAgents
 mkdir -p "$HOME/Library/LaunchAgents"
 ln -sf "$DOTFILES_ROOT/launchagents/com.ibarsi.lms-server.plist" "$HOME/Library/LaunchAgents/com.ibarsi.lms-server.plist"
+ln -sf "$DOTFILES_ROOT/launchagents/com.ibarsi.capslock-control.plist" "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist"
 if command -v launchctl >/dev/null 2>&1; then
 	launchctl bootout "gui/$(id -u)/com.ibarsi.lms-server" >/dev/null 2>&1 || true
+	launchctl bootout "gui/$(id -u)/com.ibarsi.capslock-control" >/dev/null 2>&1 || true
 	launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ibarsi.lms-server.plist" >/dev/null 2>&1 || true
+	launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist" >/dev/null 2>&1 || true
 	launchctl kickstart -k "gui/$(id -u)/com.ibarsi.lms-server" >/dev/null 2>&1 || true
+	launchctl kickstart -k "gui/$(id -u)/com.ibarsi.capslock-control" >/dev/null 2>&1 || true
 fi
 
 # 4. Install Catppuccin theme
