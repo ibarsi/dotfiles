@@ -68,6 +68,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
+- **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 - **OpenCode workflow**: Local LM Studio-backed OpenCode config managed in dotfiles.
@@ -129,6 +130,19 @@ Then open `http://localhost:4173`.
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## Obsidian Workflow
+
+[Obsidian](https://obsidian.md) is installed from `Brewfile`, but this repo does not automate its CLI setup or theme activation.
+
+If you want Obsidian to match the Catppuccin theme used elsewhere, enable Obsidian's CLI yourself and then run:
+
+**Theme commands used:**
+
+```bash
+obsidian theme:install name=Catppuccin
+obsidian theme:set name=Catppuccin
+```
 
 ## tmux Workflow
 

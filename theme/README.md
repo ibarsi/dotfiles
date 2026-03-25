@@ -48,11 +48,21 @@ Already configured in `starship.toml`. Ensure your `.zshrc` loads it:
 eval "$(starship init zsh)"
 ```
 
+### Obsidian
+
+This repo does not automate Obsidian theme setup. If you want Obsidian to match, enable the Obsidian CLI yourself and run:
+
+```bash
+obsidian theme:install name=Catppuccin
+obsidian theme:set name=Catppuccin
+```
+
 ## Tools Integrated
 
 - ✅ iTerm2 terminal colors
 - ✅ Starship prompt
 - ✅ Ghostty editor theme
+- ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
 - ✅ FZF fuzzy finder
