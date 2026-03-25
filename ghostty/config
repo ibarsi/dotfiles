@@ -84,4 +84,3 @@ copy-on-select = clipboard
 
 # Trackpad scrolling controls terminal viewport, not shell history
 mouse-scroll-multiplier = 3
-scroll-passthrough = false

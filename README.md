@@ -145,11 +145,25 @@ Then open `http://localhost:4173`.
 - Fast pane resizing (`Shift+Arrow`)
 - Catppuccin-inspired statusline and borders
 - Copy mode with vim keys
+- AI helpers:
+  - `Ctrl+a M` toggles quiet-window monitoring (`monitor-silence`) for the current window
+  - `Ctrl+a A` renames the current window and enables a 15s quiet alert for AI sessions
 
 **Claude Teams fit:**
 - Includes a quiet-window notification hook (`alert-silence`) for windows using `monitor-silence`.
 - Useful pattern per Claude window:
-  - `tmux setw monitor-silence 15`
+  - `Ctrl+a A` and name it `claude-impl`, `claude-review`, etc.
+  - Or toggle it manually with `Ctrl+a M`
+  - Shell equivalent: `tmux setw monitor-silence 15`
+
+**Recommended Claude layout:**
+- One tmux session per project (`tn <project>`)
+- Window 1: editor/build/test loop
+- Window 2: `claude-impl` for implementation work
+- Window 3: `claude-review` for code review, debugging, or a second thread
+- Window 4: logs, watch mode, or git operations
+
+Prefer separate windows over many panes for independent Claude threads so quiet notifications and window switching stay clean. Use panes when two terminals belong to the same task in the same directory.
 
 **tmux aliases:**
 - `tl` → list sessions
