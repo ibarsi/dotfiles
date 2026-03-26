@@ -69,6 +69,117 @@ function groot() {
     cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || return 1
 }
 
+# Print the conventional path for a repo worktree under ~/worktrees/<repo>/<name>
+function wtpath() {
+    local repo_root repo_name name
+    if ! command -v git >/dev/null 2>&1; then
+        echo "git is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "Not inside a git repository" >&2
+        return 1
+    }
+
+    name="${1:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null)}"
+    repo_name=$(basename "$repo_root")
+    echo "$HOME/worktrees/$repo_name/$name"
+}
+
+# Create a new worktree in ~/worktrees/<repo>/<branch> and cd into it
+function wtnew() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: wtnew <branch> [base]" >&2
+        return 1
+    fi
+
+    if ! command -v git >/dev/null 2>&1; then
+        echo "git is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local branch base worktree_path
+    branch="$1"
+    base="${2:-HEAD}"
+    if ! worktree_path=$(wtpath "$branch"); then
+        return 1
+    fi
+
+    mkdir -p "$(dirname "$worktree_path")"
+    echo "Creating worktree:"
+    echo "  branch: $branch"
+    echo "  base:   $base"
+    echo "  path:   $worktree_path"
+
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+        echo "Using existing local branch $branch"
+        git worktree add "$worktree_path" "$branch" || {
+            echo "Failed to create worktree for existing local branch $branch" >&2
+            return 1
+        }
+    elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+        echo "Creating local tracking branch from origin/$branch"
+        git worktree add --track -b "$branch" "$worktree_path" "origin/$branch" || {
+            echo "Failed to create tracking worktree from origin/$branch" >&2
+            return 1
+        }
+    else
+        echo "Creating new branch $branch from $base"
+        git worktree add -b "$branch" "$worktree_path" "$base" || {
+            echo "Failed to create new worktree branch $branch from $base" >&2
+            return 1
+        }
+    fi
+
+    cd "$worktree_path" || return 1
+
+    if command -v mise >/dev/null 2>&1 && [[ -f .mise.toml || -f mise.toml ]]; then
+        echo "Trusting mise config in $worktree_path"
+        mise trust >/dev/null || {
+            echo "Failed to trust mise config in $worktree_path" >&2
+            return 1
+        }
+    fi
+
+    echo "Entered $worktree_path"
+}
+
+# Attach or create a tmux session named from the current repo and branch
+function wtsesh() {
+    local repo_root repo_name branch session
+
+    if ! command -v tmux >/dev/null 2>&1; then
+        echo "tmux is not installed"
+        return 1
+    fi
+
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "Not inside a git repository"
+        return 1
+    }
+
+    repo_name=$(basename "$repo_root")
+    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    session="${repo_name}-${branch}"
+    session="${session//\//-}"
+
+    if [[ -n "${TMUX:-}" ]]; then
+        if tmux has-session -t "$session" 2>/dev/null; then
+            tmux switch-client -t "$session"
+        else
+            tmux new-session -d -s "$session" -c "$PWD"
+            tmux switch-client -t "$session"
+        fi
+    else
+        if tmux has-session -t "$session" 2>/dev/null; then
+            tmux attach-session -t "$session"
+        else
+            tmux new-session -s "$session" -c "$PWD"
+        fi
+    fi
+}
+
 # Open existing PR in browser, or create one if missing
 function pr() {
     gh pr view --web 2>/dev/null || gh pr create --web
@@ -243,4 +354,3 @@ function netspeed() {
     local duration="${2:-10}"
     iperf3 -c "$1" -t "$duration"
 }
-

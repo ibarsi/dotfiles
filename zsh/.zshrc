@@ -105,3 +105,7 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL='claude-haiku-4-5@20251001'
 export ANTHROPIC_DEFAULT_OPUS_MODEL='claude-opus-4-6'
 export ANTHROPIC_VERTEX_PROJECT_ID=vertex-internal-490520
 export CLOUD_ML_REGION=us-east5
+
+# Gemini - GCP Vertex AI Configuration
+export GOOGLE_CLOUD_PROJECT=vertex-internal-490520
+export GOOGLE_CLOUD_LOCATION=global

@@ -110,6 +110,13 @@
     # Root directory
     root = rev-parse --show-toplevel
 
+    # Git worktree helpers
+    wt = worktree
+    wtl = worktree list
+    wtp = worktree prune
+    wtr = worktree remove
+    wtx = "!git worktree list --porcelain"
+
     # Browse on GitHub
     browse = !gh repo view --web
 

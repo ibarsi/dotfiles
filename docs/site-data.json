@@ -1,9 +1,9 @@
 {
-  "git_revision": "1c9a6d3e3bf99e08d9ce430be351dfe5e73a8e9f",
-  "source_hash": "b3adaa7b5ad8",
+  "git_revision": "52e28a09bdb446be6ab9de938ad38b1b4a32b94f",
+  "source_hash": "bde4d4e0d22b",
   "stats": {
     "aliases": 48,
-    "functions": 23,
+    "functions": 26,
     "features": 13,
     "tasks": 15,
     "bootstrap_links": 18,
@@ -507,6 +507,27 @@
       "name": "whichport",
       "summary": "Show process(es) listening on a given port",
       "usage": "whichport <port>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "wtnew",
+      "summary": "Create a new worktree in ~/worktrees/<repo>/<branch> and cd into it",
+      "usage": "wtnew <branch> [base]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "wtpath",
+      "summary": "Print the conventional path for a repo worktree under ~/worktrees/<repo>/<name>",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "wtsesh",
+      "summary": "Attach or create a tmux session named from the current repo and branch",
+      "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
     }
