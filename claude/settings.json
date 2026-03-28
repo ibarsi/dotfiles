@@ -46,6 +46,7 @@
     "defaultMode": "default",
     "disableBypassPermissionsMode": "disable"
   },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/igorbarsi/.claude/statusline-command.sh"

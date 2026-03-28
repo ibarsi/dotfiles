@@ -1,12 +1,12 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "52e28a09bdb446be6ab9de938ad38b1b4a32b94f",
-  "source_hash": "bde4d4e0d22b",
+  "git_revision": "bbeb2fbd6e98030500d2290615aca2d6f1948c81",
+  "source_hash": "f4b38c14a139",
   "stats": {
     "aliases": 48,
     "functions": 26,
-    "features": 13,
+    "features": 12,
     "tasks": 15,
-    "bootstrap_links": 18,
+    "bootstrap_links": 17,
     "brews": 35,
     "casks": 24
   },
@@ -644,16 +644,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "opencode/opencode.json"
     },
     {
-      "slug": "lmstudio_launchagent",
-      "title": "LM Studio boot LaunchAgent",
-      "summary": "Provides a LaunchAgent plist that starts the local LM Studio server and preloads the default qwen model at login.",
-      "details": [
-        "Uses the lms CLI rather than launching the full LM Studio UI manually.",
-        "Starts the server on 127.0.0.1:1234, then loads qwen2.5-coder-7b-instruct-mlx."
-      ],
-      "source": "launchagents/com.ibarsi.lms-server.plist"
-    },
-    {
       "slug": "validation",
       "title": "Validation scripts",
       "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
@@ -876,11 +866,6 @@ window.DOTFILES_DOCS_DATA = {
     {
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",
       "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
-      "source": "bootstrap.sh"
-    },
-    {
-      "source_path": "launchagents/com.ibarsi.lms-server.plist",
-      "target_path": "~/Library/LaunchAgents/com.ibarsi.lms-server.plist",
       "source": "bootstrap.sh"
     }
   ],

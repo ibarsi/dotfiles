@@ -348,27 +348,6 @@ A lightweight AI-generated startup tip appears once per new interactive terminal
 **Usage:**
 - Start OpenCode normally with `opencode`
 
-## LM Studio Headless Boot Server
-
-A LaunchAgent plist is included for boot-time startup of LM Studio's local server through the `lms` CLI.
-
-| File | Purpose |
-|------|---------|
-| `launchagents/com.ibarsi.lms-server.plist` | Starts the local LM Studio server on `127.0.0.1:1234` and loads `qwen2.5-coder-7b-instruct-mlx` at login |
-
-**Behavior:**
-- Uses `lms server start --port 1234 --bind 127.0.0.1`
-- Waits briefly, then runs `lms load qwen2.5-coder-7b-instruct-mlx --yes`
-- Intended to be installed into `~/Library/LaunchAgents/`
-
-**Example install:**
-```bash
-mkdir -p ~/Library/LaunchAgents
-cp ~/dotfiles/launchagents/com.ibarsi.lms-server.plist ~/Library/LaunchAgents/
-launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.ibarsi.lms-server.plist
-launchctl kickstart -k "gui/$(id -u)/com.ibarsi.lms-server"
-```
-
 ## AI Diagnostics
 
 Scripts under `scripts/`:
