@@ -45,5 +45,5 @@ trust_level = "trusted"
 [projects."/Users/igorbarsi/Projects"]
 trust_level = "trusted"
 
-[projects."/Users/igorbarsi/Projects/maximum"]
+[projects."/Users/igorbarsi/Projects/igorbarsi"]
 trust_level = "trusted"
