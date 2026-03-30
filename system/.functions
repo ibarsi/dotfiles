@@ -280,6 +280,76 @@ function fkill() {
     kill -9 "$pid"
 }
 
+# Fuzzy-pick a git worktree and remove it with git wtr
+function fwtr() {
+    if ! command -v git >/dev/null 2>&1; then
+        echo "git is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "fzf is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local current_worktree selected worktree_path branch head
+    current_worktree=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "Not inside a git repository" >&2
+        return 1
+    }
+
+    selected=$(
+        git wtx | awk -v current="$current_worktree" '
+            /^worktree / {
+                path = substr($0, 10)
+                next
+            }
+            /^HEAD / {
+                head = $2
+                next
+            }
+            /^branch / {
+                branch = $2
+                sub(/^refs\/heads\//, "", branch)
+                next
+            }
+            /^detached$/ {
+                branch = "(detached)"
+                next
+            }
+            /^$/ {
+                if (path != "" && path != current) {
+                    printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
+                }
+                path = ""
+                branch = ""
+                head = ""
+            }
+            END {
+                if (path != "" && path != current) {
+                    printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
+                }
+            }
+        ' | fzf --delimiter=$'\t' --with-nth=2,1 --height=60% --layout=reverse --border \
+                 --prompt='Remove worktree> ' \
+                 --header='branch  path' \
+                 --preview 'git -C {1} status -sb 2>/dev/null || git -C {1} rev-parse --short HEAD' \
+                 --preview-window=right:60%
+    ) || return 1
+
+    if [[ -z "$selected" ]]; then
+        echo "No removable worktrees found"
+        return 1
+    fi
+
+    IFS=$'\t' read -r worktree_path branch head <<<"$selected"
+
+    echo "Removing worktree:"
+    echo "  branch: $branch"
+    echo "  path:   $worktree_path"
+    git wtr "$worktree_path"
+}
+
 # NETWORK WORKFLOWS
 
 # Quick DNS trace (A + AAAA + CNAME + NS path)

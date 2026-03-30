@@ -1,9 +1,9 @@
 {
-  "git_revision": "bbeb2fbd6e98030500d2290615aca2d6f1948c81",
-  "source_hash": "f4b38c14a139",
+  "git_revision": "316cf3c158b7cc84d0dbdbcb487409a019d881fc",
+  "source_hash": "ea245639fcfc",
   "stats": {
     "aliases": 48,
-    "functions": 26,
+    "functions": 27,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 17,
@@ -401,6 +401,13 @@
     {
       "name": "fs",
       "summary": "Determine size of a file or total size of a directory",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fwtr",
+      "summary": "Fuzzy-pick a git worktree and remove it with git wtr",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
