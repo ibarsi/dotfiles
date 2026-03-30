@@ -195,7 +195,7 @@ def extract_comment_block(lines: list[str], index: int) -> str:
     return " ".join(part for part in comments if part)
 
 
-def parse_functions(path: Path) -> list[dict]:
+def parse_function_records(path: Path) -> list[dict]:
     lines = read_lines(path)
     items = []
     for index, line in enumerate(lines):
@@ -203,7 +203,7 @@ def parse_functions(path: Path) -> list[dict]:
         if not match:
             continue
         name = match.group(1)
-        summary = extract_comment_block(lines, index)
+        summary = extract_comment_block(lines, index) or "Shell helper."
         usage = ""
         body_lines = []
         depth = 0
@@ -223,13 +223,92 @@ def parse_functions(path: Path) -> list[dict]:
         items.append(
             {
                 "name": name,
-                "summary": summary or "Shell helper.",
+                "summary": summary,
                 "usage": usage,
+                "body": body,
                 "source": rel(path),
                 "source_kind": "system function",
             }
         )
     return items
+
+
+def parse_functions(path: Path) -> list[dict]:
+    items = parse_function_records(path)
+    return [{k: v for k, v in item.items() if k != "body"} for item in items]
+
+
+def parse_git_aliases(path: Path) -> list[dict]:
+    items = []
+    lines = read_lines(path)
+    in_alias_section = False
+    current_summary = ""
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("["):
+            in_alias_section = stripped == "[alias]"
+            current_summary = ""
+            continue
+        if not in_alias_section:
+            continue
+        if not stripped:
+            current_summary = ""
+            continue
+        if stripped.startswith("#"):
+            comment = stripped.lstrip("#").strip()
+            current_summary = f"{current_summary} {comment}".strip() if current_summary else comment
+            continue
+        match = re.match(r"([A-Za-z0-9_.-]+)\s*=\s*(.+)", stripped)
+        if not match:
+            current_summary = ""
+            continue
+        items.append(
+            {
+                "name": match.group(1),
+                "command": match.group(2).strip(),
+                "summary": current_summary or "Git alias.",
+                "kind": "git alias",
+                "source": rel(path),
+            }
+        )
+    return items
+
+
+def parse_git_shortcuts(alias_paths: list[tuple[Path, str]], functions_path: Path) -> list[dict]:
+    items = parse_git_aliases(ROOT / "git/.gitconfig")
+    git_pattern = re.compile(r"(?<![A-Za-z0-9_.-])git(?![A-Za-z0-9_.-])|\bgh\b|gitmoji")
+
+    for path, source_kind in alias_paths:
+        for alias in parse_aliases(path, source_kind):
+            haystack = f"{alias['name']} {alias['command']}"
+            if not git_pattern.search(haystack):
+                continue
+            items.append(
+                {
+                    "name": alias["name"],
+                    "command": alias["command"],
+                    "summary": f"{alias['source_kind']} from {alias['group']}",
+                    "kind": alias["source_kind"],
+                    "source": alias["source"],
+                }
+            )
+
+    for func in parse_function_records(functions_path):
+        haystack = func["body"]
+        if not git_pattern.search(haystack):
+            continue
+        items.append(
+            {
+                "name": func["name"],
+                "command": func["usage"] or func["name"],
+                "summary": func["summary"],
+                "kind": "function",
+                "source": func["source"],
+            }
+        )
+
+    return sorted(items, key=lambda item: (item["kind"], item["name"]))
 
 
 def parse_tasks(path: Path) -> list[dict]:
@@ -355,12 +434,18 @@ def source_hash(paths: list[Path]) -> str:
 
 
 def main() -> None:
-    aliases = parse_aliases(ROOT / "system/.aliases", "system alias")
-    aliases.extend(parse_aliases(ROOT / "zsh/aliases.zsh", "zsh alias"))
+    alias_sources = [
+        (ROOT / "system/.aliases", "system alias"),
+        (ROOT / "zsh/aliases.zsh", "zsh alias"),
+    ]
+    aliases = []
+    for path, source_kind in alias_sources:
+        aliases.extend(parse_aliases(path, source_kind))
     aliases.sort(key=lambda item: item["name"])
 
     functions = parse_functions(ROOT / "system/.functions")
     functions.sort(key=lambda item: item["name"])
+    git = parse_git_shortcuts(alias_sources, ROOT / "system/.functions")
 
     tasks = parse_tasks(ROOT / "mise.toml")
     tasks.sort(key=lambda item: item["name"])
@@ -376,6 +461,7 @@ def main() -> None:
             [
                 ROOT / "Brewfile",
                 ROOT / "bootstrap.sh",
+                ROOT / "git/.gitconfig",
                 ROOT / "mise.toml",
                 ROOT / "system/.aliases",
                 ROOT / "system/.functions",
@@ -390,6 +476,7 @@ def main() -> None:
         "stats": {
             "aliases": len(aliases),
             "functions": len(functions),
+            "git": len(git),
             "features": len(FEATURE_NOTES),
             "tasks": len(tasks),
             "bootstrap_links": len(bootstrap_links),
@@ -398,6 +485,7 @@ def main() -> None:
         },
         "aliases": aliases,
         "functions": functions,
+        "git": git,
         "features": build_features(),
         "tasks": tasks,
         "bootstrap_links": bootstrap_links,

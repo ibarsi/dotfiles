@@ -1,9 +1,10 @@
 {
-  "git_revision": "7e209b25fe2223e11d86811b6146652561cacf36",
-  "source_hash": "fbd292bd896c",
+  "git_revision": "d0fd30ad24e1011deedc73955bc23eca755cb53c",
+  "source_hash": "d7d6d4549001",
   "stats": {
     "aliases": 48,
     "functions": 28,
+    "git": 51,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 17,
@@ -544,6 +545,365 @@
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
+    }
+  ],
+  "git": [
+    {
+      "name": "dotfiles-sync",
+      "command": "dotfiles-sync",
+      "summary": "Sync dotfiles safely (fetch + status + optional update)",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "fbr",
+      "command": "fbr",
+      "summary": "Fuzzy-switch git branch",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "fwtr",
+      "command": "fwtr",
+      "summary": "Fuzzy-pick a git worktree and remove it with git wtr",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "groot",
+      "command": "groot",
+      "summary": "Jump to the current git repository root",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "pr",
+      "command": "pr",
+      "summary": "Open existing PR in browser, or create one if missing",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "wtnew",
+      "command": "wtnew <branch> [base]",
+      "summary": "Create a new worktree in ~/worktrees/<repo>/<branch> and cd into it",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "wtpath",
+      "command": "wtpath",
+      "summary": "Print the conventional path for a repo worktree under ~/worktrees/<repo>/<name>",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "wtsesh",
+      "command": "wtsesh",
+      "summary": "Attach or create a tmux session named from the current repo and branch",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "amend",
+      "command": "commit --amend --reuse-message=HEAD",
+      "summary": "Amend the currently staged files to the latest commit",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "b",
+      "command": "\"!git rev-parse --abbrev-ref HEAD\"",
+      "summary": "Print current branch name",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "branches",
+      "command": "branch -a",
+      "summary": "Show verbose output about tags, branches or remotes",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "breb",
+      "command": "\"!f() { git rebase -i `git merge-base $1 HEAD`; }; f\"",
+      "summary": "Interactively rebase changes in current branch against another branch used as the base",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "browse",
+      "command": "!gh repo view --web",
+      "summary": "Browse on GitHub",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "c",
+      "command": "clone --recursive",
+      "summary": "Clone a repository including all submodules",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "ca",
+      "command": "!git add -A && git commit -av",
+      "summary": "Commit all changes",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "co",
+      "command": "\"checkout\"",
+      "summary": "Shorthand for checkout",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "contrib",
+      "command": "shortlog --summary --numbered",
+      "summary": "List contributors with number of commits",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "credit",
+      "command": "\"!f() { git commit --amend --author \\\"$1 <$2>\\\" -C HEAD; }; f\"",
+      "summary": "Credit an author on the latest commit",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "d",
+      "command": "!\"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat\"",
+      "summary": "Show the diff between the latest commit and the current state",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "db",
+      "command": "!\"f() { git diff $(git merge-base $1 HEAD); }; f\"",
+      "summary": "Show the diff of all changes in the current branch.",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "di",
+      "command": "!\"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d\"",
+      "summary": "Show the diff between the state `$number` revisions ago and the current state",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "dm",
+      "command": "\"!git branch --merged | grep -v '\\\\*' | xargs -n 1 git branch -d\"",
+      "summary": "Remove branches that have already been merged with master a.k.a. \u2018delete merged\u2019",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fb",
+      "command": "\"!f() { git branch -a --contains $1; }; f\"",
+      "summary": "Find branches containing commit",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fc",
+      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f\"",
+      "summary": "Find commits by source code",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fm",
+      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f\"",
+      "summary": "Find commits by commit message",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fo",
+      "command": "\"!git fetch origin\"",
+      "summary": "Fetch origin",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "ft",
+      "command": "\"!f() { git describe --always --contains $1; }; f\"",
+      "summary": "Find tags containing commit",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fu",
+      "command": "\"!git fetch upstream\"",
+      "summary": "Fetch upstream",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "go",
+      "command": "\"!f() { git checkout -b \\\"$1\\\" 2> /dev/null || git checkout \\\"$1\\\"; }; f\"",
+      "summary": "Switch to a branch, creating it if necessary",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "l",
+      "command": "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'",
+      "summary": "View abbreviated SHA, description, and history graph of the latest 20 commits",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "lcp",
+      "command": "l --no-merges --cherry-pick --right-only",
+      "summary": "View abbreviated SHAs between two branches, excluding cherry picks",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "lg",
+      "command": "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit",
+      "summary": "Advanced visualization",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "m",
+      "command": "\"merge\"",
+      "summary": "Shorthand for merge",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "oreb",
+      "command": "\"!f() { git rebase origin/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
+      "summary": "Fetch and rebase current branch with origin's master",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "p",
+      "command": "!\"git pull; git submodule foreach git pull origin master\"",
+      "summary": "Pull in remote changes for the current repository and all its submodules",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "pub",
+      "command": "\"!git push -u origin $(git b)\"",
+      "summary": "Push current branch to origin and set upstream",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "reb",
+      "command": "\"!r() { git rebase -i HEAD~$1; }; r\"",
+      "summary": "Interactive rebase with the given number of latest commits",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "remotes",
+      "command": "remote -v",
+      "summary": "Show verbose output about tags, branches or remotes",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "retag",
+      "command": "\"!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r\"",
+      "summary": "Remove the old tag with this name and tag the latest commit with it.",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "root",
+      "command": "rev-parse --show-toplevel",
+      "summary": "Root directory",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "s",
+      "command": "status -s",
+      "summary": "View the current working tree status using the short format",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "tags",
+      "command": "tag -l",
+      "summary": "Show verbose output about tags, branches or remotes",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "undo-commit",
+      "command": "reset --soft HEAD^",
+      "summary": "Undo last local commit",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "unpub",
+      "command": "\"!git push origin :$(git b)\"",
+      "summary": "Delete current branch from origin",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "ureb",
+      "command": "\"!f() { git rebase upstream/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
+      "summary": "Fetch and rebase current branch with upstream's master",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "wt",
+      "command": "worktree",
+      "summary": "Git worktree helpers",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "wtl",
+      "command": "worktree list",
+      "summary": "Git worktree helpers",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "wtp",
+      "command": "worktree prune",
+      "summary": "Git worktree helpers",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "wtr",
+      "command": "worktree remove",
+      "summary": "Git worktree helpers",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "wtx",
+      "command": "\"!git worktree list --porcelain\"",
+      "summary": "Git worktree helpers",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "gm",
+      "command": "gitmoji",
+      "summary": "system alias from Gitmoji",
+      "kind": "system alias",
+      "source": "system/.aliases"
     }
   ],
   "features": [

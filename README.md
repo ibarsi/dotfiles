@@ -65,7 +65,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, disables press-and-hold accent popups, and reloads a Caps Lock to Control remap at login.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
-- **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, mise tasks, bootstrap links, and major repo capabilities from source files.
+- **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, and major repo capabilities from source files.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
@@ -89,7 +89,7 @@ The repo includes a lightweight static docs app in `docs/` for browsing the curr
 
 - Source-driven generator: `scripts/generate-docs.py`
 - Generated data file: `docs/site-data.json`
-- Includes: aliases, functions, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
+- Includes: aliases, functions, git shortcuts from `git/.gitconfig` plus git-focused shell helpers, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
 
 Refresh the docs after any feature, alias, function, task, or bootstrap link change:
 

@@ -19,6 +19,11 @@ const sectionMeta = {
     title: "Functions",
     empty: "No functions matched the current filter.",
   },
+  git: {
+    label: "Version control",
+    title: "Git shortcuts",
+    empty: "No git shortcuts matched the current filter.",
+  },
   features: {
     label: "Repo capabilities",
     title: "Features",
@@ -56,6 +61,8 @@ const buildSearchText = (item, section) => {
       return [item.name, item.command, item.group, item.source].join(" ").toLowerCase();
     case "functions":
       return [item.name, item.summary, item.usage, item.source].join(" ").toLowerCase();
+    case "git":
+      return [item.name, item.command, item.summary, item.kind, item.source].join(" ").toLowerCase();
     case "features":
       return [item.title, item.summary, item.details.join(" "), item.source].join(" ").toLowerCase();
     case "tasks":
@@ -88,6 +95,12 @@ const cardForItem = (item, section) => {
     badge.textContent = "function";
     summary.textContent = item.summary;
     code.textContent = item.usage || item.name;
+    meta.textContent = item.source;
+  } else if (section === "git") {
+    title.textContent = item.name;
+    badge.textContent = item.kind;
+    summary.textContent = item.summary;
+    code.textContent = item.command;
     meta.textContent = item.source;
   } else if (section === "features") {
     title.textContent = item.title;
@@ -128,6 +141,7 @@ const renderStats = () => {
   const pairs = [
     [data.stats.aliases, "aliases"],
     [data.stats.functions, "functions"],
+    [data.stats.git, "git"],
     [data.stats.features, "features"],
     [data.stats.tasks, "tasks"],
     [data.stats.bootstrap_links, "links"],
