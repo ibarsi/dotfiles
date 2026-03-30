@@ -3,45 +3,68 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dotfiles Reference</title>
+    <title>dotfiles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="hero">
-        <p class="eyebrow">Dotfiles Docs</p>
-        <h1>Reference for aliases, functions, tasks, bootstrap links, and repo features.</h1>
-        <p class="hero-copy">
-          Generated from repository source files so the docs site stays tied to the actual shell and bootstrap behavior.
-        </p>
-        <div class="hero-actions">
-          <label class="search">
-            <span>Search</span>
-            <input id="search" type="search" placeholder="Find aliases, functions, tasks, or features" />
-          </label>
-          <select id="section-filter" aria-label="Filter by section">
-            <option value="all">All sections</option>
-            <option value="aliases">Aliases</option>
-            <option value="functions">Functions</option>
-            <option value="features">Features</option>
-            <option value="tasks">Mise tasks</option>
-            <option value="bootstrap_links">Bootstrap links</option>
-          </select>
+        <div class="hero-top">
+          <div class="hero-brand">
+            <div class="logo" aria-hidden="true">~/.</div>
+            <div>
+              <h1>dotfiles</h1>
+              <p class="hero-copy">
+                Shell aliases, functions, tasks &amp; bootstrap links &mdash; generated from source.
+              </p>
+            </div>
+          </div>
+          <div class="stats" id="stats"></div>
         </div>
-        <div class="stats" id="stats"></div>
+        <div class="hero-controls">
+          <label class="search-bar">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" />
+              <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input id="search" type="search" placeholder="Search everything&hellip;" />
+            <kbd class="search-hint">⌘K</kbd>
+          </label>
+          <nav class="section-tabs" id="section-filter" role="tablist">
+            <button class="tab active" role="tab" data-value="all">All</button>
+            <button class="tab" role="tab" data-value="aliases">Aliases</button>
+            <button class="tab" role="tab" data-value="functions">Functions</button>
+            <button class="tab" role="tab" data-value="features">Features</button>
+            <button class="tab" role="tab" data-value="tasks">Tasks</button>
+            <button class="tab" role="tab" data-value="bootstrap_links">Links</button>
+          </nav>
+        </div>
       </header>
 
       <main id="content" class="content" aria-live="polite"></main>
+
+      <footer class="site-footer">
+        <p>
+          Auto-generated from repo source files &middot;
+          <span id="footer-hash"></span>
+        </p>
+      </footer>
     </div>
 
     <template id="section-template">
       <section class="section">
         <div class="section-header">
-          <div>
-            <p class="section-kicker"></p>
+          <div class="section-title-group">
             <h2></h2>
+            <span class="section-count"></span>
           </div>
-          <p class="section-count"></p>
+          <p class="section-kicker"></p>
         </div>
         <div class="cards"></div>
       </section>
@@ -54,7 +77,7 @@
           <span class="badge"></span>
         </div>
         <p class="summary"></p>
-        <pre class="command"></pre>
+        <pre class="command"><code></code></pre>
         <ul class="detail-list"></ul>
         <p class="meta"></p>
       </article>

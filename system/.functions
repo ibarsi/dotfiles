@@ -64,6 +64,42 @@ function reload-dotfiles() {
     echo "Reloaded ~/.zshrc"
 }
 
+# Serve the dotfiles docs site from anywhere and open it in the browser
+function dotdocs() {
+    local repo_root url port log_file
+    repo_root="${DOTFILES:-$HOME/dotfiles}"
+    url="http://localhost:4173"
+    port="4173"
+    log_file="${TMPDIR:-/tmp}/dotfiles-docs.log"
+
+    if [[ ! -f "$repo_root/mise.toml" || ! -d "$repo_root/docs" ]]; then
+        echo "Dotfiles repo not found at $repo_root" >&2
+        return 1
+    fi
+
+    if ! command -v mise >/dev/null 2>&1; then
+        echo "mise is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if ! lsof -ti tcp:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+        (
+            cd "$repo_root" || exit 1
+            nohup mise run docs-serve >"$log_file" 2>&1 &
+        )
+        sleep 1
+    fi
+
+    if lsof -ti tcp:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+        open "$url"
+        echo "Docs site available at $url"
+        echo "Server log: $log_file"
+    else
+        echo "Failed to start docs server. Check $log_file" >&2
+        return 1
+    fi
+}
+
 # Jump to the current git repository root
 function groot() {
     cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || return 1

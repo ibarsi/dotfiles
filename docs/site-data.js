@@ -1,9 +1,9 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "316cf3c158b7cc84d0dbdbcb487409a019d881fc",
-  "source_hash": "ea245639fcfc",
+  "git_revision": "7e209b25fe2223e11d86811b6146652561cacf36",
+  "source_hash": "fbd292bd896c",
   "stats": {
     "aliases": 48,
-    "functions": 27,
+    "functions": 28,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 17,
@@ -353,6 +353,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "dnstrace",
       "summary": "Quick DNS trace (A + AAAA + CNAME + NS path)",
       "usage": "dnstrace <domain>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "dotdocs",
+      "summary": "Serve the dotfiles docs site from anywhere and open it in the browser",
+      "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
     },

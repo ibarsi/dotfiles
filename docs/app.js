@@ -1,9 +1,12 @@
 const content = document.querySelector("#content");
 const statsNode = document.querySelector("#stats");
 const searchNode = document.querySelector("#search");
-const sectionFilterNode = document.querySelector("#section-filter");
+const tabContainer = document.querySelector("#section-filter");
 const sectionTemplate = document.querySelector("#section-template");
 const cardTemplate = document.querySelector("#card-template");
+const footerHash = document.querySelector("#footer-hash");
+
+let activeFilter = "all";
 
 const sectionMeta = {
   aliases: {
@@ -70,6 +73,7 @@ const cardForItem = (item, section) => {
   const badge = card.querySelector(".badge");
   const summary = card.querySelector(".summary");
   const command = card.querySelector(".command");
+  const code = command.querySelector("code");
   const detailList = card.querySelector(".detail-list");
   const meta = card.querySelector(".meta");
 
@@ -77,14 +81,14 @@ const cardForItem = (item, section) => {
     title.textContent = item.name;
     badge.textContent = item.group || item.source_kind;
     summary.textContent = item.source_kind;
-    command.textContent = item.command;
-    meta.textContent = `Source: ${item.source}`;
+    code.textContent = item.command;
+    meta.textContent = item.source;
   } else if (section === "functions") {
     title.textContent = item.name;
     badge.textContent = "function";
     summary.textContent = item.summary;
-    command.textContent = item.usage || item.name;
-    meta.textContent = `Source: ${item.source}`;
+    code.textContent = item.usage || item.name;
+    meta.textContent = item.source;
   } else if (section === "features") {
     title.textContent = item.title;
     badge.textContent = "feature";
@@ -95,25 +99,25 @@ const cardForItem = (item, section) => {
       li.textContent = detail;
       detailList.append(li);
     });
-    meta.textContent = `Source: ${item.source}`;
+    meta.textContent = item.source;
   } else if (section === "tasks") {
     title.textContent = item.name;
     badge.textContent = "mise task";
     summary.textContent = item.description;
-    command.textContent = item.run.join("\n");
-    meta.textContent = `Source: ${item.source}`;
+    code.textContent = item.run.join("\n");
+    meta.textContent = item.source;
   } else if (section === "bootstrap_links") {
     title.textContent = item.target_path;
     badge.textContent = "symlink";
     summary.textContent = item.source_path;
-    command.textContent = `${item.source_path} -> ${item.target_path}`;
-    meta.textContent = `Source: ${item.source}`;
+    code.textContent = `${item.source_path} → ${item.target_path}`;
+    meta.textContent = item.source;
   }
 
   if (!detailList.children.length) {
     detailList.remove();
   }
-  if (!command.textContent) {
+  if (command.parentNode && !code?.textContent) {
     command.remove();
   }
 
@@ -121,23 +125,26 @@ const cardForItem = (item, section) => {
 };
 
 const renderStats = () => {
-  const entries = [
-    `${data.stats.aliases} aliases`,
-    `${data.stats.functions} functions`,
-    `${data.stats.features} features`,
-    `${data.stats.tasks} tasks`,
-    `${data.stats.bootstrap_links} managed links`,
-    `${data.stats.brews} brews`,
-    `${data.stats.casks} casks`,
+  const pairs = [
+    [data.stats.aliases, "aliases"],
+    [data.stats.functions, "functions"],
+    [data.stats.features, "features"],
+    [data.stats.tasks, "tasks"],
+    [data.stats.bootstrap_links, "links"],
+    [data.stats.brews, "brews"],
+    [data.stats.casks, "casks"],
   ];
-  statsNode.textContent = `${entries.join(" • ")} • Source hash ${data.source_hash} • Git ${data.git_revision.slice(0, 12)}`;
+  statsNode.textContent = pairs.map(([n, l]) => `${n} ${l}`).join(" · ");
+  if (footerHash) {
+    footerHash.textContent = `${data.source_hash} · ${data.git_revision.slice(0, 8)}`;
+  }
 };
 
 const renderSection = (section, items) => {
   const node = sectionTemplate.content.firstElementChild.cloneNode(true);
   node.querySelector(".section-kicker").textContent = sectionMeta[section].label;
   node.querySelector("h2").textContent = sectionMeta[section].title;
-  node.querySelector(".section-count").textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+  node.querySelector(".section-count").textContent = `(${items.length})`;
   const cards = node.querySelector(".cards");
 
   if (!items.length) {
@@ -154,11 +161,10 @@ const renderSection = (section, items) => {
 
 const render = () => {
   const query = searchNode.value.trim().toLowerCase();
-  const sectionFilter = sectionFilterNode.value;
   content.replaceChildren();
 
   Object.keys(sectionMeta).forEach((section) => {
-    if (sectionFilter !== "all" && section !== sectionFilter) {
+    if (activeFilter !== "all" && section !== activeFilter) {
       return;
     }
     const items = data[section].filter((item) => {
@@ -171,7 +177,26 @@ const render = () => {
   });
 };
 
+/* ── tab navigation ──────────────────────────────── */
+tabContainer.addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+
+  tabContainer.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+  tab.classList.add("active");
+  activeFilter = tab.dataset.value;
+  render();
+});
+
+/* ── ⌘K shortcut ──────────────────────────────────── */
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    e.preventDefault();
+    searchNode.focus();
+    searchNode.select();
+  }
+});
+
 renderStats();
 render();
 searchNode.addEventListener("input", render);
-sectionFilterNode.addEventListener("change", render);

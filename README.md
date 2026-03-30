@@ -22,6 +22,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run docs-build` → regenerate the docs site data from repo sources
 - `mise run docs-check` → fail if `docs/site-data.json` is stale
 - `mise run docs-serve` → serve the docs site locally with mise-managed Python
+- `dotdocs` → start the docs site from any directory and open it in the browser
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
@@ -104,6 +105,8 @@ mise run docs-serve
 ```
 
 Then open `http://localhost:4173`.
+
+From any directory, `dotdocs` will start the server if needed and open the same URL automatically.
 
 ## Ghostty Terminal
 
