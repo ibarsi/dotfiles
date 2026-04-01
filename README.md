@@ -69,6 +69,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
+- **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
@@ -188,6 +189,15 @@ Prefer separate windows over many panes for independent Claude threads so quiet 
 - `tl` → list sessions
 - `ta <name>` → attach session
 - `tn <name>` → create new named session
+
+## SSH Workflow
+
+Use `sshx` instead of `ssh` for remote hosts that mis-handle Ghostty's default `xterm-ghostty` terminal type.
+
+- `sshx user@host` → run SSH with `TERM=xterm-256color`
+- `sshx -p 2222 user@host` → same behavior with explicit port/flags
+
+This is mainly useful for older appliances and NAS shells that render broken line editing or arrow-key behavior over SSH.
 
 ## Networking Workflow
 

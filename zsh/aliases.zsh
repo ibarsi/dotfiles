@@ -8,6 +8,9 @@ alias dsync="dotfiles-sync"
 # Reload shell
 alias reload="exec zsh -l"
 
+# SSH compatibility
+alias sshx='TERM=xterm-256color ssh'
+
 # Codex CLI
 alias cx="codex"
 alias cxe="codex exec"

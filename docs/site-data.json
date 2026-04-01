@@ -1,8 +1,8 @@
 {
-  "git_revision": "1e4de44e7be370d7ce001c273d98f4324e321aab",
-  "source_hash": "f34ef832ad4d",
+  "git_revision": "b0946f26f01c9455f1152871d5262e02ffe5c47b",
+  "source_hash": "9e5fb46bf01b",
   "stats": {
-    "aliases": 48,
+    "aliases": 49,
     "functions": 29,
     "git": 52,
     "features": 12,
@@ -317,6 +317,13 @@
       "name": "reload",
       "command": "exec zsh -l",
       "group": "Reload shell",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "sshx",
+      "command": "TERM=xterm-256color ssh",
+      "group": "SSH compatibility",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
