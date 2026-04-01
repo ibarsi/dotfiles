@@ -1,10 +1,10 @@
 {
-  "git_revision": "b0946f26f01c9455f1152871d5262e02ffe5c47b",
-  "source_hash": "9e5fb46bf01b",
+  "git_revision": "28376c9b68429b76728f4323f0407dd22001122d",
+  "source_hash": "c580ee197d9c",
   "stats": {
     "aliases": 49,
     "functions": 29,
-    "git": 52,
+    "git": 55,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 17,
@@ -640,6 +640,13 @@
       "source": "git/.gitconfig"
     },
     {
+      "name": "bparent",
+      "command": "\"!f() { git log ${1:-main}..HEAD --oneline | tail -1 | cut -d\\\" \\\" -f1 | xargs -I{} git log --oneline -1 {}^; }; f\"",
+      "summary": "Print the parent commit of the oldest commit on the current branch not found in the given base",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
       "name": "branches",
       "command": "branch -a",
       "summary": "Show verbose output about tags, branches or remotes",
@@ -801,6 +808,13 @@
       "source": "git/.gitconfig"
     },
     {
+      "name": "onto",
+      "command": "\"!f() { sha=$(git bparent \\\"$1\\\" | cut -d\\\" \\\" -f1) && [ -n \\\"$sha\\\" ] && git rebase --onto origin/${1:-main} \\\"$sha\\\"; }; f\"",
+      "summary": "Rebase the current branch onto origin/<base> using bparent as the boundary",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
       "name": "oreb",
       "command": "\"!f() { git rebase origin/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
       "summary": "Fetch and rebase current branch with origin's master",
@@ -839,6 +853,13 @@
       "name": "retag",
       "command": "\"!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r\"",
       "summary": "Remove the old tag with this name and tag the latest commit with it.",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "rh",
+      "command": "\"!git reset --hard origin/$(git symbolic-ref --short HEAD)\"",
+      "summary": "Hard reset the current branch to its origin branch",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },

@@ -242,11 +242,14 @@ These are designed for daily terminal usage with your current tooling stack and 
 The shell and git config now include a minimal worktree layer aimed at parallel agent sessions without adding much ceremony.
 
 **Git aliases:**
+- `git rh` → hard reset the current branch to `origin/<current-branch>`
 - `git wt` → raw `git worktree`
 - `git wtl` → list worktrees
 - `git wtp` → prune stale worktree metadata
 - `git wtr <path>` → remove a worktree
 - `git wtx` → porcelain worktree listing for scripting
+- `git bparent [base-ref]` → print the parent commit of the oldest commit on the current branch not found in the given base
+- `git onto [base-ref]` → rebase the current branch onto `origin/<base>` using `git bparent` as the boundary
 
 **Shell helpers:**
 - `wtpath [name]` → print the conventional path for the current repo under `~/worktrees/<repo>/<name>`

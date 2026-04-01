@@ -44,6 +44,9 @@
     # Fetch upstream
     fu = "!git fetch upstream"
 
+    # Hard reset the current branch to its origin branch
+    rh = "!git reset --hard origin/$(git symbolic-ref --short HEAD)"
+
     # Commit all changes
     ca = !git add -A && git commit -av
 
@@ -75,6 +78,12 @@
 
     # Interactively rebase changes in current branch against another branch used as the base
     breb = "!f() { git rebase -i `git merge-base $1 HEAD`; }; f"
+
+    # Print the parent commit of the oldest commit on the current branch not found in the given base
+    bparent = "!f() { git log ${1:-main}..HEAD --oneline | tail -1 | cut -d\" \" -f1 | xargs -I{} git log --oneline -1 {}^; }; f"
+
+    # Rebase the current branch onto origin/<base> using bparent as the boundary
+    onto = "!f() { sha=$(git bparent \"$1\" | cut -d\" \" -f1) && [ -n \"$sha\" ] && git rebase --onto origin/${1:-main} \"$sha\"; }; f"
 
     # Remove the old tag with this name and tag the latest commit with it.
     retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
