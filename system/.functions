@@ -386,6 +386,72 @@ function fwtr() {
     git wtr "$worktree_path"
 }
 
+# Fuzzy-pick a git worktree from the current repo and cd into it
+function fwt() {
+    if ! command -v git >/dev/null 2>&1; then
+        echo "git is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "fzf is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local selected worktree_path branch head
+    git rev-parse --show-toplevel >/dev/null 2>&1 || {
+        echo "Not inside a git repository" >&2
+        return 1
+    }
+
+    selected=$(
+        git wtx | awk '
+            /^worktree / {
+                path = substr($0, 10)
+                next
+            }
+            /^HEAD / {
+                head = $2
+                next
+            }
+            /^branch / {
+                branch = $2
+                sub(/^refs\/heads\//, "", branch)
+                next
+            }
+            /^detached$/ {
+                branch = "(detached)"
+                next
+            }
+            /^$/ {
+                if (path != "") {
+                    printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
+                }
+                path = ""
+                branch = ""
+                head = ""
+            }
+            END {
+                if (path != "") {
+                    printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
+                }
+            }
+        ' | fzf --delimiter=$'\t' --with-nth=2,1 --height=60% --layout=reverse --border \
+                 --prompt='Worktree> ' \
+                 --header='branch  path' \
+                 --preview 'git -C {1} status -sb 2>/dev/null || git -C {1} rev-parse --short HEAD' \
+                 --preview-window=right:60%
+    ) || return 1
+
+    if [[ -z "$selected" ]]; then
+        echo "No worktrees found"
+        return 1
+    fi
+
+    IFS=$'\t' read -r worktree_path branch head <<<"$selected"
+    cd "$worktree_path" || return 1
+}
+
 # NETWORK WORKFLOWS
 
 # Quick DNS trace (A + AAAA + CNAME + NS path)

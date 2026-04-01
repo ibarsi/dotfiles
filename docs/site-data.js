@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "d0fd30ad24e1011deedc73955bc23eca755cb53c",
-  "source_hash": "d7d6d4549001",
+  "git_revision": "1e4de44e7be370d7ce001c273d98f4324e321aab",
+  "source_hash": "f34ef832ad4d",
   "stats": {
     "aliases": 48,
-    "functions": 28,
-    "git": 51,
+    "functions": 29,
+    "git": 52,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 17,
@@ -414,6 +414,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
+      "name": "fwt",
+      "summary": "Fuzzy-pick a git worktree from the current repo and cd into it",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "fwtr",
       "summary": "Fuzzy-pick a git worktree and remove it with git wtr",
       "usage": "",
@@ -559,6 +566,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fbr",
       "command": "fbr",
       "summary": "Fuzzy-switch git branch",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "fwt",
+      "command": "fwt",
+      "summary": "Fuzzy-pick a git worktree from the current repo and cd into it",
       "kind": "function",
       "source": "system/.functions"
     },

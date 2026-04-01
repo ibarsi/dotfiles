@@ -222,6 +222,7 @@ This keeps the setup lean: mostly thin wrappers over proven tools, with sensible
 - `fbr` → fuzzy-switch git branches (supports remote tracking branches)
 - `frg [query]` → fuzzy-select from `rg` results and jump to file+line
 - `fkill` → fuzzy-select running process and kill it
+- `fwt` → fuzzy-pick a git worktree from the current repo and `cd` into it
 - `fwtr` → fuzzy-pick a sibling git worktree and remove it with `git wtr`
 
 These are designed for daily terminal usage with your current tooling stack and should work across your repos out of the box.
@@ -240,11 +241,13 @@ The shell and git config now include a minimal worktree layer aimed at parallel 
 **Shell helpers:**
 - `wtpath [name]` → print the conventional path for the current repo under `~/worktrees/<repo>/<name>`
 - `wtnew <branch> [base]` → create a new worktree at that path, print the exact branch/base/path used, and `cd` into it
+- `fwt` → fuzzy-pick any worktree from the current repo and `cd` into it
 - `wtsesh` → attach/create a tmux session named from the current repo and branch
 - `fwtr` → fuzzy-search removable worktrees from the current repo and pass the selected path to `git wtr`
 
 **Recommended flow:**
 - From any repo root, run `wtnew feature/my-task`
+- Use `fwt` any time you want to jump between existing worktrees for that repo
 - Start or attach your worktree tmux session with `wtsesh`
 - Run your agent inside that session so each branch/worktree has isolated terminal context
 - If `wtnew` fails, it now prints whether the problem is missing `git`, missing repo context, or a rejected `git worktree add`
