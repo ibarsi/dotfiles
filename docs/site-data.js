@@ -1,13 +1,13 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "28376c9b68429b76728f4323f0407dd22001122d",
-  "source_hash": "c580ee197d9c",
+  "git_revision": "212f7653f9f784f65313fd06118b84e6bd5e8d49",
+  "source_hash": "db35789cb4be",
   "stats": {
     "aliases": 49,
     "functions": 29,
     "git": 55,
     "features": 12,
     "tasks": 15,
-    "bootstrap_links": 17,
+    "bootstrap_links": 18,
     "brews": 35,
     "casks": 24
   },
@@ -1282,6 +1282,11 @@ window.DOTFILES_DOCS_DATA = {
     {
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",
       "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
+      "source": "bootstrap.sh"
+    },
+    {
+      "source_path": "gitmoji/config.json",
+      "target_path": "~/Library/Preferences/gitmoji-nodejs/config.json",
       "source": "bootstrap.sh"
     }
   ],

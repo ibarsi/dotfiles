@@ -43,6 +43,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `vim/`: Vim configuration.
 - `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
+- `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
@@ -68,6 +69,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, and major repo capabilities from source files.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
 - **Advanced Git**: Includes `gh-dash` and powerful log visualization.
+- **Gitmoji subject format**: Global `gitmoji-cli` defaults keep the message in the commit subject as `✨ (feat): Title` instead of pushing it into the body.
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
 - **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.

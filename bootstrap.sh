@@ -73,6 +73,10 @@ ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
 mkdir -p "$HOME/.config/opencode"
 ln -sf "$DOTFILES_ROOT/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
 
+# Gitmoji
+mkdir -p "$HOME/Library/Preferences/gitmoji-nodejs"
+ln -sf "$DOTFILES_ROOT/gitmoji/config.json" "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
+
 # LaunchAgents
 mkdir -p "$HOME/Library/LaunchAgents"
 ln -sf "$DOTFILES_ROOT/launchagents/com.ibarsi.capslock-control.plist" "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist"
