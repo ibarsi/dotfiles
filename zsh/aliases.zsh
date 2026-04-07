@@ -16,12 +16,14 @@ alias cx="codex"
 alias cxe="codex exec"
 alias cxr="codex resume --last"
 alias cxreview='codex "/review"'
+alias cxyolo="codex --full-auto"
 
 # Claude Code CLI
 alias cc="claude"
-alias ccr="claude --resume"
-alias ccdoctor="claude doctor"
-alias cyolo="claude --dangerously-skip-permissions"
+alias cce="claude -p"
+alias ccr="claude --continue"
+alias ccreview='claude "/review"'
+alias ccyolo="claude --dangerously-skip-permissions"
 
 # Upgrade AI coding tools
 alias aiup="brew upgrade claude-code codex opencode"

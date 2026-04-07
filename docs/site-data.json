@@ -1,8 +1,8 @@
 {
-  "git_revision": "5b6019caf76e101b21fb39094d4d8fd9e0f5e04c",
-  "source_hash": "7f7a36fe3b09",
+  "git_revision": "49a2812dec261350ed0a6ca5b8bb49740e82f33e",
+  "source_hash": "04394c3fe6ae",
   "stats": {
-    "aliases": 49,
+    "aliases": 51,
     "functions": 29,
     "git": 55,
     "features": 10,
@@ -42,7 +42,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude codex opencode",
+      "command": "brew upgrade claude-code codex opencode",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -62,15 +62,29 @@
       "source_kind": "zsh alias"
     },
     {
-      "name": "ccdoctor",
-      "command": "claude doctor",
+      "name": "cce",
+      "command": "claude -p",
       "group": "Claude Code CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
     {
       "name": "ccr",
-      "command": "claude --resume",
+      "command": "claude --continue",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "ccreview",
+      "command": "claude \"/review\"",
+      "group": "Claude Code CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "ccyolo",
+      "command": "claude --dangerously-skip-permissions",
       "group": "Claude Code CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -125,9 +139,9 @@
       "source_kind": "zsh alias"
     },
     {
-      "name": "cyolo",
-      "command": "claude --dangerously-skip-permissions",
-      "group": "Claude Code CLI",
+      "name": "cxyolo",
+      "command": "codex --full-auto",
+      "group": "Codex CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },

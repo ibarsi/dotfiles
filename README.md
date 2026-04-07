@@ -461,7 +461,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 **Zsh shortcuts:**
 - `cc` → `claude`
-- `ccr` → `claude --resume`
+- `ccr` → `claude --continue`
 - `ccdoctor` → `claude doctor`
 - `ccupdate` → upgrade Claude Code (brew cask if installed via Homebrew, otherwise `claude update`)
 
