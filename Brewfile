@@ -1,8 +1,6 @@
 # Brewfile - Modernized Setup for ibarsi
 
 # Taps
-tap "matheusml/zsh-ai"
-
 # CLI Tools (Core)
 brew "coreutils"
 brew "moreutils"
@@ -36,7 +34,6 @@ brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
-brew "zsh-ai"           # Natural language → shell command helper
 brew "k9s"              # Kubernetes cluster TUI
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
 brew "mtr"              # Traceroute + ping in one view

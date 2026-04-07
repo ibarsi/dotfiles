@@ -32,7 +32,7 @@ FEATURE_NOTES = {
         "details": [
             "Sources topic files from the repo instead of duplicating config into the home directory.",
             "Enables history sharing, cached completion, case-insensitive globbing, and tool init for zoxide, starship, and mise.",
-            "Loads Codex shell completion and the optional zsh-ai plugin when available.",
+            "Loads Codex shell completion when available.",
         ],
     },
     "plugins": {
@@ -43,26 +43,6 @@ FEATURE_NOTES = {
             "Loads zsh-autosuggestions when installed.",
             "Loads zsh-syntax-highlighting when installed.",
             "Sources ~/.fzf.zsh for shell keybindings and completion.",
-        ],
-    },
-    "startup_tips": {
-        "title": "AI startup tips",
-        "summary": "Shows one cached daily tip generated from the repo's actual aliases and functions.",
-        "source": "zsh/startup-tip.zsh",
-        "details": [
-            "Interactive shells only.",
-            "Can be disabled with DOTFILES_STARTUP_TIPS=0.",
-            "Uses zsh-ai and caches the generated tip per day.",
-        ],
-    },
-    "zsh_ai": {
-        "title": "Local zsh-ai defaults",
-        "summary": "Targets LM Studio's OpenAI-compatible endpoint and steers generated commands toward the repo's preferred CLI tools.",
-        "source": "zsh/zsh-ai.zsh",
-        "details": [
-            "Defaults to qwen2.5-coder-7b-instruct-mlx on http://localhost:1234.",
-            "Biases command suggestions toward eza, fd, rg, bat, and zed.",
-            "Avoids destructive commands unless explicitly requested.",
         ],
     },
     "theme": {
@@ -467,8 +447,6 @@ def main() -> None:
                 ROOT / "system/.functions",
                 ROOT / "zsh/aliases.zsh",
                 ROOT / "zsh/plugins.zsh",
-                ROOT / "zsh/startup-tip.zsh",
-                ROOT / "zsh/zsh-ai.zsh",
                 ROOT / "scripts/doctor-ai.sh",
                 ROOT / "scripts/bootstrap-verify.sh",
             ]

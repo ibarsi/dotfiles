@@ -24,7 +24,7 @@ done < <(find "$DOTFILES" -type f -name '*.path' | sort)
 
 # 2. Load all other .zsh files (except plugins/completion)
 while IFS= read -r file; do
-	if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* && "$file" != *"startup-tip.zsh"* ]]; then
+	if [[ "$file" != *"plugins.zsh"* && "$file" != *"completion.zsh"* ]]; then
 		source "$file"
 	fi
 done < <(find "$DOTFILES" -type f -name '*.zsh' | sort)
@@ -43,11 +43,6 @@ fi
 # starship (prompt)
 if command -v starship >/dev/null; then
 	eval "$(starship init zsh)"
-fi
-
-# zsh-ai plugin (Homebrew install path)
-if command -v brew >/dev/null && [[ -r "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh" ]]; then
-	source "$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh"
 fi
 
 # plugins

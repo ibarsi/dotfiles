@@ -1,14 +1,14 @@
 {
-  "git_revision": "212f7653f9f784f65313fd06118b84e6bd5e8d49",
-  "source_hash": "db35789cb4be",
+  "git_revision": "cd68983947330735fe582b2bbfe09e7877e99f96",
+  "source_hash": "7b9061291a3e",
   "stats": {
     "aliases": 49,
     "functions": 29,
     "git": 55,
-    "features": 12,
+    "features": 10,
     "tasks": 15,
     "bootstrap_links": 18,
-    "brews": 35,
+    "brews": 34,
     "casks": 24
   },
   "aliases": [
@@ -967,7 +967,7 @@
       "details": [
         "Sources topic files from the repo instead of duplicating config into the home directory.",
         "Enables history sharing, cached completion, case-insensitive globbing, and tool init for zoxide, starship, and mise.",
-        "Loads Codex shell completion and the optional zsh-ai plugin when available."
+        "Loads Codex shell completion when available."
       ],
       "source": "zsh/.zshrc"
     },
@@ -981,28 +981,6 @@
         "Sources ~/.fzf.zsh for shell keybindings and completion."
       ],
       "source": "zsh/plugins.zsh"
-    },
-    {
-      "slug": "startup_tips",
-      "title": "AI startup tips",
-      "summary": "Shows one cached daily tip generated from the repo's actual aliases and functions.",
-      "details": [
-        "Interactive shells only.",
-        "Can be disabled with DOTFILES_STARTUP_TIPS=0.",
-        "Uses zsh-ai and caches the generated tip per day."
-      ],
-      "source": "zsh/startup-tip.zsh"
-    },
-    {
-      "slug": "zsh_ai",
-      "title": "Local zsh-ai defaults",
-      "summary": "Targets LM Studio's OpenAI-compatible endpoint and steers generated commands toward the repo's preferred CLI tools.",
-      "details": [
-        "Defaults to qwen2.5-coder-7b-instruct-mlx on http://localhost:1234.",
-        "Biases command suggestions toward eza, fd, rg, bat, and zed.",
-        "Avoids destructive commands unless explicitly requested."
-      ],
-      "source": "zsh/zsh-ai.zsh"
     },
     {
       "slug": "theme",
@@ -1291,9 +1269,7 @@
     }
   ],
   "packages": {
-    "taps": [
-      "matheusml/zsh-ai"
-    ],
+    "taps": [],
     "brews": [
       "coreutils",
       "moreutils",
@@ -1325,7 +1301,6 @@
       "eza\"              # Better 'ls",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
-      "zsh-ai\"           # Natural language \u2192 shell command helper",
       "k9s\"              # Kubernetes cluster TUI",
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
       "mtr\"              # Traceroute + ping in one view",

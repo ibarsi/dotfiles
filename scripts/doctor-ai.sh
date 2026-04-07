@@ -15,7 +15,6 @@ echo "== AI Toolchain Doctor =="
 check_bin codex
 check_bin claude
 check_bin opencode
-check_bin zsh-ai
 check_bin mise
 check_bin rg
 check_bin fd

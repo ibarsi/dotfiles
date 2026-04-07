@@ -78,8 +78,6 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 - **OpenCode workflow**: Local LM Studio-backed OpenCode config managed in dotfiles.
-- **zsh-ai workflow**: Natural-language command generation in terminal using a local LM Studio model by default.
-
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
@@ -314,42 +312,6 @@ git push origin --delete feat/mobile-nav
 
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
-
-## Startup Smart Tips
-
-A lightweight AI-generated startup tip appears once per new interactive terminal session, based on aliases/functions from your actual setup.
-
-- File: `zsh/startup-tip.zsh`
-- Behavior: one generated tip at shell start (cached daily)
-- Opt-out: `export DOTFILES_STARTUP_TIPS=0`
-- Requires: `zsh-ai` available in PATH
-
-## zsh-ai Workflow
-
-[zsh-ai](https://github.com/matheusml/zsh-ai) is integrated as a shell plugin with local LM Studio defaults tuned for your existing CLI stack.
-
-| File | Purpose |
-|------|---------|
-| `zsh/zsh-ai.zsh` | Provider/model defaults and prompt preferences |
-
-**Install path**
-- Homebrew tap: `matheusml/zsh-ai`
-- Formula: `zsh-ai`
-- Plugin sourced from: `$(brew --prefix)/share/zsh-ai/zsh-ai.plugin.zsh`
-
-**Defaults configured:**
-- `ZSH_AI_PROVIDER="openai"`
-- `ZSH_AI_OPENAI_MODEL="qwen2.5-coder-7b-instruct-mlx"`
-- `ZSH_AI_OPENAI_URL="http://localhost:1234/v1/chat/completions"`
-- `ZSH_AI_PROMPT_EXTEND` tuned to your tools (`rg`, `fd`, `bat`, `eza`, `zed`)
-
-**Local model setup:**
-- LM Studio local server should be running at `http://localhost:1234`
-- Load `qwen2.5-coder-7b-instruct-mlx` in LM Studio before using `zsh-ai`
-- No API key is required for local LM Studio usage with the custom `ZSH_AI_OPENAI_URL`
-
-**Usage:**
-- Type `# what you want` and press Enter, or run `zsh-ai "your request"`
 
 ## OpenCode Workflow
 
