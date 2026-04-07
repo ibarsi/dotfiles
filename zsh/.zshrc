@@ -87,10 +87,6 @@ setopt nocaseglob
 # --- Keybindings ---
 bindkey -e
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/igorbarsi/.lmstudio/bin"
-# End of LM Studio CLI section
-
 # Claude Code - GCP Vertex AI Configuration
 # Added by dev-tooling setup gcp
 export CLAUDE_CODE_USE_VERTEX=1

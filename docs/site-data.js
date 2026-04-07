@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "cd68983947330735fe582b2bbfe09e7877e99f96",
-  "source_hash": "7b9061291a3e",
+  "git_revision": "5b6019caf76e101b21fb39094d4d8fd9e0f5e04c",
+  "source_hash": "7f7a36fe3b09",
   "stats": {
     "aliases": 49,
     "functions": 29,
@@ -41,6 +41,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
+      "name": "aiup",
+      "command": "brew upgrade claude codex opencode",
+      "group": "Upgrade AI coding tools",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
       "name": "cat",
       "command": "bat",
       "group": "Shortcuts",
@@ -64,13 +71,6 @@ window.DOTFILES_DOCS_DATA = {
     {
       "name": "ccr",
       "command": "claude --resume",
-      "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "ccupdate",
-      "command": "if command -v brew >/dev/null && brew list --cask claude-code >/dev/null 2>&1; then brew upgrade --cask claude-code; else claude update; fi",
       "group": "Claude Code CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -125,9 +125,9 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "zsh alias"
     },
     {
-      "name": "cxup",
-      "command": "if command -v brew >/dev/null && brew list --cask codex >/dev/null 2>&1; then brew upgrade --cask codex; else npm i -g @openai/codex@latest; fi",
-      "group": "Codex CLI",
+      "name": "cyolo",
+      "command": "claude --dangerously-skip-permissions",
+      "group": "Claude Code CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
