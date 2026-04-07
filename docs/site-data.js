@@ -1327,7 +1327,7 @@ window.DOTFILES_DOCS_DATA = {
       "chatgpt-atlas",
       "comet",
       "discord",
-      "docker-desktop",
+      "orbstack",
       "grandperspective",
       "lulu",
       "obsidian",
