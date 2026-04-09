@@ -170,15 +170,30 @@ function wtnew() {
 
     cd "$worktree_path" || return 1
 
-    if command -v mise >/dev/null 2>&1 && [[ -f .mise.toml || -f mise.toml ]]; then
+    if command -v mise >/dev/null 2>&1; then
         echo "Trusting mise config in $worktree_path"
-        mise trust >/dev/null || {
-            echo "Failed to trust mise config in $worktree_path" >&2
-            return 1
-        }
+        mise trust 2>/dev/null
     fi
 
     echo "Entered $worktree_path"
+
+    # Inlined from wtsesh so we can send ccyolo into the session before
+    # attaching — wtsesh blocks on attach/switch, so calling it directly
+    # would prevent ccyolo from being queued.
+    local repo_name session
+    repo_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
+    session="${repo_name}-${branch}"
+    session="${session//\//-}"
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux new-session -d -s "$session" -c "$worktree_path"
+        tmux send-keys -t "$session" 'ccyolo' Enter
+        tmux switch-client -t "$session"
+    else
+        tmux new-session -d -s "$session" -c "$worktree_path"
+        tmux send-keys -t "$session" 'ccyolo' Enter
+        tmux attach-session -t "$session"
+    fi
 }
 
 # Attach or create a tmux session named from the current repo and branch
