@@ -1,6 +1,6 @@
 {
-  "git_revision": "0d88e6e26e1d4dde547b11e49b2b144e4a4cf15c",
-  "source_hash": "b610a8083b6c",
+  "git_revision": "1ed79ead8d80c01733879dafed804193cc02b1af",
+  "source_hash": "17230c621745",
   "stats": {
     "aliases": 51,
     "functions": 29,
@@ -1107,7 +1107,7 @@
       "description": "Ensure generated docs data is up to date",
       "run": [
         "python3 ./scripts/generate-docs.py",
-        "git diff --exit-code -- docs/site-data.json docs/site-data.js"
+        "git diff --exit-code -I '\\\"git_revision\\\"' -- docs/site-data.json docs/site-data.js"
       ],
       "source": "mise.toml"
     },
