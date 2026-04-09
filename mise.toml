@@ -61,7 +61,7 @@ run = "python3 ./scripts/generate-docs.py"
 description = "Ensure generated docs data is up to date"
 run = [
   "python3 ./scripts/generate-docs.py",
-  "git diff --exit-code -- docs/site-data.json docs/site-data.js",
+  "git diff --exit-code -I '\"git_revision\"' -- docs/site-data.json docs/site-data.js",
 ]
 
 [tasks.docs-serve]
