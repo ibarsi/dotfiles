@@ -1,0 +1,2 @@
+# Strip machine-local settings (e.g. trusted_config_paths) before committing
+mise/config.toml filter=mise-local

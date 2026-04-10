@@ -61,6 +61,10 @@ ln -sf "$DOTFILES_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
 mkdir -p "$HOME/.config/mise"
 ln -sf "$DOTFILES_ROOT/mise/config.toml" "$HOME/.config/mise/config.toml"
 
+# Git filters (repo-local, must be set per-clone)
+git -C "$DOTFILES_ROOT" config filter.mise-local.clean 'grep -v "^trusted_config_paths"'
+git -C "$DOTFILES_ROOT" config filter.mise-local.smudge cat
+
 # Codex CLI
 mkdir -p "$HOME/.codex"
 ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
