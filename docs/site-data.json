@@ -1,13 +1,13 @@
 {
-  "git_revision": "f4fae054471dd097da33523621a062ee8ea831b8",
-  "source_hash": "bcee9a10b0dc",
+  "git_revision": "29913bc8eb7b67f54874ddf4d16969fdbaa49471",
+  "source_hash": "29b2514baf10",
   "stats": {
     "aliases": 51,
     "functions": 29,
     "git": 55,
     "features": 10,
     "tasks": 15,
-    "bootstrap_links": 18,
+    "bootstrap_links": 19,
     "brews": 34,
     "casks": 24
   },
@@ -1194,92 +1194,97 @@
     {
       "source_path": "claude/settings.json",
       "target_path": "~/.claude/settings.json",
-      "source": "bootstrap.sh"
+      "source": "claude/install.sh"
     },
     {
       "source_path": "codex/config.toml",
       "target_path": "~/.codex/config.toml",
-      "source": "bootstrap.sh"
+      "source": "codex/install.sh"
     },
     {
       "source_path": "ghostty/config",
       "target_path": "~/.config/ghostty/config",
-      "source": "bootstrap.sh"
+      "source": "ghostty/install.sh"
     },
     {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/config.toml",
-      "source": "bootstrap.sh"
+      "source": "mise/install.sh"
     },
     {
       "source_path": "opencode/opencode.json",
       "target_path": "~/.config/opencode/opencode.json",
-      "source": "bootstrap.sh"
+      "source": "opencode/install.sh"
+    },
+    {
+      "source_path": "theme/starship.toml",
+      "target_path": "~/.config/starship.toml",
+      "source": "theme/install.sh"
     },
     {
       "source_path": "zed/keymap.json",
       "target_path": "~/.config/zed/keymap.json",
-      "source": "bootstrap.sh"
+      "source": "zed/install.sh"
     },
     {
       "source_path": "zed/settings.json",
       "target_path": "~/.config/zed/settings.json",
-      "source": "bootstrap.sh"
+      "source": "zed/install.sh"
     },
     {
       "source_path": "system/.curlrc",
       "target_path": "~/.curlrc",
-      "source": "bootstrap.sh"
+      "source": "system/install.sh"
     },
     {
       "source_path": "system/.editorconfig",
       "target_path": "~/.editorconfig",
-      "source": "bootstrap.sh"
+      "source": "system/install.sh"
     },
     {
       "source_path": "git/.gitattributes",
       "target_path": "~/.gitattributes",
-      "source": "bootstrap.sh"
+      "source": "git/install.sh"
     },
     {
       "source_path": "git/.gitconfig",
       "target_path": "~/.gitconfig",
-      "source": "bootstrap.sh"
+      "source": "git/install.sh"
     },
     {
       "source_path": "git/.gitignore",
       "target_path": "~/.gitignore",
-      "source": "bootstrap.sh"
+      "source": "git/install.sh"
     },
     {
       "source_path": "ssh/config",
       "target_path": "~/.ssh/config",
-      "source": "bootstrap.sh"
+      "source": "ssh/install.sh"
     },
     {
       "source_path": "tmux/.tmux.conf",
       "target_path": "~/.tmux.conf",
-      "source": "bootstrap.sh"
+      "source": "tmux/install.sh"
     },
     {
       "source_path": "vim/.vimrc",
       "target_path": "~/.vimrc",
-      "source": "bootstrap.sh"
+      "source": "vim/install.sh"
     },
     {
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
-      "source": "bootstrap.sh"
+      "source": "zsh/install.sh"
     },
     {
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",
       "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
-      "source": "bootstrap.sh"
+      "source": "launchagents/install.sh"
     },
     {
       "source_path": "gitmoji/config.json",
       "target_path": "~/Library/Preferences/gitmoji-nodejs/config.json",
-      "source": "bootstrap.sh"
+      "source": "gitmoji/install.sh"
     }
   ],
   "packages": {

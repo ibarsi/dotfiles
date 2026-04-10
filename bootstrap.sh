@@ -22,95 +22,19 @@ fi
 echo "Syncing tools from Brewfile..."
 brew bundle --file "$DOTFILES_ROOT/Brewfile"
 
-# 3. Create symlinks
-# We use a simple loop to find files we want to link to $HOME
-echo "Creating symlinks..."
+# 3. Run each topic's install script
+echo "Setting up topics..."
+for installer in */install.sh; do
+	topic="$(dirname "$installer")"
+	echo "  → $topic"
+	bash "$installer"
+done
 
-# Zsh
-ln -sf "$DOTFILES_ROOT/zsh/.zshrc" "$HOME/.zshrc"
-
-# Git
-ln -sf "$DOTFILES_ROOT/git/.gitconfig" "$HOME/.gitconfig"
-ln -sf "$DOTFILES_ROOT/git/.gitignore" "$HOME/.gitignore"
-ln -sf "$DOTFILES_ROOT/git/.gitattributes" "$HOME/.gitattributes"
-
-# System
-ln -sf "$DOTFILES_ROOT/system/.editorconfig" "$HOME/.editorconfig"
-ln -sf "$DOTFILES_ROOT/system/.curlrc" "$HOME/.curlrc"
-
-# Vim
-ln -sf "$DOTFILES_ROOT/vim/.vimrc" "$HOME/.vimrc"
-
-# SSH
-mkdir -p "$HOME/.ssh"
-ln -sf "$DOTFILES_ROOT/ssh/config" "$HOME/.ssh/config"
-
-# tmux
-ln -sf "$DOTFILES_ROOT/tmux/.tmux.conf" "$HOME/.tmux.conf"
-
-# Zed
-mkdir -p "$HOME/.config/zed"
-ln -sf "$DOTFILES_ROOT/zed/settings.json" "$HOME/.config/zed/settings.json"
-ln -sf "$DOTFILES_ROOT/zed/keymap.json" "$HOME/.config/zed/keymap.json"
-
-# Ghostty
-mkdir -p "$HOME/.config/ghostty"
-ln -sf "$DOTFILES_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
-
-# Mise
-mkdir -p "$HOME/.config/mise"
-ln -sf "$DOTFILES_ROOT/mise/config.toml" "$HOME/.config/mise/config.toml"
-
-# Git filters (repo-local, must be set per-clone)
-git -C "$DOTFILES_ROOT" config filter.mise-local.clean 'grep -v "^trusted_config_paths"'
-git -C "$DOTFILES_ROOT" config filter.mise-local.smudge cat
-
-# Codex CLI
-mkdir -p "$HOME/.codex"
-ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
-
-# Claude Code CLI
-mkdir -p "$HOME/.claude"
-ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
-
-# OpenCode
-mkdir -p "$HOME/.config/opencode"
-ln -sf "$DOTFILES_ROOT/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
-
-# Gitmoji
-mkdir -p "$HOME/Library/Preferences/gitmoji-nodejs"
-ln -sf "$DOTFILES_ROOT/gitmoji/config.json" "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
-
-# LaunchAgents
-mkdir -p "$HOME/Library/LaunchAgents"
-ln -sf "$DOTFILES_ROOT/launchagents/com.ibarsi.capslock-control.plist" "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist"
-if command -v launchctl >/dev/null 2>&1; then
-	launchctl bootout "gui/$(id -u)/com.ibarsi.capslock-control" >/dev/null 2>&1 || true
-	launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist" >/dev/null 2>&1 || true
-	launchctl kickstart -k "gui/$(id -u)/com.ibarsi.capslock-control" >/dev/null 2>&1 || true
-fi
-
-# 4. Install Catppuccin theme
-if [ -f "$DOTFILES_ROOT/theme/install.sh" ]; then
-	echo "Installing Catppuccin theme..."
-	bash "$DOTFILES_ROOT/theme/install.sh"
-else
-	echo "Theme install script not found, skipping..."
-fi
-
-# 5. Set Zsh as default shell
+# 4. Set Zsh as default shell
 ZSH_PATH="$(command -v zsh || true)"
 if [ -n "$ZSH_PATH" ] && [ "$SHELL" != "$ZSH_PATH" ]; then
 	echo "Setting Zsh as default shell..."
 	chsh -s "$ZSH_PATH"
-fi
-
-# 6. Apply macOS defaults
-if [ -f "$DOTFILES_ROOT/macos/.macos" ]; then
-	echo "Applying macOS defaults (requires sudo)..."
-	bash "$DOTFILES_ROOT/macos/.macos"
-else
-	echo "macOS defaults script not found, skipping..."
 fi
 
 echo "Setup complete! Restart your terminal to see changes."

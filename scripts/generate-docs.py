@@ -430,7 +430,10 @@ def main() -> None:
     tasks = parse_tasks(ROOT / "mise.toml")
     tasks.sort(key=lambda item: item["name"])
 
-    bootstrap_links = parse_bootstrap_links(ROOT / "bootstrap.sh")
+    bootstrap_links = []
+    install_scripts = sorted(ROOT.glob("*/install.sh"))
+    for script in install_scripts:
+        bootstrap_links.extend(parse_bootstrap_links(script))
     bootstrap_links.sort(key=lambda item: item["target_path"])
 
     packages = parse_brewfile(ROOT / "Brewfile")
@@ -450,6 +453,7 @@ def main() -> None:
                 ROOT / "scripts/doctor-ai.sh",
                 ROOT / "scripts/bootstrap-verify.sh",
             ]
+            + install_scripts
         ),
         "stats": {
             "aliases": len(aliases),
