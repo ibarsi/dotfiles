@@ -1,8 +1,8 @@
 {
-  "git_revision": "29913bc8eb7b67f54874ddf4d16969fdbaa49471",
-  "source_hash": "29b2514baf10",
+  "git_revision": "5846fca1f005bcf2ef2e23353e1fcbc45c4405e0",
+  "source_hash": "e2dbdc91c89d",
   "stats": {
-    "aliases": 51,
+    "aliases": 52,
     "functions": 29,
     "git": 55,
     "features": 10,
@@ -310,6 +310,13 @@
       "name": "msu",
       "command": "mise upgrade",
       "group": "Mise",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "omlxs",
+      "command": "omlx serve --model-dir ~/.omlx/models --port 1234",
+      "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
