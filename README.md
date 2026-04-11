@@ -412,17 +412,22 @@ npm i -g @openai/codex  # cross-platform alternative
 ```
 
 **Key defaults in this repo:**
-- `model = "gpt-5.3-codex"`
+- `model = "gpt-5.4"`
 - `approval_policy = "on-request"`
 - `sandbox_mode = "workspace-write"`
 - `web_search = "cached"` (safer default than live web)
 - `/review` uses `review_model = "gpt-5.3-codex"`
+- Native TUI footer enabled for non-tmux use (`model-with-reasoning`, `git-branch`, `project`, `context-window`, `five-hour`)
 
 **Enabled quality-of-life features:**
 - `shell_snapshot` (faster repeated command runs)
 - `unified_exec` (improved command execution path)
 - `undo` (safer edit iteration)
 - `voice_transcription` (hold Space to speak in supported Codex CLI builds)
+
+**TUI footer:**
+- Use `/statusline` in Codex to interactively reorder or trim footer items.
+- The repo default shows model/reasoning, git branch, project, context-window usage, and the 5-hour usage meter.
 
 **Zsh shortcuts:**
 - `cx` → `codex`

@@ -21,9 +21,9 @@ personality = "pragmatic"
 # Increase reasoning depth for non-trivial coding tasks.
 model_reasoning_effort = "medium"
 
-# Used when running `codex /review` (PR/diff review mode).
-# Normal coding/chat requests continue using `model` above.
-review_model = "gpt-5.3-codex"
+[tui]
+# Native Codex footer for non-tmux workflows.
+status_line = ["model-with-reasoning", "git-branch", "current-dir", "context-usage", "five-hour-limit", "weekly-limit"]
 
 # Ignore warnings for experimental features since I mindfully turn those on
 suppress_unstable_features_warning = true
@@ -50,3 +50,9 @@ trust_level = "trusted"
 
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
+
+[mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
+approval_mode = "approve"
+
+[mcp_servers.openaiDeveloperDocs.tools.fetch_openai_doc]
+approval_mode = "approve"
