@@ -1,6 +1,6 @@
 {
-  "git_revision": "2100eea45a8a7405c703feaa79cde2385986fe33",
-  "source_hash": "e2dbdc91c89d",
+  "git_revision": "e8e18f3bc10385f0cf5d352eda2c7ee2ded0f215",
+  "source_hash": "cf957a4ca04b",
   "stats": {
     "aliases": 52,
     "functions": 29,
@@ -42,7 +42,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code codex opencode",
+      "command": "brew upgrade claude-code@latest codex opencode ollama omlx",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1113,8 +1113,7 @@
       "name": "docs-check",
       "description": "Ensure generated docs data is up to date",
       "run": [
-        "python3 ./scripts/generate-docs.py",
-        "git diff --exit-code -I '\\\"git_revision\\\"' -- docs/site-data.json docs/site-data.js"
+        "python3 ./scripts/check-docs.py"
       ],
       "source": "mise.toml"
     },
@@ -1339,7 +1338,7 @@
       "chatgpt-atlas",
       "comet",
       "discord",
-      "orbstack",
+      "docker",
       "grandperspective",
       "lulu",
       "obsidian",

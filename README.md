@@ -20,7 +20,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run verify` → AI doctor + bootstrap link verification
 - `mise run ai-doctor` → AI CLI/tooling health check
 - `mise run docs-build` → regenerate the docs site data from repo sources
-- `mise run docs-check` → fail if `docs/site-data.json` is stale
+- `mise run docs-check` → fail if regenerating docs would change `docs/site-data.*`
 - `mise run docs-serve` → serve the docs site locally with mise-managed Python
 - `dotdocs` → start the docs site from any directory and open it in the browser
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
