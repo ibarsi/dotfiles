@@ -129,7 +129,8 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 | Shortcut | Action |
 |----------|--------|
 | `cmd+]` / `cmd+[` | Next / previous tab |
-| `cmd+d` | Split pane right |
+| `cmd+shift+←` / `cmd+shift+→` | Split pane left / right |
+| `cmd+shift+↑` / `cmd+shift+↓` | Split pane up / down |
 | `cmd+w` | Close pane / tab |
 | `cmd+k cmd+z` | Toggle fullscreen (zen mode) |
 | `cmd+=` / `cmd+-` | Increase / decrease font size |
