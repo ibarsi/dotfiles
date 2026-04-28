@@ -3,7 +3,7 @@
 # Docs: https://developers.openai.com/codex/config-basic
 
 # Keep a coding-focused default model.
-model = "gpt-5.4"
+model = "gpt-5.5"
 
 # Safe-by-default execution posture:
 # - approval_policy="on-request": prompt before running commands outside the sandbox or with elevated risk.
@@ -27,6 +27,9 @@ status_line = ["model-with-reasoning", "git-branch", "current-dir", "context-usa
 
 # Ignore warnings for experimental features since I mindfully turn those on
 suppress_unstable_features_warning = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 3
 
 # Experimental features that are useful for daily coding workflows.
 [features]
@@ -52,6 +55,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/igorbarsi/Downloads/vpn-setup"]
+trust_level = "trusted"
+
+[projects."/Users/igorbarsi/Downloads"]
 trust_level = "trusted"
 
 [mcp_servers.openaiDeveloperDocs]

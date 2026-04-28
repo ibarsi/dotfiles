@@ -43,10 +43,9 @@
       "Read(./.env)",
       "Read(./secrets/**)"
     ],
-    "defaultMode": "default",
-    "disableBypassPermissionsMode": "disable"
+    "defaultMode": "default"
   },
-  "model": "sonnet",
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -107,7 +106,6 @@
     "command": "bash /Users/igorbarsi/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
@@ -115,5 +113,6 @@
   },
   "extraKnownMarketplaces": {},
   "autoUpdatesChannel": "stable",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true
 }
