@@ -29,7 +29,7 @@ status_line = ["model-with-reasoning", "git-branch", "current-dir", "context-usa
 suppress_unstable_features_warning = true
 
 [tui.model_availability_nux]
-"gpt-5.5" = 3
+"gpt-5.5" = 4
 
 # Experimental features that are useful for daily coding workflows.
 [features]

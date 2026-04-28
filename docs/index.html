@@ -3,7 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>dotfiles</title>
+    <meta
+      name="description"
+      content="Searchable local reference for dotfiles aliases, functions, git shortcuts, mise tasks, bootstrap links, and repo capabilities."
+    />
+    <meta name="theme-color" content="#1e1e2e" />
+    <meta property="og:title" content="dotfiles docs" />
+    <meta
+      property="og:description"
+      content="Generated reference for the shell surface, automation tasks, and bootstrap-managed configuration in this dotfiles repo."
+    />
+    <title>dotfiles docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,6 +23,7 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <div class="page-shell">
       <header class="hero">
         <div class="hero-top">
@@ -21,7 +32,7 @@
             <div>
               <h1>dotfiles</h1>
               <p class="hero-copy">
-                Shell helpers, git shortcuts, tasks &amp; bootstrap links &mdash; generated from source.
+                A source-generated operating manual for shell helpers, git shortcuts, automation, and bootstrap links.
               </p>
             </div>
           </div>
@@ -29,21 +40,22 @@
         </div>
         <div class="hero-controls">
           <label class="search-bar">
+            <span class="visually-hidden">Search dotfiles docs</span>
             <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5" />
               <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
             </svg>
-            <input id="search" type="search" placeholder="Search everything&hellip;" />
+            <input id="search" type="search" placeholder="Search aliases, commands, files, tasks..." />
             <kbd class="search-hint">⌘K</kbd>
           </label>
-          <nav class="section-tabs" id="section-filter" role="tablist">
-            <button class="tab active" role="tab" data-value="all">All</button>
-            <button class="tab" role="tab" data-value="aliases">Aliases</button>
-            <button class="tab" role="tab" data-value="functions">Functions</button>
-            <button class="tab" role="tab" data-value="git">Git</button>
-            <button class="tab" role="tab" data-value="features">Features</button>
-            <button class="tab" role="tab" data-value="tasks">Tasks</button>
-            <button class="tab" role="tab" data-value="bootstrap_links">Links</button>
+          <nav class="section-tabs" id="section-filter" role="tablist" aria-label="Documentation sections">
+            <button class="tab active" role="tab" aria-selected="true" tabindex="0" data-value="all">All</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="aliases">Aliases</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="functions">Functions</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="git">Git</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="features">Features</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="tasks">Tasks</button>
+            <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-value="bootstrap_links">Links</button>
           </nav>
         </div>
       </header>
@@ -67,7 +79,7 @@
           </div>
           <p class="section-kicker"></p>
         </div>
-        <div class="cards"></div>
+        <div class="section-body"></div>
       </section>
     </template>
 
