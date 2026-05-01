@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "313efc683ac9d0affecf390c985a669769a9e35a",
-  "source_hash": "9a3825126c5c",
+  "git_revision": "ff8f323d7911f606c6498931efc883bebf97e782",
+  "source_hash": "5f2754317d30",
   "stats": {
     "aliases": 52,
     "functions": 29,
@@ -8,7 +8,7 @@ window.DOTFILES_DOCS_DATA = {
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 20,
-    "brews": 33,
+    "brews": 32,
     "casks": 25
   },
   "aliases": [
@@ -1329,7 +1329,6 @@ window.DOTFILES_DOCS_DATA = {
       "pre-commit\"       # Deterministic pre-commit checks",
       "gitleaks\"         # Secret scanning for commits/PRs",
       "cloudflared",
-      "go",
       "jq",
       "oath-toolkit",
       "openvpn",
