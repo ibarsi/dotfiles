@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "fa94931ce20789ea6302607df587ef7573243a25",
-  "source_hash": "cf957a4ca04b",
+  "git_revision": "0c320450c51f216d6ebab47c75918e31edf51c6d",
+  "source_hash": "59d44781b8c4",
   "stats": {
     "aliases": 52,
     "functions": 29,
@@ -8,7 +8,7 @@ window.DOTFILES_DOCS_DATA = {
     "features": 10,
     "tasks": 15,
     "bootstrap_links": 19,
-    "brews": 34,
+    "brews": 33,
     "casks": 24
   },
   "aliases": [
@@ -42,7 +42,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex opencode ollama omlx",
+      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1314,7 +1314,6 @@ window.DOTFILES_DOCS_DATA = {
       "pre-commit\"       # Deterministic pre-commit checks",
       "gitleaks\"         # Secret scanning for commits/PRs",
       "cloudflared",
-      "gitmoji",
       "go",
       "jq",
       "oath-toolkit",

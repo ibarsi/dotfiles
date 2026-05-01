@@ -20,7 +20,6 @@ brew "commitizen"
 brew "pre-commit"       # Deterministic pre-commit checks
 brew "gitleaks"         # Secret scanning for commits/PRs
 brew "cloudflared"
-brew "gitmoji"
 brew "go"
 brew "jq"
 brew "oath-toolkit"

@@ -13,5 +13,9 @@ env_cache_ttl = "2h"
 color_theme = "catppuccin"
 
 [tools]
+node = "25.8.2"
+gemini = "latest"
+opencode = "latest"
+"npm:gitmoji-cli" = "latest"
 "go:golang.org/x/tools/gopls" = "latest"
 uv = "latest"

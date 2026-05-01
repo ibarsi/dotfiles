@@ -26,7 +26,7 @@ alias ccreview='claude "/review"'
 alias ccyolo="claude --dangerously-skip-permissions"
 
 # Upgrade AI coding tools
-alias aiup="brew upgrade claude-code@latest codex opencode ollama omlx"
+alias aiup="brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode"
 alias omlxs='omlx serve --model-dir ~/.omlx/models --port 1234'
 
 # Mise
