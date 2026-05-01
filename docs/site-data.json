@@ -1,15 +1,15 @@
 {
-  "git_revision": "0c320450c51f216d6ebab47c75918e31edf51c6d",
-  "source_hash": "59d44781b8c4",
+  "git_revision": "313efc683ac9d0affecf390c985a669769a9e35a",
+  "source_hash": "9a3825126c5c",
   "stats": {
     "aliases": 52,
     "functions": 29,
     "git": 55,
-    "features": 10,
+    "features": 11,
     "tasks": 15,
-    "bootstrap_links": 19,
+    "bootstrap_links": 20,
     "brews": 33,
-    "casks": 24
+    "casks": 25
   },
   "aliases": [
     {
@@ -1023,6 +1023,16 @@
       "source": "ghostty/config"
     },
     {
+      "slug": "warp",
+      "title": "Warp terminal theme",
+      "summary": "Ships a managed Warp custom theme that ports the repo Catppuccin Mocha palette.",
+      "details": [
+        "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
+        "Warp settings such as font, padding, and keybindings remain app-managed."
+      ],
+      "source": "warp/themes/catppuccin-mocha.yaml"
+    },
+    {
       "slug": "zed",
       "title": "Zed editor config",
       "summary": "Stores editor settings and keybindings in-repo and links them into ~/.config/zed.",
@@ -1278,6 +1288,11 @@
       "source": "vim/install.sh"
     },
     {
+      "source_path": "warp/themes/catppuccin-mocha.yaml",
+      "target_path": "~/.warp/themes/catppuccin-mocha.yaml",
+      "source": "warp/install.sh"
+    },
+    {
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
       "source": "zsh/install.sh"
@@ -1332,6 +1347,7 @@
     ],
     "casks": [
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
+      "warp\"              # AI-native terminal with managed Catppuccin theme",
       "codex\"             # OpenAI Codex CLI",
       "1password-cli",
       "chatgpt-atlas",

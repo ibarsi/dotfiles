@@ -62,6 +62,15 @@ FEATURE_NOTES = {
             "Symlinked into ~/.config/ghostty/config during bootstrap.",
         ],
     },
+    "warp": {
+        "title": "Warp terminal theme",
+        "summary": "Ships a managed Warp custom theme that ports the repo Catppuccin Mocha palette.",
+        "source": "warp/themes/catppuccin-mocha.yaml",
+        "details": [
+            "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
+            "Warp settings such as font, padding, and keybindings remain app-managed.",
+        ],
+    },
     "zed": {
         "title": "Zed editor config",
         "summary": "Stores editor settings and keybindings in-repo and links them into ~/.config/zed.",
