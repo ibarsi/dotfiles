@@ -43,7 +43,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `vim/`: Vim configuration.
 - `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
-- `warp/`: Warp terminal custom theme (symlinked to `~/.warp/themes/`).
+- `warp/`: Warp terminal custom theme and keybindings (symlinked to `~/.warp/`).
 - `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
@@ -74,7 +74,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
 - **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
-- **Warp terminal theme**: Warp is installed from `Brewfile`, with a repo-managed Catppuccin Mocha custom theme linked into `~/.warp/themes/`.
+- **Warp terminal**: Warp is installed from `Brewfile`, with a repo-managed Catppuccin Mocha custom theme and split-pane keybindings linked into `~/.warp/`.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
@@ -142,11 +142,19 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 ## Warp Terminal
 
-[Warp](https://www.warp.dev/) is installed from `Brewfile`. Warp does not use Ghostty's plain-text config format, so only the portable color theme is managed here; app preferences such as font, padding, splits, and keybindings stay in Warp Settings.
+[Warp](https://www.warp.dev/) is installed from `Brewfile`. This repo manages the portable color theme and split-pane keybindings; app preferences such as font and padding stay in Warp Settings.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
 | `warp/themes/catppuccin-mocha.yaml` | `~/.warp/themes/catppuccin-mocha.yaml` | Warp custom theme port of Catppuccin Mocha |
+| `warp/keybindings.yaml` | `~/.warp/keybindings.yaml` | Ghostty-style directional split-pane shortcuts |
+
+**Keybindings:**
+
+| Shortcut | Action |
+|----------|--------|
+| `cmd+shift+←` / `cmd+shift+→` | Split pane left / right |
+| `cmd+shift+↑` / `cmd+shift+↓` | Split pane up / down |
 
 After bootstrap, open Warp Settings → Appearance → Themes and select `Catppuccin Mocha`.
 

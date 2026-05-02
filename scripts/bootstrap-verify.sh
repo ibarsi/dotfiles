@@ -14,6 +14,7 @@ check_link() {
 
 check_link "$HOME/.config/ghostty/config"
 check_link "$HOME/.warp/themes/catppuccin-mocha.yaml"
+check_link "$HOME/.warp/keybindings.yaml"
 check_link "$HOME/.config/zed/settings.json"
 check_link "$HOME/.config/zed/keymap.json"
 check_link "$HOME/.config/mise/config.toml"

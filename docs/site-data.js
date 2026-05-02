@@ -1,13 +1,13 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "ff8f323d7911f606c6498931efc883bebf97e782",
-  "source_hash": "5f2754317d30",
+  "git_revision": "2bd1a9411eadd0e6a0df053a000846eeb53709e4",
+  "source_hash": "e51997bcdcec",
   "stats": {
     "aliases": 52,
     "functions": 29,
     "git": 55,
     "features": 11,
     "tasks": 15,
-    "bootstrap_links": 20,
+    "bootstrap_links": 21,
     "brews": 32,
     "casks": 25
   },
@@ -1024,11 +1024,12 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "slug": "warp",
-      "title": "Warp terminal theme",
-      "summary": "Ships a managed Warp custom theme that ports the repo Catppuccin Mocha palette.",
+      "title": "Warp terminal config",
+      "summary": "Ships a managed Warp custom theme and Ghostty-style directional split-pane keybindings.",
       "details": [
         "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
-        "Warp settings such as font, padding, and keybindings remain app-managed."
+        "Symlinked into ~/.warp/keybindings.yaml during bootstrap.",
+        "Warp settings such as font and padding remain app-managed."
       ],
       "source": "warp/themes/catppuccin-mocha.yaml"
     },
@@ -1286,6 +1287,11 @@ window.DOTFILES_DOCS_DATA = {
       "source_path": "vim/.vimrc",
       "target_path": "~/.vimrc",
       "source": "vim/install.sh"
+    },
+    {
+      "source_path": "warp/keybindings.yaml",
+      "target_path": "~/.warp/keybindings.yaml",
+      "source": "warp/install.sh"
     },
     {
       "source_path": "warp/themes/catppuccin-mocha.yaml",

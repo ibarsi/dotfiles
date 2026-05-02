@@ -1,0 +1,5 @@
+---
+"pane_group:add_left": cmd-shift-left
+"pane_group:add_right": cmd-shift-right
+"pane_group:add_up": cmd-shift-up
+"pane_group:add_down": cmd-shift-down

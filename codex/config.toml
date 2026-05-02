@@ -25,6 +25,10 @@ model_reasoning_effort = "medium"
 # Native Codex footer for non-tmux workflows.
 status_line = ["model-with-reasoning", "git-branch", "current-dir", "context-usage", "five-hour-limit", "weekly-limit"]
 
+notifications = true
+notification_method = "osc9"
+notification_condition = "always"
+
 # Ignore warnings for experimental features since I mindfully turn those on
 suppress_unstable_features_warning = true
 
@@ -68,6 +72,3 @@ approval_mode = "approve"
 
 [mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
 approval_mode = "approve"
-
-[mcp_servers.browseros]
-url = "http://127.0.0.1:9000/mcp"

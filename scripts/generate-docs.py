@@ -63,12 +63,13 @@ FEATURE_NOTES = {
         ],
     },
     "warp": {
-        "title": "Warp terminal theme",
-        "summary": "Ships a managed Warp custom theme that ports the repo Catppuccin Mocha palette.",
+        "title": "Warp terminal config",
+        "summary": "Ships a managed Warp custom theme and Ghostty-style directional split-pane keybindings.",
         "source": "warp/themes/catppuccin-mocha.yaml",
         "details": [
             "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
-            "Warp settings such as font, padding, and keybindings remain app-managed.",
+            "Symlinked into ~/.warp/keybindings.yaml during bootstrap.",
+            "Warp settings such as font and padding remain app-managed.",
         ],
     },
     "zed": {
