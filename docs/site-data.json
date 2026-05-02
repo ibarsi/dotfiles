@@ -1,6 +1,6 @@
 {
-  "git_revision": "2bd1a9411eadd0e6a0df053a000846eeb53709e4",
-  "source_hash": "e51997bcdcec",
+  "git_revision": "c76dc9db00b093992d28165d4a472a0ae42bdbc0",
+  "source_hash": "065ffbd87007",
   "stats": {
     "aliases": 52,
     "functions": 29,
@@ -42,7 +42,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode",
+      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode npm:@mariozechner/pi-coding-agent",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -548,7 +548,7 @@
     },
     {
       "name": "tre",
-      "summary": "`tre` is a shorthand for `tree` with hidden files and color enabled, ignoring the `.git` directory, listing directories first. The output gets piped into `less` with options to preserve color and line numbers, unless the output is small enough for one screen.",
+      "summary": "`tre` is a shorthand for `tree` with hidden files and color enabled, ignoring the `.git` directory, listing directories first. The output gets piped into `less` with options to preserve color, unless the output is small enough for one screen.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
