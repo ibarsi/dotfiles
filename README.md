@@ -79,7 +79,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
-- **OpenCode workflow**: Local LM Studio-backed OpenCode config managed in dotfiles.
+- **OpenCode workflow**: Local oMLX-backed OpenCode config managed in dotfiles.
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
@@ -336,24 +336,74 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 
 ## OpenCode Workflow
 
-[OpenCode](https://opencode.ai) is configured to use your local LM Studio instance through the OpenAI-compatible `/v1` endpoint.
+[OpenCode](https://opencode.ai) is configured to use your local oMLX instance through the OpenAI-compatible `/v1` endpoint.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
-| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for LM Studio-backed OpenCode |
+| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for oMLX-backed OpenCode |
 
 **Defaults configured:**
-- Provider: local `lmstudio`
-- Endpoint: `http://localhost:1234/v1`
-- Model: `qwen2.5-coder-7b-instruct-mlx`
+- Provider: local `omlx`
+- Endpoint: `http://127.0.0.1:1234/v1`
+- Model: `gemma-4-e4b-it-MLX-4bit`
 
 **Local model setup:**
-- Ensure LM Studio's local server is running on port `1234`
-- Load the configured model in LM Studio before starting OpenCode
+- Run `omlxs` before starting OpenCode
 - Re-run `./bootstrap.sh` to install the symlinked config
 
 **Usage:**
 - Start OpenCode normally with `opencode`
+
+## Pi Coding Agent Workflow
+
+[Pi](https://pi.dev/docs/latest) is configured as the primary local-model coding agent, with defaults matched to this repo's Codex safety posture and OpenCode's oMLX endpoint.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `pi/settings.json` | `~/.pi/agent/settings.json` | Default provider/model, compaction, UI, model cycling |
+| `pi/models.json` | `~/.pi/agent/models.json` | Local OpenAI-compatible model providers |
+
+**Defaults configured:**
+- Provider: local `omlx`
+- Endpoint: `http://127.0.0.1:1234/v1`
+- Model: `gemma-4-e4b-it-MLX-4bit`
+- Thinking level: `medium`
+- Compaction enabled with larger response reserve for coding tasks
+- Startup telemetry disabled; use `PI_OFFLINE=1` or `pi --offline` to skip startup network checks
+
+**Local model setup:**
+- Run `omlxs` before starting Pi
+- Export `OMLX_API_KEY` in your local shell/private env if the oMLX server requires bearer auth
+- Re-run `./bootstrap.sh` to install the symlinked config
+
+**Usage:**
+- `pi` → interactive coding session
+- `pie "prompt"` → non-interactive print mode
+- `pic "prompt"` → continue previous session
+- `pir` → pick a previous session to resume
+- `piro -p "review src/"` → read-only review mode with read/search/list tools
+- `pimodels` → inspect available configured models
+
+**Extension shortlist to evaluate:**
+- `pi-subagents` for delegated/parallel agent work
+- `pi-mcp-adapter` to reuse MCP tooling where Pi is the daily driver
+- `pi-lens` for LSP/linter/type-check feedback inside Pi
+- `@juicesharp/rpiv-todo` for a persistent task overlay that survives compaction
+- `pi-ask-user` or `@juicesharp/rpiv-ask-user-question` for structured clarifying questions
+- `pi-btw` for side questions without polluting the main session
+
+Install only after reviewing source:
+
+```bash
+pi install npm:pi-subagents
+pi install npm:pi-mcp-adapter
+pi install npm:pi-lens
+pi install npm:@juicesharp/rpiv-todo
+pi install npm:pi-ask-user
+pi install npm:pi-btw
+```
+
+> Security note: Pi extensions and packages run with full local permissions. Treat them like shell plugins or editor extensions, not inert prompts.
 
 ## AI Diagnostics
 
@@ -415,7 +465,6 @@ pre-commit run --all-files
 
 - Use `.env.example` as the reference for expected local AI environment variables.
 - Keep real values in untracked local files/shell env (for example `.env.local` or your shell profile).
-- Preferred Anthropic key file path for local loading: `~/.config/anthropic/api_key`.
 
 ## Codex CLI Workflow
 
@@ -433,7 +482,7 @@ npm i -g @openai/codex  # cross-platform alternative
 ```
 
 **Key defaults in this repo:**
-- `model = "gpt-5.4"`
+- `model = "gpt-5.5"`
 - `approval_policy = "on-request"`
 - `sandbox_mode = "workspace-write"`
 - `web_search = "cached"` (safer default than live web)

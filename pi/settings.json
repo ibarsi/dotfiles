@@ -1,0 +1,34 @@
+{
+  "defaultProvider": "omlx",
+  "defaultModel": "gemma-4-e4b-it-MLX-4bit",
+  "defaultThinkingLevel": "medium",
+  "quietStartup": true,
+  "collapseChangelog": true,
+  "enableInstallTelemetry": false,
+  "doubleEscapeAction": "tree",
+  "treeFilterMode": "user-only",
+  "steeringMode": "one-at-a-time",
+  "followUpMode": "one-at-a-time",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 32768,
+    "keepRecentTokens": 20000
+  },
+  "branchSummary": {
+    "reserveTokens": 16384,
+    "skipPrompt": false
+  },
+  "terminal": {
+    "showImages": true,
+    "imageWidthCells": 60
+  },
+  "images": {
+    "autoResize": true,
+    "blockImages": false
+  },
+  "enabledModels": [
+    "omlx/gemma-4-e4b-it-MLX-4bit"
+  ],
+  "enableSkillCommands": true,
+  "lastChangelogVersion": "0.73.0"
+}

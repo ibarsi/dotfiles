@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "omlx": {
+      "baseUrl": "http://127.0.0.1:1234/v1",
+      "api": "openai-completions",
+      "apiKey": "OMLX_API_KEY",
+      "authHeader": true,
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "gemma-4-e4b-it-MLX-4bit",
+          "name": "Gemma 4 E4B IT MLX 4-bit",
+          "reasoning": false,
+          "input": [
+            "text",
+            "image"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 256000,
+          "maxTokens": 32768
+        }
+      ]
+    }
+  }
+}

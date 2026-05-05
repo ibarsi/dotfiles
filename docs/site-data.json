@@ -1,13 +1,13 @@
 {
-  "git_revision": "c76dc9db00b093992d28165d4a472a0ae42bdbc0",
-  "source_hash": "065ffbd87007",
+  "git_revision": "c0aaeb318b808f62fcad05624f578548e86bff89",
+  "source_hash": "ae470b3d1204",
   "stats": {
-    "aliases": 52,
+    "aliases": 58,
     "functions": 29,
     "git": 55,
-    "features": 11,
+    "features": 12,
     "tasks": 15,
-    "bootstrap_links": 21,
+    "bootstrap_links": 23,
     "brews": 32,
     "casks": 25
   },
@@ -326,6 +326,48 @@
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
+    },
+    {
+      "name": "pic",
+      "command": "pi --continue",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "pie",
+      "command": "pi -p",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "pimodels",
+      "command": "pi --list-models",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "pioff",
+      "command": "pi --offline",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "pir",
+      "command": "pi --resume",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "piro",
+      "command": "pi --tools read,grep,find,ls",
+      "group": "Pi Coding Agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
     },
     {
       "name": "reload",
@@ -1056,18 +1098,29 @@
       "title": "Claude Code config",
       "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
       "details": [
-        "AI doctor validates both the config path and API key presence."
+        "AI doctor validates the config path."
       ],
       "source": "claude/settings.json"
     },
     {
       "slug": "opencode",
       "title": "OpenCode local model config",
-      "summary": "Targets a local LM Studio endpoint through the OpenAI-compatible /v1 interface.",
+      "summary": "Targets a local oMLX endpoint through the OpenAI-compatible /v1 interface.",
       "details": [
         "Bootstrap links ~/.config/opencode/opencode.json."
       ],
       "source": "opencode/opencode.json"
+    },
+    {
+      "slug": "pi",
+      "title": "Pi Coding Agent config",
+      "summary": "Maintains Pi defaults for local OpenAI-compatible models and efficient terminal coding.",
+      "details": [
+        "Bootstrap links ~/.pi/agent/settings.json and ~/.pi/agent/models.json.",
+        "The default provider targets oMLX on 127.0.0.1:1234 and reads the key from OMLX_API_KEY.",
+        "Model cycling includes the oMLX Gemma model."
+      ],
+      "source": "pi/settings.json"
     },
     {
       "slug": "validation",
@@ -1107,6 +1160,7 @@
         "bash -n bootstrap.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
+        "bash -n pi/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh"
       ],
@@ -1148,7 +1202,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1156,7 +1210,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1164,7 +1218,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh macos/.macos theme/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shellcheck bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1272,6 +1326,16 @@
       "source_path": "git/.gitignore",
       "target_path": "~/.gitignore",
       "source": "git/install.sh"
+    },
+    {
+      "source_path": "pi/models.json",
+      "target_path": "~/.pi/agent/models.json",
+      "source": "pi/install.sh"
+    },
+    {
+      "source_path": "pi/settings.json",
+      "target_path": "~/.pi/agent/settings.json",
+      "source": "pi/install.sh"
     },
     {
       "source_path": "ssh/config",

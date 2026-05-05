@@ -18,6 +18,14 @@ alias cxr="codex resume --last"
 alias cxreview='codex "/review"'
 alias cxyolo="codex --full-auto"
 
+# Pi Coding Agent
+alias pie="pi -p"
+alias pir="pi --resume"
+alias pic="pi --continue"
+alias pioff="pi --offline"
+alias piro="pi --tools read,grep,find,ls"
+alias pimodels="pi --list-models"
+
 # Claude Code CLI
 alias cc="claude"
 alias cce="claude -p"
