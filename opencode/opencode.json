@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "lmstudio/qwen2.5-coder-7b-instruct-mlx",
+  "model": "omlx/gemma-4-e4b-it-MLX-4bit",
   "provider": {
     "lmstudio": {
       "npm": "@ai-sdk/openai-compatible",
@@ -11,6 +11,33 @@
       "models": {
         "qwen2.5-coder-7b-instruct-mlx": {
           "name": "qwen2.5-coder-7b-instruct-mlx"
+        }
+      }
+    },
+    "omlx": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "oMLX",
+      "options": {
+        "baseURL": "http://127.0.0.1:1234/v1",
+        "apiKey": "omlx-ix00as7p7wr47m0a"
+      },
+      "models": {
+        "gemma-4-e4b-it-MLX-4bit": {
+          "name": "gemma-4-e4b-it-MLX-4bit",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "attachment": true,
+          "limit": {
+            "context": 256000,
+            "output": 32768
+          }
         }
       }
     }
