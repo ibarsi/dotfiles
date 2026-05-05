@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "c0aaeb318b808f62fcad05624f578548e86bff89",
-  "source_hash": "ae470b3d1204",
+  "git_revision": "357c0df7cd711e9bbfce1e46d7f81a7f58cabbbd",
+  "source_hash": "cea9ee1ee199",
   "stats": {
     "aliases": 58,
     "functions": 29,
@@ -42,7 +42,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode npm:@mariozechner/pi-coding-agent",
+      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode npm:@mariozechner/pi-coding-agent; pi update --extensions",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
