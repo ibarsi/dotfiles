@@ -34,6 +34,7 @@
   "packages": [
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-btw"
+    "npm:@juicesharp/rpiv-btw",
+    "../../Projects/rpiv-mono/packages/rpiv-web-tools"
   ]
 }

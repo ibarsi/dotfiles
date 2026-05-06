@@ -45,6 +45,7 @@ unified_exec = true
 undo = true
 # Enable push-to-talk voice transcription in supported Codex CLI builds.
 voice_transcription = true
+memories = true
 
 [projects."/Users/igorbarsi/dotfiles"]
 trust_level = "trusted"
@@ -72,3 +73,6 @@ approval_mode = "approve"
 
 [mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
 approval_mode = "approve"
+
+[mcp_servers.browseros]
+url = "http://127.0.0.1:9000/mcp"
