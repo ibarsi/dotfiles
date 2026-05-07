@@ -1,13 +1,13 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "357c0df7cd711e9bbfce1e46d7f81a7f58cabbbd",
-  "source_hash": "cea9ee1ee199",
+  "git_revision": "2d5096aa36272ad2e12ea0a3c1c11f4e94d0981b",
+  "source_hash": "5f3c7f1bbaad",
   "stats": {
     "aliases": 58,
     "functions": 29,
     "git": 55,
-    "features": 12,
+    "features": 11,
     "tasks": 15,
-    "bootstrap_links": 23,
+    "bootstrap_links": 22,
     "brews": 32,
     "casks": 25
   },
@@ -42,7 +42,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini opencode npm:@mariozechner/pi-coding-agent; pi update --extensions",
+      "command": "brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -196,7 +196,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "ip",
-      "command": "curl -s https://ifconfig.me",
+      "command": "curl -s https://ifconfig.me/ip",
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -1103,15 +1103,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "claude/settings.json"
     },
     {
-      "slug": "opencode",
-      "title": "OpenCode local model config",
-      "summary": "Targets a local oMLX endpoint through the OpenAI-compatible /v1 interface.",
-      "details": [
-        "Bootstrap links ~/.config/opencode/opencode.json."
-      ],
-      "source": "opencode/opencode.json"
-    },
-    {
       "slug": "pi",
       "title": "Pi Coding Agent config",
       "summary": "Maintains Pi defaults for local OpenAI-compatible models and efficient terminal coding.",
@@ -1281,11 +1272,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/config.toml",
       "source": "mise/install.sh"
-    },
-    {
-      "source_path": "opencode/opencode.json",
-      "target_path": "~/.config/opencode/opencode.json",
-      "source": "opencode/install.sh"
     },
     {
       "source_path": "theme/starship.toml",

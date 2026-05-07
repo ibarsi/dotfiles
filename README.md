@@ -49,7 +49,6 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
-- `opencode/`: OpenCode configuration (symlinked to `~/.config/opencode/`).
 - `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
@@ -79,7 +78,6 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
-- **OpenCode workflow**: Local oMLX-backed OpenCode config managed in dotfiles.
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
@@ -334,29 +332,9 @@ git push origin --delete feat/mobile-nav
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
 
-## OpenCode Workflow
-
-[OpenCode](https://opencode.ai) is configured to use your local oMLX instance through the OpenAI-compatible `/v1` endpoint.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `opencode/opencode.json` | `~/.config/opencode/opencode.json` | Local provider config for oMLX-backed OpenCode |
-
-**Defaults configured:**
-- Provider: local `omlx`
-- Endpoint: `http://127.0.0.1:1234/v1`
-- Model: `gemma-4-e4b-it-MLX-4bit`
-
-**Local model setup:**
-- Run `omlxs` before starting OpenCode
-- Re-run `./bootstrap.sh` to install the symlinked config
-
-**Usage:**
-- Start OpenCode normally with `opencode`
-
 ## Pi Coding Agent Workflow
 
-[Pi](https://pi.dev/docs/latest) is configured as the primary local-model coding agent, with defaults matched to this repo's Codex safety posture and OpenCode's oMLX endpoint.
+[Pi](https://pi.dev/docs/latest) is configured as the primary local-model coding agent, with defaults matched to this repo's Codex safety posture and local oMLX endpoint.
 
 | File | Destination | Purpose |
 |------|-------------|---------|

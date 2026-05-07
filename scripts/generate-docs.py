@@ -96,14 +96,6 @@ FEATURE_NOTES = {
             "AI doctor validates the config path.",
         ],
     },
-    "opencode": {
-        "title": "OpenCode local model config",
-        "summary": "Targets a local oMLX endpoint through the OpenAI-compatible /v1 interface.",
-        "source": "opencode/opencode.json",
-        "details": [
-            "Bootstrap links ~/.config/opencode/opencode.json.",
-        ],
-    },
     "pi": {
         "title": "Pi Coding Agent config",
         "summary": "Maintains Pi defaults for local OpenAI-compatible models and efficient terminal coding.",
