@@ -24,7 +24,6 @@ brew "gitleaks"         # Secret scanning for commits/PRs
 brew "cloudflared"
 brew "jq"
 brew "oath-toolkit"
-brew "openvpn"
 
 # Modern CLI Enhancements
 brew "fzf"              # Interactive fuzzy selector (pick from lists)
@@ -38,6 +37,10 @@ brew "k9s"              # Kubernetes cluster TUI
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
 brew "mtr"              # Traceroute + ping in one view
 brew "iperf3"           # Throughput testing
+brew "jundot/omlx/omlx" # Apple Silicon local LLM inference server
+brew "llmfit"           # Model fit estimator for local hardware
+brew "ollama"           # Local LLM runtime
+brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
@@ -46,12 +49,13 @@ cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
 cask "bdcli"             # BetterDiscord CLI installer/updater
 # Optional/newer casks (higher rename/churn risk over time)
-cask "chatgpt-atlas"
+cask "1password"
 cask "comet"
 cask "discord"
-cask "docker"
+cask "docker-desktop"
 cask "grandperspective"
 cask "lulu"
+cask "nordvpn"
 cask "obsidian"
 cask "raindropio"
 cask "tradingview"
@@ -63,7 +67,8 @@ cask "spotify"
 cask "postman"
 cask "rectangle"        # Window manager
 cask "signal"
-cask "wireshark"        # GUI packet analysis
+cask "wireshark-app"    # GUI packet analysis
 cask "raycast"          # Productivity launcher
-cask "claude-code"      # Claude Code CLI (Anthropic)
+cask "claude-code@latest" # Claude Code CLI (Anthropic)
+cask "wribe"
 cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)

@@ -1,6 +1,6 @@
 {
-  "git_revision": "501fc5ddff54907706933ba21b703f26d7fe726f",
-  "source_hash": "936aba420162",
+  "git_revision": "980c728077cf6a6030450b17865002700c4f220d",
+  "source_hash": "42794470c63d",
   "stats": {
     "aliases": 58,
     "functions": 29,
@@ -8,8 +8,8 @@
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 22,
-    "brews": 32,
-    "casks": 26
+    "brews": 35,
+    "casks": 28
   },
   "aliases": [
     {
@@ -1389,7 +1389,6 @@
       "cloudflared",
       "jq",
       "oath-toolkit",
-      "openvpn",
       "fzf\"              # Interactive fuzzy selector (pick from lists)",
       "fd\"               # Fast file discovery (complements fzf; not a replacement)",
       "zoxide\"           # Better 'cd",
@@ -1400,7 +1399,11 @@
       "k9s\"              # Kubernetes cluster TUI",
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
       "mtr\"              # Traceroute + ping in one view",
-      "iperf3\"           # Throughput testing"
+      "iperf3\"           # Throughput testing",
+      "jundot/omlx/omlx\" # Apple Silicon local LLM inference server",
+      "llmfit\"           # Model fit estimator for local hardware",
+      "ollama\"           # Local LLM runtime",
+      "teamookla/speedtest/speedtest\" # Ookla network speed testing"
     ],
     "casks": [
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
@@ -1408,12 +1411,13 @@
       "codex\"             # OpenAI Codex CLI",
       "1password-cli",
       "bdcli\"             # BetterDiscord CLI installer/updater",
-      "chatgpt-atlas",
+      "1password",
       "comet",
       "discord",
-      "docker",
+      "docker-desktop",
       "grandperspective",
       "lulu",
+      "nordvpn",
       "obsidian",
       "raindropio",
       "tradingview",
@@ -1425,9 +1429,10 @@
       "postman",
       "rectangle\"        # Window manager",
       "signal",
-      "wireshark\"        # GUI packet analysis",
+      "wireshark-app\"    # GUI packet analysis",
       "raycast\"          # Productivity launcher",
-      "claude-code\"      # Claude Code CLI (Anthropic)",
+      "claude-code@latest\" # Claude Code CLI (Anthropic)",
+      "wribe",
       "font-fira-code-nerd-font\" # Nerd font for icons (eza/starship)"
     ]
   }
