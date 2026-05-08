@@ -50,7 +50,7 @@ eval "$(starship init zsh)"
 
 ### BetterDiscord
 
-Bootstrap symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
+Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord into Discord Stable, and symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
 
 ```text
 ~/Library/Application Support/BetterDiscord/themes/mocha.theme.css
@@ -72,7 +72,7 @@ obsidian theme:set name=Catppuccin
 - ✅ iTerm2 terminal colors
 - ✅ Starship prompt
 - ✅ Ghostty editor theme
-- ✅ BetterDiscord theme wrapper
+- ✅ BetterDiscord CLI install + theme wrapper
 - ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting

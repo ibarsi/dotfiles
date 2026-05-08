@@ -74,7 +74,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **Warp terminal**: Warp is installed from `Brewfile`, with a repo-managed Catppuccin Mocha custom theme and split-pane keybindings linked into `~/.warp/`.
-- **BetterDiscord theme**: Bootstrap links a repo-managed Catppuccin Mocha wrapper into BetterDiscord's themes folder; enable it from Discord Settings → BetterDiscord → Themes.
+- **BetterDiscord theme**: Bootstrap installs the BetterDiscord CLI, injects BetterDiscord into Discord Stable, and links a repo-managed Catppuccin Mocha wrapper into BetterDiscord's themes folder.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
@@ -159,13 +159,13 @@ After bootstrap, open Warp Settings → Appearance → Themes and select `Catppu
 
 ## BetterDiscord Theme
 
-The Catppuccin setup links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder.
+The Catppuccin setup installs `bdcli` from the BetterDiscord Homebrew tap, runs `bdcli install --channel stable`, and links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
 | `theme/betterdiscord/mocha.theme.css` | `~/Library/Application Support/BetterDiscord/themes/mocha.theme.css` | BetterDiscord theme wrapper for Catppuccin Mocha |
 
-After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If it does not appear immediately, reload Discord with `Cmd+R`.
+After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If BetterDiscord or the theme list does not appear immediately, reload Discord with `Cmd+R`.
 
 ## Obsidian Workflow
 

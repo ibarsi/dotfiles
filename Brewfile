@@ -1,6 +1,8 @@
 # Brewfile - Modernized Setup for ibarsi
 
 # Taps
+tap "betterdiscord/tap"
+
 # CLI Tools (Core)
 brew "coreutils"
 brew "moreutils"
@@ -42,6 +44,7 @@ cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "warp"              # AI-native terminal with managed Catppuccin theme
 cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
+cask "bdcli"             # BetterDiscord CLI installer/updater
 # Optional/newer casks (higher rename/churn risk over time)
 cask "chatgpt-atlas"
 cask "comet"

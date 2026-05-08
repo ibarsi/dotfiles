@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "c0b22c113a7a9457358bf2bb602e0ebb6a29c897",
-  "source_hash": "81493bd8374c",
+  "git_revision": "501fc5ddff54907706933ba21b703f26d7fe726f",
+  "source_hash": "936aba420162",
   "stats": {
     "aliases": 58,
     "functions": 29,
@@ -9,7 +9,7 @@ window.DOTFILES_DOCS_DATA = {
     "tasks": 15,
     "bootstrap_links": 22,
     "brews": 32,
-    "casks": 25
+    "casks": 26
   },
   "aliases": [
     {
@@ -1048,10 +1048,10 @@ window.DOTFILES_DOCS_DATA = {
     {
       "slug": "theme",
       "title": "Catppuccin theme setup",
-      "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
+      "summary": "Installs the repository-managed shell prompt, terminal, BetterDiscord, and app theming assets.",
       "details": [
         "Bootstraps the theme during setup when the installer script is present.",
-        "Pairs with starship, BetterDiscord, and the theme assets stored in theme/."
+        "Uses bdcli to install BetterDiscord into Discord Stable before linking the Catppuccin theme wrapper."
       ],
       "source": "theme/install.sh"
     },
@@ -1365,7 +1365,9 @@ window.DOTFILES_DOCS_DATA = {
     }
   ],
   "packages": {
-    "taps": [],
+    "taps": [
+      "betterdiscord/tap"
+    ],
     "brews": [
       "coreutils",
       "moreutils",
@@ -1405,6 +1407,7 @@ window.DOTFILES_DOCS_DATA = {
       "warp\"              # AI-native terminal with managed Catppuccin theme",
       "codex\"             # OpenAI Codex CLI",
       "1password-cli",
+      "bdcli\"             # BetterDiscord CLI installer/updater",
       "chatgpt-atlas",
       "comet",
       "discord",

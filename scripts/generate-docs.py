@@ -47,11 +47,11 @@ FEATURE_NOTES = {
     },
     "theme": {
         "title": "Catppuccin theme setup",
-        "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
+        "summary": "Installs the repository-managed shell prompt, terminal, BetterDiscord, and app theming assets.",
         "source": "theme/install.sh",
         "details": [
             "Bootstraps the theme during setup when the installer script is present.",
-            "Pairs with starship, BetterDiscord, and the theme assets stored in theme/.",
+            "Uses bdcli to install BetterDiscord into Discord Stable before linking the Catppuccin theme wrapper.",
         ],
     },
     "ghostty": {
