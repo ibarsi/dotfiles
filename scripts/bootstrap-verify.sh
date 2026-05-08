@@ -13,6 +13,7 @@ check_link() {
 }
 
 check_link "$HOME/.config/ghostty/config"
+check_link "$HOME/Library/Application Support/BetterDiscord/themes/mocha.theme.css"
 check_link "$HOME/.warp/themes/catppuccin-mocha.yaml"
 check_link "$HOME/.warp/keybindings.yaml"
 check_link "$HOME/.config/zed/settings.json"

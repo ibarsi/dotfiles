@@ -20,6 +20,12 @@ bat cache --build
 
 echo "→ Ghostty: Catppuccin theme is built-in (configured via ghostty/config)"
 
+# BetterDiscord theme wrapper
+echo "→ Symlinking BetterDiscord Catppuccin theme..."
+BETTERDISCORD_THEME_DIR="$HOME/Library/Application Support/BetterDiscord/themes"
+mkdir -p "$BETTERDISCORD_THEME_DIR"
+ln -sf "$DOTFILES_ROOT/theme/betterdiscord/mocha.theme.css" "$BETTERDISCORD_THEME_DIR/mocha.theme.css"
+
 # Vim setup
 echo "→ Setting up Vim Catppuccin..."
 mkdir -p "$HOME/.vim/pack/catppuccin/start"
@@ -51,7 +57,8 @@ echo "✅ Catppuccin theme installed!"
 echo ""
 echo "Manual steps:"
 echo "  1. Ghostty: Catppuccin Mocha theme is applied automatically via config symlink"
-echo "  2. Obsidian (optional): if you want Obsidian to match, run these yourself:"
+echo "  2. BetterDiscord: open Discord Settings > BetterDiscord > Themes and enable Catppuccin Mocha"
+echo "  3. Obsidian (optional): if you want Obsidian to match, run these yourself:"
 echo "     obsidian theme:install name=Catppuccin"
 echo "     obsidian theme:set name=Catppuccin"
-echo "  3. Restart your terminal"
+echo "  4. Restart your terminal"

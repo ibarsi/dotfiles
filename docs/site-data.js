@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "2d5096aa36272ad2e12ea0a3c1c11f4e94d0981b",
-  "source_hash": "5f3c7f1bbaad",
+  "git_revision": "c0b22c113a7a9457358bf2bb602e0ebb6a29c897",
+  "source_hash": "81493bd8374c",
   "stats": {
     "aliases": 58,
     "functions": 29,
@@ -1047,11 +1047,11 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "slug": "theme",
-      "title": "Catppuccin terminal theme",
-      "summary": "Installs the repository-managed shell prompt and terminal theming assets.",
+      "title": "Catppuccin theme setup",
+      "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
       "details": [
         "Bootstraps the theme during setup when the installer script is present.",
-        "Pairs with starship and the theme assets stored in theme/."
+        "Pairs with starship, BetterDiscord, and the theme assets stored in theme/."
       ],
       "source": "theme/install.sh"
     },

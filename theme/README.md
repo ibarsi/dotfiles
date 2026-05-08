@@ -48,6 +48,16 @@ Already configured in `starship.toml`. Ensure your `.zshrc` loads it:
 eval "$(starship init zsh)"
 ```
 
+### BetterDiscord
+
+Bootstrap symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
+
+```text
+~/Library/Application Support/BetterDiscord/themes/mocha.theme.css
+```
+
+After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If the theme list is stale, reload Discord with `Cmd+R`.
+
 ### Obsidian
 
 This repo does not automate Obsidian theme setup. If you want Obsidian to match, enable the Obsidian CLI yourself and run:
@@ -62,6 +72,7 @@ obsidian theme:set name=Catppuccin
 - ✅ iTerm2 terminal colors
 - ✅ Starship prompt
 - ✅ Ghostty editor theme
+- ✅ BetterDiscord theme wrapper
 - ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
@@ -74,6 +85,7 @@ obsidian theme:set name=Catppuccin
 ```
 theme/
 ├── catppuccin.zsh        # Shell env vars & FZF/bat/eza config
+├── betterdiscord/        # BetterDiscord Catppuccin theme wrapper
 ├── starship.toml         # Prompt theme configuration
 ├── iterm2-catppuccin.json # iTerm2 color preset
 ├── install.sh            # One-command setup

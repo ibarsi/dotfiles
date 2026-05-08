@@ -46,12 +46,12 @@ FEATURE_NOTES = {
         ],
     },
     "theme": {
-        "title": "Catppuccin terminal theme",
-        "summary": "Installs the repository-managed shell prompt and terminal theming assets.",
+        "title": "Catppuccin theme setup",
+        "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
         "source": "theme/install.sh",
         "details": [
             "Bootstraps the theme during setup when the installer script is present.",
-            "Pairs with starship and the theme assets stored in theme/.",
+            "Pairs with starship, BetterDiscord, and the theme assets stored in theme/.",
         ],
     },
     "ghostty": {
