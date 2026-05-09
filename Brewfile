@@ -65,7 +65,7 @@ cask "google-chrome"
 cask "zed"
 cask "slack"
 cask "spotify"
-cask "postman"
+cask "bruno"
 cask "rectangle"        # Window manager
 cask "signal"
 cask "wireshark-app"    # GUI packet analysis

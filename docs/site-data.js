@@ -1427,7 +1427,7 @@ window.DOTFILES_DOCS_DATA = {
       "zed",
       "slack",
       "spotify",
-      "postman",
+      "bruno",
       "rectangle\"        # Window manager",
       "signal",
       "wireshark-app\"    # GUI packet analysis",
