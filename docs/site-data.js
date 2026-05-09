@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "980c728077cf6a6030450b17865002700c4f220d",
-  "source_hash": "42794470c63d",
+  "git_revision": "c2153b35ed22c12911543665789b1c714aa40f33",
+  "source_hash": "75aefb2b381f",
   "stats": {
     "aliases": 58,
     "functions": 29,
@@ -8,7 +8,7 @@ window.DOTFILES_DOCS_DATA = {
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 22,
-    "brews": 35,
+    "brews": 36,
     "casks": 28
   },
   "aliases": [
@@ -767,7 +767,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "d",
-      "command": "!\"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat\"",
+      "command": "!\"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat\"",
       "summary": "Show the diff between the latest commit and the current state",
       "kind": "git alias",
       "source": "git/.gitconfig"
@@ -1381,6 +1381,7 @@ window.DOTFILES_DOCS_DATA = {
       "tree",
       "gnupg",
       "git-lfs",
+      "git-delta",
       "gh",
       "tmux",
       "commitizen",
