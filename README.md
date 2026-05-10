@@ -60,7 +60,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Modern CLI tools**: Integrated with `eza`, `bat`, `glow`, `fzf`, `zoxide`, and `starship`.
 - **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
-- **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
+- **Zsh Power-ups**: Catppuccin Mocha syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, disables press-and-hold accent popups, and reloads a Caps Lock to Control remap at login.

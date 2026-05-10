@@ -8,6 +8,7 @@ fi
 
 # 2. zsh-syntax-highlighting
 if [ -d "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting" ]; then
+	[ -r "$DOTFILES/zsh/catppuccin_mocha-zsh-syntax-highlighting.theme" ] && source "$DOTFILES/zsh/catppuccin_mocha-zsh-syntax-highlighting.theme"
 	source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 

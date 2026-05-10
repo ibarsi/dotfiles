@@ -1,6 +1,6 @@
 {
-  "git_revision": "bad70816ffc94356030c6b16374d5d4d81adb889",
-  "source_hash": "1402dbfd9683",
+  "git_revision": "636ecd40e21bec7428bea55c18ca0aba723b0d96",
+  "source_hash": "11db635b2c93",
   "stats": {
     "aliases": 58,
     "functions": 33,
@@ -8,7 +8,7 @@
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 24,
-    "brews": 37,
+    "brews": 38,
     "casks": 28
   },
   "aliases": [
@@ -1068,7 +1068,7 @@
       "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
       "details": [
         "Loads zsh-autosuggestions when installed.",
-        "Loads zsh-syntax-highlighting when installed.",
+        "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
         "Sources ~/.fzf.zsh for shell keybindings and completion."
       ],
       "source": "zsh/plugins.zsh"
@@ -1222,7 +1222,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1230,7 +1230,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1238,7 +1238,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shellcheck bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1437,6 +1437,7 @@
       "glow",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
+      "zsh-syntax-highlighting",
       "k9s\"              # Kubernetes cluster TUI",
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
       "mtr\"              # Traceroute + ping in one view",

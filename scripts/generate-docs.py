@@ -41,7 +41,7 @@ FEATURE_NOTES = {
         "source": "zsh/plugins.zsh",
         "details": [
             "Loads zsh-autosuggestions when installed.",
-            "Loads zsh-syntax-highlighting when installed.",
+            "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
             "Sources ~/.fzf.zsh for shell keybindings and completion.",
         ],
     },
