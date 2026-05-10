@@ -32,6 +32,7 @@ brew "fd"               # Fast file discovery (complements fzf; not a replacemen
 brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
+brew "glow"
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
 brew "k9s"              # Kubernetes cluster TUI

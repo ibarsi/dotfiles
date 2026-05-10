@@ -57,7 +57,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 ## Features
 
 - **Topic-based organization**: Modular and easy to maintain.
-- **Modern CLI tools**: Integrated with `eza`, `bat`, `fzf`, `zoxide`, and `starship`.
+- **Modern CLI tools**: Integrated with `eza`, `bat`, `glow`, `fzf`, `zoxide`, and `starship`.
 - **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
 - **Zsh Power-ups**: Syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
@@ -179,6 +179,17 @@ If you want Obsidian to match the Catppuccin theme used elsewhere, enable Obsidi
 obsidian theme:install name=Catppuccin
 obsidian theme:set name=Catppuccin
 ```
+
+## Markdown Workflow
+
+`glow` is installed from `Brewfile` and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering.
+
+**Markdown functions (`system/.functions`):**
+- `md [file|url|repo]` → render Markdown with Glow; with no argument it opens `README.md` when present, otherwise starts Glow's current-directory browser
+- `mdf` → fuzzy-pick a local Markdown file and preview it with Glow before rendering
+- `mdrepo <owner/repo>` → render a GitHub/GitLab README; shorthand like `mdrepo charmbracelet/glow` expands to `github.com/charmbracelet/glow`
+
+This gives you a fast terminal path for local READMEs, generated docs, changelogs, and remote project docs without leaving the shell.
 
 ## tmux Workflow
 

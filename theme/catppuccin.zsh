@@ -43,6 +43,11 @@ export FZF_DEFAULT_OPTS="
 # Bat theme
 export BAT_THEME="Catppuccin Mocha"
 
+# Glow/Glamour markdown rendering
+export GLOW_CONFIG_HOME="$HOME/.config/glow"
+export GLAMOUR_STYLE="$GLOW_CONFIG_HOME/catppuccin-mocha.json"
+export GLOW_HIGH_PERFORMANCE_PAGER="true"
+
 # eza colors
 export EZA_COLORS="
   di=38;2;180;190;254:

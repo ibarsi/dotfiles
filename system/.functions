@@ -258,6 +258,86 @@ function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRX;
 }
 
+# Run Glow with the repo-managed config and Catppuccin Glamour style by default.
+function glow() {
+    local config_home style_path
+    config_home="${GLOW_CONFIG_HOME:-$HOME/.config/glow}"
+    style_path="${GLAMOUR_STYLE:-$config_home/catppuccin-mocha.json}"
+
+    if [[ -f "$config_home/glow.yml" && -f "$style_path" ]]; then
+        command glow --config "$config_home/glow.yml" --style "$style_path" "$@"
+    else
+        command glow "$@"
+    fi
+}
+
+# Render Markdown with Glow. With no argument, open README.md when present;
+# otherwise launch Glow's current-directory browser.
+function md() {
+    if ! command -v glow >/dev/null 2>&1; then
+        echo "glow is not installed" >&2
+        return 1
+    fi
+
+    if [[ "$#" -eq 0 ]]; then
+        if [[ -f README.md ]]; then
+            glow -p README.md
+        else
+            glow -m
+        fi
+        return
+    fi
+
+    glow -p "$@"
+}
+
+# Fuzzy-pick a Markdown file and render it with Glow.
+function mdf() {
+    if ! command -v glow >/dev/null 2>&1; then
+        echo "glow is not installed" >&2
+        return 1
+    fi
+
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "fzf is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local file
+    if command -v fd >/dev/null 2>&1; then
+        file=$(fd --type f --extension md --extension markdown --hidden --exclude .git --exclude node_modules --exclude .mise \
+            | fzf --height=60% --layout=reverse --border --preview 'command glow -s "$GLAMOUR_STYLE" -w 100 {}' --preview-window=right:60%) || return 1
+    else
+        file=$(find . -type f \( -name '*.md' -o -name '*.markdown' \) \
+            -not -path '*/.git/*' \
+            -not -path '*/node_modules/*' \
+            -not -path '*/.mise/*' \
+            2>/dev/null | fzf --height=60% --layout=reverse --border --preview 'command glow -s "$GLAMOUR_STYLE" -w 100 {}' --preview-window=right:60%) || return 1
+    fi
+
+    glow -p "$file"
+}
+
+# Render a GitHub/GitLab repository README with Glow.
+function mdrepo() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Usage: mdrepo <owner/repo|github.com/owner/repo|gitlab.com/owner/repo|url>" >&2
+        return 1
+    fi
+
+    if ! command -v glow >/dev/null 2>&1; then
+        echo "glow is not installed" >&2
+        return 1
+    fi
+
+    local target="$1"
+    if [[ "$target" != *"://"* && "$target" != github.com/* && "$target" != gitlab.com/* && "$target" != github://* && "$target" != gitlab://* ]]; then
+        target="github.com/$target"
+    fi
+
+    glow -p "$target"
+}
+
 # POWER
 
 # FZF WORKFLOWS

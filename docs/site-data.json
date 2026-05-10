@@ -1,14 +1,14 @@
 {
-  "git_revision": "c2153b35ed22c12911543665789b1c714aa40f33",
-  "source_hash": "75aefb2b381f",
+  "git_revision": "bad70816ffc94356030c6b16374d5d4d81adb889",
+  "source_hash": "1402dbfd9683",
   "stats": {
     "aliases": 58,
-    "functions": 29,
+    "functions": 33,
     "git": 55,
     "features": 11,
     "tasks": 15,
-    "bootstrap_links": 22,
-    "brews": 36,
+    "bootstrap_links": 24,
+    "brews": 37,
     "casks": 28
   },
   "aliases": [
@@ -498,6 +498,13 @@
       "source_kind": "system function"
     },
     {
+      "name": "glow",
+      "summary": "Run Glow with the repo-managed config and Catppuccin Glamour style by default.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "groot",
       "summary": "Jump to the current git repository root",
       "usage": "",
@@ -522,6 +529,27 @@
       "name": "listeners",
       "summary": "Check open TCP/UDP listeners in a compact view",
       "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "md",
+      "summary": "Render Markdown with Glow. With no argument, open README.md when present; otherwise launch Glow's current-directory browser.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "mdf",
+      "summary": "Fuzzy-pick a Markdown file and render it with Glow.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "mdrepo",
+      "summary": "Render a GitHub/GitLab repository README with Glow.",
+      "usage": "mdrepo <owner/repo|github.com/owner/repo|gitlab.com/owner/repo|url>",
       "source": "system/.functions",
       "source_kind": "system function"
     },
@@ -1151,6 +1179,7 @@
         "bash -n bootstrap.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
+        "bash -n glow/install.sh",
         "bash -n pi/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh"
@@ -1193,7 +1222,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1201,7 +1230,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1209,7 +1238,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh macos/.macos theme/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shellcheck bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1267,6 +1296,16 @@
       "source_path": "ghostty/config",
       "target_path": "~/.config/ghostty/config",
       "source": "ghostty/install.sh"
+    },
+    {
+      "source_path": "glow/catppuccin-mocha.json",
+      "target_path": "~/.config/glow/catppuccin-mocha.json",
+      "source": "glow/install.sh"
+    },
+    {
+      "source_path": "glow/glow.yml",
+      "target_path": "~/.config/glow/glow.yml",
+      "source": "glow/install.sh"
     },
     {
       "source_path": "mise/config.toml",
@@ -1395,6 +1434,7 @@
       "zoxide\"           # Better 'cd",
       "bat\"              # Better 'cat",
       "eza\"              # Better 'ls",
+      "glow",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
       "k9s\"              # Kubernetes cluster TUI",
