@@ -32,3 +32,5 @@ Run:
 - Clear summary + rationale.
 - Mention caveats/manual follow-up if needed.
 - Request review from `ibarsi`.
+
+@RTK.md
