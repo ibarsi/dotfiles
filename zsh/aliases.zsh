@@ -16,7 +16,7 @@ alias cx="codex"
 alias cxe="codex exec"
 alias cxr="codex resume --last"
 alias cxreview='codex "/review"'
-alias cxyolo="codex --full-auto"
+alias cxyolo="codex --dangerously-bypass-approvals-and-sandbox"
 
 # Pi Coding Agent
 alias pie="pi -p"

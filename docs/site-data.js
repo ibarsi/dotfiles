@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "c3d63b930e7da3da7b668876d74537c1dfa94b14",
-  "source_hash": "f7a941827573",
+  "git_revision": "c9bf583703878c4917de30830b1425c992e08c91",
+  "source_hash": "dbe0280dab44",
   "stats": {
     "aliases": 58,
     "functions": 33,
@@ -9,7 +9,7 @@ window.DOTFILES_DOCS_DATA = {
     "tasks": 15,
     "bootstrap_links": 24,
     "brews": 38,
-    "casks": 28
+    "casks": 27
   },
   "aliases": [
     {
@@ -140,7 +140,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "cxyolo",
-      "command": "codex --full-auto",
+      "command": "codex --dangerously-bypass-approvals-and-sandbox",
       "group": "Codex CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1454,7 +1454,6 @@ window.DOTFILES_DOCS_DATA = {
       "1password-cli",
       "bdcli\"             # BetterDiscord CLI installer/updater",
       "1password",
-      "comet",
       "discord",
       "docker-desktop",
       "grandperspective",

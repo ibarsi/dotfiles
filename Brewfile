@@ -53,7 +53,6 @@ cask "1password-cli"
 cask "bdcli"             # BetterDiscord CLI installer/updater
 # Optional/newer casks (higher rename/churn risk over time)
 cask "1password"
-cask "comet"
 cask "discord"
 cask "docker-desktop"
 cask "grandperspective"
