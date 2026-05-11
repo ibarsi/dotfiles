@@ -479,6 +479,7 @@ function fwtr() {
     echo "  branch: $branch"
     echo "  path:   $worktree_path"
     git wtr "$worktree_path"
+    rmdir -p "$(dirname "$worktree_path")" 2>/dev/null || true
 }
 
 # Fuzzy-pick a git worktree from the current repo and cd into it
