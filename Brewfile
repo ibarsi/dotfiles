@@ -47,7 +47,6 @@ brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
-cask "warp"              # AI-native terminal with managed Catppuccin theme
 cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
 cask "bdcli"             # BetterDiscord CLI installer/updater

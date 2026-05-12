@@ -1,15 +1,15 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "c9bf583703878c4917de30830b1425c992e08c91",
-  "source_hash": "dbe0280dab44",
+  "git_revision": "0bd0bc324c9812876f8f287f983ee1d6cc4bb4dc",
+  "source_hash": "be2cafb1aa6b",
   "stats": {
     "aliases": 58,
     "functions": 33,
     "git": 55,
-    "features": 11,
+    "features": 10,
     "tasks": 15,
-    "bootstrap_links": 24,
+    "bootstrap_links": 22,
     "brews": 38,
-    "casks": 27
+    "casks": 26
   },
   "aliases": [
     {
@@ -1093,17 +1093,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "ghostty/config"
     },
     {
-      "slug": "warp",
-      "title": "Warp terminal config",
-      "summary": "Ships a managed Warp custom theme and Ghostty-style directional split-pane keybindings.",
-      "details": [
-        "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
-        "Symlinked into ~/.warp/keybindings.yaml during bootstrap.",
-        "Warp settings such as font and padding remain app-managed."
-      ],
-      "source": "warp/themes/catppuccin-mocha.yaml"
-    },
-    {
       "slug": "zed",
       "title": "Zed editor config",
       "summary": "Stores editor settings and keybindings in-repo and links them into ~/.config/zed.",
@@ -1378,16 +1367,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "vim/install.sh"
     },
     {
-      "source_path": "warp/keybindings.yaml",
-      "target_path": "~/.warp/keybindings.yaml",
-      "source": "warp/install.sh"
-    },
-    {
-      "source_path": "warp/themes/catppuccin-mocha.yaml",
-      "target_path": "~/.warp/themes/catppuccin-mocha.yaml",
-      "source": "warp/install.sh"
-    },
-    {
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
       "source": "zsh/install.sh"
@@ -1449,7 +1428,6 @@ window.DOTFILES_DOCS_DATA = {
     ],
     "casks": [
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
-      "warp\"              # AI-native terminal with managed Catppuccin theme",
       "codex\"             # OpenAI Codex CLI",
       "1password-cli",
       "bdcli\"             # BetterDiscord CLI installer/updater",

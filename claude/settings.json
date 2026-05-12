@@ -119,16 +119,7 @@
     "superpowers@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "linear@claude-plugins-official": true,
-    "warp@claude-code-warp": true
-  },
-  "extraKnownMarketplaces": {
-    "claude-code-warp": {
-      "source": {
-        "source": "github",
-        "repo": "warpdotdev/claude-code-warp"
-      }
-    }
+    "linear@claude-plugins-official": true
   },
   "autoUpdatesChannel": "stable",
   "tui": "fullscreen",

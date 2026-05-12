@@ -62,16 +62,6 @@ FEATURE_NOTES = {
             "Symlinked into ~/.config/ghostty/config during bootstrap.",
         ],
     },
-    "warp": {
-        "title": "Warp terminal config",
-        "summary": "Ships a managed Warp custom theme and Ghostty-style directional split-pane keybindings.",
-        "source": "warp/themes/catppuccin-mocha.yaml",
-        "details": [
-            "Symlinked into ~/.warp/themes/catppuccin-mocha.yaml during bootstrap.",
-            "Symlinked into ~/.warp/keybindings.yaml during bootstrap.",
-            "Warp settings such as font and padding remain app-managed.",
-        ],
-    },
     "zed": {
         "title": "Zed editor config",
         "summary": "Stores editor settings and keybindings in-repo and links them into ~/.config/zed.",
