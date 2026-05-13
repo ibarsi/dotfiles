@@ -102,7 +102,7 @@ FEATURE_NOTES = {
         "source": "scripts/doctor-ai.sh",
         "details": [
             "doctor-ai checks binaries, config files, env vars, and endpoint reachability.",
-            "bootstrap-verify checks expected post-bootstrap files and symlinks.",
+            "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state.",
         ],
     },
 }

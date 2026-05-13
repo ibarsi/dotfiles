@@ -1,13 +1,13 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "0bd0bc324c9812876f8f287f983ee1d6cc4bb4dc",
-  "source_hash": "be2cafb1aa6b",
+  "git_revision": "38f90f16f2fface5254127afe4cd674b1da8dd1f",
+  "source_hash": "dd3294792489",
   "stats": {
     "aliases": 58,
     "functions": 33,
     "git": 55,
     "features": 10,
     "tasks": 15,
-    "bootstrap_links": 22,
+    "bootstrap_links": 23,
     "brews": 38,
     "casks": 26
   },
@@ -1136,7 +1136,7 @@ window.DOTFILES_DOCS_DATA = {
       "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
       "details": [
         "doctor-ai checks binaries, config files, env vars, and endpoint reachability.",
-        "bootstrap-verify checks expected post-bootstrap files and symlinks."
+        "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state."
       ],
       "source": "scripts/doctor-ai.sh"
     }
@@ -1374,6 +1374,11 @@ window.DOTFILES_DOCS_DATA = {
     {
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",
       "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
+      "source": "launchagents/install.sh"
+    },
+    {
+      "source_path": "launchagents/com.ibarsi.ensure-betterdiscord.plist",
+      "target_path": "~/Library/LaunchAgents/com.ibarsi.ensure-betterdiscord.plist",
       "source": "launchagents/install.sh"
     },
     {

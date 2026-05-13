@@ -139,7 +139,7 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 ## BetterDiscord Theme
 
-The Catppuccin setup installs `bdcli` from the BetterDiscord Homebrew tap, runs `bdcli install --channel stable`, and links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder.
+The Catppuccin setup installs `bdcli` from the BetterDiscord Homebrew tap, runs `bdcli install --channel stable`, and links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder. Bootstrap also installs a LaunchAgent that checks at user-session load and reinjects BetterDiscord when a Discord Stable update has replaced the patched desktop core.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
@@ -389,7 +389,7 @@ pi install npm:pi-btw
 
 Scripts under `scripts/`:
 - `doctor-ai.sh` → checks binaries, config presence, env presence, endpoint reachability
-- `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files
+- `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files and BetterDiscord injection state
 
 ## Deterministic Checks (Pre-commit)
 

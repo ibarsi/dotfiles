@@ -58,6 +58,8 @@ Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord in
 
 After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If the theme list is stale, reload Discord with `Cmd+R`.
 
+The `com.ibarsi.ensure-betterdiscord` LaunchAgent checks at user-session load and reruns `bdcli install --channel stable` when a Discord Stable update removes the BetterDiscord injection.
+
 ### Obsidian
 
 This repo does not automate Obsidian theme setup. If you want Obsidian to match, enable the Obsidian CLI yourself and run:
