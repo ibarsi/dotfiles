@@ -44,6 +44,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/`).
+- `k9s/`: Kubernetes TUI configuration (symlinked to `~/Library/Application Support/k9s/config.yaml`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
@@ -73,6 +74,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
 - **BetterDiscord theme**: Bootstrap installs the BetterDiscord CLI, injects BetterDiscord into Discord Stable, and links a repo-managed Catppuccin Mocha wrapper into BetterDiscord's themes folder.
+- **k9s defaults**: Bootstrap links a repo-managed k9s config that uses the Catppuccin Mocha skin and wraps log lines by default.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.

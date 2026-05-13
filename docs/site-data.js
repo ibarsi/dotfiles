@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "38f90f16f2fface5254127afe4cd674b1da8dd1f",
-  "source_hash": "dd3294792489",
+  "git_revision": "fb9fe0feeed1385e13040eecab7c6802d03ff69e",
+  "source_hash": "b491352882fc",
   "stats": {
     "aliases": 58,
     "functions": 33,
@@ -1166,6 +1166,7 @@ window.DOTFILES_DOCS_DATA = {
         "mise run fmt-check",
         "mise run docs-check",
         "bash -n bootstrap.sh",
+        "bash -n k9s/install.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
         "bash -n glow/install.sh",
@@ -1211,7 +1212,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1219,7 +1220,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1227,7 +1228,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },

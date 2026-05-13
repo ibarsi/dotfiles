@@ -60,6 +60,16 @@ After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `
 
 The `com.ibarsi.ensure-betterdiscord` LaunchAgent checks at user-session load and reruns `bdcli install --channel stable` when a Discord Stable update removes the BetterDiscord injection.
 
+### k9s
+
+Bootstrap downloads the Catppuccin Mocha k9s skin into:
+
+```text
+~/Library/Application Support/k9s/skins/catppuccin-mocha.yaml
+```
+
+The k9s app config itself is managed by `k9s/config.yaml` and symlinked by `k9s/install.sh`, so defaults such as log wrapping stay reproducible.
+
 ### Obsidian
 
 This repo does not automate Obsidian theme setup. If you want Obsidian to match, enable the Obsidian CLI yourself and run:

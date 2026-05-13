@@ -40,6 +40,8 @@ check_betterdiscord_injection() {
 }
 
 check_link "$HOME/.config/ghostty/config"
+check_link "$HOME/Library/Application Support/k9s/config.yaml"
+check_link "$HOME/Library/Application Support/k9s/skins/catppuccin-mocha.yaml"
 check_link "$HOME/Library/Application Support/BetterDiscord/themes/mocha.theme.css"
 check_betterdiscord_injection
 check_link "$HOME/.config/zed/settings.json"
