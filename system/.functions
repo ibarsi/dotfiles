@@ -478,7 +478,7 @@ function fwtr() {
     echo "Removing worktree:"
     echo "  branch: $branch"
     echo "  path:   $worktree_path"
-    git wtr "$worktree_path"
+    git wtr --force "$worktree_path"
 
     local dir="$(dirname "$worktree_path")"
     local root="$HOME/worktrees"
