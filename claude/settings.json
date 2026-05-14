@@ -3,7 +3,8 @@
   "respectGitignore": true,
   "cleanupPeriodDays": 30,
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "90"
   },
   "attribution": {
     "commit": "",
@@ -29,7 +30,9 @@
       "Bash(cd:*)",
       "Bash(buf:*)",
       "Bash(docker compose:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(linear:*)",
+      "Bash(~/Projects/linear-cli/linear:*)"
     ],
     "deny": [
       "Bash(rm -rf /)",
@@ -118,8 +121,7 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
-    "linear@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true
   },
   "autoUpdatesChannel": "stable",
   "tui": "fullscreen",
