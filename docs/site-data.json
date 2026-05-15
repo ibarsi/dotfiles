@@ -1,10 +1,10 @@
 {
-  "git_revision": "fb9fe0feeed1385e13040eecab7c6802d03ff69e",
-  "source_hash": "b491352882fc",
+  "git_revision": "8fec86432f95f14b3f4cb151ada7209ef4a3391c",
+  "source_hash": "e4f52c958615",
   "stats": {
     "aliases": 58,
     "functions": 33,
-    "git": 55,
+    "git": 56,
     "features": 10,
     "tasks": 15,
     "bootstrap_links": 23,
@@ -818,6 +818,13 @@
       "name": "dm",
       "command": "\"!git branch --merged | grep -v '\\\\*' | xargs -n 1 git branch -d\"",
       "summary": "Remove branches that have already been merged with master a.k.a. \u2018delete merged\u2019",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "fa",
+      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --author=$1; }; f\"",
+      "summary": "Find commits by author",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },
