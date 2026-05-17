@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "8fec86432f95f14b3f4cb151ada7209ef4a3391c",
-  "source_hash": "e4f52c958615",
+  "git_revision": "7bf57df385bcdc50dea98b56a7ed2e29417df531",
+  "source_hash": "f0d6097b3bc4",
   "stats": {
     "aliases": 58,
     "functions": 33,
@@ -1464,7 +1464,7 @@ window.DOTFILES_DOCS_DATA = {
       "wireshark-app\"    # GUI packet analysis",
       "raycast\"          # Productivity launcher",
       "claude-code@latest\" # Claude Code CLI (Anthropic)",
-      "wribe",
+      "typewhisper/tap/typewhisper",
       "font-fira-code-nerd-font\" # Nerd font for icons (eza/starship)"
     ]
   }

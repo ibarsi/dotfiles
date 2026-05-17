@@ -71,5 +71,5 @@ cask "signal"
 cask "wireshark-app"    # GUI packet analysis
 cask "raycast"          # Productivity launcher
 cask "claude-code@latest" # Claude Code CLI (Anthropic)
-cask "wribe"
+cask "typewhisper/tap/typewhisper"
 cask "font-fira-code-nerd-font" # Nerd font for icons (eza/starship)
