@@ -30,7 +30,7 @@
     "omlx/gemma-4-e4b-it-MLX-4bit"
   ],
   "enableSkillCommands": true,
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.75.4",
   "packages": [
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-ask-user-question",
