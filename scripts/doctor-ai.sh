@@ -27,8 +27,4 @@ if [ -f "$HOME/.pi/agent/models.json" ]; then ok "$HOME/.pi/agent/models.json pr
 
 if [ -n "${OMLX_API_KEY:-}" ]; then ok "OMLX_API_KEY is set"; else warn "OMLX_API_KEY is not set (needed for the repo-managed Pi oMLX provider)"; fi
 
-# Endpoint reachability (status only, no secrets)
-local_models_url="http://127.0.0.1:1234/v1/models"
-if curl -sS -I --max-time 5 "$local_models_url" >/dev/null; then ok "Reachable: $local_models_url"; else warn "Cannot reach: $local_models_url"; fi
-
 echo "Done."

@@ -73,7 +73,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
 - **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
 - **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
-- **BetterDiscord theme**: Bootstrap installs the BetterDiscord CLI, injects BetterDiscord into Discord Stable, and links a repo-managed Catppuccin Mocha wrapper into BetterDiscord's themes folder.
+- **BetterDiscord theme**: Bootstrap installs the BetterDiscord CLI, injects BetterDiscord when Discord Stable is present, and links a repo-managed Catppuccin Mocha wrapper into BetterDiscord's themes folder.
 - **k9s defaults**: Bootstrap links a repo-managed k9s config that uses the Catppuccin Mocha skin and wraps log lines by default.
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
@@ -141,7 +141,7 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 ## BetterDiscord Theme
 
-The Catppuccin setup installs `bdcli` from the BetterDiscord Homebrew tap, runs `bdcli install --channel stable`, and links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder. Bootstrap also installs a LaunchAgent that checks at user-session load and reinjects BetterDiscord when a Discord Stable update has replaced the patched desktop core.
+The Catppuccin setup installs `bdcli` from the BetterDiscord Homebrew tap, runs `bdcli install --channel stable` when Discord Stable is present, and links a BetterDiscord theme wrapper into Discord's BetterDiscord themes folder. Bootstrap also installs a LaunchAgent that checks at user-session load and reinjects BetterDiscord when a Discord Stable update has replaced the patched desktop core.
 
 | File | Destination | Purpose |
 |------|-------------|---------|
@@ -390,7 +390,7 @@ pi install npm:pi-btw
 ## AI Diagnostics
 
 Scripts under `scripts/`:
-- `doctor-ai.sh` → checks binaries, config presence, env presence, endpoint reachability
+- `doctor-ai.sh` → checks binaries, config presence, and env presence
 - `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files and BetterDiscord injection state
 
 ## Deterministic Checks (Pre-commit)

@@ -51,7 +51,7 @@ FEATURE_NOTES = {
         "source": "theme/install.sh",
         "details": [
             "Bootstraps the theme during setup when the installer script is present.",
-            "Uses bdcli to install BetterDiscord into Discord Stable before linking the Catppuccin theme wrapper.",
+            "Uses bdcli to install BetterDiscord when Discord Stable is present and links the Catppuccin theme wrapper.",
         ],
     },
     "ghostty": {
@@ -101,7 +101,7 @@ FEATURE_NOTES = {
         "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
         "source": "scripts/doctor-ai.sh",
         "details": [
-            "doctor-ai checks binaries, config files, env vars, and endpoint reachability.",
+            "doctor-ai checks binaries, config files, and env vars.",
             "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state.",
         ],
     },

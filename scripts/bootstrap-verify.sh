@@ -30,6 +30,11 @@ check_betterdiscord_injection() {
 		return
 	fi
 
+	if ! printf '%s\n' "$output" | awk '$1 == "Discord" { found = 1 } END { exit found ? 0 : 1 }'; then
+		echo "ℹ️  Discord Stable not installed; skipping BetterDiscord injection check"
+		return
+	fi
+
 	if printf '%s\n' "$output" | awk '$1 == "Discord" && $4 == "yes" { found = 1 } END { exit found ? 0 : 1 }'; then
 		echo "✅ BetterDiscord injected into Discord Stable"
 	else

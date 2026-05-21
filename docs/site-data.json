@@ -1,6 +1,6 @@
 {
-  "git_revision": "7ad18bb4d6b62c75d1ae3a1a147674d7f8b79a98",
-  "source_hash": "0eb8bfa252ab",
+  "git_revision": "4decbf235ea05dfdf2e3f764e57e5435c42e7791",
+  "source_hash": "9d0fcfdb2007",
   "stats": {
     "aliases": 62,
     "functions": 33,
@@ -1114,7 +1114,7 @@
       "summary": "Installs the repository-managed shell prompt, terminal, BetterDiscord, and app theming assets.",
       "details": [
         "Bootstraps the theme during setup when the installer script is present.",
-        "Uses bdcli to install BetterDiscord into Discord Stable before linking the Catppuccin theme wrapper."
+        "Uses bdcli to install BetterDiscord when Discord Stable is present and links the Catppuccin theme wrapper."
       ],
       "source": "theme/install.sh"
     },
@@ -1170,7 +1170,7 @@
       "title": "Validation scripts",
       "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
       "details": [
-        "doctor-ai checks binaries, config files, env vars, and endpoint reachability.",
+        "doctor-ai checks binaries, config files, and env vars.",
         "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state."
       ],
       "source": "scripts/doctor-ai.sh"

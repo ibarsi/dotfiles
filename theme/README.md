@@ -50,7 +50,7 @@ eval "$(starship init zsh)"
 
 ### BetterDiscord
 
-Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord into Discord Stable, and symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
+Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord when Discord Stable is present, and symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
 
 ```text
 ~/Library/Application Support/BetterDiscord/themes/mocha.theme.css
@@ -58,7 +58,7 @@ Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord in
 
 After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If the theme list is stale, reload Discord with `Cmd+R`.
 
-The `com.ibarsi.ensure-betterdiscord` LaunchAgent checks at user-session load and reruns `bdcli install --channel stable` when a Discord Stable update removes the BetterDiscord injection.
+The `com.ibarsi.ensure-betterdiscord` LaunchAgent checks at user-session load and reruns `bdcli install --channel stable` when Discord Stable is present and an update removes the BetterDiscord injection.
 
 ### k9s
 
