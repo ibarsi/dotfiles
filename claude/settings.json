@@ -125,5 +125,6 @@
   },
   "autoUpdatesChannel": "stable",
   "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "custom:catppuccin-mocha"
 }

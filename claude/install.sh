@@ -5,3 +5,6 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 mkdir -p "$HOME/.claude"
 ln -sf "$DOTFILES_ROOT/claude/settings.json" "$HOME/.claude/settings.json"
+
+rm -rf "$HOME/.claude/themes"
+ln -sf "$DOTFILES_ROOT/claude/themes" "$HOME/.claude/themes"
