@@ -518,11 +518,24 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 **Zsh shortcuts:**
 - `cc` → `claude`
+- `cce` → `claude -p`
 - `ccr` → `claude --continue`
+- `ccreview` → start Claude with `/review`
+- `ccyolo` → `claude --dangerously-skip-permissions`
 - `ccdoctor` → `claude doctor`
 - `ccupdate` → upgrade Claude Code (brew cask if installed via Homebrew, otherwise `claude update`)
 
 > Workflow note: Codex and Claude configs are independent (`~/.codex/` and `~/.claude/`), so switching between them is frictionless.
+
+## Agy CLI Workflow
+
+Agy is wired into the zsh shortcut set with aliases that mirror the Codex and Claude Code patterns where the CLI exposes matching flags.
+
+**Zsh shortcuts:**
+- `agye` → `agy -p`
+- `agyr` → `agy --continue`
+- `agyreview` → start Agy with `/review`
+- `agyyolo` → `agy --dangerously-skip-permissions`
 
 ## Zed Editor
 
