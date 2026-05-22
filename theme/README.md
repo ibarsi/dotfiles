@@ -48,18 +48,6 @@ Already configured in `starship.toml`. Ensure your `.zshrc` loads it:
 eval "$(starship init zsh)"
 ```
 
-### BetterDiscord
-
-Bootstrap installs the BetterDiscord CLI from Homebrew, injects BetterDiscord when Discord Stable is present, and symlinks `theme/betterdiscord/mocha.theme.css` into BetterDiscord's theme folder:
-
-```text
-~/Library/Application Support/BetterDiscord/themes/mocha.theme.css
-```
-
-After bootstrap, open Discord Settings → BetterDiscord → Themes and enable `Catppuccin Mocha`. If the theme list is stale, reload Discord with `Cmd+R`.
-
-The `com.ibarsi.ensure-betterdiscord` LaunchAgent checks at user-session load and reruns `bdcli install --channel stable` when Discord Stable is present and an update removes the BetterDiscord injection.
-
 ### k9s
 
 Bootstrap downloads the Catppuccin Mocha k9s skin into:
@@ -84,7 +72,6 @@ obsidian theme:set name=Catppuccin
 - ✅ iTerm2 terminal colors
 - ✅ Starship prompt
 - ✅ Ghostty editor theme
-- ✅ BetterDiscord CLI install + theme wrapper
 - ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
@@ -97,7 +84,6 @@ obsidian theme:set name=Catppuccin
 ```
 theme/
 ├── catppuccin.zsh        # Shell env vars & FZF/bat/eza config
-├── betterdiscord/        # BetterDiscord Catppuccin theme wrapper
 ├── starship.toml         # Prompt theme configuration
 ├── iterm2-catppuccin.json # iTerm2 color preset
 ├── install.sh            # One-command setup

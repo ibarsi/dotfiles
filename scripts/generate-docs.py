@@ -47,11 +47,11 @@ FEATURE_NOTES = {
     },
     "theme": {
         "title": "Catppuccin theme setup",
-        "summary": "Installs the repository-managed shell prompt, terminal, BetterDiscord, and app theming assets.",
+        "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
         "source": "theme/install.sh",
         "details": [
             "Bootstraps the theme during setup when the installer script is present.",
-            "Uses bdcli to install BetterDiscord when Discord Stable is present and links the Catppuccin theme wrapper.",
+            "Links and downloads Catppuccin assets for supported terminal and CLI tools.",
         ],
     },
     "ghostty": {
@@ -102,7 +102,7 @@ FEATURE_NOTES = {
         "source": "scripts/doctor-ai.sh",
         "details": [
             "doctor-ai checks binaries, config files, and env vars.",
-            "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state.",
+            "bootstrap-verify checks expected post-bootstrap files and symlinks.",
         ],
     },
 }

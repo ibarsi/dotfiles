@@ -1,8 +1,5 @@
 # Brewfile - Modernized Setup for ibarsi
 
-# Taps
-tap "betterdiscord/tap"
-
 # CLI Tools (Core)
 brew "coreutils"
 brew "moreutils"
@@ -49,7 +46,6 @@ brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "codex"             # OpenAI Codex CLI
 cask "1password-cli"
-cask "bdcli"             # BetterDiscord CLI installer/updater
 # Optional/newer casks (higher rename/churn risk over time)
 cask "1password"
 cask "discord"

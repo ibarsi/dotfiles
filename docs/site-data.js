@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "4decbf235ea05dfdf2e3f764e57e5435c42e7791",
-  "source_hash": "9d0fcfdb2007",
+  "git_revision": "359635b7c7c02c494797f92a771f8619a813f253",
+  "source_hash": "917b14f84da3",
   "stats": {
     "aliases": 62,
     "functions": 33,
@@ -9,7 +9,7 @@ window.DOTFILES_DOCS_DATA = {
     "tasks": 15,
     "bootstrap_links": 23,
     "brews": 38,
-    "casks": 26
+    "casks": 25
   },
   "aliases": [
     {
@@ -1111,10 +1111,10 @@ window.DOTFILES_DOCS_DATA = {
     {
       "slug": "theme",
       "title": "Catppuccin theme setup",
-      "summary": "Installs the repository-managed shell prompt, terminal, BetterDiscord, and app theming assets.",
+      "summary": "Installs the repository-managed shell prompt, terminal, and app theming assets.",
       "details": [
         "Bootstraps the theme during setup when the installer script is present.",
-        "Uses bdcli to install BetterDiscord when Discord Stable is present and links the Catppuccin theme wrapper."
+        "Links and downloads Catppuccin assets for supported terminal and CLI tools."
       ],
       "source": "theme/install.sh"
     },
@@ -1171,7 +1171,7 @@ window.DOTFILES_DOCS_DATA = {
       "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
       "details": [
         "doctor-ai checks binaries, config files, and env vars.",
-        "bootstrap-verify checks expected post-bootstrap files, symlinks, and BetterDiscord injection state."
+        "bootstrap-verify checks expected post-bootstrap files and symlinks."
       ],
       "source": "scripts/doctor-ai.sh"
     }
@@ -1313,6 +1313,11 @@ window.DOTFILES_DOCS_DATA = {
       "source": "claude/install.sh"
     },
     {
+      "source_path": "claude/themes",
+      "target_path": "~/.claude/themes",
+      "source": "claude/install.sh"
+    },
+    {
       "source_path": "codex/config.toml",
       "target_path": "~/.codex/config.toml",
       "source": "codex/install.sh"
@@ -1413,20 +1418,13 @@ window.DOTFILES_DOCS_DATA = {
       "source": "launchagents/install.sh"
     },
     {
-      "source_path": "launchagents/com.ibarsi.ensure-betterdiscord.plist",
-      "target_path": "~/Library/LaunchAgents/com.ibarsi.ensure-betterdiscord.plist",
-      "source": "launchagents/install.sh"
-    },
-    {
       "source_path": "gitmoji/config.json",
       "target_path": "~/Library/Preferences/gitmoji-nodejs/config.json",
       "source": "gitmoji/install.sh"
     }
   ],
   "packages": {
-    "taps": [
-      "betterdiscord/tap"
-    ],
+    "taps": [],
     "brews": [
       "coreutils",
       "moreutils",
@@ -1471,7 +1469,6 @@ window.DOTFILES_DOCS_DATA = {
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
       "codex\"             # OpenAI Codex CLI",
       "1password-cli",
-      "bdcli\"             # BetterDiscord CLI installer/updater",
       "1password",
       "discord",
       "docker-desktop",
