@@ -48,6 +48,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
+- `cmux/`: cmux app configuration (symlinked to `~/.config/cmux/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
@@ -137,6 +138,15 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 | `cmd+0` | Reset font size |
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
+
+## cmux
+
+[cmux](https://github.com/manaflow-ai/cmux) is installed from the `manaflow-ai/cmux` Homebrew tap and configured from the repo-managed JSONC file in `cmux/`.
+Bootstrap also runs `cmux themes set --dark "Catppuccin Mocha"` so the dark theme is applied consistently.
+
+| File | Destination | Purpose |
+|------|-------------|---------|
+| `cmux/cmux.json` | `~/.config/cmux/cmux.json` | App settings and configurable defaults |
 
 ## Obsidian Workflow
 

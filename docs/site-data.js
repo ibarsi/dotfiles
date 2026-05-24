@@ -1,15 +1,15 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "359635b7c7c02c494797f92a771f8619a813f253",
-  "source_hash": "917b14f84da3",
+  "git_revision": "51850bd6b69eeea1156e02f64284e6d183885fd4",
+  "source_hash": "083cbbb15cf2",
   "stats": {
     "aliases": 62,
     "functions": 33,
     "git": 56,
-    "features": 10,
+    "features": 11,
     "tasks": 15,
-    "bootstrap_links": 23,
+    "bootstrap_links": 24,
     "brews": 38,
-    "casks": 25
+    "casks": 26
   },
   "aliases": [
     {
@@ -1146,6 +1146,17 @@ window.DOTFILES_DOCS_DATA = {
       "source": "codex/config.toml"
     },
     {
+      "slug": "cmux",
+      "title": "cmux config",
+      "summary": "Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.",
+      "details": [
+        "Homebrew installs cmux from the manaflow-ai/cmux tap.",
+        "Bootstrap links ~/.config/cmux/cmux.json to the repository-managed JSONC file.",
+        "Bootstrap sets the dark theme to Catppuccin Mocha through the cmux CLI."
+      ],
+      "source": "cmux/cmux.json"
+    },
+    {
       "slug": "claude",
       "title": "Claude Code config",
       "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
@@ -1323,6 +1334,11 @@ window.DOTFILES_DOCS_DATA = {
       "source": "codex/install.sh"
     },
     {
+      "source_path": "cmux/cmux.json",
+      "target_path": "~/.config/cmux/cmux.json",
+      "source": "cmux/install.sh"
+    },
+    {
       "source_path": "ghostty/config",
       "target_path": "~/.config/ghostty/config",
       "source": "ghostty/install.sh"
@@ -1424,7 +1440,9 @@ window.DOTFILES_DOCS_DATA = {
     }
   ],
   "packages": {
-    "taps": [],
+    "taps": [
+      "manaflow-ai/cmux"
+    ],
     "brews": [
       "coreutils",
       "moreutils",
@@ -1468,6 +1486,7 @@ window.DOTFILES_DOCS_DATA = {
     "casks": [
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
       "codex\"             # OpenAI Codex CLI",
+      "cmux",
       "1password-cli",
       "1password",
       "discord",

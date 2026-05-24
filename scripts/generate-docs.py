@@ -78,6 +78,16 @@ FEATURE_NOTES = {
             "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
         ],
     },
+    "cmux": {
+        "title": "cmux config",
+        "summary": "Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.",
+        "source": "cmux/cmux.json",
+        "details": [
+            "Homebrew installs cmux from the manaflow-ai/cmux tap.",
+            "Bootstrap links ~/.config/cmux/cmux.json to the repository-managed JSONC file.",
+            "Bootstrap sets the dark theme to Catppuccin Mocha through the cmux CLI.",
+        ],
+    },
     "claude": {
         "title": "Claude Code config",
         "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
