@@ -144,6 +144,7 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 [cmux](https://github.com/manaflow-ai/cmux) is installed from the `manaflow-ai/cmux` Homebrew tap and configured from the repo-managed JSONC file in `cmux/`.
 Bootstrap also runs `cmux themes set --dark "Catppuccin Mocha"` so the dark theme is applied consistently.
+The workspace color picker is file-managed with Catppuccin Mocha colors matching the Ghostty palette used by cmux themes.
 
 | File | Destination | Purpose |
 |------|-------------|---------|

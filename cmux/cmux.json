@@ -74,29 +74,29 @@
   //     "hideAllDetails" : false
   //   },
 
-  //   "workspaceColors" : {
-  //     "indicatorStyle" : "leftRail",
-  //     "selectionColor" : null,
-  //     "notificationBadgeColor" : null,
-  //     "colors" : {
-  //       "Red" : "#C0392B",
-  //       "Navy" : "#1A5276",
-  //       "Crimson" : "#922B21",
-  //       "Rose" : "#880E4F",
-  //       "Green" : "#196F3D",
-  //       "Brown" : "#7B3F00",
-  //       "Teal" : "#006B6B",
-  //       "Indigo" : "#283593",
-  //       "Orange" : "#A04000",
-  //       "Olive" : "#4A5C18",
-  //       "Charcoal" : "#3E4B5E",
-  //       "Purple" : "#6A1B9A",
-  //       "Aqua" : "#0E6B8C",
-  //       "Magenta" : "#AD1457",
-  //       "Amber" : "#7D6608",
-  //       "Blue" : "#1565C0"
-  //     }
-  //   },
+  "workspaceColors" : {
+    "indicatorStyle" : "leftRail",
+    "selectionColor" : null,
+    "notificationBadgeColor" : null,
+    "colors" : {
+      "Red" : "#f38ba8",
+      "Crimson" : "#f37799",
+      "Orange" : "#f9e2af",
+      "Amber" : "#ebd391",
+      "Olive" : "#89d88b",
+      "Green" : "#a6e3a1",
+      "Teal" : "#94e2d5",
+      "Aqua" : "#6bd7ca",
+      "Blue" : "#89b4fa",
+      "Navy" : "#74a8fc",
+      "Indigo" : "#f5c2e7",
+      "Purple" : "#f2aede",
+      "Magenta" : "#f5c2e7",
+      "Rose" : "#f5e0dc",
+      "Brown" : "#45475a",
+      "Charcoal" : "#585b70"
+    }
+  },
 
   //   "sidebarAppearance" : {
   //     "darkModeTintColor" : null,
