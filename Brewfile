@@ -34,6 +34,7 @@ brew "eza"              # Better 'ls'
 brew "glow"
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
+brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "k9s"              # Kubernetes cluster TUI
 brew "doggo"            # Modern DNS client (dig replacement for daily use)

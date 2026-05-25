@@ -86,3 +86,7 @@ setopt nocaseglob
 
 # --- Keybindings ---
 bindkey -e
+if zle -l autosuggest-accept >/dev/null 2>&1; then
+	bindkey '^[[C' autosuggest-accept
+	bindkey '^[[OC' autosuggest-accept
+fi

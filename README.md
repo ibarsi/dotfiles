@@ -82,6 +82,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
+- History-backed zsh autosuggestions: type the start of a previous command, then press `Right Arrow` to accept the gray suggestion
 - Interactive completion menu + clearer completion descriptions
 - **Startup smart tips**: On new terminal sessions, generate one practical AI tip from your dotfiles context (can be disabled).
 

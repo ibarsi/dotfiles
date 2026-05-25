@@ -1,6 +1,6 @@
 {
-  "git_revision": "51850bd6b69eeea1156e02f64284e6d183885fd4",
-  "source_hash": "083cbbb15cf2",
+  "git_revision": "3b664b97743dbd877b7e6268424807fea6699432",
+  "source_hash": "e4e62b5ac3d3",
   "stats": {
     "aliases": 62,
     "functions": 33,
@@ -8,7 +8,7 @@
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 24,
-    "brews": 38,
+    "brews": 39,
     "casks": 26
   },
   "aliases": [
@@ -1102,9 +1102,9 @@
       "title": "Shell plugin integrations",
       "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
       "details": [
-        "Loads zsh-autosuggestions when installed.",
+        "Loads zsh-autosuggestions with history-first suggestions and Right Arrow acceptance.",
         "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
-        "Sources ~/.fzf.zsh for shell keybindings and completion."
+        "Sources Homebrew fzf completion and key bindings, with Ctrl-R history search defaults."
       ],
       "source": "zsh/plugins.zsh"
     },
@@ -1473,6 +1473,7 @@
       "glow",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
+      "zsh-autosuggestions",
       "zsh-syntax-highlighting",
       "k9s\"              # Kubernetes cluster TUI",
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
