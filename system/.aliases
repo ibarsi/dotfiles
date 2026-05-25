@@ -62,3 +62,18 @@ alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 # Gitmoji
 alias gm='gitmoji'
 
+# Kubernetes
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgpa='kubectl get pods -A'
+alias kd='kubectl describe'
+alias klf='kubectl logs -f --tail=1000'
+alias klp='kubectl logs --previous'
+alias kex='kubectl exec -it'
+alias ke='kubectl events'
+alias krs='kubectl rollout status'
+alias krr='kubectl rollout restart'
+alias kctx='kubectl config current-context'
+alias kctxs='kubectl config get-contexts'
+alias kuc='kubectl config use-context'
+alias kns='kubectl config set-context --current --namespace'

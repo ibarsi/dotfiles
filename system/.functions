@@ -64,6 +64,31 @@ function reload-dotfiles() {
     echo "Reloaded ~/.zshrc"
 }
 
+# Stream Kubernetes logs through jq and page them with less when interactive.
+# Press Ctrl-C inside less to pause following, / to search, and Shift-F to resume.
+function klogj() {
+    if [[ "$#" -eq 0 ]]; then
+        echo "Usage: klogj <pod|resource/name> [kubectl logs flags...]" >&2
+        return 1
+    fi
+
+    if ! command -v kubectl >/dev/null 2>&1; then
+        echo "kubectl is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "jq is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if [[ -t 1 ]] && command -v less >/dev/null 2>&1; then
+        kubectl logs -f --tail="${KLOG_TAIL:-1000}" "$@" | jq -C -Rr 'fromjson? // .' | less -R +F
+    else
+        kubectl logs -f --tail="${KLOG_TAIL:-1000}" "$@" | jq -Rr 'fromjson? // .'
+    fi
+}
+
 # Serve the dotfiles docs site from anywhere and open it in the browser
 function dotdocs() {
     local repo_root url port log_file

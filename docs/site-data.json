@@ -1,9 +1,9 @@
 {
-  "git_revision": "0291f8cf886e2b354b90ee8b0fdfdda848548c77",
-  "source_hash": "e4e62b5ac3d3",
+  "git_revision": "0964d42136872b1ba5525db7ca5edb36c3b35e1c",
+  "source_hash": "b401e170a7c5",
   "stats": {
-    "aliases": 62,
-    "functions": 33,
+    "aliases": 76,
+    "functions": 34,
     "git": 56,
     "features": 11,
     "tasks": 15,
@@ -233,6 +233,104 @@
       "name": "ips",
       "command": "ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \\\"\\\"); print }'",
       "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "k",
+      "command": "kubectl",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kctx",
+      "command": "kubectl config current-context",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kctxs",
+      "command": "kubectl config get-contexts",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kd",
+      "command": "kubectl describe",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "ke",
+      "command": "kubectl events",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kex",
+      "command": "kubectl exec -it",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kgp",
+      "command": "kubectl get pods",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kgpa",
+      "command": "kubectl get pods -A",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "klf",
+      "command": "kubectl logs -f --tail=1000",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "klp",
+      "command": "kubectl logs --previous",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kns",
+      "command": "kubectl config set-context --current --namespace",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "krr",
+      "command": "kubectl rollout restart",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "krs",
+      "command": "kubectl rollout status",
+      "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kuc",
+      "command": "kubectl config use-context",
+      "group": "Kubernetes",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
@@ -550,6 +648,13 @@
       "name": "killport",
       "summary": "Kill process by port",
       "usage": "killport <port>",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "klogj",
+      "summary": "Stream Kubernetes logs through jq and page them with less when interactive. Press Ctrl-C inside less to pause following, / to search, and Shift-F to resume.",
+      "usage": "klogj <pod|resource/name> [kubectl logs flags...]",
       "source": "system/.functions",
       "source_kind": "system function"
     },
