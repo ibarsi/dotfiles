@@ -40,7 +40,7 @@ FEATURE_NOTES = {
         "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
         "source": "zsh/plugins.zsh",
         "details": [
-            "Loads zsh-autosuggestions with history-first suggestions and Right Arrow acceptance.",
+            "Loads zsh-autosuggestions with history-first suggestions, Shift-Tab acceptance, and Tab expansion/completion.",
             "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
             "Sources Homebrew fzf completion and key bindings, with Ctrl-R history search defaults.",
         ],

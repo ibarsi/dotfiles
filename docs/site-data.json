@@ -1,5 +1,5 @@
 {
-  "git_revision": "3b664b97743dbd877b7e6268424807fea6699432",
+  "git_revision": "6be796c65f9d67a4343269f72ebb7745a9a70997",
   "source_hash": "e4e62b5ac3d3",
   "stats": {
     "aliases": 62,
@@ -1102,7 +1102,7 @@
       "title": "Shell plugin integrations",
       "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
       "details": [
-        "Loads zsh-autosuggestions with history-first suggestions and Right Arrow acceptance.",
+        "Loads zsh-autosuggestions with history-first suggestions, Shift-Tab acceptance, and Tab expansion/completion.",
         "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
         "Sources Homebrew fzf completion and key bindings, with Ctrl-R history search defaults."
       ],
