@@ -121,7 +121,16 @@
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    }
   },
   "autoUpdatesChannel": "stable",
   "tui": "fullscreen",

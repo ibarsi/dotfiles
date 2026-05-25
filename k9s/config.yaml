@@ -2,4 +2,7 @@ k9s:
   ui:
     skin: catppuccin-mocha
   logger:
+    tail: 1000
+    buffer: 10000
+    sinceSeconds: -1
     textWrap: true
