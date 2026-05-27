@@ -33,6 +33,13 @@ alias ccr="claude --continue"
 alias ccreview='claude "/review"'
 alias ccyolo="claude --dangerously-skip-permissions"
 
+# Gemini CLI
+alias gc="gemini"
+alias gce="gemini -p"
+alias gcr="gemini --resume latest"
+alias gcreview='gemini "/review"'
+alias gcyolo="gemini --yolo"
+
 # Agy CLI
 alias agye="agy -p"
 alias agyr="agy --continue"
