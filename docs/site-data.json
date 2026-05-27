@@ -1,8 +1,8 @@
 {
-  "git_revision": "0964d42136872b1ba5525db7ca5edb36c3b35e1c",
-  "source_hash": "b401e170a7c5",
+  "git_revision": "a9d80db09bc44cd3a1a608869db4bdb569f69997",
+  "source_hash": "c8b97af0d04a",
   "stats": {
-    "aliases": 76,
+    "aliases": 81,
     "functions": 34,
     "git": 56,
     "features": 11,
@@ -207,6 +207,41 @@
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
+    },
+    {
+      "name": "gc",
+      "command": "gemini",
+      "group": "Gemini CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "gce",
+      "command": "gemini -p",
+      "group": "Gemini CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "gcr",
+      "command": "gemini --resume latest",
+      "group": "Gemini CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "gcreview",
+      "command": "gemini \"/review\"",
+      "group": "Gemini CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "gcyolo",
+      "command": "gemini --approval-mode yolo",
+      "group": "Gemini CLI",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
     },
     {
       "name": "gm",

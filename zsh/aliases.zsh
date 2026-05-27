@@ -38,7 +38,7 @@ alias gc="gemini"
 alias gce="gemini -p"
 alias gcr="gemini --resume latest"
 alias gcreview='gemini "/review"'
-alias gcyolo="gemini --yolo"
+alias gcyolo="gemini --approval-mode yolo"
 
 # Agy CLI
 alias agye="agy -p"
