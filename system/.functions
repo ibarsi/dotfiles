@@ -620,6 +620,49 @@ function ncprobe() {
     nc -vz "$1" "$2"
 }
 
+# KUBERNETES WORKFLOWS
+
+# Auto-reconnecting kubectl port-forward.
+function kpf() {
+    if ! command -v kubectl >/dev/null 2>&1; then
+        echo "kubectl is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local ctx="" ns=""
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --context)   ctx="$2"; shift 2 ;;
+            --context=*) ctx="${1#--context=}"; shift ;;
+            -n)          ns="$2"; shift 2 ;;
+            -n=*)        ns="${1#-n=}"; shift ;;
+            -h|--help)
+                echo "Usage: kpf [--context <ctx>] [-n <ns>] <resource> <port> [port...]"
+                return 0
+                ;;
+            *) break ;;
+        esac
+    done
+
+    if [[ $# -lt 2 ]]; then
+        echo "Usage: kpf [--context <ctx>] [-n <ns>] <resource> <port> [port...]" >&2
+        return 1
+    fi
+
+    local resource="$1"; shift
+    [[ "$resource" != */* ]] && resource="svc/$resource"
+
+    local kctl=(kubectl)
+    [[ -n "$ctx" ]] && kctl+=(--context "$ctx")
+    [[ -n "$ns" ]]  && kctl+=(-n "$ns")
+
+    while true; do
+        "${kctl[@]}" port-forward "$resource" "$@"
+        echo "Connection lost, reconnecting in 2s..."
+        sleep 2
+    done
+}
+
 # tcpdump helper: capture to file with optional filter expression
 function pcap() {
     local iface="${1:-any}"
