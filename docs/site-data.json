@@ -1,9 +1,9 @@
 {
-  "git_revision": "a9d80db09bc44cd3a1a608869db4bdb569f69997",
-  "source_hash": "c8b97af0d04a",
+  "git_revision": "ff5302ad95c0087c64772c71dcf81147380638a2",
+  "source_hash": "8da3d7c792ef",
   "stats": {
     "aliases": 81,
-    "functions": 34,
+    "functions": 35,
     "git": 56,
     "features": 11,
     "tasks": 15,
@@ -690,6 +690,13 @@
       "name": "klogj",
       "summary": "Stream Kubernetes logs through jq and page them with less when interactive. Press Ctrl-C inside less to pause following, / to search, and Shift-F to resume.",
       "usage": "klogj <pod|resource/name> [kubectl logs flags...]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "kpf",
+      "summary": "Auto-reconnecting kubectl port-forward.",
+      "usage": "kpf [--context <ctx>] [-n <ns>] <resource> <port> [port...]",
       "source": "system/.functions",
       "source_kind": "system function"
     },
