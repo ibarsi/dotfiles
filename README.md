@@ -26,6 +26,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
+- `upall` → upgrade Homebrew packages/casks, converge the Brewfile, upgrade mise-managed tools, and refresh `BUMBLEBEE_CATALOG_DIR` if it points into a git checkout
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
 - `groot` → jump to git repo root quickly
 - `wtnew <branch> [base]` → create a worktree under `~/worktrees/<repo>/<branch>` and enter it
@@ -182,6 +183,7 @@ This gives you a fast terminal path for local READMEs, generated docs, changelog
 - `bbscan [bumblebee scan flags...]` → run a project-profile Bumblebee exposure scan against the current `$PWD`, writing timestamped findings and diagnostics NDJSON files in that directory
 
 Set `BUMBLEBEE_CATALOG_DIR` to override the default catalog lookup path.
+When `BUMBLEBEE_CATALOG_DIR` points inside a git checkout, `upall` refreshes that checkout with `git pull --ff-only`.
 
 ## tmux Workflow
 
@@ -386,6 +388,7 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 **Local model setup:**
 - Run `omlxs` before starting Pi
 - Export `OMLX_API_KEY` in your local shell/private env if the oMLX server requires bearer auth
+- SkillSpector defaults are exported from `system/.exports` to use `http://127.0.0.1:1234/v1` with the local oMLX Gemma model
 - Re-run `./bootstrap.sh` to install the symlinked config
 
 **Usage:**

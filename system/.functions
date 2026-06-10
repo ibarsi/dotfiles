@@ -58,6 +58,59 @@ function dotfiles-sync() {
     )
 }
 
+# Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.
+function upall() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        echo "Usage: upall"
+        return 0
+    fi
+
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "brew is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if ! command -v mise >/dev/null 2>&1; then
+        echo "mise is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local repo_root catalog_dir catalog_repo
+    repo_root="${DOTFILES:-$HOME/dotfiles}"
+
+    if [[ ! -f "$repo_root/Brewfile" || ! -f "$repo_root/mise.toml" ]]; then
+        echo "Dotfiles repo not found at $repo_root" >&2
+        return 1
+    fi
+
+    echo "== Homebrew update =="
+    brew update || return
+
+    echo "== Homebrew upgrade =="
+    brew upgrade --greedy || return
+
+    echo "== Brewfile install/upgrade =="
+    brew bundle install --file "$repo_root/Brewfile" || return
+
+    echo "== mise upgrade =="
+    mise upgrade -C "$repo_root" || return
+
+    catalog_dir="${BUMBLEBEE_CATALOG_DIR:-}"
+    if [[ -n "$catalog_dir" && -d "$catalog_dir" ]]; then
+        catalog_repo="$catalog_dir"
+        while [[ "$catalog_repo" != "/" && ! -d "$catalog_repo/.git" ]]; do
+            catalog_repo="$(dirname "$catalog_repo")"
+        done
+
+        if [[ -d "$catalog_repo/.git" ]]; then
+            echo "== Bumblebee threat catalog update =="
+            git -C "$catalog_repo" pull --ff-only || return
+        else
+            echo "Skipping Bumblebee threat catalog update; $catalog_dir is not inside a git checkout"
+        fi
+    fi
+}
+
 # Reload shell only (no git/network side effects)
 function reload-dotfiles() {
     # shellcheck source=/dev/null
@@ -501,7 +554,7 @@ function fwtr() {
         return 1
     fi
 
-    local current_worktree selected worktree_path branch head
+    local current_worktree selected worktree_path branch _head
     current_worktree=$(git rev-parse --show-toplevel 2>/dev/null) || {
         echo "Not inside a git repository" >&2
         return 1

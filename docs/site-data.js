@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "1667ad1768b633b93f18fda0c7fdbd61f3497171",
-  "source_hash": "ebb06dd1a9d9",
+  "git_revision": "2ac6ba8a09ac7ff8da519b79d0aea9399d62ac6c",
+  "source_hash": "0bcbe4de9196",
   "stats": {
     "aliases": 82,
-    "functions": 36,
-    "git": 56,
+    "functions": 37,
+    "git": 57,
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 24,
@@ -813,6 +813,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
+      "name": "upall",
+      "summary": "Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "whichport",
       "summary": "Show process(es) listening on a given port",
       "usage": "whichport <port>",
@@ -881,6 +888,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "pr",
       "command": "pr",
       "summary": "Open existing PR in browser, or create one if missing",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "upall",
+      "command": "upall",
+      "summary": "Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.",
       "kind": "function",
       "source": "system/.functions"
     },
