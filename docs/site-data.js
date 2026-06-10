@@ -1,9 +1,9 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "ff5302ad95c0087c64772c71dcf81147380638a2",
-  "source_hash": "8da3d7c792ef",
+  "git_revision": "1667ad1768b633b93f18fda0c7fdbd61f3497171",
+  "source_hash": "ebb06dd1a9d9",
   "stats": {
-    "aliases": 81,
-    "functions": 35,
+    "aliases": 82,
+    "functions": 36,
     "git": 56,
     "features": 11,
     "tasks": 15,
@@ -207,6 +207,13 @@ window.DOTFILES_DOCS_DATA = {
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
+    },
+    {
+      "name": "fzs",
+      "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become(${EDITOR:-vim} +{2} {1})\"",
+      "group": "fzf content search",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
     },
     {
       "name": "gc",
@@ -581,6 +588,13 @@ window.DOTFILES_DOCS_DATA = {
     }
   ],
   "functions": [
+    {
+      "name": "bbscan",
+      "summary": "Scan the current project with Bumblebee's threat-intel exposure catalogs",
+      "usage": "bbscan [bumblebee scan flags...]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
     {
       "name": "dnstrace",
       "summary": "Quick DNS trace (A + AAAA + CNAME + NS path)",

@@ -30,7 +30,7 @@ function whichport() {
 
 # Create a new directory and enter it
 function mkd() {
-    mkdir -p "$@" && cd "$_";
+    mkdir -p "$@" && cd "$_" || return
 }
 
 # Sync dotfiles safely (fetch + status + optional update)
@@ -60,6 +60,7 @@ function dotfiles-sync() {
 
 # Reload shell only (no git/network side effects)
 function reload-dotfiles() {
+    # shellcheck source=/dev/null
     source "$HOME/.zshrc"
     echo "Reloaded ~/.zshrc"
 }
@@ -123,6 +124,56 @@ function dotdocs() {
         echo "Failed to start docs server. Check $log_file" >&2
         return 1
     fi
+}
+
+# Scan the current project with Bumblebee's threat-intel exposure catalogs
+function bbscan() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        echo "Usage: bbscan [bumblebee scan flags...]"
+        return 0
+    fi
+
+    if ! command -v bumblebee >/dev/null 2>&1; then
+        echo "bumblebee is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    local catalog_dir="${BUMBLEBEE_CATALOG_DIR:-}" gopath stamp findings diagnostics
+    if [[ -z "$catalog_dir" ]]; then
+        if ! command -v go >/dev/null 2>&1; then
+            echo "go is not installed; set BUMBLEBEE_CATALOG_DIR to the threat_intel directory" >&2
+            return 1
+        fi
+
+        gopath=$(go env GOPATH 2>/dev/null) || {
+            echo "Unable to resolve GOPATH; set BUMBLEBEE_CATALOG_DIR to the threat_intel directory" >&2
+            return 1
+        }
+        catalog_dir=$(find "$gopath/pkg/mod/github.com/perplexityai" -path '*/bumblebee@*/threat_intel' -type d 2>/dev/null | sort | tail -n 1)
+    fi
+
+    if [[ -z "$catalog_dir" || ! -d "$catalog_dir" ]]; then
+        echo "Bumblebee threat_intel directory not found; set BUMBLEBEE_CATALOG_DIR" >&2
+        return 1
+    fi
+
+    stamp=$(date +%Y%m%d-%H%M%S)
+    findings="bumblebee-findings-${stamp}.ndjson"
+    diagnostics="bumblebee-diagnostics-${stamp}.ndjson"
+
+    echo "Scanning $PWD"
+    echo "Catalogs: $catalog_dir"
+    echo "Findings: $PWD/$findings"
+    echo "Diagnostics: $PWD/$diagnostics"
+
+    bumblebee scan \
+        --profile project \
+        --root "$PWD" \
+        --exposure-catalog "$catalog_dir" \
+        --findings-only \
+        "$@" \
+        >"$findings" \
+        2>"$diagnostics"
 }
 
 # Jump to the current git repository root
@@ -268,7 +319,7 @@ function fs() {
     else
         local arg=-sh;
     fi
-    if [[ -n "$@" ]]; then
+    if [[ "$#" -gt 0 ]]; then
         du $arg -- "$@";
     else
         du $arg .[^.]* ./*;
@@ -330,9 +381,11 @@ function mdf() {
 
     local file
     if command -v fd >/dev/null 2>&1; then
+        # shellcheck disable=SC2016
         file=$(fd --type f --extension md --extension markdown --hidden --exclude .git --exclude node_modules --exclude .mise \
             | fzf --height=60% --layout=reverse --border --preview 'command glow -s "$GLAMOUR_STYLE" -w 100 {}' --preview-window=right:60%) || return 1
     else
+        # shellcheck disable=SC2016
         file=$(find . -type f \( -name '*.md' -o -name '*.markdown' \) \
             -not -path '*/.git/*' \
             -not -path '*/node_modules/*' \
@@ -498,15 +551,16 @@ function fwtr() {
         return 1
     fi
 
-    IFS=$'\t' read -r worktree_path branch head <<<"$selected"
+    IFS=$'\t' read -r worktree_path branch _head <<<"$selected"
 
     echo "Removing worktree:"
     echo "  branch: $branch"
     echo "  path:   $worktree_path"
     git wtr --force "$worktree_path"
 
-    local dir="$(dirname "$worktree_path")"
-    local root="$HOME/worktrees"
+    local dir root
+    dir="$(dirname "$worktree_path")"
+    root="$HOME/worktrees"
     while [[ "$dir" != "$root" && "$dir" == "$root"/* ]]; do
         rmdir "$dir" 2>/dev/null || break
         dir="$(dirname "$dir")"
@@ -525,7 +579,7 @@ function fwt() {
         return 1
     fi
 
-    local selected worktree_path branch head
+    local selected worktree_path branch _head
     git rev-parse --show-toplevel >/dev/null 2>&1 || {
         echo "Not inside a git repository" >&2
         return 1
@@ -575,7 +629,7 @@ function fwt() {
         return 1
     fi
 
-    IFS=$'\t' read -r worktree_path branch head <<<"$selected"
+    IFS=$'\t' read -r worktree_path branch _head <<<"$selected"
     cd "$worktree_path" || return 1
 }
 

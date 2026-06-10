@@ -69,6 +69,9 @@ trust_level = "trusted"
 [projects."/Users/igorbarsi"]
 trust_level = "trusted"
 
+[projects."/Users/igorbarsi/Projects/gemini-cli"]
+trust_level = "trusted"
+
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 

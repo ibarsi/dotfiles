@@ -174,6 +174,15 @@ obsidian theme:set name=Catppuccin
 
 This gives you a fast terminal path for local READMEs, generated docs, changelogs, and remote project docs without leaving the shell.
 
+## Supply Chain Inventory Workflow
+
+`bumblebee` can scan the current project against the maintained threat-intel exposure catalogs bundled with the installed Go module.
+
+**Supply-chain functions (`system/.functions`):**
+- `bbscan [bumblebee scan flags...]` → run a project-profile Bumblebee exposure scan against the current `$PWD`, writing timestamped findings and diagnostics NDJSON files in that directory
+
+Set `BUMBLEBEE_CATALOG_DIR` to override the default catalog lookup path.
+
 ## tmux Workflow
 
 `tmux` is configured for a keyboard-first, AI-session-friendly terminal workflow.
