@@ -57,6 +57,9 @@ alias msu="mise upgrade"
 alias msr="mise run"
 alias msd="mise doctor"
 
+# fzf content search
+alias fzs='rg --line-number --no-heading --color=always "" | fzf --ansi --delimiter ":" --preview "bat --color=always --highlight-line {2} {1}" --preview-window "+{2}-5" --bind "enter:become(${EDITOR:-vim} +{2} {1})"'
+
 # tmux
 alias tl="tmux ls"
 alias ta="tmux attach -t"
