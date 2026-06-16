@@ -47,7 +47,7 @@ alias agyreview='agy "/review"'
 alias agyyolo="agy --dangerously-skip-permissions"
 
 # Upgrade AI coding tools
-alias aiup="brew upgrade claude-code@latest codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update"
+alias aiup="brew upgrade browseros claude-code@latest codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update"
 alias omlxs='omlx serve --model-dir ~/.omlx/models --port 1234'
 
 # Mise
