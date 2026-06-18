@@ -44,6 +44,10 @@
     # Fetch upstream
     fu = "!git fetch upstream"
 
+    # Show commits incoming from a branch's upstream (default: current branch).
+    # `git incoming` -> current branch vs its upstream; `git incoming main` -> main vs origin/main
+    incoming = "!f() { b=\"${1:-HEAD}\"; u=$(git rev-parse --abbrev-ref \"${b}@{upstream}\" 2>/dev/null) || { echo \"no upstream for ${b}\" >&2; return 1; }; git fetch -q \"${u%%/*}\"; git log --no-merges --decorate --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' \"${b}..${b}@{upstream}\"; echo; }; f"
+
     # Hard reset the current branch to its origin branch
     rh = "!git reset --hard origin/$(git symbolic-ref --short HEAD)"
 
@@ -95,13 +99,13 @@
     ft = "!f() { git describe --always --contains $1; }; f"
 
     # Find commits by source code
-    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+    fc = "!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate -S$1; }; f"
 
     # Find commits by commit message
-    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+    fm = "!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --grep=$1; }; f"
 
     # Find commits by author
-    fa = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --author=$1; }; f"
+    fa = "!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --author=$1; }; f"
 
     # Remove branches that have already been merged with master
     # a.k.a. ‘delete merged’
