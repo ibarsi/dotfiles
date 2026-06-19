@@ -23,13 +23,13 @@ run = [
 [tasks.fmt-shell]
 description = "Format shell scripts in this repo"
 run = [
-  "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh",
+  "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
 ]
 
 [tasks.fmt-check]
 description = "Check shell formatting without writing"
 run = [
-  "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh",
+  "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
 ]
 
 [tasks.check]
@@ -62,9 +62,7 @@ run = "python3 ./scripts/generate-docs.py"
 
 [tasks.docs-check]
 description = "Ensure generated docs data is up to date"
-run = [
-  "python3 ./scripts/check-docs.py",
-]
+run = ["python3 ./scripts/check-docs.py"]
 
 [tasks.docs-serve]
 description = "Serve the docs site locally with mise-managed Python"

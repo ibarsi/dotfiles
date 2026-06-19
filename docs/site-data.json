@@ -1,10 +1,10 @@
 {
-  "git_revision": "c78a5241b98a9aede25df498565287962fffe2e4",
-  "source_hash": "b9e392b2fa2d",
+  "git_revision": "0df8aba25140460d73581623c3964b6e3d4c84c8",
+  "source_hash": "04763ce38f79",
   "stats": {
     "aliases": 82,
     "functions": 37,
-    "git": 57,
+    "git": 58,
     "features": 11,
     "tasks": 15,
     "bootstrap_links": 24,
@@ -1026,7 +1026,7 @@
     },
     {
       "name": "fa",
-      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --author=$1; }; f\"",
+      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --author=$1; }; f\"",
       "summary": "Find commits by author",
       "kind": "git alias",
       "source": "git/.gitconfig"
@@ -1040,14 +1040,14 @@
     },
     {
       "name": "fc",
-      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f\"",
+      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate -S$1; }; f\"",
       "summary": "Find commits by source code",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },
     {
       "name": "fm",
-      "command": "\"!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f\"",
+      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --grep=$1; }; f\"",
       "summary": "Find commits by commit message",
       "kind": "git alias",
       "source": "git/.gitconfig"
@@ -1077,6 +1077,13 @@
       "name": "go",
       "command": "\"!f() { git checkout -b \\\"$1\\\" 2> /dev/null || git checkout \\\"$1\\\"; }; f\"",
       "summary": "Switch to a branch, creating it if necessary",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "incoming",
+      "command": "\"!f() { b=\\\"${1:-HEAD}\\\"; u=$(git rev-parse --abbrev-ref \\\"${b}@{upstream}\\\" 2>/dev/null) || { echo \\\"no upstream for ${b}\\\" >&2; return 1; }; git fetch -q \\\"${u%%/*}\\\"; git log --no-merges --decorate --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' \\\"${b}..${b}@{upstream}\\\"; echo; }; f\"",
+      "summary": "Show commits incoming from a branch's upstream (default: current branch). `git incoming` -> current branch vs its upstream; `git incoming main` -> main vs origin/main",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },
@@ -1408,9 +1415,7 @@
     {
       "name": "docs-check",
       "description": "Ensure generated docs data is up to date",
-      "run": [
-        "python3 ./scripts/check-docs.py"
-      ],
+      "run": [],
       "source": "mise.toml"
     },
     {
@@ -1433,7 +1438,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1441,7 +1446,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
