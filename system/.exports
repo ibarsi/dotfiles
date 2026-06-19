@@ -31,8 +31,10 @@ export GPG_TTY=$(tty);
 # Configure SkillSpector to use the local oMLX OpenAI-compatible endpoint by default.
 export SKILLSPECTOR_PROVIDER="${SKILLSPECTOR_PROVIDER:-openai}"
 export OPENAI_BASE_URL="${OPENAI_BASE_URL:-http://127.0.0.1:1234/v1}"
-export OPENAI_API_KEY="${OPENAI_API_KEY:-${OMLX_API_KEY:-omlx}}"
+export OMLX_API_KEY="${OMLX_API_KEY:-omlx}"
+export OPENAI_API_KEY="${OPENAI_API_KEY:-$OMLX_API_KEY}"
 export SKILLSPECTOR_MODEL="${SKILLSPECTOR_MODEL:-gemma-4-e4b-it-MLX-4bit}"
+export SKILLSPECTOR_MODEL_REGISTRY="${SKILLSPECTOR_MODEL_REGISTRY:-$DOTFILES/skillspector/model_registry.yaml}"
 
 # Hide MacOS message saying the default shell is now zsh
 export BASH_SILENCE_DEPRECATION_WARNING=1

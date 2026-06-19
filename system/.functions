@@ -229,6 +229,18 @@ function bbscan() {
         2>"$diagnostics"
 }
 
+# Run SkillSpector against the local oMLX endpoint using the oMLX-specific key.
+function skillspector() {
+    if [[ "${SKILLSPECTOR_PROVIDER:-openai}" == "openai" &&
+        "${OPENAI_BASE_URL:-}" == "http://127.0.0.1:1234/v1" &&
+        -n "${OMLX_API_KEY:-}" ]]; then
+        OPENAI_API_KEY="$OMLX_API_KEY" command skillspector "$@"
+        return
+    fi
+
+    command skillspector "$@"
+}
+
 # Jump to the current git repository root
 function groot() {
     cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || return 1

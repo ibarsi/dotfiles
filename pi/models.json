@@ -3,7 +3,7 @@
     "omlx": {
       "baseUrl": "http://127.0.0.1:1234/v1",
       "api": "openai-completions",
-      "apiKey": "OMLX_API_KEY",
+      "apiKey": "$OMLX_API_KEY",
       "authHeader": true,
       "compat": {
         "supportsDeveloperRole": false,

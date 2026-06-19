@@ -1,0 +1,5 @@
+# Local SkillSpector model metadata for oMLX-backed OpenAI-compatible scans.
+models:
+  "gemma-4-e4b-it-MLX-4bit":
+    context_length: 2048
+    max_output_tokens: 512

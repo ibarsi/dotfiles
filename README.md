@@ -387,8 +387,9 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 
 **Local model setup:**
 - Run `omlxs` before starting Pi
-- Export `OMLX_API_KEY` in your local shell/private env if the oMLX server requires bearer auth
-- SkillSpector defaults are exported from `system/.exports` to use `http://127.0.0.1:1234/v1` with the local oMLX Gemma model
+- Pi reads `OMLX_API_KEY` for the local provider bearer token; `system/.exports` defaults it to `omlx` for fresh shells
+- Export `OMLX_API_KEY` in your local shell/private env if your oMLX server requires a different bearer token
+- SkillSpector defaults are exported from `system/.exports` to use `http://127.0.0.1:1234/v1` with the local oMLX Gemma model, the `skillspector` shell wrapper passes `OMLX_API_KEY` as the OpenAI-compatible bearer token for that endpoint, and `skillspector/model_registry.yaml` caps the local model context for stable scans
 - Re-run `./bootstrap.sh` to install the symlinked config
 
 **Usage:**

@@ -1,9 +1,9 @@
 {
-  "git_revision": "0df8aba25140460d73581623c3964b6e3d4c84c8",
-  "source_hash": "04763ce38f79",
+  "git_revision": "d137f8784d02292ef31833ca20ece3cbb7914c26",
+  "source_hash": "fa8efa0c9e7d",
   "stats": {
     "aliases": 82,
-    "functions": 37,
+    "functions": 38,
     "git": 58,
     "features": 11,
     "tasks": 15,
@@ -483,7 +483,7 @@
     },
     {
       "name": "omlxs",
-      "command": "omlx serve --model-dir ~/.omlx/models --port 1234",
+      "command": "omlx serve --model-dir ~/.omlx/models --port 1234 --memory-guard-gb 16 --max-concurrent-requests 2",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -794,6 +794,13 @@
     {
       "name": "reload-dotfiles",
       "summary": "Reload shell only (no git/network side effects)",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "skillspector",
+      "summary": "Run SkillSpector against the local oMLX endpoint using the oMLX-specific key.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
