@@ -11,6 +11,8 @@ env_cache_ttl = "2h"
 
 # Match terminal theme family used across this dotfiles repo.
 color_theme = "catppuccin"
+# trusted_config_paths is global-only; mise treats this symlinked file as
+# non-global and ignores+rewrites it. Set via MISE_TRUSTED_CONFIG_PATHS in zsh/.zshrc instead.
 
 [tools]
 node = "25.8.2"

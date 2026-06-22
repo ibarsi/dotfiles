@@ -50,6 +50,9 @@ source "$DOTFILES/zsh/plugins.zsh"
 
 # mise (version manager)
 # Keep activation near the end so later PATH edits don't override mise tools.
+# trusted_config_paths must be a global setting; the symlinked config.toml is
+# seen as non-global, so set trust here. Trusts every worktree recursively.
+export MISE_TRUSTED_CONFIG_PATHS="$HOME/worktrees"
 if command -v mise >/dev/null; then
 	eval "$(mise activate zsh)"
 fi
