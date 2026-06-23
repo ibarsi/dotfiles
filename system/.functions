@@ -311,11 +311,6 @@ function wtnew() {
 
     cd "$worktree_path" || return 1
 
-    if command -v mise >/dev/null 2>&1; then
-        echo "Trusting mise config in $worktree_path"
-        mise trust 2>/dev/null
-    fi
-
     echo "Entered $worktree_path"
 
     # Inlined from wtsesh so we can send ccyolo into the session before
