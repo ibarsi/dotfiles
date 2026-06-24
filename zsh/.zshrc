@@ -50,8 +50,13 @@ source "$DOTFILES/zsh/plugins.zsh"
 
 # mise (version manager)
 # Keep activation near the end so later PATH edits don't override mise tools.
-# trusted_config_paths must be a global setting; the symlinked config.toml is
-# seen as non-global, so set trust here. Trusts every worktree recursively.
+# Point mise at the config's real path so it isn't classified as non-global.
+# Without this, mise loads via the ~/.config symlink but compares against the
+# resolved dotfiles path -> treats it as a project config and ignores+warns on
+# global-only settings like trusted_config_paths (which the maximum monorepo's
+# .mise.toml writes via `mise settings add` on setup/pre-push).
+export MISE_GLOBAL_CONFIG_FILE="$HOME/dotfiles/mise/config.toml"
+# Blanket-trust every worktree so configs are trusted before any task runs.
 export MISE_TRUSTED_CONFIG_PATHS="$HOME/worktrees"
 if command -v mise >/dev/null; then
 	eval "$(mise activate zsh)"
