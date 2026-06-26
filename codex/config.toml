@@ -83,3 +83,6 @@ approval_mode = "approve"
 
 [mcp_servers.browseros]
 url = "http://127.0.0.1:9000/mcp"
+
+[plugins."codex-security@openai-curated"]
+enabled = true
