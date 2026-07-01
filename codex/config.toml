@@ -72,6 +72,9 @@ trust_level = "trusted"
 [projects."/Users/igorbarsi/Projects/gemini-cli"]
 trust_level = "trusted"
 
+[projects."/Users/igorbarsi/Documents/obsidian-maximum"]
+trust_level = "trusted"
+
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
@@ -84,5 +87,15 @@ approval_mode = "approve"
 [mcp_servers.browseros]
 url = "http://127.0.0.1:9000/mcp"
 
-[plugins."codex-security@openai-curated"]
+[marketplaces.obsidian-skills]
+last_updated = "2026-06-30T19:13:22Z"
+last_revision = "a1dc48e68138490d522c04cbf5822214c6eb1202"
+source_type = "git"
+source = "https://github.com/kepano/obsidian-skills.git"
+
+[plugins."obsidian@obsidian-skills"]
 enabled = true
+
+[mcp_servers.semble]
+command = "uvx"
+args = ["--from", "semble[mcp]", "semble"]

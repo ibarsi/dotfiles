@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "d137f8784d02292ef31833ca20ece3cbb7914c26",
-  "source_hash": "fa8efa0c9e7d",
+  "git_revision": "709aeb725370a7b30a1b3f4ec742025e2559bf33",
+  "source_hash": "a7b04d37a0cc",
   "stats": {
     "aliases": 82,
     "functions": 38,
@@ -70,7 +70,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade browseros claude-code@latest codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update",
+      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1542,7 +1542,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "source_path": "mise/config.toml",
-      "target_path": "~/.config/mise/config.toml",
+      "target_path": "~/.config/mise/conf.d/00-dotfiles.toml",
       "source": "mise/install.sh"
     },
     {

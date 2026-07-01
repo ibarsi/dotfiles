@@ -57,6 +57,17 @@
   },
   "model": "opus",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Grep/Glob tools are disabled for code search. Use the semble MCP (mcp__semble__search / mcp__semble__find_related) instead. For a deliberate exhaustive literal-string sweep (e.g. every caller of a renamed symbol), use Bash grep/rg as the documented escape hatch.' >&2; exit 2"
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
