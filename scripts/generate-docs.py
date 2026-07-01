@@ -76,6 +76,7 @@ FEATURE_NOTES = {
         "source": "codex/config.toml",
         "details": [
             "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
+            "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
         ],
     },
     "cmux": {

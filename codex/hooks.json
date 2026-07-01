@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Shell|UnifiedExec",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/codex/hooks/require-semble-for-search.py\"",
+            "timeout": 10,
+            "statusMessage": "Checking search tool choice"
+          }
+        ]
+      }
+    ]
+  }
+}

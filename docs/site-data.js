@@ -1,13 +1,13 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "709aeb725370a7b30a1b3f4ec742025e2559bf33",
-  "source_hash": "a7b04d37a0cc",
+  "git_revision": "15036904f8b454012dba81cfba4bf31925cdea38",
+  "source_hash": "3ffac800f8ca",
   "stats": {
     "aliases": 82,
     "functions": 38,
     "git": 58,
     "features": 11,
     "tasks": 15,
-    "bootstrap_links": 24,
+    "bootstrap_links": 25,
     "brews": 39,
     "casks": 26
   },
@@ -1330,7 +1330,8 @@ window.DOTFILES_DOCS_DATA = {
       "title": "Codex CLI config",
       "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
       "details": [
-        "Bootstrap links ~/.codex/config.toml to the repository-managed file."
+        "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
+        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery."
       ],
       "source": "codex/config.toml"
     },
@@ -1518,6 +1519,11 @@ window.DOTFILES_DOCS_DATA = {
     {
       "source_path": "codex/config.toml",
       "target_path": "~/.codex/config.toml",
+      "source": "codex/install.sh"
+    },
+    {
+      "source_path": "codex/hooks.json",
+      "target_path": "~/.codex/hooks.json",
       "source": "codex/install.sh"
     },
     {

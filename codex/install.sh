@@ -5,3 +5,4 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 mkdir -p "$HOME/.codex"
 ln -sf "$DOTFILES_ROOT/codex/config.toml" "$HOME/.codex/config.toml"
+ln -sf "$DOTFILES_ROOT/codex/hooks.json" "$HOME/.codex/hooks.json"
