@@ -1,11 +1,11 @@
 {
-  "git_revision": "15036904f8b454012dba81cfba4bf31925cdea38",
-  "source_hash": "3ffac800f8ca",
+  "git_revision": "b185b23d08b858bdc76ba12fa0c47987fe24ca0c",
+  "source_hash": "67b44d522886",
   "stats": {
-    "aliases": 82,
+    "aliases": 85,
     "functions": 38,
     "git": 58,
-    "features": 11,
+    "features": 12,
     "tasks": 15,
     "bootstrap_links": 25,
     "brews": 39,
@@ -70,7 +70,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update",
+      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent pipx:mini-swe-agent; pi update",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -445,6 +445,27 @@
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
+    },
+    {
+      "name": "mni",
+      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml",
+      "group": "mini-SWE-agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "mnie",
+      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml -t",
+      "group": "mini-SWE-agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
+    },
+    {
+      "name": "mniyolo",
+      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml --yolo",
+      "group": "mini-SWE-agent",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
     },
     {
       "name": "ms",
@@ -1365,6 +1386,17 @@
         "Model cycling includes the oMLX Gemma model."
       ],
       "source": "pi/settings.json"
+    },
+    {
+      "slug": "mini-swe-agent",
+      "title": "mini-SWE-agent config",
+      "summary": "Keeps the mini-SWE-agent CLI installed through mise and pointed at the local oMLX Gemma model.",
+      "details": [
+        "Global mise installs mini-SWE-agent through the pipx backend.",
+        "Shell aliases merge the upstream mini.yaml defaults with the repo-managed oMLX overlay.",
+        "Fresh shells replace the old OPENAI_API_KEY=omlx placeholder with OMLX_API_KEY, and the aliases pass the same key to LiteLLM."
+      ],
+      "source": "mini-swe-agent/omlx.yaml"
     },
     {
       "slug": "validation",

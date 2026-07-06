@@ -26,6 +26,11 @@ alias pioff="pi --offline"
 alias piro="pi --tools read,grep,find,ls"
 alias pimodels="pi --list-models"
 
+# mini-SWE-agent
+alias mni='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml'
+alias mnie='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml -t'
+alias mniyolo='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml --yolo'
+
 # Claude Code CLI
 alias cc="claude"
 alias cce="claude -p"
@@ -47,7 +52,7 @@ alias agyreview='agy "/review"'
 alias agyyolo="agy --dangerously-skip-permissions"
 
 # Upgrade AI coding tools
-alias aiup="brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent; pi update"
+alias aiup="brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent pipx:mini-swe-agent; pi update"
 alias omlxs='omlx serve --model-dir ~/.omlx/models --port 1234 --memory-guard-gb 16 --max-concurrent-requests 2'
 
 # Mise

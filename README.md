@@ -421,6 +421,25 @@ pi install npm:pi-btw
 
 > Security note: Pi extensions and packages run with full local permissions. Treat them like shell plugins or editor extensions, not inert prompts.
 
+## mini-SWE-agent Workflow
+
+[mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) is installed through the global mise config as `pipx:mini-swe-agent` and uses the same local oMLX Gemma endpoint as Pi.
+
+**Defaults configured:**
+- Endpoint: `http://127.0.0.1:1234/v1`
+- Model: `gemma-4-e4b-it-MLX-4bit`
+- Config overlay: `mini-swe-agent/omlx.yaml`
+- Config discovery: `MSWEA_CONFIG_DIR=$DOTFILES/mini-swe-agent`
+- Cost tracking ignored for the local zero-cost model
+
+**Usage:**
+- `mni` → interactive mini-SWE-agent session using upstream `mini.yaml` plus the oMLX overlay
+- `mnie "prompt"` → run a task non-interactively with the same local model config
+- `mniyolo` → start mini-SWE-agent in yolo mode with the same local model config
+- `aiup` → upgrades `pipx:mini-swe-agent` through mise along with the other AI coding tools
+
+Run `omlxs` before starting mini-SWE-agent. Fresh shells replace the old `OPENAI_API_KEY=omlx` placeholder with the real `OMLX_API_KEY`, and the mini-SWE-agent aliases also pass `OMLX_API_KEY` as `OPENAI_API_KEY` for that command so LiteLLM authenticates against the local oMLX endpoint with the same bearer token Pi uses.
+
 ## AI Diagnostics
 
 Scripts under `scripts/`:

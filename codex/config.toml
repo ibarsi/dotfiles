@@ -96,6 +96,11 @@ source = "https://github.com/kepano/obsidian-skills.git"
 [plugins."obsidian@obsidian-skills"]
 enabled = true
 
+[hooks.state]
+
+[hooks.state."/Users/igorbarsi/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:7ccb4c74a7ddb27d3ea43ec8186f116624e2d10da79f819f8478115be633c243"
+
 [mcp_servers.semble]
 command = "uvx"
 args = ["--from", "semble[mcp]", "semble"]
