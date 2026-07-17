@@ -313,23 +313,7 @@ function wtnew() {
 
     echo "Entered $worktree_path"
 
-    # Inlined from wtsesh so we can send ccyolo into the session before
-    # attaching — wtsesh blocks on attach/switch, so calling it directly
-    # would prevent ccyolo from being queued.
-    local repo_name session
-    repo_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
-    session="${repo_name}-${branch}"
-    session="${session//\//-}"
-
-    if [[ -n "${TMUX:-}" ]]; then
-        tmux new-session -d -s "$session" -c "$worktree_path"
-        tmux send-keys -t "$session" 'ccyolo' Enter
-        tmux switch-client -t "$session"
-    else
-        tmux new-session -d -s "$session" -c "$worktree_path"
-        tmux send-keys -t "$session" 'ccyolo' Enter
-        tmux attach-session -t "$session"
-    fi
+    ccyolo
 }
 
 # Attach or create a tmux session named from the current repo and branch
