@@ -275,11 +275,30 @@ const renderSection = (section, items) => {
   return node;
 };
 
+// Fuzzy subsequence match (fzf-style): query chars must appear in order.
+// Returns a relevance score, or -1 when it does not match.
+const fuzzyScore = (query, text) => {
+  let score = 0;
+  let qi = 0;
+  let lastIdx = -1;
+  for (let ti = 0; ti < text.length && qi < query.length; ti++) {
+    if (text[ti] !== query[qi]) continue;
+    score += ti === lastIdx + 1 ? 3 : 1; // reward consecutive matches
+    if (ti === 0 || text[ti - 1] === " ") score += 5; // reward word starts
+    lastIdx = ti;
+    qi++;
+  }
+  return qi === query.length ? score : -1;
+};
+
 const matchingItems = (section, query) => {
-  return data[section].filter((item) => {
-    if (!query) return true;
-    return buildSearchText(item, section).includes(query);
-  });
+  const items = data[section];
+  if (!query) return items;
+  return items
+    .map((item) => ({ item, score: fuzzyScore(query, buildSearchText(item, section)) }))
+    .filter((entry) => entry.score >= 0)
+    .sort((a, b) => b.score - a.score)
+    .map((entry) => entry.item);
 };
 
 const render = () => {
