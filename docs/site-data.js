@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "b185b23d08b858bdc76ba12fa0c47987fe24ca0c",
-  "source_hash": "67b44d522886",
+  "git_revision": "1e3fdbc20f4c62474e3f15d0abddd0b35fee725b",
+  "source_hash": "65022eb2fb45",
   "stats": {
     "aliases": 85,
     "functions": 38,
@@ -378,7 +378,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "l",
-      "command": "eza -lF --icons",
+      "command": "eza -lF --icons=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -399,7 +399,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "la",
-      "command": "eza -laF --icons",
+      "command": "eza -laF --icons=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -427,7 +427,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "ls",
-      "command": "eza --icons",
+      "command": "eza --icons=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"

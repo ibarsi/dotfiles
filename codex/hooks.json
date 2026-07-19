@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/codex/hooks/require-semble-for-search.py\"",
+            "command": "repo=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0; exec /usr/bin/env python3 \"$repo/codex/hooks/require-semble-for-search.py\"",
             "timeout": 10,
             "statusMessage": "Checking search tool choice"
           }

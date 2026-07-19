@@ -13,9 +13,9 @@ alias cdp="cd ~/Projects"
 
 # Detect which `ls` flavor is in use
 if command -v eza > /dev/null; then
-    alias ls="eza --icons"
-    alias l="eza -lF --icons"
-    alias la="eza -laF --icons"
+    alias ls="eza --icons=auto"
+    alias l="eza -lF --icons=auto"
+    alias la="eza -laF --icons=auto"
 elif ls --color > /dev/null 2>&1; then # GNU `ls`
     colorflag="--color"
     alias l="ls -lF ${colorflag}"
