@@ -55,7 +55,7 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
+  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {
@@ -88,7 +88,8 @@
     "explanatory-output-style@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "andrej-karpathy-skills@karpathy-skills": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "claude-security@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "karpathy-skills": {
