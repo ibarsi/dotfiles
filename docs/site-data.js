@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "1e3fdbc20f4c62474e3f15d0abddd0b35fee725b",
-  "source_hash": "65022eb2fb45",
+  "git_revision": "abbeaca3dc647f8909bb1a1815f0113a49662cd1",
+  "source_hash": "2f3a27d388b7",
   "stats": {
     "aliases": 85,
     "functions": 38,
-    "git": 58,
+    "git": 53,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 25,
@@ -1011,13 +1011,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/.gitconfig"
     },
     {
-      "name": "contrib",
-      "command": "shortlog --summary --numbered",
-      "summary": "List contributors with number of commits",
-      "kind": "git alias",
-      "source": "git/.gitconfig"
-    },
-    {
       "name": "credit",
       "command": "\"!f() { git commit --amend --author \\\"$1 <$2>\\\" -C HEAD; }; f\"",
       "summary": "Credit an author on the latest commit",
@@ -1032,13 +1025,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/.gitconfig"
     },
     {
-      "name": "db",
-      "command": "!\"f() { git diff $(git merge-base $1 HEAD); }; f\"",
-      "summary": "Show the diff of all changes in the current branch.",
-      "kind": "git alias",
-      "source": "git/.gitconfig"
-    },
-    {
       "name": "di",
       "command": "!\"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d\"",
       "summary": "Show the diff between the state `$number` revisions ago and the current state",
@@ -1046,9 +1032,9 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/.gitconfig"
     },
     {
-      "name": "dm",
-      "command": "\"!git branch --merged | grep -v '\\\\*' | xargs -n 1 git branch -d\"",
-      "summary": "Remove branches that have already been merged with master a.k.a. \u2018delete merged\u2019",
+      "name": "ds",
+      "command": "!\"f() { git diff --stat \\\"$1\\\" \\\"${2:-HEAD}\\\"; }; f\"",
+      "summary": "Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },
@@ -1130,13 +1116,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/.gitconfig"
     },
     {
-      "name": "lg",
-      "command": "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit",
-      "summary": "Advanced visualization",
-      "kind": "git alias",
-      "source": "git/.gitconfig"
-    },
-    {
       "name": "m",
       "command": "\"merge\"",
       "summary": "Shorthand for merge",
@@ -1200,13 +1179,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/.gitconfig"
     },
     {
-      "name": "root",
-      "command": "rev-parse --show-toplevel",
-      "summary": "Root directory",
-      "kind": "git alias",
-      "source": "git/.gitconfig"
-    },
-    {
       "name": "s",
       "command": "status -s",
       "summary": "View the current working tree status using the short format",
@@ -1217,13 +1189,6 @@ window.DOTFILES_DOCS_DATA = {
       "name": "tags",
       "command": "tag -l",
       "summary": "Show verbose output about tags, branches or remotes",
-      "kind": "git alias",
-      "source": "git/.gitconfig"
-    },
-    {
-      "name": "undo-commit",
-      "command": "reset --soft HEAD^",
-      "summary": "Undo last local commit",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },
@@ -1352,7 +1317,8 @@ window.DOTFILES_DOCS_DATA = {
       "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
       "details": [
         "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
-        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery."
+        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
+        "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode."
       ],
       "source": "codex/config.toml"
     },

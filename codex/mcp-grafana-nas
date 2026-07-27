@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# The Grafana service-account token is stored in the macOS login keychain.
+# Do not add it to this repository or to codex/config.toml.
+export GRAFANA_URL="http://192.168.0.39:3340"
+export GRAFANA_SERVICE_ACCOUNT_TOKEN="$(
+  security find-generic-password \
+    -a "$USER" \
+    -s "codex-grafana-mcp" \
+    -w
+)"
+
+exec uvx mcp-grafana --disable-write --max-loki-log-limit 300

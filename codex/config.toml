@@ -85,9 +85,6 @@ approval_mode = "approve"
 [mcp_servers.openaiDeveloperDocs.tools.search_openai_docs]
 approval_mode = "approve"
 
-[mcp_servers.browseros]
-url = "http://127.0.0.1:9000/mcp"
-
 [marketplaces.obsidian-skills]
 last_updated = "2026-06-30T19:13:22Z"
 last_revision = "a1dc48e68138490d522c04cbf5822214c6eb1202"
@@ -105,3 +102,6 @@ trusted_hash = "sha256:17b9953d8c9cf17a0f27d9d7c39c897d3b97ba2ace165049e09bc6a3f
 [mcp_servers.semble]
 command = "uvx"
 args = ["--from", "semble[mcp]", "semble"]
+
+[mcp_servers.grafana]
+command = "/Users/igorbarsi/dotfiles/codex/mcp-grafana-nas"

@@ -508,6 +508,7 @@ pre-commit run --all-files
 | File | Destination | Purpose |
 |------|-------------|---------|
 | `codex/config.toml` | `~/.codex/config.toml` | Default model, approvals/sandbox, search mode, feature toggles |
+| `codex/mcp-grafana-nas` | Invoked by Codex | Read-only Grafana MCP launcher; loads its token from macOS Keychain |
 
 **Install Codex CLI:**
 
@@ -529,6 +530,10 @@ npm i -g @openai/codex  # cross-platform alternative
 - `unified_exec` (improved command execution path)
 - `undo` (safer edit iteration)
 - `voice_transcription` (hold Space to speak in supported Codex CLI builds)
+
+**Grafana MCP:**
+- Connects to the NAS Grafana instance at `http://192.168.0.39:3340` in read-only mode.
+- Create a Grafana Viewer service-account token and store it in the login keychain under service name `codex-grafana-mcp` and your macOS username before starting Codex.
 
 **TUI footer:**
 - Use `/statusline` in Codex to interactively reorder or trim footer items.

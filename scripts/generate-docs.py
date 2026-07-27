@@ -77,6 +77,7 @@ FEATURE_NOTES = {
         "details": [
             "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
             "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
+            "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode.",
         ],
     },
     "cmux": {
