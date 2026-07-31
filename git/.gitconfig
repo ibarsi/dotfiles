@@ -29,6 +29,9 @@
     # Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given
     ds = !"f() { git diff --stat \"$1\" \"${2:-HEAD}\"; }; f"
 
+    # Show the same stats for the whole current branch, measured from where it forked off $1
+    bds = !"f() { git diff --stat ${1:-main}...HEAD; }; f"
+
     # Pull in remote changes for the current repository and all its submodules
     p = !"git pull; git submodule foreach git pull origin master"
 

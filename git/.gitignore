@@ -29,3 +29,5 @@
 
 # Env
 .env
+
+**/.claude/settings.local.json

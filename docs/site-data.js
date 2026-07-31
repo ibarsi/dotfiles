@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "abbeaca3dc647f8909bb1a1815f0113a49662cd1",
-  "source_hash": "2f3a27d388b7",
+  "git_revision": "c657fe08c11553db0b41f5ca5ef75929b1afe973",
+  "source_hash": "f4f5faf4e4fe",
   "stats": {
-    "aliases": 85,
+    "aliases": 87,
     "functions": 38,
-    "git": 53,
+    "git": 54,
     "features": 12,
     "tasks": 15,
     "bootstrap_links": 25,
@@ -286,6 +286,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
+      "name": "kargopw",
+      "command": "kubectl -n sys-argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d; echo",
+      "group": "ArgoCD",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
       "name": "kctx",
       "command": "kubectl config current-context",
       "group": "Kubernetes",
@@ -317,6 +324,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "kex",
       "command": "kubectl exec -it",
       "group": "Kubernetes",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
+      "name": "kgapp",
+      "command": "kubectl get applications",
+      "group": "ArgoCD",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
@@ -958,6 +972,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "b",
       "command": "\"!git rev-parse --abbrev-ref HEAD\"",
       "summary": "Print current branch name",
+      "kind": "git alias",
+      "source": "git/.gitconfig"
+    },
+    {
+      "name": "bds",
+      "command": "!\"f() { git diff --stat ${1:-main}...HEAD; }; f\"",
+      "summary": "Show the same stats for the whole current branch, measured from where it forked off $1",
       "kind": "git alias",
       "source": "git/.gitconfig"
     },

@@ -77,3 +77,7 @@ alias kctx='kubectl config current-context'
 alias kctxs='kubectl config get-contexts'
 alias kuc='kubectl config use-context'
 alias kns='kubectl config set-context --current --namespace'
+
+# ArgoCD
+alias kgapp='kubectl get applications'
+alias kargopw='kubectl -n sys-argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo'
