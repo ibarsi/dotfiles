@@ -97,7 +97,7 @@ enabled = true
 [hooks.state]
 
 [hooks.state."/Users/igorbarsi/.codex/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:17b9953d8c9cf17a0f27d9d7c39c897d3b97ba2ace165049e09bc6a3f0101d10"
+trusted_hash = "sha256:a757aff182215193b244741eb75d989865595f6f2367c70efac11fc75564b1a3"
 
 [mcp_servers.semble]
 command = "uvx"
