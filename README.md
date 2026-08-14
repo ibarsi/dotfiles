@@ -368,62 +368,9 @@ git push origin --delete feat/mobile-nav
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
 
-## Pi Coding Agent Workflow
-
-[Pi](https://pi.dev/docs/latest) is configured as the primary local-model coding agent, with defaults matched to this repo's Codex safety posture and local oMLX endpoint.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `pi/settings.json` | `~/.pi/agent/settings.json` | Default provider/model, compaction, UI, model cycling |
-| `pi/models.json` | `~/.pi/agent/models.json` | Local OpenAI-compatible model providers |
-
-**Defaults configured:**
-- Provider: local `omlx`
-- Endpoint: `http://127.0.0.1:1234/v1`
-- Model: `gemma-4-e4b-it-MLX-4bit`
-- Thinking level: `medium`
-- Compaction enabled with larger response reserve for coding tasks
-- Startup telemetry disabled; use `PI_OFFLINE=1` or `pi --offline` to skip startup network checks
-
-**Local model setup:**
-- Run `omlxs` before starting Pi
-- Pi reads `OMLX_API_KEY` for the local provider bearer token; `system/.exports` defaults it to `omlx` for fresh shells
-- Export `OMLX_API_KEY` in your local shell/private env if your oMLX server requires a different bearer token
-- SkillSpector defaults are exported from `system/.exports` to use `http://127.0.0.1:1234/v1` with the local oMLX Gemma model, the `skillspector` shell wrapper passes `OMLX_API_KEY` as the OpenAI-compatible bearer token for that endpoint, and `skillspector/model_registry.yaml` caps the local model context for stable scans
-- Re-run `./bootstrap.sh` to install the symlinked config
-
-**Usage:**
-- `pi` → interactive coding session
-- `pie "prompt"` → non-interactive print mode
-- `pic "prompt"` → continue previous session
-- `pir` → pick a previous session to resume
-- `piro -p "review src/"` → read-only review mode with read/search/list tools
-- `pimodels` → inspect available configured models
-
-**Extension shortlist to evaluate:**
-- `pi-subagents` for delegated/parallel agent work
-- `pi-mcp-adapter` to reuse MCP tooling where Pi is the daily driver
-- `pi-lens` for LSP/linter/type-check feedback inside Pi
-- `@juicesharp/rpiv-todo` for a persistent task overlay that survives compaction
-- `pi-ask-user` or `@juicesharp/rpiv-ask-user-question` for structured clarifying questions
-- `pi-btw` for side questions without polluting the main session
-
-Install only after reviewing source:
-
-```bash
-pi install npm:pi-subagents
-pi install npm:pi-mcp-adapter
-pi install npm:pi-lens
-pi install npm:@juicesharp/rpiv-todo
-pi install npm:pi-ask-user
-pi install npm:pi-btw
-```
-
-> Security note: Pi extensions and packages run with full local permissions. Treat them like shell plugins or editor extensions, not inert prompts.
-
 ## mini-SWE-agent Workflow
 
-[mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) is installed through the global mise config as `pipx:mini-swe-agent` and uses the same local oMLX Gemma endpoint as Pi.
+[mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) is installed through the global mise config as `pipx:mini-swe-agent` and uses the local oMLX Gemma endpoint.
 
 **Defaults configured:**
 - Endpoint: `http://127.0.0.1:1234/v1`
@@ -438,7 +385,7 @@ pi install npm:pi-btw
 - `mniyolo` → start mini-SWE-agent in yolo mode with the same local model config
 - `aiup` → upgrades `pipx:mini-swe-agent` through mise along with the other AI coding tools
 
-Run `omlxs` before starting mini-SWE-agent. Fresh shells replace the old `OPENAI_API_KEY=omlx` placeholder with the real `OMLX_API_KEY`, and the mini-SWE-agent aliases also pass `OMLX_API_KEY` as `OPENAI_API_KEY` for that command so LiteLLM authenticates against the local oMLX endpoint with the same bearer token Pi uses.
+Run `omlxs` before starting mini-SWE-agent. Fresh shells replace the old `OPENAI_API_KEY=omlx` placeholder with the real `OMLX_API_KEY`, and the mini-SWE-agent aliases also pass `OMLX_API_KEY` as `OPENAI_API_KEY` for that command so LiteLLM authenticates against the local oMLX endpoint.
 
 ## AI Diagnostics
 

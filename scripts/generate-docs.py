@@ -98,16 +98,6 @@ FEATURE_NOTES = {
             "AI doctor validates the config path.",
         ],
     },
-    "pi": {
-        "title": "Pi Coding Agent config",
-        "summary": "Maintains Pi defaults for local OpenAI-compatible models and efficient terminal coding.",
-        "source": "pi/settings.json",
-        "details": [
-            "Bootstrap links ~/.pi/agent/settings.json and ~/.pi/agent/models.json.",
-            "The default provider targets oMLX on 127.0.0.1:1234 and reads the key from OMLX_API_KEY.",
-            "Model cycling includes the oMLX Gemma model.",
-        ],
-    },
     "mini-swe-agent": {
         "title": "mini-SWE-agent config",
         "summary": "Keeps the mini-SWE-agent CLI installed through mise and pointed at the local oMLX Gemma model.",

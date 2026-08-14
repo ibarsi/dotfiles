@@ -1,13 +1,13 @@
 {
-  "git_revision": "c657fe08c11553db0b41f5ca5ef75929b1afe973",
-  "source_hash": "f4f5faf4e4fe",
+  "git_revision": "ddc3e72fbf0f38bc2e3bcd9682e5034a6fc7d5eb",
+  "source_hash": "0640a06e1b6f",
   "stats": {
-    "aliases": 87,
+    "aliases": 81,
     "functions": 38,
     "git": 54,
-    "features": 12,
+    "features": 11,
     "tasks": 15,
-    "bootstrap_links": 25,
+    "bootstrap_links": 23,
     "brews": 39,
     "casks": 26
   },
@@ -70,7 +70,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini npm:@mariozechner/pi-coding-agent pipx:mini-swe-agent; pi update",
+      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini pipx:mini-swe-agent; agy update",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -529,48 +529,6 @@
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
-    },
-    {
-      "name": "pic",
-      "command": "pi --continue",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "pie",
-      "command": "pi -p",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "pimodels",
-      "command": "pi --list-models",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "pioff",
-      "command": "pi --offline",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "pir",
-      "command": "pi --resume",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "piro",
-      "command": "pi --tools read,grep,find,ls",
-      "group": "Pi Coding Agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
     },
     {
       "name": "reload",
@@ -1364,17 +1322,6 @@
       "source": "claude/settings.json"
     },
     {
-      "slug": "pi",
-      "title": "Pi Coding Agent config",
-      "summary": "Maintains Pi defaults for local OpenAI-compatible models and efficient terminal coding.",
-      "details": [
-        "Bootstrap links ~/.pi/agent/settings.json and ~/.pi/agent/models.json.",
-        "The default provider targets oMLX on 127.0.0.1:1234 and reads the key from OMLX_API_KEY.",
-        "Model cycling includes the oMLX Gemma model."
-      ],
-      "source": "pi/settings.json"
-    },
-    {
       "slug": "mini-swe-agent",
       "title": "mini-SWE-agent config",
       "summary": "Keeps the mini-SWE-agent CLI installed through mise and pointed at the local oMLX Gemma model.",
@@ -1425,7 +1372,6 @@
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
         "bash -n glow/install.sh",
-        "bash -n pi/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh"
       ],
@@ -1465,7 +1411,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1473,7 +1419,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1481,7 +1427,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh pi/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1609,16 +1555,6 @@
       "source_path": "git/.gitignore",
       "target_path": "~/.gitignore",
       "source": "git/install.sh"
-    },
-    {
-      "source_path": "pi/models.json",
-      "target_path": "~/.pi/agent/models.json",
-      "source": "pi/install.sh"
-    },
-    {
-      "source_path": "pi/settings.json",
-      "target_path": "~/.pi/agent/settings.json",
-      "source": "pi/install.sh"
     },
     {
       "source_path": "ssh/config",
