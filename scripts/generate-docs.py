@@ -408,11 +408,23 @@ def build_features() -> list[dict]:
 
 
 def git_revision() -> str:
+    """Return the revision that was available when generated docs were written.
+
+    Before a commit, generated files are based on the current HEAD. After that
+    commit is created, HEAD changes, so use its parent while the worktree is
+    clean. This keeps the generated metadata reproducible both before and
+    after committing it.
+    """
     try:
-        return (
-            subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True)
-            .strip()
-        )
+        is_clean = subprocess.run(
+            ["git", "diff", "--quiet"], cwd=ROOT, check=False
+        ).returncode == 0 and subprocess.run(
+            ["git", "diff", "--cached", "--quiet"], cwd=ROOT, check=False
+        ).returncode == 0
+        revision = "HEAD^" if is_clean else "HEAD"
+        return subprocess.check_output(
+            ["git", "rev-parse", revision], cwd=ROOT, text=True
+        ).strip()
     except Exception:
         return "unknown"
 
