@@ -5,12 +5,23 @@ A modern, topic-based dotfile configuration for macOS and Bash-based Linux envir
 ## Installation
 
 ```bash
+# macOS
 git clone https://github.com/ibarsi/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` is path-safe and uses the repository root internally, so it can be re-run reliably even when invoked from different working directories.
+For Omarchy and other Bash-based Linux systems, clone the same repository and run the additive setup instead:
+
+```bash
+git clone https://github.com/ibarsi/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./bootstrap-omarchy.sh
+```
+
+`bootstrap-omarchy.sh` adds the shared Bash aliases/functions and Git aliases without replacing Omarchy's `~/.bashrc` or `~/.gitconfig`. It deliberately does not install packages, apply macOS defaults, or change the default shell.
+
+Both scripts use the repository root internally, so they can be re-run reliably even when invoked from different working directories.
 
 ## Quick Commands
 
@@ -37,7 +48,7 @@ Use `mise run ...` directly for project workflows:
 
 The repository is organized into **topics**, making it easy to modularize your configuration:
 
-- `git/`: Git configuration and aliases.
+- `git/`: Git configuration and a portable aliases include. On Linux, `bash git/install-aliases.sh` adds only the aliases without replacing the host Git config.
 - `ssh/`: SSH client configuration for GitHub and related tooling.
 - `macos/`: macOS system defaults and UI/UX settings.
 - `system/`: Global environment variables, paths, and generic aliases.
@@ -95,7 +106,7 @@ The repo includes a lightweight static docs app in `docs/` for browsing the curr
 
 - Source-driven generator: `scripts/generate-docs.py`
 - Generated data file: `docs/site-data.json`
-- Includes: aliases, functions, git shortcuts from `git/.gitconfig` plus git-focused shell helpers, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
+- Includes: aliases, functions, git shortcuts from `git/aliases.gitconfig` plus git-focused shell helpers, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
 
 Refresh the docs after any feature, alias, function, task, or bootstrap link change:
 

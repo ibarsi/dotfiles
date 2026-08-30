@@ -17,19 +17,19 @@ run = "mise install"
 [tasks.lint-shell]
 description = "Lint shell scripts in this repo"
 run = [
-  "shellcheck bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh",
+  "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh",
 ]
 
 [tasks.fmt-shell]
 description = "Format shell scripts in this repo"
 run = [
-  "shfmt -w bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
+  "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
 ]
 
 [tasks.fmt-check]
 description = "Check shell formatting without writing"
 run = [
-  "shfmt -d bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
+  "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh",
 ]
 
 [tasks.check]
@@ -39,6 +39,7 @@ run = [
   "mise run fmt-check",
   "mise run docs-check",
   "bash -n bootstrap.sh",
+  "bash -n bootstrap-omarchy.sh",
   "bash -n bash/bashrc",
   "bash -n bash/install.sh",
   "bash -n k9s/install.sh",

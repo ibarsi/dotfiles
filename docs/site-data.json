@@ -1,11 +1,11 @@
 {
-  "git_revision": "5dca240eb9d7ea6b00c5a8fa12f6fcd21712486c",
-  "source_hash": "7b497034c36d",
+  "git_revision": "d6223365bed9c043bac1342a1c62c03817db9636",
+  "source_hash": "d070b60aeffa",
   "stats": {
     "aliases": 70,
     "functions": 40,
     "git": 53,
-    "features": 11,
+    "features": 13,
     "tasks": 15,
     "bootstrap_links": 23,
     "brews": 36,
@@ -852,303 +852,303 @@
     {
       "name": "amend",
       "command": "commit --amend --reuse-message=HEAD",
-      "summary": "Amend the currently staged files to the latest commit",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "b",
-      "command": "\"!git rev-parse --abbrev-ref HEAD\"",
-      "summary": "Print current branch name",
+      "command": "!git rev-parse --abbrev-ref HEAD",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "bds",
       "command": "!\"f() { git diff --stat ${1:-main}...HEAD; }; f\"",
-      "summary": "Show the same stats for the whole current branch, measured from where it forked off $1",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "bparent",
-      "command": "\"!f() { git log ${1:-main}..HEAD --oneline | tail -1 | cut -d\\\" \\\" -f1 | xargs -I{} git log --oneline -1 {}^; }; f\"",
-      "summary": "Print the parent commit of the oldest commit on the current branch not found in the given base",
+      "command": "!\"f() { git log ${1:-main}..HEAD --oneline | tail -1 | cut -d\\\" \\\" -f1 | xargs -I{} git log --oneline -1 {}^; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "branches",
       "command": "branch -a",
-      "summary": "Show verbose output about tags, branches or remotes",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "breb",
-      "command": "\"!f() { git rebase -i `git merge-base $1 HEAD`; }; f\"",
-      "summary": "Interactively rebase changes in current branch against another branch used as the base",
+      "command": "!\"f() { git rebase -i `git merge-base $1 HEAD`; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "browse",
       "command": "!gh repo view --web",
-      "summary": "Browse on GitHub",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers Browse on GitHub",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "c",
       "command": "clone --recursive",
-      "summary": "Clone a repository including all submodules",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "ca",
       "command": "!git add -A && git commit -av",
-      "summary": "Commit all changes",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "co",
-      "command": "\"checkout\"",
+      "command": "checkout",
       "summary": "Shorthand for checkout",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "credit",
-      "command": "\"!f() { git commit --amend --author \\\"$1 <$2>\\\" -C HEAD; }; f\"",
-      "summary": "Credit an author on the latest commit",
+      "command": "!\"f() { git commit --amend --author \\\"$1 <$2>\\\" -C HEAD; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "d",
       "command": "!\"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat\"",
-      "summary": "Show the diff between the latest commit and the current state",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "di",
       "command": "!\"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d\"",
-      "summary": "Show the diff between the state `$number` revisions ago and the current state",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "ds",
       "command": "!\"f() { git diff --stat \\\"$1\\\" \\\"${2:-HEAD}\\\"; }; f\"",
-      "summary": "Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fa",
-      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --author=$1; }; f\"",
-      "summary": "Find commits by author",
+      "command": "!\"f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --author=$1; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fb",
-      "command": "\"!f() { git branch -a --contains $1; }; f\"",
-      "summary": "Find branches containing commit",
+      "command": "!\"f() { git branch -a --contains $1; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fc",
-      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate -S$1; }; f\"",
-      "summary": "Find commits by source code",
+      "command": "!\"f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate -S$1; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fm",
-      "command": "\"!f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --grep=$1; }; f\"",
-      "summary": "Find commits by commit message",
+      "command": "!\"f() { git log --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --decorate --grep=$1; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fo",
-      "command": "\"!git fetch origin\"",
-      "summary": "Fetch origin",
+      "command": "!git fetch origin",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "ft",
-      "command": "\"!f() { git describe --always --contains $1; }; f\"",
-      "summary": "Find tags containing commit",
+      "command": "!\"f() { git describe --always --contains $1; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "fu",
-      "command": "\"!git fetch upstream\"",
-      "summary": "Fetch upstream",
+      "command": "!git fetch upstream",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "go",
-      "command": "\"!f() { git checkout -b \\\"$1\\\" 2> /dev/null || git checkout \\\"$1\\\"; }; f\"",
-      "summary": "Switch to a branch, creating it if necessary",
+      "command": "!\"f() { git checkout -b \\\"$1\\\" 2> /dev/null || git checkout \\\"$1\\\"; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "incoming",
-      "command": "\"!f() { b=\\\"${1:-HEAD}\\\"; u=$(git rev-parse --abbrev-ref \\\"${b}@{upstream}\\\" 2>/dev/null) || { echo \\\"no upstream for ${b}\\\" >&2; return 1; }; git fetch -q \\\"${u%%/*}\\\"; git log --no-merges --decorate --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' \\\"${b}..${b}@{upstream}\\\"; echo; }; f\"",
-      "summary": "Show commits incoming from a branch's upstream (default: current branch). `git incoming` -> current branch vs its upstream; `git incoming main` -> main vs origin/main",
+      "command": "!\"f() { b=\\\"${1:-HEAD}\\\"; u=$(git rev-parse --abbrev-ref \\\"${b}@{upstream}\\\" 2>/dev/null) || { echo \\\"no upstream for ${b}\\\" >&2; return 1; }; git fetch -q \\\"${u%%/*}\\\"; git log --no-merges --decorate --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' \\\"${b}..${b}@{upstream}\\\"; echo; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch).",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "l",
       "command": "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'",
-      "summary": "View abbreviated SHA, description, and history graph of the latest 20 commits",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "lcp",
       "command": "l --no-merges --cherry-pick --right-only",
-      "summary": "View abbreviated SHAs between two branches, excluding cherry picks",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "m",
-      "command": "\"merge\"",
-      "summary": "Shorthand for merge",
+      "command": "merge",
+      "summary": "Shorthand for checkout Shorthand for merge",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "onto",
-      "command": "\"!f() { sha=$(git bparent \\\"$1\\\" | cut -d\\\" \\\" -f1) && [ -n \\\"$sha\\\" ] && git rebase --onto origin/${1:-main} \\\"$sha\\\"; }; f\"",
-      "summary": "Rebase the current branch onto origin/<base> using bparent as the boundary",
+      "command": "!\"f() { sha=$(git bparent \\\"$1\\\" | cut -d\\\" \\\" -f1) && [ -n \\\"$sha\\\" ] && git rebase --onto origin/${1:-main} \\\"$sha\\\"; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "oreb",
-      "command": "\"!f() { git rebase origin/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
-      "summary": "Fetch and rebase current branch with origin's master",
+      "command": "!\"f() { git rebase origin/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "p",
       "command": "!\"git pull; git submodule foreach git pull origin master\"",
-      "summary": "Pull in remote changes for the current repository and all its submodules",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "pub",
-      "command": "\"!git push -u origin $(git b)\"",
-      "summary": "Push current branch to origin and set upstream",
+      "command": "!git push -u origin $(git b)",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "reb",
-      "command": "\"!r() { git rebase -i HEAD~$1; }; r\"",
-      "summary": "Interactive rebase with the given number of latest commits",
+      "command": "!\"r() { git rebase -i HEAD~$1; }; r\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "remotes",
       "command": "remote -v",
-      "summary": "Show verbose output about tags, branches or remotes",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "retag",
-      "command": "\"!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r\"",
-      "summary": "Remove the old tag with this name and tag the latest commit with it.",
+      "command": "!\"r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it.",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "rh",
-      "command": "\"!git reset --hard origin/$(git symbolic-ref --short HEAD)\"",
-      "summary": "Hard reset the current branch to its origin branch",
+      "command": "!git reset --hard origin/$(git symbolic-ref --short HEAD)",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "s",
       "command": "status -s",
-      "summary": "View the current working tree status using the short format",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "tags",
       "command": "tag -l",
-      "summary": "Show verbose output about tags, branches or remotes",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "unpub",
-      "command": "\"!git push origin :$(git b)\"",
-      "summary": "Delete current branch from origin",
+      "command": "!git push origin :$(git b)",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "ureb",
-      "command": "\"!f() { git rebase upstream/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
-      "summary": "Fetch and rebase current branch with upstream's master",
+      "command": "!\"f() { git rebase upstream/${1:-$(git symbolic-ref --short HEAD)}; }; f\"",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "wt",
       "command": "worktree",
-      "summary": "Git worktree helpers",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "wtl",
       "command": "worktree list",
-      "summary": "Git worktree helpers",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "wtp",
       "command": "worktree prune",
-      "summary": "Git worktree helpers",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "wtr",
       "command": "worktree remove",
-      "summary": "Git worktree helpers",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "wtx",
-      "command": "\"!git worktree list --porcelain\"",
-      "summary": "Git worktree helpers",
+      "command": "!git worktree list --porcelain",
+      "summary": "Shorthand for checkout Shorthand for merge View abbreviated SHA, description, and history graph of the latest 20 commits View abbreviated SHAs between two branches, excluding cherry picks View the current working tree status using the short format Show the diff between the latest commit and the current state Show the diff between the state `$number` revisions ago and the current state Show per-file and total added/removed line stats from $1 to HEAD, or to $2 if given Show the same stats for the whole current branch, measured from where it forked off $1 Pull in remote changes for the current repository and all its submodules Clone a repository including all submodules Print current branch name Fetch origin Fetch upstream Show commits incoming from a branch's upstream (default: current branch). Hard reset the current branch to its origin branch Commit all changes Switch to a branch, creating it if necessary Show verbose output about tags, branches or remotes Amend the currently staged files to the latest commit Credit an author on the latest commit Interactive rebase with the given number of latest commits Fetch and rebase current branch with origin's master Fetch and rebase current branch with upstream's master Interactively rebase changes in current branch against another branch used as the base Print the parent commit of the oldest commit on the current branch not found in the given base Rebase the current branch onto origin/<base> using bparent as the boundary Remove the old tag with this name and tag the latest commit with it. Find branches containing commit Find tags containing commit Find commits by source code Find commits by commit message Find commits by author Push current branch to origin and set upstream Delete current branch from origin Git worktree helpers",
       "kind": "git alias",
-      "source": "git/.gitconfig"
+      "source": "git/aliases.gitconfig"
     },
     {
       "name": "gm",
@@ -1191,6 +1191,28 @@
         "Keeps Omarchy's existing ~/.bashrc content and defaults intact."
       ],
       "source": "bash/bashrc"
+    },
+    {
+      "slug": "git-aliases",
+      "title": "Portable Git aliases",
+      "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
+      "details": [
+        "macOS uses the include from the repository-managed global Git config.",
+        "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+        "Existing user identity, signing, and host-specific Git settings remain in the host configuration."
+      ],
+      "source": "git/aliases.gitconfig"
+    },
+    {
+      "slug": "omarchy-bootstrap",
+      "title": "Omarchy bootstrap",
+      "summary": "Sets up the shared Bash and Git-alias layers on Linux without applying macOS-only configuration.",
+      "details": [
+        "Runs only the additive Bash and Git-alias installers.",
+        "Preserves Omarchy's existing Bash and Git configuration.",
+        "Refuses to run outside Linux and does not manage system packages."
+      ],
+      "source": "bootstrap-omarchy.sh"
     },
     {
       "slug": "plugins",
@@ -1298,6 +1320,7 @@
         "mise run fmt-check",
         "mise run docs-check",
         "bash -n bootstrap.sh",
+        "bash -n bootstrap-omarchy.sh",
         "bash -n bash/bashrc",
         "bash -n bash/install.sh",
         "bash -n k9s/install.sh",
@@ -1347,7 +1370,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1355,7 +1378,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1363,7 +1386,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },

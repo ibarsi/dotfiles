@@ -17,6 +17,7 @@ check_link() {
 
 check_link "$HOME/.config/ghostty/config"
 check_link "$HOME/.config/ibarsi-dotfiles/bashrc"
+check_link "$HOME/.config/ibarsi-dotfiles/git-aliases.gitconfig"
 check_link "$HOME/Library/Application Support/k9s/config.yaml"
 check_link "$HOME/Library/Application Support/k9s/skins/catppuccin-mocha.yaml"
 check_link "$HOME/.config/zed/settings.json"

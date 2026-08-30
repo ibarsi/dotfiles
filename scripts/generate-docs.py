@@ -45,6 +45,26 @@ FEATURE_NOTES = {
             "Keeps Omarchy's existing ~/.bashrc content and defaults intact.",
         ],
     },
+    "git-aliases": {
+        "title": "Portable Git aliases",
+        "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
+        "source": "git/aliases.gitconfig",
+        "details": [
+            "macOS uses the include from the repository-managed global Git config.",
+            "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+            "Existing user identity, signing, and host-specific Git settings remain in the host configuration.",
+        ],
+    },
+    "omarchy-bootstrap": {
+        "title": "Omarchy bootstrap",
+        "summary": "Sets up the shared Bash and Git-alias layers on Linux without applying macOS-only configuration.",
+        "source": "bootstrap-omarchy.sh",
+        "details": [
+            "Runs only the additive Bash and Git-alias installers.",
+            "Preserves Omarchy's existing Bash and Git configuration.",
+            "Refuses to run outside Linux and does not manage system packages.",
+        ],
+    },
     "plugins": {
         "title": "Shell plugin integrations",
         "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
@@ -270,7 +290,7 @@ def parse_git_aliases(path: Path) -> list[dict]:
 
 
 def parse_git_shortcuts(alias_paths: list[tuple[Path, str]], functions_path: Path) -> list[dict]:
-    items = parse_git_aliases(ROOT / "git/.gitconfig")
+    items = parse_git_aliases(ROOT / "git/aliases.gitconfig")
     git_pattern = re.compile(r"(?<![A-Za-z0-9_.-])git(?![A-Za-z0-9_.-])|\bgh\b|gitmoji")
 
     for path, source_kind in alias_paths:
@@ -470,7 +490,10 @@ def main() -> None:
             [
                 ROOT / "Brewfile",
                 ROOT / "bootstrap.sh",
+                ROOT / "bootstrap-omarchy.sh",
                 ROOT / "git/.gitconfig",
+                ROOT / "git/aliases.gitconfig",
+                ROOT / "git/install-aliases.sh",
                 ROOT / "mise.toml",
                 ROOT / "system/.aliases",
                 ROOT / "system/.functions",
