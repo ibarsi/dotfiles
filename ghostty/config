@@ -42,7 +42,9 @@ undo-timeout = 10s
 
 # Shell integration (enables features like semantic zones, prompt detection)
 shell-integration = detect
-shell-integration-features = cursor,sudo,title
+# ssh-terminfo: installs xterm-ghostty terminfo on remote hosts on first connect
+# ssh-env: propagates TERM/COLORTERM as a fallback for hosts where tic is unavailable
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
 
 # =============================================================================
 # Tabs & Splits
