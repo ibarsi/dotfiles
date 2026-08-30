@@ -1,11 +1,11 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "ddc3e72fbf0f38bc2e3bcd9682e5034a6fc7d5eb",
-  "source_hash": "0640a06e1b6f",
+  "git_revision": "055808a3f8c4075ca2bd1d611afb0b5e59c37725",
+  "source_hash": "43402ef2cd5a",
   "stats": {
-    "aliases": 81,
-    "functions": 38,
+    "aliases": 79,
+    "functions": 42,
     "git": 54,
-    "features": 11,
+    "features": 12,
     "tasks": 15,
     "bootstrap_links": 23,
     "brews": 39,
@@ -202,13 +202,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
-      "name": "flushdns",
-      "command": "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder",
-      "group": "IP addresses",
-      "source": "system/.aliases",
-      "source_kind": "system alias"
-    },
-    {
       "name": "fzs",
       "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become(${EDITOR:-vim} +{2} {1})\"",
       "group": "fzf content search",
@@ -267,13 +260,6 @@ window.DOTFILES_DOCS_DATA = {
     {
       "name": "ip",
       "command": "curl -s https://ifconfig.me/ip",
-      "group": "IP addresses",
-      "source": "system/.aliases",
-      "source_kind": "system alias"
-    },
-    {
-      "name": "ips",
-      "command": "ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \\\"\\\"); print }'",
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -399,14 +385,14 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "l",
-      "command": "ls -lF ${colorflag}",
+      "command": "command ls -lF --color=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
     {
       "name": "l",
-      "command": "ls -lF ${colorflag}",
+      "command": "command ls -lFG",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -420,22 +406,15 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "la",
-      "command": "ls -laF ${colorflag}",
+      "command": "command ls -laF --color=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
     {
       "name": "la",
-      "command": "ls -laF ${colorflag}",
+      "command": "command ls -laFG",
       "group": "Shortcuts",
-      "source": "system/.aliases",
-      "source_kind": "system alias"
-    },
-    {
-      "name": "lip",
-      "command": "ipconfig getifaddr en0",
-      "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
@@ -448,14 +427,14 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "ls",
-      "command": "command ls ${colorflag}",
+      "command": "command ls --color=auto",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
     {
       "name": "ls",
-      "command": "command ls ${colorflag}",
+      "command": "command ls -G",
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -531,8 +510,15 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
+      "name": "publicip",
+      "command": "curl -s https://ifconfig.me/ip",
+      "group": "IP addresses",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
+    },
+    {
       "name": "reload",
-      "command": "exec ${SHELL} -l",
+      "command": "exec \"${SHELL:-/bin/sh}\" -l",
       "group": "IP addresses",
       "source": "system/.aliases",
       "source_kind": "system alias"
@@ -603,6 +589,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
+      "name": "dotfiles-open",
+      "summary": "Open a URL or local path with the desktop opener available on this platform.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "dotfiles-sync",
       "summary": "Sync dotfiles safely (fetch + status + optional update)",
       "usage": "",
@@ -633,6 +626,13 @@ window.DOTFILES_DOCS_DATA = {
     {
       "name": "fkill",
       "summary": "Fuzzy pick process and kill it",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "flushdns",
+      "summary": "Clear the local DNS cache using the resolver available on the current OS.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -687,6 +687,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
+      "name": "ips",
+      "summary": "Print configured IPv4 and IPv6 addresses on macOS or Linux.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "killport",
       "summary": "Kill process by port",
       "usage": "killport <port>",
@@ -704,6 +711,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "kpf",
       "summary": "Auto-reconnecting kubectl port-forward.",
       "usage": "kpf [--context <ctx>] [-n <ns>] <resource> <port> [port...]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "lip",
+      "summary": "Print the primary LAN IPv4 address without assuming a macOS interface name.",
+      "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
     },
@@ -814,7 +828,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.",
+      "summary": "Upgrade Homebrew when available, mise tools, and optional Bumblebee catalogs.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -894,7 +908,7 @@ window.DOTFILES_DOCS_DATA = {
     {
       "name": "upall",
       "command": "upall",
-      "summary": "Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.",
+      "summary": "Upgrade Homebrew when available, mise tools, and optional Bumblebee catalogs.",
       "kind": "function",
       "source": "system/.functions"
     },
@@ -1242,14 +1256,25 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "slug": "shell",
-      "title": "Modular zsh shell",
-      "summary": "Loads path, zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.",
+      "title": "Modular Zsh shell",
+      "summary": "Loads shared paths, Zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.",
       "details": [
         "Sources topic files from the repo instead of duplicating config into the home directory.",
         "Enables history sharing, cached completion, case-insensitive globbing, and tool init for zoxide, starship, and mise.",
         "Loads Codex shell completion when available."
       ],
       "source": "zsh/.zshrc"
+    },
+    {
+      "slug": "bash",
+      "title": "Additive Bash shell",
+      "summary": "Integrates the shared shell layer with an existing Bash startup file without replacing host-managed configuration.",
+      "details": [
+        "Bootstrap links the Bash fragment under ~/.config/ibarsi-dotfiles/bashrc and adds a marked source block to ~/.bashrc only when missing.",
+        "Loads shared paths, exports, aliases, functions, zoxide, Starship, and mise for interactive Bash shells.",
+        "Keeps Omarchy's existing ~/.bashrc content and defaults intact."
+      ],
+      "source": "bash/bashrc"
     },
     {
       "slug": "plugins",
@@ -1368,12 +1393,18 @@ window.DOTFILES_DOCS_DATA = {
         "mise run fmt-check",
         "mise run docs-check",
         "bash -n bootstrap.sh",
+        "bash -n bash/bashrc",
+        "bash -n bash/install.sh",
         "bash -n k9s/install.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
         "bash -n glow/install.sh",
         "bash -n scripts/doctor-ai.sh",
-        "bash -n scripts/bootstrap-verify.sh"
+        "bash -n scripts/bootstrap-verify.sh",
+        "bash -n system/.aliases",
+        "bash -n system/.exports",
+        "bash -n system/.functions",
+        "bash -n system/.path"
       ],
       "source": "mise.toml"
     },
@@ -1411,7 +1442,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1419,7 +1450,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1427,7 +1458,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },

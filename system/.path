@@ -1,9 +1,25 @@
+# shellcheck shell=bash disable=SC1091
 # .path - Path extensions
+
+# Platform identity shared by Bash and Zsh configuration.
+case "$(uname -s 2>/dev/null)" in
+    Darwin) export DOTFILES_OS="macos" ;;
+    Linux) export DOTFILES_OS="linux" ;;
+    *) export DOTFILES_OS="unknown" ;;
+esac
+
+# Add Homebrew only when it is installed. Linux distributions keep ownership of
+# their native package paths instead of receiving a guessed Homebrew prefix.
+if command -v brew >/dev/null 2>&1; then
+    HOMEBREW_PREFIX="$(brew --prefix)"
+    export HOMEBREW_PREFIX
+    export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
+fi
 
 # Local binaries
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # Go
 if [ -d "$HOME/go/bin" ]; then
@@ -13,11 +29,4 @@ fi
 # Rust
 if [ -f "$HOME/.cargo/env" ]; then
   source "$HOME/.cargo/env"
-fi
-
-# Add Homebrew's sbin
-if [[ $(uname -m) == "arm64" ]]; then
-    export PATH="/opt/homebrew/sbin:$PATH"
-else
-    export PATH="/usr/local/sbin:$PATH"
 fi

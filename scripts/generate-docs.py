@@ -26,13 +26,23 @@ FEATURE_NOTES = {
         ],
     },
     "shell": {
-        "title": "Modular zsh shell",
-        "summary": "Loads path, zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.",
+        "title": "Modular Zsh shell",
+        "summary": "Loads shared paths, Zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.",
         "source": "zsh/.zshrc",
         "details": [
             "Sources topic files from the repo instead of duplicating config into the home directory.",
             "Enables history sharing, cached completion, case-insensitive globbing, and tool init for zoxide, starship, and mise.",
             "Loads Codex shell completion when available.",
+        ],
+    },
+    "bash": {
+        "title": "Additive Bash shell",
+        "summary": "Integrates the shared shell layer with an existing Bash startup file without replacing host-managed configuration.",
+        "source": "bash/bashrc",
+        "details": [
+            "Bootstrap links the Bash fragment under ~/.config/ibarsi-dotfiles/bashrc and adds a marked source block to ~/.bashrc only when missing.",
+            "Loads shared paths, exports, aliases, functions, zoxide, Starship, and mise for interactive Bash shells.",
+            "Keeps Omarchy's existing ~/.bashrc content and defaults intact.",
         ],
     },
     "plugins": {

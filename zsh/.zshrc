@@ -1,17 +1,8 @@
 # shellcheck shell=bash disable=SC1090,SC1091,SC2034
 # .zshrc - Modular Zsh configuration for ibarsi
 
-# --- Path & Environment ---
-if [[ $(uname -m) == "arm64" ]]; then
-	export HOMEBREW_PREFIX="/opt/homebrew"
-else
-	export HOMEBREW_PREFIX="/usr/local"
-fi
-export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
-export PATH="$HOME/.local/share/mise/shims:$PATH"
-
 # Define dotfiles location
-export DOTFILES="$HOME/dotfiles"
+export DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
 # --- Load Topics ---
 # Load order: path -> everything else -> plugins

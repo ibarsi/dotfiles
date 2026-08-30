@@ -33,6 +33,73 @@ function mkd() {
     mkdir -p "$@" && cd "$_" || return
 }
 
+# Open a URL or local path with the desktop opener available on this platform.
+function dotfiles-open() {
+    if command -v open >/dev/null 2>&1; then
+        open "$@"
+    elif command -v xdg-open >/dev/null 2>&1; then
+        xdg-open "$@" >/dev/null 2>&1 &
+    else
+        echo "No supported desktop opener found (need open or xdg-open)" >&2
+        return 1
+    fi
+}
+
+# Print the primary LAN IPv4 address without assuming a macOS interface name.
+function lip() {
+    local address
+
+    if [ "${DOTFILES_OS:-}" = "macos" ] && command -v ipconfig >/dev/null 2>&1; then
+        address="$(ipconfig getifaddr en0 2>/dev/null || true)"
+    elif command -v ip >/dev/null 2>&1; then
+        address="$(command ip -4 route get 1.1.1.1 2>/dev/null | awk '{ for (i = 1; i <= NF; i++) if ($i == "src") { print $(i + 1); exit } }')"
+    elif command -v hostname >/dev/null 2>&1; then
+        address="$(hostname -I 2>/dev/null | awk '{ print $1 }')"
+    fi
+
+    if [ -n "$address" ]; then
+        printf '%s\n' "$address"
+    else
+        echo "Unable to determine a LAN IPv4 address" >&2
+        return 1
+    fi
+}
+
+# Print configured IPv4 and IPv6 addresses on macOS or Linux.
+function ips() {
+    if command -v ip >/dev/null 2>&1; then
+        command ip -o addr show scope global | awk '{ split($4, address, "/"); print address[1] }'
+    elif command -v ifconfig >/dev/null 2>&1; then
+        ifconfig -a | awk '/inet / { print $2 } /inet6 / { print $2 }'
+    else
+        echo "Neither ip nor ifconfig is available" >&2
+        return 1
+    fi
+}
+
+# Clear the local DNS cache using the resolver available on the current OS.
+function flushdns() {
+    case "${DOTFILES_OS:-unknown}" in
+        macos)
+            sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
+            ;;
+        linux)
+            if command -v resolvectl >/dev/null 2>&1; then
+                sudo resolvectl flush-caches
+            elif command -v systemd-resolve >/dev/null 2>&1; then
+                sudo systemd-resolve --flush-caches
+            else
+                echo "No supported local DNS cache command found" >&2
+                return 1
+            fi
+            ;;
+        *)
+            echo "DNS cache flushing is not configured for this OS" >&2
+            return 1
+            ;;
+    esac
+}
+
 # Sync dotfiles safely (fetch + status + optional update)
 function dotfiles-sync() {
     local repo="$HOME/dotfiles"
@@ -58,16 +125,11 @@ function dotfiles-sync() {
     )
 }
 
-# Upgrade Homebrew packages/casks, Brewfile dependencies, mise tools, and optional Bumblebee catalogs.
+# Upgrade Homebrew when available, mise tools, and optional Bumblebee catalogs.
 function upall() {
     if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
         echo "Usage: upall"
         return 0
-    fi
-
-    if ! command -v brew >/dev/null 2>&1; then
-        echo "brew is not installed or not in PATH" >&2
-        return 1
     fi
 
     if ! command -v mise >/dev/null 2>&1; then
@@ -78,19 +140,29 @@ function upall() {
     local repo_root catalog_dir catalog_repo
     repo_root="${DOTFILES:-$HOME/dotfiles}"
 
-    if [[ ! -f "$repo_root/Brewfile" || ! -f "$repo_root/mise.toml" ]]; then
+    if [[ ! -f "$repo_root/mise.toml" ]]; then
         echo "Dotfiles repo not found at $repo_root" >&2
         return 1
     fi
 
-    echo "== Homebrew update =="
-    brew update || return
+    if command -v brew >/dev/null 2>&1; then
+        if [[ ! -f "$repo_root/Brewfile" ]]; then
+            echo "Brewfile not found at $repo_root" >&2
+            return 1
+        fi
 
-    echo "== Homebrew upgrade =="
-    brew upgrade --greedy || return
+        echo "== Homebrew update =="
+        brew update || return
 
-    echo "== Brewfile install/upgrade =="
-    brew bundle install --file "$repo_root/Brewfile" || return
+        echo "== Homebrew upgrade =="
+        brew upgrade --greedy || return
+
+        echo "== Brewfile install/upgrade =="
+        brew bundle install --file "$repo_root/Brewfile" || return
+    else
+        echo "== Homebrew =="
+        echo "Skipping: managed by the platform package manager on ${DOTFILES_OS:-this OS}."
+    fi
 
     echo "== mise upgrade =="
     mise upgrade -C "$repo_root" || return
@@ -114,8 +186,13 @@ function upall() {
 # Reload shell only (no git/network side effects)
 function reload-dotfiles() {
     # shellcheck source=/dev/null
-    source "$HOME/.zshrc"
-    echo "Reloaded ~/.zshrc"
+    if [ -n "${BASH_VERSION:-}" ]; then
+        source "$HOME/.bashrc"
+        echo "Reloaded ~/.bashrc"
+    else
+        source "$HOME/.zshrc"
+        echo "Reloaded ~/.zshrc"
+    fi
 }
 
 # Stream Kubernetes logs through jq and page them with less when interactive.
@@ -170,7 +247,7 @@ function dotdocs() {
     fi
 
     if lsof -ti tcp:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
-        open "$url"
+        dotfiles-open "$url"
         echo "Docs site available at $url"
         echo "Server log: $log_file"
     else

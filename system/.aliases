@@ -16,16 +16,14 @@ if command -v eza > /dev/null; then
     alias ls="eza --icons=auto"
     alias l="eza -lF --icons=auto"
     alias la="eza -laF --icons=auto"
-elif ls --color > /dev/null 2>&1; then # GNU `ls`
-    colorflag="--color"
-    alias l="ls -lF ${colorflag}"
-    alias la="ls -laF ${colorflag}"
-    alias ls="command ls ${colorflag}"
+elif command ls --color=auto > /dev/null 2>&1; then # GNU `ls`
+    alias l='command ls -lF --color=auto'
+    alias la='command ls -laF --color=auto'
+    alias ls='command ls --color=auto'
 else # macOS `ls`
-    colorflag="-G"
-    alias l="ls -lF ${colorflag}"
-    alias la="ls -laF ${colorflag}"
-    alias ls="command ls ${colorflag}"
+    alias l='command ls -lFG'
+    alias la='command ls -laFG'
+    alias ls='command ls -G'
 fi
 
 # Always use bat instead of cat if available
@@ -45,19 +43,16 @@ alias egrep='egrep --color=auto'
 alias sudo='sudo '
 
 # IP addresses
-alias ip="curl -s https://ifconfig.me/ip"
-alias lip="ipconfig getifaddr en0"
-
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+alias publicip="curl -s https://ifconfig.me/ip"
+if [ "${DOTFILES_OS:-}" != "linux" ]; then
+    alias ip="curl -s https://ifconfig.me/ip"
+fi
 
 # Reload the shell (i.e. invoke as a login shell)
-alias reload="exec ${SHELL} -l"
+alias reload='exec "${SHELL:-/bin/sh}" -l'
 
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
-
-# Clear DNS cache
-alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 # Gitmoji
 alias gm='gitmoji'

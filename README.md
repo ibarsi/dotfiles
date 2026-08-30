@@ -1,6 +1,6 @@
 # Igor's `dotfiles`
 
-A modern, topic-based dotfile configuration for macOS. Optimized for Apple Silicon and productivity.
+A modern, topic-based dotfile configuration for macOS and Bash-based Linux environments such as Omarchy. It keeps macOS in Zsh while adding shared shell aliases and functions to Bash without replacing the host's `~/.bashrc`.
 
 ## Installation
 
@@ -26,7 +26,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
-- `upall` → upgrade Homebrew packages/casks, converge the Brewfile, upgrade mise-managed tools, and refresh `BUMBLEBEE_CATALOG_DIR` if it points into a git checkout
+- `upall` → upgrade Homebrew packages/casks when Homebrew is present, upgrade mise-managed tools, and refresh `BUMBLEBEE_CATALOG_DIR` if it points into a git checkout
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
 - `groot` → jump to git repo root quickly
 - `wtnew <branch> [base]` → create a worktree under `~/worktrees/<repo>/<branch>` and enter it
@@ -41,6 +41,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `ssh/`: SSH client configuration for GitHub and related tooling.
 - `macos/`: macOS system defaults and UI/UX settings.
 - `system/`: Global environment variables, paths, and generic aliases.
+- `bash/`: Additive Bash shell configuration. Bootstrap links its fragment under `~/.config/ibarsi-dotfiles/` and sources it from the existing `~/.bashrc` without replacing Omarchy defaults.
 - `vim/`: Vim configuration.
 - `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
@@ -63,6 +64,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
 - **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
 - **Zsh Power-ups**: Catppuccin Mocha syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
+- **Shared Bash/Zsh shell layer**: OS-aware paths, aliases, and functions work on macOS and Linux; Bash integrates additively with an existing `~/.bashrc`.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
 - **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, disables press-and-hold accent popups, and reloads a Caps Lock to Control remap at login.
