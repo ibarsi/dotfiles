@@ -108,16 +108,6 @@ FEATURE_NOTES = {
             "AI doctor validates the config path.",
         ],
     },
-    "mini-swe-agent": {
-        "title": "mini-SWE-agent config",
-        "summary": "Keeps the mini-SWE-agent CLI installed through mise and pointed at the local oMLX Gemma model.",
-        "source": "mini-swe-agent/omlx.yaml",
-        "details": [
-            "Global mise installs mini-SWE-agent through the pipx backend.",
-            "Shell aliases merge the upstream mini.yaml defaults with the repo-managed oMLX overlay.",
-            "Fresh shells replace the old OPENAI_API_KEY=omlx placeholder with OMLX_API_KEY, and the aliases pass the same key to LiteLLM.",
-        ],
-    },
     "validation": {
         "title": "Validation scripts",
         "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
@@ -476,7 +466,6 @@ def main() -> None:
                 ROOT / "zsh/plugins.zsh",
                 ROOT / "scripts/doctor-ai.sh",
                 ROOT / "scripts/bootstrap-verify.sh",
-                ROOT / "mini-swe-agent/omlx.yaml",
             ]
             + install_scripts
         ),

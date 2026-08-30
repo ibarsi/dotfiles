@@ -1,14 +1,14 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "055808a3f8c4075ca2bd1d611afb0b5e59c37725",
-  "source_hash": "43402ef2cd5a",
+  "git_revision": "ccbc08aef17a3bb8822e9698cc28ae54577b3430",
+  "source_hash": "7b497034c36d",
   "stats": {
-    "aliases": 79,
-    "functions": 42,
-    "git": 54,
-    "features": 12,
+    "aliases": 70,
+    "functions": 40,
+    "git": 53,
+    "features": 11,
     "tasks": 15,
     "bootstrap_links": 23,
-    "brews": 39,
+    "brews": 36,
     "casks": 26
   },
   "aliases": [
@@ -70,7 +70,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini pipx:mini-swe-agent; agy update",
+      "command": "brew upgrade claude-code@latest claude-devtools codex; agy update",
       "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -205,41 +205,6 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fzs",
       "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become(${EDITOR:-vim} +{2} {1})\"",
       "group": "fzf content search",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "gc",
-      "command": "gemini",
-      "group": "Gemini CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "gce",
-      "command": "gemini -p",
-      "group": "Gemini CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "gcr",
-      "command": "gemini --resume latest",
-      "group": "Gemini CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "gcreview",
-      "command": "gemini \"/review\"",
-      "group": "Gemini CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "gcyolo",
-      "command": "gemini --approval-mode yolo",
-      "group": "Gemini CLI",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
@@ -440,27 +405,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
-      "name": "mni",
-      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml",
-      "group": "mini-SWE-agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "mnie",
-      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml -t",
-      "group": "mini-SWE-agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "mniyolo",
-      "command": "OPENAI_API_KEY=\"$OMLX_API_KEY\" mini -c mini.yaml -c omlx.yaml --yolo",
-      "group": "mini-SWE-agent",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
       "name": "ms",
       "command": "mise",
       "group": "Mise",
@@ -492,13 +436,6 @@ window.DOTFILES_DOCS_DATA = {
       "name": "msu",
       "command": "mise upgrade",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
-      "name": "omlxs",
-      "command": "omlx serve --model-dir ~/.omlx/models --port 1234 --memory-guard-gb 16 --max-concurrent-requests 2",
-      "group": "Upgrade AI coding tools",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
@@ -567,13 +504,6 @@ window.DOTFILES_DOCS_DATA = {
     }
   ],
   "functions": [
-    {
-      "name": "bbscan",
-      "summary": "Scan the current project with Bumblebee's threat-intel exposure catalogs",
-      "usage": "bbscan [bumblebee scan flags...]",
-      "source": "system/.functions",
-      "source_kind": "system function"
-    },
     {
       "name": "dnstrace",
       "summary": "Quick DNS trace (A + AAAA + CNAME + NS path)",
@@ -806,13 +736,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
-      "name": "skillspector",
-      "summary": "Run SkillSpector against the local oMLX endpoint using the oMLX-specific key.",
-      "usage": "",
-      "source": "system/.functions",
-      "source_kind": "system function"
-    },
-    {
       "name": "sniffweb",
       "summary": "Live HTTP-ish packet view (ports 80/443)",
       "usage": "",
@@ -828,7 +751,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew when available, mise tools, and optional Bumblebee catalogs.",
+      "summary": "Upgrade Homebrew when available and mise tools.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -902,13 +825,6 @@ window.DOTFILES_DOCS_DATA = {
       "name": "pr",
       "command": "pr",
       "summary": "Open existing PR in browser, or create one if missing",
-      "kind": "function",
-      "source": "system/.functions"
-    },
-    {
-      "name": "upall",
-      "command": "upall",
-      "summary": "Upgrade Homebrew when available, mise tools, and optional Bumblebee catalogs.",
       "kind": "function",
       "source": "system/.functions"
     },
@@ -1347,17 +1263,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "claude/settings.json"
     },
     {
-      "slug": "mini-swe-agent",
-      "title": "mini-SWE-agent config",
-      "summary": "Keeps the mini-SWE-agent CLI installed through mise and pointed at the local oMLX Gemma model.",
-      "details": [
-        "Global mise installs mini-SWE-agent through the pipx backend.",
-        "Shell aliases merge the upstream mini.yaml defaults with the repo-managed oMLX overlay.",
-        "Fresh shells replace the old OPENAI_API_KEY=omlx placeholder with OMLX_API_KEY, and the aliases pass the same key to LiteLLM."
-      ],
-      "source": "mini-swe-agent/omlx.yaml"
-    },
-    {
       "slug": "validation",
       "title": "Validation scripts",
       "summary": "Provides deterministic checks for AI tooling and bootstrap results.",
@@ -1658,9 +1563,6 @@ window.DOTFILES_DOCS_DATA = {
       "doggo\"            # Modern DNS client (dig replacement for daily use)",
       "mtr\"              # Traceroute + ping in one view",
       "iperf3\"           # Throughput testing",
-      "jundot/omlx/omlx\" # Apple Silicon local LLM inference server",
-      "llmfit\"           # Model fit estimator for local hardware",
-      "ollama\"           # Local LLM runtime",
       "teamookla/speedtest/speedtest\" # Ookla network speed testing"
     ],
     "casks": [

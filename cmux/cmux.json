@@ -120,7 +120,6 @@
   //     "ripgrepBinaryPath" : "",
   //     "suppressSubagentNotifications" : true,
   //     "cursorIntegration" : true,
-  //     "geminiIntegration" : true,
   //     "portBase" : 9100
   //   },
 

@@ -40,9 +40,6 @@ brew "k9s"              # Kubernetes cluster TUI
 brew "doggo"            # Modern DNS client (dig replacement for daily use)
 brew "mtr"              # Traceroute + ping in one view
 brew "iperf3"           # Throughput testing
-brew "jundot/omlx/omlx" # Apple Silicon local LLM inference server
-brew "llmfit"           # Model fit estimator for local hardware
-brew "ollama"           # Local LLM runtime
 brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 
 # Casks (Apps)

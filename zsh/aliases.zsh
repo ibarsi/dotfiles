@@ -18,24 +18,12 @@ alias cxr="codex resume --last"
 alias cxreview='codex "/review"'
 alias cxyolo="codex --dangerously-bypass-approvals-and-sandbox"
 
-# mini-SWE-agent
-alias mni='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml'
-alias mnie='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml -t'
-alias mniyolo='OPENAI_API_KEY="$OMLX_API_KEY" mini -c mini.yaml -c omlx.yaml --yolo'
-
 # Claude Code CLI
 alias cc="claude"
 alias cce="claude -p"
 alias ccr="claude --continue"
 alias ccreview='claude "/review"'
 alias ccyolo="claude --dangerously-skip-permissions"
-
-# Gemini CLI
-alias gc="gemini"
-alias gce="gemini -p"
-alias gcr="gemini --resume latest"
-alias gcreview='gemini "/review"'
-alias gcyolo="gemini --approval-mode yolo"
 
 # Agy CLI
 alias agye="agy -p"
@@ -44,8 +32,7 @@ alias agyreview='agy "/review"'
 alias agyyolo="agy --dangerously-skip-permissions"
 
 # Upgrade AI coding tools
-alias aiup="brew upgrade browseros claude-code@latest claude-devtools codex ollama omlx llmfit; mise upgrade gemini pipx:mini-swe-agent; agy update"
-alias omlxs='omlx serve --model-dir ~/.omlx/models --port 1234 --memory-guard-gb 16 --max-concurrent-requests 2'
+alias aiup="brew upgrade claude-code@latest claude-devtools codex; agy update"
 
 # Mise
 alias ms="mise"

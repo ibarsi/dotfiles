@@ -26,7 +26,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
 - `mise run precommit-install` / `mise run precommit-run`
 - `mise run secrets-scan` → run explicit repo secret scan
-- `upall` → upgrade Homebrew packages/casks when Homebrew is present, upgrade mise-managed tools, and refresh `BUMBLEBEE_CATALOG_DIR` if it points into a git checkout
+- `upall` → upgrade Homebrew packages/casks when Homebrew is present and upgrade mise-managed tools
 - `dsync` → safe dotfiles update preview (fetch/status + next commands)
 - `groot` → jump to git repo root quickly
 - `wtnew <branch> [base]` → create a worktree under `~/worktrees/<repo>/<branch>` and enter it
@@ -176,16 +176,6 @@ obsidian theme:set name=Catppuccin
 - `mdrepo <owner/repo>` → render a GitHub/GitLab README; shorthand like `mdrepo charmbracelet/glow` expands to `github.com/charmbracelet/glow`
 
 This gives you a fast terminal path for local READMEs, generated docs, changelogs, and remote project docs without leaving the shell.
-
-## Supply Chain Inventory Workflow
-
-`bumblebee` can scan the current project against the maintained threat-intel exposure catalogs bundled with the installed Go module.
-
-**Supply-chain functions (`system/.functions`):**
-- `bbscan [bumblebee scan flags...]` → run a project-profile Bumblebee exposure scan against the current `$PWD`, writing timestamped findings and diagnostics NDJSON files in that directory
-
-Set `BUMBLEBEE_CATALOG_DIR` to override the default catalog lookup path.
-When `BUMBLEBEE_CATALOG_DIR` points inside a git checkout, `upall` refreshes that checkout with `git pull --ff-only`.
 
 ## tmux Workflow
 
@@ -369,25 +359,6 @@ git push origin --delete feat/mobile-nav
 
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
-
-## mini-SWE-agent Workflow
-
-[mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) is installed through the global mise config as `pipx:mini-swe-agent` and uses the local oMLX Gemma endpoint.
-
-**Defaults configured:**
-- Endpoint: `http://127.0.0.1:1234/v1`
-- Model: `gemma-4-e4b-it-MLX-4bit`
-- Config overlay: `mini-swe-agent/omlx.yaml`
-- Config discovery: `MSWEA_CONFIG_DIR=$DOTFILES/mini-swe-agent`
-- Cost tracking ignored for the local zero-cost model
-
-**Usage:**
-- `mni` → interactive mini-SWE-agent session using upstream `mini.yaml` plus the oMLX overlay
-- `mnie "prompt"` → run a task non-interactively with the same local model config
-- `mniyolo` → start mini-SWE-agent in yolo mode with the same local model config
-- `aiup` → upgrades `pipx:mini-swe-agent` through mise along with the other AI coding tools
-
-Run `omlxs` before starting mini-SWE-agent. Fresh shells replace the old `OPENAI_API_KEY=omlx` placeholder with the real `OMLX_API_KEY`, and the mini-SWE-agent aliases also pass `OMLX_API_KEY` as `OPENAI_API_KEY` for that command so LiteLLM authenticates against the local oMLX endpoint.
 
 ## AI Diagnostics
 
