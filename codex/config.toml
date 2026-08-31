@@ -21,6 +21,8 @@ personality = "pragmatic"
 # Increase reasoning depth for non-trivial coding tasks.
 model_reasoning_effort = "medium"
 
+notify = ["/Users/igorbarsi/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+
 [tui]
 # Native Codex footer for non-tmux workflows.
 status_line = ["model-with-reasoning", "git-branch", "current-dir", "context-usage", "five-hour-limit", "weekly-limit"]
@@ -88,7 +90,23 @@ last_revision = "a1dc48e68138490d522c04cbf5822214c6eb1202"
 source_type = "git"
 source = "https://github.com/kepano/obsidian-skills.git"
 
+[marketplaces.openai-bundled]
+source_type = "local"
+source = "/Users/igorbarsi/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
 [plugins."obsidian@obsidian-skills"]
+enabled = true
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
 enabled = true
 
 [hooks.state]
@@ -96,9 +114,44 @@ enabled = true
 [hooks.state."/Users/igorbarsi/.codex/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:a757aff182215193b244741eb75d989865595f6f2367c70efac11fc75564b1a3"
 
+[desktop]
+followUpQueueMode = "queue"
+conversationDetailMode = "STEPS_PROSE"
+
 [mcp_servers.semble]
 command = "uvx"
 args = ["--from", "semble[mcp]", "semble"]
 
 [mcp_servers.grafana]
 command = "/Users/igorbarsi/dotfiles/codex/mcp-grafana-nas"
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/igorbarsi/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/igorbarsi/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "0"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.825.41651"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/igorbarsi/.codex/plugins/cache/openai-bundled/browser/26.825.41651/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[mcp_servers.cua_repl]
+command = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
+enabled = false
