@@ -1,8 +1,8 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "d6223365bed9c043bac1342a1c62c03817db9636",
-  "source_hash": "d070b60aeffa",
+  "git_revision": "f417d03a730ad0df6a483537ea439b79351fab61",
+  "source_hash": "44c2c541f24f",
   "stats": {
-    "aliases": 70,
+    "aliases": 69,
     "functions": 40,
     "git": 53,
     "features": 13,
@@ -44,34 +44,34 @@ window.DOTFILES_DOCS_DATA = {
       "name": "agye",
       "command": "agy -p",
       "group": "Agy CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "agyr",
       "command": "agy --continue",
       "group": "Agy CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "agyreview",
       "command": "agy \"/review\"",
       "group": "Agy CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "agyyolo",
       "command": "agy --dangerously-skip-permissions",
       "group": "Agy CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "aiup",
       "command": "brew upgrade claude-code@latest claude-devtools codex; agy update",
-      "group": "Upgrade AI coding tools",
+      "group": "General",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
     },
@@ -86,36 +86,36 @@ window.DOTFILES_DOCS_DATA = {
       "name": "cc",
       "command": "claude",
       "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cce",
       "command": "claude -p",
       "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "ccr",
       "command": "claude --continue",
       "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "ccreview",
       "command": "claude \"/review\"",
       "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "ccyolo",
       "command": "claude --dangerously-skip-permissions",
       "group": "Claude Code CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cdd",
@@ -142,50 +142,50 @@ window.DOTFILES_DOCS_DATA = {
       "name": "cx",
       "command": "codex",
       "group": "Codex CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cxe",
       "command": "codex exec",
       "group": "Codex CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cxr",
       "command": "codex resume --last",
       "group": "Codex CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cxreview",
       "command": "codex \"/review\"",
       "group": "Codex CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "cxyolo",
       "command": "codex --dangerously-bypass-approvals-and-sandbox",
       "group": "Codex CLI",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "dsync",
       "command": "dotfiles-sync",
       "group": "Navigation",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "dtf",
       "command": "cd \"$DOTFILES\"",
       "group": "Navigation",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "egrep",
@@ -205,8 +205,8 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fzs",
       "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become(${EDITOR:-vim} +{2} {1})\"",
       "group": "fzf content search",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "gm",
@@ -408,41 +408,41 @@ window.DOTFILES_DOCS_DATA = {
       "name": "ms",
       "command": "mise",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "msd",
       "command": "mise doctor",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "msi",
       "command": "mise install",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "msr",
       "command": "mise run",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "msu",
       "command": "mise upgrade",
       "group": "Mise",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "path",
       "command": "echo -e ${PATH//:/\\\\n}",
-      "group": "IP addresses",
+      "group": "tmux",
       "source": "system/.aliases",
       "source_kind": "system alias"
     },
@@ -461,18 +461,11 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system alias"
     },
     {
-      "name": "reload",
-      "command": "exec zsh -l",
-      "group": "Reload shell",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
-    },
-    {
       "name": "sshx",
       "command": "TERM=xterm-256color ssh",
       "group": "SSH compatibility",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "sudo",
@@ -485,22 +478,22 @@ window.DOTFILES_DOCS_DATA = {
       "name": "ta",
       "command": "tmux attach -t",
       "group": "tmux",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "tl",
       "command": "tmux ls",
       "group": "tmux",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "tn",
       "command": "tmux new -s",
       "group": "tmux",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     }
   ],
   "functions": [

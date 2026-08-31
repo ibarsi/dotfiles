@@ -51,6 +51,48 @@ fi
 # Reload the shell (i.e. invoke as a login shell)
 alias reload='exec "${SHELL:-/bin/sh}" -l'
 
+# Navigation
+alias dtf='cd "$DOTFILES"'
+alias dsync="dotfiles-sync"
+
+# SSH compatibility
+alias sshx='TERM=xterm-256color ssh'
+
+# Codex CLI
+alias cx="codex"
+alias cxe="codex exec"
+alias cxr="codex resume --last"
+alias cxreview='codex "/review"'
+alias cxyolo="codex --dangerously-bypass-approvals-and-sandbox"
+
+# Claude Code CLI
+alias cc="claude"
+alias cce="claude -p"
+alias ccr="claude --continue"
+alias ccreview='claude "/review"'
+alias ccyolo="claude --dangerously-skip-permissions"
+
+# Agy CLI
+alias agye="agy -p"
+alias agyr="agy --continue"
+alias agyreview='agy "/review"'
+alias agyyolo="agy --dangerously-skip-permissions"
+
+# Mise
+alias ms="mise"
+alias msi="mise install"
+alias msu="mise upgrade"
+alias msr="mise run"
+alias msd="mise doctor"
+
+# fzf content search
+alias fzs='rg --line-number --no-heading --color=always "" | fzf --ansi --delimiter ":" --preview "bat --color=always --highlight-line {2} {1}" --preview-window "+{2}-5" --bind "enter:become(${EDITOR:-vim} +{2} {1})"'
+
+# tmux
+alias tl="tmux ls"
+alias ta="tmux attach -t"
+alias tn="tmux new -s"
+
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 

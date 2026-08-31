@@ -470,7 +470,7 @@ npm i -g @openai/codex  # cross-platform alternative
 - Use `/statusline` in Codex to interactively reorder or trim footer items.
 - The repo default shows model/reasoning, git branch, project, context-window usage, and the 5-hour usage meter.
 
-**Zsh shortcuts:**
+**Shell shortcuts:**
 - `cx` → `codex`
 - `cxe` → `codex exec`
 - `cxr` → `codex resume --last`
@@ -505,7 +505,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 - `permissions.deny` blocks obviously dangerous shell patterns (`sudo *`, `rm -rf /`, `rm -rf ~/`)
 - `attribution.commit` / `attribution.pr` are blanked to avoid automatic AI bylines in commits/PRs
 
-**Zsh shortcuts:**
+**Shell shortcuts:**
 - `cc` → `claude`
 - `cce` → `claude -p`
 - `ccr` → `claude --continue`
@@ -518,9 +518,9 @@ curl -fsSL https://claude.ai/install.sh | bash
 
 ## Agy CLI Workflow
 
-Agy is wired into the zsh shortcut set with aliases that mirror the Codex and Claude Code patterns where the CLI exposes matching flags.
+Agy is wired into the shared shell shortcut set with aliases that mirror the Codex and Claude Code patterns where the CLI exposes matching flags.
 
-**Zsh shortcuts:**
+**Shell shortcuts:**
 - `agye` → `agy -p`
 - `agyr` → `agy --continue`
 - `agyreview` → start Agy with `/review`
