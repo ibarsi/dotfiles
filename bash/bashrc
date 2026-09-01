@@ -9,7 +9,7 @@ esac
 
 export DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
-for file in "$DOTFILES/system/.path" "$DOTFILES/system/.exports" "$DOTFILES/system/.aliases" "$DOTFILES/system/.functions"; do
+for file in "$DOTFILES/system/.path" "$DOTFILES/system/.exports" "$DOTFILES/system/.aliases" "$DOTFILES/system/.functions" "$DOTFILES/system/.extra"; do
     [ -r "$file" ] && . "$file"
 done
 

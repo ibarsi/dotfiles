@@ -237,6 +237,8 @@ Use `sshx` instead of `ssh` for remote hosts that mis-handle Ghostty's default `
 
 This is mainly useful for older appliances and NAS shells that render broken line editing or arrow-key behavior over SSH.
 
+The Synology NAS is available as `nas` (`ssh nas`), and the Omen host is pinned as `omen` (`ssh omen`).
+
 ## Networking Workflow
 
 This repo now includes a lightweight, practical network-debug toolkit for daily use.

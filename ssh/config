@@ -1,5 +1,14 @@
 IgnoreUnknown UseKeychain
 
+Host nas
+  HostName 192.168.0.39
+  User ibarsi
+  Port 2222
+
+Host omen
+  HostName omen.tail59cd7d.ts.net
+  User ibarsi
+
 Host github.com
   AddKeysToAgent yes
   UseKeychain yes
