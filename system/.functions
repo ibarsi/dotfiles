@@ -247,6 +247,18 @@ function groot() {
     cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || return 1
 }
 
+# Resolve the shared repository root. Works in linked worktrees and bare clones.
+_git_repo_root() {
+    local git_common
+    git_common=$(git rev-parse --git-common-dir 2>/dev/null) || return 1
+    git_common=$(cd "$git_common" && pwd -P) || return 1
+    if [[ "$(basename "$git_common")" == ".git" ]]; then
+        dirname "$git_common"
+    else
+        echo "$git_common"
+    fi
+}
+
 # Print the conventional path for a repo worktree under ~/worktrees/<repo>/<name>
 function wtpath() {
     local repo_root repo_name name
@@ -255,13 +267,13 @@ function wtpath() {
         return 1
     fi
 
-    repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    repo_root=$(_git_repo_root) || {
         echo "Not inside a git repository" >&2
         return 1
     }
 
     name="${1:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null)}"
-    repo_name=$(basename "$repo_root")
+    repo_name=$(basename "$repo_root" .git)
     echo "$HOME/worktrees/$repo_name/$name"
 }
 
@@ -547,15 +559,17 @@ function fwtr() {
     fi
 
     local current_worktree selected worktree_path branch _head
-    current_worktree=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    git rev-parse --git-dir >/dev/null 2>&1 || {
         echo "Not inside a git repository" >&2
         return 1
     }
+    current_worktree=$(git rev-parse --show-toplevel 2>/dev/null || true)
 
     selected=$(
         git wtx | awk -v current="$current_worktree" '
             /^worktree / {
                 path = substr($0, 10)
+                skip = 0
                 next
             }
             /^HEAD / {
@@ -571,16 +585,21 @@ function fwtr() {
                 branch = "(detached)"
                 next
             }
+            /^bare$/ {
+                skip = 1
+                next
+            }
             /^$/ {
-                if (path != "" && path != current) {
+                if (path != "" && !skip && path != current) {
                     printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
                 }
                 path = ""
                 branch = ""
                 head = ""
+                skip = 0
             }
             END {
-                if (path != "" && path != current) {
+                if (path != "" && !skip && path != current) {
                     printf "%s\t%s\t%s\n", path, (branch != "" ? branch : "(unknown)"), head
                 }
             }
@@ -625,7 +644,7 @@ function fwt() {
     fi
 
     local selected worktree_path branch _head
-    git rev-parse --show-toplevel >/dev/null 2>&1 || {
+    git rev-parse --git-dir >/dev/null 2>&1 || {
         echo "Not inside a git repository" >&2
         return 1
     }
@@ -647,6 +666,10 @@ function fwt() {
             }
             /^detached$/ {
                 branch = "(detached)"
+                next
+            }
+            /^bare$/ {
+                branch = "(bare)"
                 next
             }
             /^$/ {
