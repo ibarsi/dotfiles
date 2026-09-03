@@ -319,8 +319,8 @@ The shell and git config now include a minimal worktree layer aimed at parallel 
 - `fwtr` → fuzzy-search removable worktrees from the current repo and pass the selected path to `git wtr`
 
 **Recommended flow:**
-- From any repo root — including a bare main checkout — run `wtnew feature/my-task`
-- Use `fwt` any time you want to jump between existing worktrees for that repo (also works from the bare parent)
+- From any repo root, run `wtnew feature/my-task`
+- Use `fwt` any time you want to jump between existing worktrees for that repo
 - Start or attach your worktree tmux session with `wtsesh`
 - Run your agent inside that session so each branch/worktree has isolated terminal context
 - If `wtnew` fails, it now prints whether the problem is missing `git`, missing repo context, or a rejected `git worktree add`
