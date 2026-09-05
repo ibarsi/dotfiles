@@ -1,13 +1,13 @@
 {
-  "git_revision": "b82ad885986159f0b0578e4973047b96f757b5b0",
-  "source_hash": "0a8b7adfb517",
+  "git_revision": "550fcc50e3d76d58dfb520e916043f79ba8b7720",
+  "source_hash": "51192233dd3e",
   "stats": {
     "aliases": 69,
     "functions": 40,
     "git": 53,
     "features": 13,
     "tasks": 15,
-    "bootstrap_links": 23,
+    "bootstrap_links": 22,
     "brews": 36,
     "casks": 26
   },
@@ -1199,10 +1199,11 @@
     {
       "slug": "omarchy-bootstrap",
       "title": "Omarchy bootstrap",
-      "summary": "Sets up the shared Bash and Git-alias layers on Linux without applying macOS-only configuration.",
+      "summary": "Sets up shared Bash, Git-alias, and Gitmoji-preference layers on Linux without applying macOS-only configuration.",
       "details": [
-        "Runs only the additive Bash and Git-alias installers.",
+        "Runs the additive Bash, Git-alias, and Gitmoji-preference installers.",
         "Preserves Omarchy's existing Bash and Git configuration.",
+        "Links the repository Gitmoji configuration at ~/.config/gitmoji-nodejs/config.json.",
         "Refuses to run outside Linux and does not manage system packages."
       ],
       "source": "bootstrap-omarchy.sh"
@@ -1532,11 +1533,6 @@
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",
       "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
       "source": "launchagents/install.sh"
-    },
-    {
-      "source_path": "gitmoji/config.json",
-      "target_path": "~/Library/Preferences/gitmoji-nodejs/config.json",
-      "source": "gitmoji/install.sh"
     }
   ],
   "packages": {

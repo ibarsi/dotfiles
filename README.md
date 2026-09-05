@@ -19,7 +19,7 @@ cd ~/dotfiles
 ./bootstrap-omarchy.sh
 ```
 
-`bootstrap-omarchy.sh` adds the shared Bash aliases/functions and Git aliases without replacing Omarchy's `~/.bashrc` or `~/.gitconfig`. It deliberately does not install packages, apply macOS defaults, or change the default shell.
+`bootstrap-omarchy.sh` adds the shared Bash aliases/functions and Git aliases without replacing Omarchy's `~/.bashrc` or `~/.gitconfig`, and links the repository Gitmoji preferences to `~/.config/gitmoji-nodejs/config.json`. It deliberately does not install packages, apply macOS defaults, or change the default shell.
 
 Both scripts use the repository root internally, so they can be re-run reliably even when invoked from different working directories.
 
@@ -56,7 +56,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `vim/`: Vim configuration.
 - `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
-- `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/`).
+- `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/` on macOS and `~/.config/gitmoji-nodejs/` on Linux).
 - `k9s/`: Kubernetes TUI configuration (symlinked to `~/Library/Application Support/k9s/config.yaml`).
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).

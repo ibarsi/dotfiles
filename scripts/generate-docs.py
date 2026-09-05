@@ -57,11 +57,12 @@ FEATURE_NOTES = {
     },
     "omarchy-bootstrap": {
         "title": "Omarchy bootstrap",
-        "summary": "Sets up the shared Bash and Git-alias layers on Linux without applying macOS-only configuration.",
+        "summary": "Sets up shared Bash, Git-alias, and Gitmoji-preference layers on Linux without applying macOS-only configuration.",
         "source": "bootstrap-omarchy.sh",
         "details": [
-            "Runs only the additive Bash and Git-alias installers.",
+            "Runs the additive Bash, Git-alias, and Gitmoji-preference installers.",
             "Preserves Omarchy's existing Bash and Git configuration.",
+            "Links the repository Gitmoji configuration at ~/.config/gitmoji-nodejs/config.json.",
             "Refuses to run outside Linux and does not manage system packages.",
         ],
     },
@@ -382,7 +383,18 @@ def parse_tasks(path: Path) -> list[dict]:
 
 def parse_bootstrap_links(path: Path) -> list[dict]:
     links = []
+    variables: dict[str, list[str]] = {}
     for line in read_lines(path):
+        assignment = re.search(r'^([A-Z_]+)="\$HOME/([^"]+)"', line)
+        if assignment:
+            variables.setdefault(assignment.group(1), []).append("~/" + assignment.group(2))
+
+        xdg_assignment = re.search(r'^([A-Z_]+)="\$\{XDG_CONFIG_HOME:-\$HOME/([^}]+)\}/([^"]+)"', line)
+        if xdg_assignment:
+            variables.setdefault(xdg_assignment.group(1), []).append(
+                "~/" + xdg_assignment.group(2) + "/" + xdg_assignment.group(3)
+            )
+
         match = re.search(r'ln -sf "\$DOTFILES_ROOT/([^"]+)" "\$HOME/([^"]+)"', line)
         if match:
             source_path = match.group(1)
@@ -394,6 +406,19 @@ def parse_bootstrap_links(path: Path) -> list[dict]:
                     "source": rel(path),
                 }
             )
+
+        variable_link = re.search(r'ln -sf "\$DOTFILES_ROOT/([^"]+)" "\$([A-Z_]+)/([^"]+)"', line)
+        if variable_link:
+            source_path = variable_link.group(1)
+            variable_name = variable_link.group(2)
+            for target_dir in variables.get(variable_name, []):
+                links.append(
+                    {
+                        "source_path": source_path,
+                        "target_path": target_dir + "/" + variable_link.group(3),
+                        "source": rel(path),
+                    }
+                )
     return links
 
 
