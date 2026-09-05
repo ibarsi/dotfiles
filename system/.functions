@@ -313,8 +313,6 @@ function wtnew() {
     cd "$worktree_path" || return 1
 
     echo "Entered $worktree_path"
-
-    ccyolo
 }
 
 # Attach or create a tmux session named from the current repo and branch
