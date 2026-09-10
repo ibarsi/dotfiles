@@ -1,9 +1,9 @@
 {
-  "git_revision": "1691c45c276cb26f09016f198bb66ee6d34a70ac",
-  "source_hash": "a7d5ffe816c5",
+  "git_revision": "b2df5f05fbd1a65309b28e33f1e375c8c2c6c416",
+  "source_hash": "5f2dfa4cc98d",
   "stats": {
     "aliases": 69,
-    "functions": 40,
+    "functions": 41,
     "git": 53,
     "features": 13,
     "tasks": 15,
@@ -706,6 +706,13 @@
       "usage": "netspeed <iperf3-server-host> [seconds]",
       "source": "system/.functions",
       "source_kind": "system function"
+    },
+    {
+      "name": "omux",
+      "summary": "macOS-only Omen tmux sessions. This deliberately stays out of system/ so it is never sourced by the Bash-based Omarchy bootstrap.",
+      "usage": "omux ls",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh function"
     },
     {
       "name": "pcap",

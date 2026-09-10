@@ -228,6 +228,14 @@ Prefer separate windows over many panes for independent Claude threads so quiet 
 - `ta <name>` → attach session
 - `tn <name>` → create new named session
 
+**Omen remote sessions (macOS Zsh only):**
+- `omux` → attach/create an Omen tmux session named from the current Mac repo and branch
+- `omux <session>` → attach/create a custom named Omen tmux session
+- `omux ls` → list Omen tmux sessions
+- `omux kill <session>` → confirm, then kill one Omen tmux session
+
+`omux` connects as `ibarsi@omen`. When creating a new session from a Mac worktree under `~/worktrees/`, it starts in the matching Omen worktree if that directory exists; otherwise it starts in Omen's login directory. Reattached sessions retain their existing working directory. It is intentionally defined only in `zsh/aliases.zsh`, so it does not change the shared shell layer or Omarchy bootstrap.
+
 ## SSH Workflow
 
 Use `sshx` instead of `ssh` for remote hosts that mis-handle Ghostty's default `xterm-ghostty` terminal type.

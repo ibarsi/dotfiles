@@ -210,7 +210,7 @@ def extract_comment_block(lines: list[str], index: int) -> str:
     return " ".join(part for part in comments if part)
 
 
-def parse_function_records(path: Path) -> list[dict]:
+def parse_function_records(path: Path, source_kind: str = "system function") -> list[dict]:
     lines = read_lines(path)
     items = []
     for index, line in enumerate(lines):
@@ -242,15 +242,19 @@ def parse_function_records(path: Path) -> list[dict]:
                 "usage": usage,
                 "body": body,
                 "source": rel(path),
-                "source_kind": "system function",
+                "source_kind": source_kind,
             }
         )
     return items
 
 
-def parse_functions(path: Path) -> list[dict]:
-    items = parse_function_records(path)
-    return [{k: v for k, v in item.items() if k != "body"} for item in items]
+def parse_functions(path: Path, source_kind: str = "system function") -> list[dict]:
+    items = parse_function_records(path, source_kind)
+    return [
+        {k: v for k, v in item.items() if k != "body"}
+        for item in items
+        if not item["name"].startswith("_")
+    ]
 
 
 def parse_git_aliases(path: Path) -> list[dict]:
@@ -494,7 +498,13 @@ def main() -> None:
         aliases.extend(parse_aliases(path, source_kind))
     aliases.sort(key=lambda item: item["name"])
 
-    functions = parse_functions(ROOT / "system/.functions")
+    function_sources = [
+        (ROOT / "system/.functions", "system function"),
+        (ROOT / "zsh/aliases.zsh", "zsh function"),
+    ]
+    functions = []
+    for path, source_kind in function_sources:
+        functions.extend(parse_functions(path, source_kind))
     functions.sort(key=lambda item: item["name"])
     git = parse_git_shortcuts(alias_sources, ROOT / "system/.functions")
 
