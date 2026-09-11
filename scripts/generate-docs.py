@@ -17,6 +17,9 @@ README_PATH = ROOT / "README.md"
 PLATFORM_MATRIX_BEGIN = "<!-- BEGIN GENERATED: platform-matrix -->"
 PLATFORM_MATRIX_END = "<!-- END GENERATED: platform-matrix -->"
 
+FEATURES_BEGIN = "<!-- BEGIN GENERATED: features -->"
+FEATURES_END = "<!-- END GENERATED: features -->"
+
 # Maps an Omarchy installer script name to the detail text shown when that
 # script is not the topic's full install.sh (i.e. only part of the topic is
 # wired up on Omarchy). An installer not listed here fails the build instead
@@ -27,6 +30,14 @@ PARTIAL_INSTALLER_DETAIL = {
 
 
 FEATURE_NOTES = {
+    "topics": {
+        "title": "Topic-based organization",
+        "summary": "Splits configuration into independent topic directories so any tool's setup can be added, edited, or removed without touching the rest.",
+        "source": "bootstrap.sh",
+        "details": [
+            "bootstrap.sh installs every topic by globbing */install.sh, so adding a topic needs no bootstrap edit.",
+        ],
+    },
     "bootstrap": {
         "title": "Bootstrap workflow",
         "summary": "Installs Homebrew dependencies, creates config symlinks, applies themes, and runs macOS setup.",
@@ -35,6 +46,16 @@ FEATURE_NOTES = {
             "Installs Homebrew when missing and reuses the repo root for path-safe runs.",
             "Uses Brewfile as the package source of truth.",
             "Installs the theme, sets zsh as the default shell, and applies macOS defaults.",
+        ],
+    },
+    "omarchy-bootstrap": {
+        "title": "Omarchy bootstrap",
+        "summary": "Sets up shared Bash, Git-alias, Gitmoji, tmux, and VoxType layers on Linux, additively, without applying macOS-only configuration.",
+        "source": "bootstrap-omarchy.sh",
+        "details": [
+            "Runs the additive Bash, Git-alias, Gitmoji, tmux, and VoxType-vocabulary-sync installers.",
+            "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
+            "Refuses to run outside Linux and does not manage system packages.",
         ],
     },
     "shell": {
@@ -57,30 +78,9 @@ FEATURE_NOTES = {
             "Keeps Omarchy's existing ~/.bashrc content and defaults intact.",
         ],
     },
-    "git-aliases": {
-        "title": "Portable Git aliases",
-        "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
-        "source": "git/aliases.gitconfig",
-        "details": [
-            "macOS uses the include from the repository-managed global Git config.",
-            "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
-            "Existing user identity, signing, and host-specific Git settings remain in the host configuration.",
-        ],
-    },
-    "omarchy-bootstrap": {
-        "title": "Omarchy bootstrap",
-        "summary": "Sets up shared Bash, Git-alias, and Gitmoji-preference layers on Linux without applying macOS-only configuration.",
-        "source": "bootstrap-omarchy.sh",
-        "details": [
-            "Runs the additive Bash, Git-alias, and Gitmoji-preference installers.",
-            "Preserves Omarchy's existing Bash and Git configuration.",
-            "Links the repository Gitmoji configuration at ~/.config/gitmoji-nodejs/config.json.",
-            "Refuses to run outside Linux and does not manage system packages.",
-        ],
-    },
     "plugins": {
-        "title": "Shell plugin integrations",
-        "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
+        "title": "Zsh power-ups",
+        "summary": "Catppuccin Mocha syntax highlighting and history-backed autosuggestions, plus fzf shell integration, through Homebrew-managed paths.",
         "source": "zsh/plugins.zsh",
         "details": [
             "Loads zsh-autosuggestions with history-first suggestions, Shift-Tab acceptance, and Tab expansion/completion.",
@@ -95,6 +95,80 @@ FEATURE_NOTES = {
         "details": [
             "Bootstraps the theme during setup when the installer script is present.",
             "Links and downloads Catppuccin assets for supported terminal and CLI tools.",
+        ],
+    },
+    "cli-tools": {
+        "title": "Modern CLI tools",
+        "summary": "Integrates eza, bat, glow, fzf, zoxide, and starship for a modern terminal experience.",
+        "source": "Brewfile",
+        "details": [
+            "Installed via Brewfile and wired into system/.aliases and system/.functions.",
+        ],
+    },
+    "networking": {
+        "title": "Lean networking toolkit",
+        "summary": "Modern DNS/HTTP/traffic-inspection helpers (doggo, mtr, iperf3, tcpdump, netcat) as thin wrappers with sensible defaults.",
+        "source": "system/.functions",
+        "details": [
+            "dnstrace, httptime, listeners, nclisten/ncprobe, pcap, sniffweb, netpath, netspeed.",
+        ],
+    },
+    "fzf": {
+        "title": "FZF workflows",
+        "summary": "Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process-kill helpers.",
+        "source": "system/.functions",
+        "details": [
+            "ff, fcd, fbr, frg, fkill, fwt, fwtr.",
+        ],
+    },
+    "tmux": {
+        "title": "tmux workflow",
+        "summary": "Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.",
+        "source": "tmux/.tmux.conf",
+        "details": [
+            "Sources Omarchy's own tmux base first when present, layering on top instead of replacing it.",
+        ],
+    },
+    "git-aliases": {
+        "title": "Portable Git aliases",
+        "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
+        "source": "git/aliases.gitconfig",
+        "details": [
+            "macOS uses the include from the repository-managed global Git config.",
+            "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+            "Existing user identity, signing, and host-specific Git settings remain in the host configuration.",
+        ],
+    },
+    "git-log": {
+        "title": "Advanced Git log",
+        "summary": "A `git l` alias renders a compact, colorized log graph for quick history review.",
+        "source": "git/aliases.gitconfig",
+        "details": [
+            "Graph log with abbreviated hashes, relative dates, decorations, and author info.",
+        ],
+    },
+    "gitmoji": {
+        "title": "Gitmoji subject format",
+        "summary": "Global gitmoji-cli defaults keep the emoji and type in the commit subject line instead of pushing it into the body.",
+        "source": "gitmoji/config.json",
+        "details": [
+            "Produces subjects like `✨ (feat): Title`.",
+        ],
+    },
+    "ssh-signing": {
+        "title": "SSH commit signing",
+        "summary": "Git signs commits with ~/.ssh/id_ed25519.pub via gpg.format=ssh.",
+        "source": "git/.gitconfig",
+        "details": [
+            "Avoids managing a separate GPG key just for commit signing.",
+        ],
+    },
+    "sshx": {
+        "title": "SSH compatibility helper",
+        "summary": "sshx forces TERM=xterm-256color for hosts that break on Ghostty's xterm-ghostty terminal type.",
+        "source": "system/.functions",
+        "details": [
+            "Mainly useful for older appliances and NAS shells with broken line-editing over SSH.",
         ],
     },
     "ghostty": {
@@ -113,14 +187,20 @@ FEATURE_NOTES = {
             "Bootstrap links both settings.json and keymap.json.",
         ],
     },
-    "codex": {
-        "title": "Codex CLI config",
-        "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
-        "source": "codex/config.toml",
+    "k9s": {
+        "title": "k9s defaults",
+        "summary": "Bootstrap links a repo-managed k9s config using the Catppuccin Mocha skin, a 1000-line log tail, and wrapped log lines by default.",
+        "source": "k9s/config.yaml",
         "details": [
-            "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
-            "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
-            "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode.",
+            "Symlinked to ~/Library/Application Support/k9s/config.yaml.",
+        ],
+    },
+    "obsidian": {
+        "title": "Obsidian theme notes",
+        "summary": "Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.",
+        "source": "docs/guides/macos.md",
+        "details": [
+            "This repo does not automate Obsidian's CLI setup or theme activation.",
         ],
     },
     "cmux": {
@@ -133,12 +213,30 @@ FEATURE_NOTES = {
             "Bootstrap sets the dark theme to Catppuccin Mocha through the cmux CLI.",
         ],
     },
+    "codex": {
+        "title": "Codex CLI config",
+        "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
+        "source": "codex/config.toml",
+        "details": [
+            "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
+            "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
+            "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode.",
+        ],
+    },
     "claude": {
         "title": "Claude Code config",
         "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
         "source": "claude/settings.json",
         "details": [
             "AI doctor validates the config path.",
+        ],
+    },
+    "mise": {
+        "title": "Mise integration",
+        "summary": "Configured global settings and project tools/tasks for reproducible shell workflows.",
+        "source": "mise.toml",
+        "details": [
+            "auto_install, env_cache, and a catppuccin color theme are set as best-practice defaults.",
         ],
     },
     "validation": {
@@ -148,6 +246,38 @@ FEATURE_NOTES = {
         "details": [
             "doctor-ai checks binaries, config files, and env vars.",
             "bootstrap-verify checks expected post-bootstrap files and symlinks.",
+        ],
+    },
+    "docs-site": {
+        "title": "Generated reference site",
+        "summary": "A searchable docs app under docs/ inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, features, and the platform support matrix from source files.",
+        "source": "scripts/generate-docs.py",
+        "details": [
+            "mise run docs-check fails the build whenever the generated data or the README platform matrix drifts from source.",
+        ],
+    },
+    "precommit": {
+        "title": "Deterministic guardrails",
+        "summary": "Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.",
+        "source": ".pre-commit-config.yaml",
+        "details": [
+            "shellcheck, shfmt, gitleaks, plus merge-conflict and trailing-whitespace checks.",
+        ],
+    },
+    "nas-arr": {
+        "title": "NAS Arr import monitoring",
+        "summary": "A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.",
+        "source": "system/nas/arr-queue-exporter.py",
+        "details": [
+            "Read-only: it reports queue state and never triggers an import itself.",
+        ],
+    },
+    "benchall": {
+        "title": "Hardware benchmarking",
+        "summary": "benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.",
+        "source": "system/.functions",
+        "details": [
+            "See docs/guides/omarchy.md for the full toolchain rationale.",
         ],
     },
 }
@@ -508,20 +638,6 @@ def render_platform_matrix_markdown(matrix: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def update_readme_platform_matrix(matrix: list[dict]) -> None:
-    text = README_PATH.read_text()
-    if PLATFORM_MATRIX_BEGIN not in text or PLATFORM_MATRIX_END not in text:
-        raise RuntimeError(
-            f"README.md is missing the {PLATFORM_MATRIX_BEGIN} / {PLATFORM_MATRIX_END} markers"
-        )
-    block_pattern = re.compile(
-        re.escape(PLATFORM_MATRIX_BEGIN) + r".*?" + re.escape(PLATFORM_MATRIX_END), re.S
-    )
-    new_text = block_pattern.sub(render_platform_matrix_markdown(matrix), text, count=1)
-    if new_text != text:
-        README_PATH.write_text(new_text)
-
-
 def build_features() -> list[dict]:
     entries = []
     for slug, note in FEATURE_NOTES.items():
@@ -535,6 +651,34 @@ def build_features() -> list[dict]:
             }
         )
     return entries
+
+
+def render_features_markdown(features: list[dict]) -> str:
+    lines = [FEATURES_BEGIN, ""]
+    for feature in features:
+        lines.append(f"- **{feature['title']}**: {feature['summary']}")
+    lines.append("")
+    lines.append(FEATURES_END)
+    return "\n".join(lines)
+
+
+def replace_readme_block(text: str, begin: str, end: str, content: str) -> str:
+    if begin not in text or end not in text:
+        raise RuntimeError(f"README.md is missing the {begin} / {end} markers")
+    block_pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end), re.S)
+    return block_pattern.sub(content, text, count=1)
+
+
+def update_readme_generated_blocks(matrix: list[dict], features: list[dict]) -> None:
+    text = README_PATH.read_text()
+    text = replace_readme_block(
+        text, PLATFORM_MATRIX_BEGIN, PLATFORM_MATRIX_END, render_platform_matrix_markdown(matrix)
+    )
+    text = replace_readme_block(
+        text, FEATURES_BEGIN, FEATURES_END, render_features_markdown(features)
+    )
+    if text != README_PATH.read_text():
+        README_PATH.write_text(text)
 
 
 def git_revision() -> str:
@@ -601,7 +745,8 @@ def main() -> None:
     packages = parse_brewfile(ROOT / "Brewfile")
 
     platform_matrix = build_platform_matrix(install_scripts, ROOT / "bootstrap-omarchy.sh")
-    update_readme_platform_matrix(platform_matrix)
+    features = build_features()
+    update_readme_generated_blocks(platform_matrix, features)
 
     docs = {
         "git_revision": git_revision(),
@@ -637,7 +782,7 @@ def main() -> None:
         "aliases": aliases,
         "functions": functions,
         "git": git,
-        "features": build_features(),
+        "features": features,
         "tasks": tasks,
         "bootstrap_links": bootstrap_links,
         "packages": packages,

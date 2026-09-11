@@ -129,34 +129,47 @@ The repository is organized into **topics**, making it easy to modularize your c
 
 ## Features
 
-- **Topic-based organization**: Modular and easy to maintain.
-- **Modern CLI tools**: Integrated with `eza`, `bat`, `glow`, `fzf`, `zoxide`, and `starship`.
-- **Lean networking toolkit**: Modern DNS/HTTP/traffic inspection helpers (`doggo`, `mtr`, `iperf3`, `tcpdump`, `netcat`).
-- **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process kill helpers.
-- **Zsh Power-ups**: Catppuccin Mocha syntax highlighting/autosuggestions plus faster completion startup and improved history behavior.
-- **Shared Bash/Zsh shell layer**: OS-aware paths, aliases, and functions work on macOS and Linux; Bash integrates additively with an existing `~/.bashrc`.
+Generated from `FEATURE_NOTES` in `scripts/generate-docs.py` — the same data
+that backs the [docs site](docs/guides/workflows.md#docs-site). Regenerate
+with `mise run docs-build`; `mise run docs-check` fails the build if this list
+is stale.
+
+<!-- BEGIN GENERATED: features -->
+
+- **Topic-based organization**: Splits configuration into independent topic directories so any tool's setup can be added, edited, or removed without touching the rest.
+- **Bootstrap workflow**: Installs Homebrew dependencies, creates config symlinks, applies themes, and runs macOS setup.
+- **Omarchy bootstrap**: Sets up shared Bash, Git-alias, Gitmoji, tmux, and VoxType layers on Linux, additively, without applying macOS-only configuration.
+- **Modular Zsh shell**: Loads shared paths, Zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.
+- **Additive Bash shell**: Integrates the shared shell layer with an existing Bash startup file without replacing host-managed configuration.
+- **Zsh power-ups**: Catppuccin Mocha syntax highlighting and history-backed autosuggestions, plus fzf shell integration, through Homebrew-managed paths.
+- **Catppuccin theme setup**: Installs the repository-managed shell prompt, terminal, and app theming assets.
+- **Modern CLI tools**: Integrates eza, bat, glow, fzf, zoxide, and starship for a modern terminal experience.
+- **Lean networking toolkit**: Modern DNS/HTTP/traffic-inspection helpers (doggo, mtr, iperf3, tcpdump, netcat) as thin wrappers with sensible defaults.
+- **FZF workflows**: Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process-kill helpers.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
-- **Auto-update**: Automatically checks for updates to your dotfiles once a day.
-- **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
-- **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
-- **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, and major repo capabilities from source files.
+- **Portable Git aliases**: Shares Git aliases through an include file without replacing a host-managed Git configuration.
+- **Advanced Git log**: A `git l` alias renders a compact, colorized log graph for quick history review.
+- **Gitmoji subject format**: Global gitmoji-cli defaults keep the emoji and type in the commit subject line instead of pushing it into the body.
+- **SSH commit signing**: Git signs commits with ~/.ssh/id_ed25519.pub via gpg.format=ssh.
+- **SSH compatibility helper**: sshx forces TERM=xterm-256color for hosts that break on Ghostty's xterm-ghostty terminal type.
+- **Ghostty terminal config**: Ships a managed Ghostty configuration with Catppuccin styling, keybindings, and shell integration defaults.
+- **Zed editor config**: Stores editor settings and keybindings in-repo and links them into ~/.config/zed.
+- **k9s defaults**: Bootstrap links a repo-managed k9s config using the Catppuccin Mocha skin, a 1000-line log tail, and wrapped log lines by default.
+- **Obsidian theme notes**: Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
+- **cmux config**: Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.
+- **Codex CLI config**: Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.
+- **Claude Code config**: Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.
+- **Mise integration**: Configured global settings and project tools/tasks for reproducible shell workflows.
+- **Validation scripts**: Provides deterministic checks for AI tooling and bootstrap results.
+- **Generated reference site**: A searchable docs app under docs/ inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, features, and the platform support matrix from source files.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
-- **Advanced Git**: Includes `gh-dash` and powerful log visualization.
-- **Gitmoji subject format**: Global `gitmoji-cli` defaults keep the message in the commit subject as `✨ (feat): Title` instead of pushing it into the body.
-- **SSH commit signing**: Git signs commits with `~/.ssh/id_ed25519.pub` via `gpg.format=ssh`.
-- **SSH compatibility helper**: `sshx` forces `TERM=xterm-256color` for hosts that break on `xterm-ghostty` during interactive sessions.
-- **Ghostty terminal**: GPU-accelerated terminal with Catppuccin theme, Fira Code font, and custom keybindings — fully configured as dotfiles.
-- **k9s defaults**: Bootstrap links a repo-managed k9s config that uses the Catppuccin Mocha skin, shows the last 1000 log lines, and wraps log lines by default.
-- **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
-- **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
-- **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **NAS Arr import monitoring**: A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.
-- **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
-- **Hardware benchmarking**: `benchall` runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent. See the [Omarchy guide](docs/guides/omarchy.md).
+- **Hardware benchmarking**: benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.
+
+<!-- END GENERATED: features -->
 
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
 - History-backed zsh autosuggestions: type the start of a previous command, then press `Shift-Tab` to accept the gray suggestion; use `Tab` for normal expansion/completion
 - Interactive completion menu + clearer completion descriptions
-- **Startup smart tips**: On new terminal sessions, generate one practical AI tip from your dotfiles context (can be disabled).

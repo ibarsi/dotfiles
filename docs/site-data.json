@@ -1,11 +1,11 @@
 {
-  "git_revision": "b273e5690727801f253a7e86375af9e110149738",
+  "git_revision": "92d1d5c4d71ff425ebf1ac0d7410af6993780697",
   "source_hash": "88b794ea39e1",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
-    "features": 13,
+    "features": 29,
     "tasks": 15,
     "bootstrap_links": 23,
     "brews": 36,
@@ -1168,6 +1168,15 @@
   ],
   "features": [
     {
+      "slug": "topics",
+      "title": "Topic-based organization",
+      "summary": "Splits configuration into independent topic directories so any tool's setup can be added, edited, or removed without touching the rest.",
+      "details": [
+        "bootstrap.sh installs every topic by globbing */install.sh, so adding a topic needs no bootstrap edit."
+      ],
+      "source": "bootstrap.sh"
+    },
+    {
       "slug": "bootstrap",
       "title": "Bootstrap workflow",
       "summary": "Installs Homebrew dependencies, creates config symlinks, applies themes, and runs macOS setup.",
@@ -1177,6 +1186,17 @@
         "Installs the theme, sets zsh as the default shell, and applies macOS defaults."
       ],
       "source": "bootstrap.sh"
+    },
+    {
+      "slug": "omarchy-bootstrap",
+      "title": "Omarchy bootstrap",
+      "summary": "Sets up shared Bash, Git-alias, Gitmoji, tmux, and VoxType layers on Linux, additively, without applying macOS-only configuration.",
+      "details": [
+        "Runs the additive Bash, Git-alias, Gitmoji, tmux, and VoxType-vocabulary-sync installers.",
+        "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
+        "Refuses to run outside Linux and does not manage system packages."
+      ],
+      "source": "bootstrap-omarchy.sh"
     },
     {
       "slug": "shell",
@@ -1201,32 +1221,9 @@
       "source": "bash/bashrc"
     },
     {
-      "slug": "git-aliases",
-      "title": "Portable Git aliases",
-      "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
-      "details": [
-        "macOS uses the include from the repository-managed global Git config.",
-        "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
-        "Existing user identity, signing, and host-specific Git settings remain in the host configuration."
-      ],
-      "source": "git/aliases.gitconfig"
-    },
-    {
-      "slug": "omarchy-bootstrap",
-      "title": "Omarchy bootstrap",
-      "summary": "Sets up shared Bash, Git-alias, and Gitmoji-preference layers on Linux without applying macOS-only configuration.",
-      "details": [
-        "Runs the additive Bash, Git-alias, and Gitmoji-preference installers.",
-        "Preserves Omarchy's existing Bash and Git configuration.",
-        "Links the repository Gitmoji configuration at ~/.config/gitmoji-nodejs/config.json.",
-        "Refuses to run outside Linux and does not manage system packages."
-      ],
-      "source": "bootstrap-omarchy.sh"
-    },
-    {
       "slug": "plugins",
-      "title": "Shell plugin integrations",
-      "summary": "Wires autosuggestions, syntax highlighting, and fzf shell integration through Homebrew-managed paths.",
+      "title": "Zsh power-ups",
+      "summary": "Catppuccin Mocha syntax highlighting and history-backed autosuggestions, plus fzf shell integration, through Homebrew-managed paths.",
       "details": [
         "Loads zsh-autosuggestions with history-first suggestions, Shift-Tab acceptance, and Tab expansion/completion.",
         "Loads the Catppuccin Mocha zsh-syntax-highlighting styles before the plugin.",
@@ -1243,6 +1240,89 @@
         "Links and downloads Catppuccin assets for supported terminal and CLI tools."
       ],
       "source": "theme/install.sh"
+    },
+    {
+      "slug": "cli-tools",
+      "title": "Modern CLI tools",
+      "summary": "Integrates eza, bat, glow, fzf, zoxide, and starship for a modern terminal experience.",
+      "details": [
+        "Installed via Brewfile and wired into system/.aliases and system/.functions."
+      ],
+      "source": "Brewfile"
+    },
+    {
+      "slug": "networking",
+      "title": "Lean networking toolkit",
+      "summary": "Modern DNS/HTTP/traffic-inspection helpers (doggo, mtr, iperf3, tcpdump, netcat) as thin wrappers with sensible defaults.",
+      "details": [
+        "dnstrace, httptime, listeners, nclisten/ncprobe, pcap, sniffweb, netpath, netspeed."
+      ],
+      "source": "system/.functions"
+    },
+    {
+      "slug": "fzf",
+      "title": "FZF workflows",
+      "summary": "Fast file/dir navigation, branch switching, ripgrep jump-to-file, and process-kill helpers.",
+      "details": [
+        "ff, fcd, fbr, frg, fkill, fwt, fwtr."
+      ],
+      "source": "system/.functions"
+    },
+    {
+      "slug": "tmux",
+      "title": "tmux workflow",
+      "summary": "Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.",
+      "details": [
+        "Sources Omarchy's own tmux base first when present, layering on top instead of replacing it."
+      ],
+      "source": "tmux/.tmux.conf"
+    },
+    {
+      "slug": "git-aliases",
+      "title": "Portable Git aliases",
+      "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
+      "details": [
+        "macOS uses the include from the repository-managed global Git config.",
+        "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+        "Existing user identity, signing, and host-specific Git settings remain in the host configuration."
+      ],
+      "source": "git/aliases.gitconfig"
+    },
+    {
+      "slug": "git-log",
+      "title": "Advanced Git log",
+      "summary": "A `git l` alias renders a compact, colorized log graph for quick history review.",
+      "details": [
+        "Graph log with abbreviated hashes, relative dates, decorations, and author info."
+      ],
+      "source": "git/aliases.gitconfig"
+    },
+    {
+      "slug": "gitmoji",
+      "title": "Gitmoji subject format",
+      "summary": "Global gitmoji-cli defaults keep the emoji and type in the commit subject line instead of pushing it into the body.",
+      "details": [
+        "Produces subjects like `\u2728 (feat): Title`."
+      ],
+      "source": "gitmoji/config.json"
+    },
+    {
+      "slug": "ssh-signing",
+      "title": "SSH commit signing",
+      "summary": "Git signs commits with ~/.ssh/id_ed25519.pub via gpg.format=ssh.",
+      "details": [
+        "Avoids managing a separate GPG key just for commit signing."
+      ],
+      "source": "git/.gitconfig"
+    },
+    {
+      "slug": "sshx",
+      "title": "SSH compatibility helper",
+      "summary": "sshx forces TERM=xterm-256color for hosts that break on Ghostty's xterm-ghostty terminal type.",
+      "details": [
+        "Mainly useful for older appliances and NAS shells with broken line-editing over SSH."
+      ],
+      "source": "system/.functions"
     },
     {
       "slug": "ghostty",
@@ -1263,15 +1343,22 @@
       "source": "zed/settings.json"
     },
     {
-      "slug": "codex",
-      "title": "Codex CLI config",
-      "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
+      "slug": "k9s",
+      "title": "k9s defaults",
+      "summary": "Bootstrap links a repo-managed k9s config using the Catppuccin Mocha skin, a 1000-line log tail, and wrapped log lines by default.",
       "details": [
-        "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
-        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
-        "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode."
+        "Symlinked to ~/Library/Application Support/k9s/config.yaml."
       ],
-      "source": "codex/config.toml"
+      "source": "k9s/config.yaml"
+    },
+    {
+      "slug": "obsidian",
+      "title": "Obsidian theme notes",
+      "summary": "Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.",
+      "details": [
+        "This repo does not automate Obsidian's CLI setup or theme activation."
+      ],
+      "source": "docs/guides/macos.md"
     },
     {
       "slug": "cmux",
@@ -1285,6 +1372,17 @@
       "source": "cmux/cmux.json"
     },
     {
+      "slug": "codex",
+      "title": "Codex CLI config",
+      "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
+      "details": [
+        "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
+        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
+        "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode."
+      ],
+      "source": "codex/config.toml"
+    },
+    {
       "slug": "claude",
       "title": "Claude Code config",
       "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
@@ -1292,6 +1390,15 @@
         "AI doctor validates the config path."
       ],
       "source": "claude/settings.json"
+    },
+    {
+      "slug": "mise",
+      "title": "Mise integration",
+      "summary": "Configured global settings and project tools/tasks for reproducible shell workflows.",
+      "details": [
+        "auto_install, env_cache, and a catppuccin color theme are set as best-practice defaults."
+      ],
+      "source": "mise.toml"
     },
     {
       "slug": "validation",
@@ -1302,6 +1409,42 @@
         "bootstrap-verify checks expected post-bootstrap files and symlinks."
       ],
       "source": "scripts/doctor-ai.sh"
+    },
+    {
+      "slug": "docs-site",
+      "title": "Generated reference site",
+      "summary": "A searchable docs app under docs/ inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, features, and the platform support matrix from source files.",
+      "details": [
+        "mise run docs-check fails the build whenever the generated data or the README platform matrix drifts from source."
+      ],
+      "source": "scripts/generate-docs.py"
+    },
+    {
+      "slug": "precommit",
+      "title": "Deterministic guardrails",
+      "summary": "Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.",
+      "details": [
+        "shellcheck, shfmt, gitleaks, plus merge-conflict and trailing-whitespace checks."
+      ],
+      "source": ".pre-commit-config.yaml"
+    },
+    {
+      "slug": "nas-arr",
+      "title": "NAS Arr import monitoring",
+      "summary": "A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.",
+      "details": [
+        "Read-only: it reports queue state and never triggers an import itself."
+      ],
+      "source": "system/nas/arr-queue-exporter.py"
+    },
+    {
+      "slug": "benchall",
+      "title": "Hardware benchmarking",
+      "summary": "benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.",
+      "details": [
+        "See docs/guides/omarchy.md for the full toolchain rationale."
+      ],
+      "source": "system/.functions"
     }
   ],
   "tasks": [
