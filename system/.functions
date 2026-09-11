@@ -793,3 +793,177 @@ function netspeed() {
     local duration="${2:-10}"
     iperf3 -c "$1" -t "$duration"
 }
+
+# Append one benchmark section to the report. Usage:
+#   _benchall_section <title> <required-binary> <command...>
+# Missing binaries and unavailable sudo become notes rather than failures, so a
+# partial toolchain still produces a complete, readable report.
+function _benchall_section() {
+    local title="$1" bin="$2"
+    shift 2
+
+    printf '\n## %s\n\n' "$title" >>"$_BENCHALL_REPORT"
+    printf '  ▸ %s\n' "$title" >&2
+
+    if ! command -v "$bin" >/dev/null 2>&1; then
+        # shellcheck disable=SC2016 # Backticks are Markdown, not a subshell.
+        printf '_skipped: `%s` is not installed_\n' "$bin" >>"$_BENCHALL_REPORT"
+        _BENCHALL_MISSING="$_BENCHALL_MISSING $bin"
+        return 0
+    fi
+
+    if [[ "$1" == "sudo" && -z "$_BENCHALL_SUDO" ]]; then
+        printf '_skipped: requires sudo_\n' >>"$_BENCHALL_REPORT"
+        return 0
+    fi
+
+    printf '```\n' >>"$_BENCHALL_REPORT"
+    timeout "${_BENCHALL_TIMEOUT:-120}" "$@" >>"$_BENCHALL_REPORT" 2>&1 ||
+        printf '\n[exited %s — timed out or failed]\n' "$?" >>"$_BENCHALL_REPORT"
+    printf '```\n' >>"$_BENCHALL_REPORT"
+}
+
+# Run a bounded benchmark across network, disk, RAM, CPU, GPU, and thermals,
+# then print a Markdown report (also saved under ~/.cache/benchall) that is easy
+# to hand to an agent for analysis.
+function benchall() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        cat <<'EOF'
+Usage: benchall [--no-net]
+
+Runs a bounded (~3 minute) benchmark across network, disk, RAM, CPU, GPU, and
+thermals. Prints a Markdown report to stdout and saves a copy under
+~/.cache/benchall/. Progress goes to stderr, so piping only moves the report.
+
+  --no-net    Skip the internet speed test (metered or tethered connections)
+
+Analyze it with an agent:
+  benchall | claude -p "analyze this benchmark for bottlenecks"
+
+Missing tools are reported as skipped sections. Install them with:
+  omarchy pkg add speedtest-cli fio hdparm sysbench stress-ng glmark2 \
+                  vkmark vulkan-tools smartmontools dmidecode
+EOF
+        return 0
+    fi
+
+    local run_net=1
+    [[ "${1:-}" == "--no-net" ]] && run_net=0
+
+    local dir="$HOME/.cache/benchall"
+    mkdir -p "$dir" || return 1
+
+    _BENCHALL_REPORT="$dir/report-$(date +%Y%m%d-%H%M%S).md"
+    _BENCHALL_MISSING=""
+
+    # Prime sudo once while a terminal is still available, then use `sudo -n`
+    # for every privileged section so an agent-driven run never blocks on a
+    # password prompt.
+    _BENCHALL_SUDO=""
+    if sudo -n true 2>/dev/null; then
+        _BENCHALL_SUDO=1
+    elif [[ -t 0 ]]; then
+        echo "benchall: some tests need sudo (disk, DMI); skipped if you decline" >&2
+        sudo -v 2>/dev/null && sudo -n true 2>/dev/null && _BENCHALL_SUDO=1
+    fi
+
+    local threads
+    threads="$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 1)"
+
+    # Physical device behind /, for the raw-read and SMART checks. findmnt may
+    # return a btrfs subvolume suffix and a dm-crypt/LVM mapper name, neither of
+    # which hdparm accepts, so strip the suffix and walk the inverse device tree
+    # down to the disk. PKNAME is empty for dm targets; `lsblk -nslo NAME` is not.
+    local rootsrc rootdev=""
+    if command -v findmnt >/dev/null 2>&1 && command -v lsblk >/dev/null 2>&1; then
+        rootsrc="$(findmnt -no SOURCE / 2>/dev/null)"
+        rootsrc="${rootsrc%%\[*}"
+        rootdev="$(lsblk -nslo NAME "$rootsrc" 2>/dev/null | tail -1)"
+        [[ -n "$rootdev" ]] && rootdev="/dev/$rootdev"
+    fi
+
+    # fio must write to real storage. /tmp is tmpfs on Arch, which would measure
+    # RAM and report a fantasy number, so scratch lives beside the report.
+    local scratch="$dir/fio-scratch" scratchfs="unknown"
+    command -v findmnt >/dev/null 2>&1 &&
+        scratchfs="$(findmnt -no FSTYPE --target "$dir" 2>/dev/null)"
+
+    echo "benchall: running, ~3 minutes; report -> $_BENCHALL_REPORT" >&2
+
+    {
+        printf '# System benchmark — %s\n\n' "$(hostname)"
+        printf -- '- date: %s\n' "$(date -Is)"
+        printf -- '- kernel: %s\n' "$(uname -sr)"
+        command -v omarchy >/dev/null 2>&1 &&
+            printf -- '- omarchy: %s\n' "$(omarchy version 2>/dev/null | tr -d '\n')"
+        printf -- '- cpu threads: %s\n' "$threads"
+        printf -- '- root device: %s\n' "${rootdev:-unknown}"
+        printf -- '- fio scratch: %s (fstype %s)\n' "$scratch" "$scratchfs"
+        printf -- '- sudo: %s\n' "${_BENCHALL_SUDO:+available}${_BENCHALL_SUDO:-unavailable}"
+        printf -- '- network tests: %s\n' "$([[ $run_net -eq 1 ]] && echo enabled || echo 'disabled (--no-net)')"
+    } >"$_BENCHALL_REPORT"
+
+    # -c 0 disables inxi colour codes, which otherwise litter the report with
+    # escape fragments once redirected to a file.
+    _benchall_section "Hardware summary" inxi inxi -Fxxxz --no-host -c 0
+    _benchall_section "Memory hardware" dmidecode \
+        sudo -n dmidecode -t memory
+
+    if [[ $run_net -eq 1 ]]; then
+        _benchall_section "Network — latency" ping ping -c 20 -i 0.2 1.1.1.1
+        _benchall_section "Network — throughput" speedtest-cli speedtest-cli --secure --simple
+    fi
+
+    _benchall_section "Disk — SMART health" smartctl \
+        sudo -n smartctl -H -A "${rootdev:-/dev/null}"
+    _benchall_section "Disk — sequential read (raw device)" hdparm \
+        sudo -n hdparm -Tt "${rootdev:-/dev/null}"
+    _benchall_section "Disk — sequential read 1M (fio)" fio \
+        fio --name=seq --filename="$scratch" --rw=read --bs=1M --size=1G \
+        --iodepth=32 --ioengine=io_uring --direct=1 --runtime=15 --time_based \
+        --group_reporting --output-format=normal
+    _benchall_section "Disk — random read 4K (fio)" fio \
+        fio --name=rand --filename="$scratch" --rw=randread --bs=4k --size=1G \
+        --iodepth=64 --numjobs=4 --ioengine=io_uring --direct=1 --runtime=15 \
+        --time_based --group_reporting --output-format=normal
+    rm -f "$scratch"
+
+    _benchall_section "RAM — capacity" free free -h
+    _benchall_section "RAM — bandwidth (STREAM)" stress-ng \
+        stress-ng --stream "$threads" --stream-l3-size 32M --metrics-brief -t 10s
+
+    _benchall_section "CPU — sysbench" sysbench \
+        sysbench cpu --time=10 --threads="$threads" run
+
+    _benchall_section "GPU — NVIDIA state" nvidia-smi \
+        nvidia-smi --query-gpu=name,driver_version,temperature.gpu,clocks.sm,power.draw,memory.used,memory.total --format=csv
+    _benchall_section "GPU — Vulkan devices" vulkaninfo \
+        sh -c "vulkaninfo --summary | grep -E 'deviceName|driverName|apiVersion'"
+    _benchall_section "GPU — Vulkan benchmark" vkmark \
+        vkmark -b 'shading:duration=5' -b 'texture:duration=5'
+    # Force the discrete card; on a dual-GPU box the loader otherwise picks the
+    # iGPU and the score looks broken.
+    _benchall_section "GPU — OpenGL benchmark" glmark2-wayland \
+        env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia \
+        glmark2-wayland -b build:duration=5 -b texture:duration=5
+
+    _benchall_section "Thermals after load" sensors sensors
+
+    {
+        printf '\n## Notes for analysis\n\n'
+        printf -- '- Every test is time-bounded (10-15s each), so throughput numbers reflect boost clocks, not sustained load.\n'
+        # shellcheck disable=SC2016 # Backticks are Markdown, not a subshell.
+        printf -- '- fio ran with `--direct=1`, bypassing the page cache; `hdparm -T` is cached and `-t` is not.\n'
+        printf -- '- Compare "Thermals after load" against the idle temps in the hardware summary to spot throttling.\n'
+        if [[ -n "$_BENCHALL_MISSING" ]]; then
+            printf -- '- Tools not installed (sections skipped): %s\n' \
+                "$(printf '%s' "$_BENCHALL_MISSING" | tr ' ' '\n' | sort -u | xargs)"
+        fi
+        [[ -z "$_BENCHALL_SUDO" ]] &&
+            printf -- '- sudo was unavailable, so raw-device and DMI sections were skipped.\n'
+    } >>"$_BENCHALL_REPORT"
+
+    echo "benchall: done -> $_BENCHALL_REPORT" >&2
+    cat "$_BENCHALL_REPORT"
+    unset _BENCHALL_REPORT _BENCHALL_SUDO _BENCHALL_MISSING
+}

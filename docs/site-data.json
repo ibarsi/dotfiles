@@ -1,9 +1,9 @@
 {
-  "git_revision": "b2df5f05fbd1a65309b28e33f1e375c8c2c6c416",
-  "source_hash": "5f2dfa4cc98d",
+  "git_revision": "4bce5fc95f5176f5b61352b957a3971c242b1e35",
+  "source_hash": "8831bab37c2e",
   "stats": {
     "aliases": 69,
-    "functions": 41,
+    "functions": 42,
     "git": 53,
     "features": 13,
     "tasks": 15,
@@ -497,6 +497,13 @@
     }
   ],
   "functions": [
+    {
+      "name": "benchall",
+      "summary": "Run a bounded benchmark across network, disk, RAM, CPU, GPU, and thermals, then print a Markdown report (also saved under ~/.cache/benchall) that is easy to hand to an agent for analysis.",
+      "usage": "benchall [--no-net]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
     {
       "name": "dnstrace",
       "summary": "Quick DNS trace (A + AAAA + CNAME + NS path)",
@@ -1482,6 +1489,11 @@
       "source": "theme/install.sh"
     },
     {
+      "source_path": "tmux/.tmux.conf",
+      "target_path": "~/.config/tmux/tmux.conf",
+      "source": "tmux/install.sh"
+    },
+    {
       "source_path": "zed/keymap.json",
       "target_path": "~/.config/zed/keymap.json",
       "source": "zed/install.sh"
@@ -1520,11 +1532,6 @@
       "source_path": "ssh/config",
       "target_path": "~/.ssh/config",
       "source": "ssh/install.sh"
-    },
-    {
-      "source_path": "tmux/.tmux.conf",
-      "target_path": "~/.tmux.conf",
-      "source": "tmux/install.sh"
     },
     {
       "source_path": "vim/.vimrc",

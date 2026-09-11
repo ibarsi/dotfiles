@@ -383,6 +383,35 @@ git push origin --delete feat/mobile-nav
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
 
+## Hardware Benchmarking
+
+`benchall` (`system/.functions`) runs a bounded (~3 minute) sweep across network, disk, RAM, CPU, GPU, and thermals, then prints a Markdown report to stdout and saves a copy under `~/.cache/benchall/`.
+
+```bash
+benchall                  # full run
+benchall --no-net         # skip the internet speed test (metered connections)
+benchall --help
+```
+
+Progress goes to stderr and the report to stdout, so it pipes straight into an agent:
+
+```bash
+benchall | claude -p "analyze this benchmark for bottlenecks"
+```
+
+Design notes:
+- Every section is wrapped in `timeout`, so no single test can hang the run.
+- Privileged sections (raw-device read, SMART, DMI) prime `sudo` once up front only when a TTY is attached, then use `sudo -n`. An agent-driven run degrades to "skipped" instead of blocking on a password prompt.
+- Missing tools are reported as skipped sections rather than failing the run.
+- fio writes its scratch file under `~/.cache/benchall`, never `/tmp`, which is tmpfs on Arch and would measure RAM instead of disk.
+
+Install the full toolchain on Omarchy/Arch:
+
+```bash
+omarchy pkg add speedtest-cli iperf3 fio hdparm sysbench stress-ng hyperfine \
+                glmark2 vkmark vulkan-tools mesa-utils smartmontools s-tui dmidecode 7zip
+```
+
 ## AI Diagnostics
 
 Scripts under `scripts/`:
