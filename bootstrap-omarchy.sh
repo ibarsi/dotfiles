@@ -18,4 +18,7 @@ bash "$DOTFILES_ROOT/git/install-aliases.sh"
 echo "Linking Gitmoji preferences..."
 bash "$DOTFILES_ROOT/gitmoji/install.sh"
 
+echo "Linking tmux config..."
+bash "$DOTFILES_ROOT/tmux/install.sh"
+
 echo "Omarchy setup complete. Restart Bash or run: source ~/.bashrc"

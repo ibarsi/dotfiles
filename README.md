@@ -54,7 +54,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `system/`: Global environment variables, paths, and generic aliases.
 - `bash/`: Additive Bash shell configuration. Bootstrap links its fragment under `~/.config/ibarsi-dotfiles/` and sources it from the existing `~/.bashrc` without replacing Omarchy defaults.
 - `vim/`: Vim configuration.
-- `tmux/`: tmux configuration (symlinked to `~/.tmux.conf`).
+- `tmux/`: tmux configuration (symlinked to `~/.config/tmux/tmux.conf`).
 - `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
 - `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/` on macOS and `~/.config/gitmoji-nodejs/` on Linux).
 - `k9s/`: Kubernetes TUI configuration (symlinked to `~/Library/Application Support/k9s/config.yaml`).
@@ -194,7 +194,7 @@ This gives you a fast terminal path for local READMEs, generated docs, changelog
 
 | File | Destination | Purpose |
 |------|-------------|---------|
-| `tmux/.tmux.conf` | `~/.tmux.conf` | Session/window/pane behavior + statusline |
+| `tmux/.tmux.conf` | `~/.config/tmux/tmux.conf` | Session/window/pane behavior + statusline (sources Omarchy's tmux base first, when present) |
 
 **Key choices:**
 - Prefix: `Ctrl+a`
