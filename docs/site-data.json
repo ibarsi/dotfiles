@@ -1,13 +1,13 @@
 {
-  "git_revision": "4bce5fc95f5176f5b61352b957a3971c242b1e35",
-  "source_hash": "8831bab37c2e",
+  "git_revision": "22ca962c35dc41aa3be5193e34ca568b921edc7d",
+  "source_hash": "75d0a8750b7c",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
     "features": 13,
     "tasks": 15,
-    "bootstrap_links": 22,
+    "bootstrap_links": 23,
     "brews": 36,
     "casks": 26
   },
@@ -1542,6 +1542,11 @@
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
       "source": "zsh/install.sh"
+    },
+    {
+      "source_path": "voice-to-text/$LABEL.plist",
+      "target_path": "~/Library/LaunchAgents/$LABEL.plist",
+      "source": "voice-to-text/install.sh"
     },
     {
       "source_path": "launchagents/com.ibarsi.capslock-control.plist",

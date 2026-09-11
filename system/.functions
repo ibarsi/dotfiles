@@ -840,9 +840,13 @@ thermals. Prints a Markdown report to stdout and saves a copy under
 Analyze it with an agent:
   benchall | claude -p "analyze this benchmark for bottlenecks"
 
-Missing tools are reported as skipped sections. Install them with:
-  omarchy pkg add speedtest-cli fio hdparm sysbench stress-ng glmark2 \
-                  vkmark vulkan-tools smartmontools dmidecode
+Missing tools are reported as skipped sections. The five that have no
+already-installed equivalent:
+  omarchy pkg add fio stress-ng smartmontools speedtest-cli vkmark
+
+Optional extras: hdparm (raw-device read, vs fio's through-filesystem read),
+vulkan-tools (device enumeration), glmark2 (OpenGL, legacy next to Vulkan).
+inxi covers DIMM detail, btop covers live thermals, nvidia-smi covers the GPU.
 EOF
         return 0
     fi
@@ -903,11 +907,10 @@ EOF
         printf -- '- network tests: %s\n' "$([[ $run_net -eq 1 ]] && echo enabled || echo 'disabled (--no-net)')"
     } >"$_BENCHALL_REPORT"
 
-    # -c 0 disables inxi colour codes, which otherwise litter the report with
-    # escape fragments once redirected to a file.
-    _benchall_section "Hardware summary" inxi inxi -Fxxxz --no-host -c 0
-    _benchall_section "Memory hardware" dmidecode \
-        sudo -n dmidecode -t memory
+    # -m adds per-DIMM type/size/speed/part-no, which inxi reads straight from
+    # /sys/firmware/dmi/tables — no root and no dmidecode needed. -c 0 disables
+    # colour codes, which otherwise litter the report with escape fragments.
+    _benchall_section "Hardware summary" inxi inxi -Fxxxzm --no-host -c 0
 
     if [[ $run_net -eq 1 ]]; then
         _benchall_section "Network — latency" ping ping -c 20 -i 0.2 1.1.1.1
@@ -932,8 +935,10 @@ EOF
     _benchall_section "RAM — bandwidth (STREAM)" stress-ng \
         stress-ng --stream "$threads" --stream-l3-size 32M --metrics-brief -t 10s
 
-    _benchall_section "CPU — sysbench" sysbench \
-        sysbench cpu --time=10 --threads="$threads" run
+    # stress-ng covers CPU as well as memory bandwidth, so it replaces a second
+    # dependency on sysbench for one number.
+    _benchall_section "CPU — throughput (bogo ops)" stress-ng \
+        stress-ng --cpu "$threads" --cpu-method all --metrics-brief -t 10s
 
     _benchall_section "GPU — NVIDIA state" nvidia-smi \
         nvidia-smi --query-gpu=name,driver_version,temperature.gpu,clocks.sm,power.draw,memory.used,memory.total --format=csv
@@ -960,7 +965,7 @@ EOF
                 "$(printf '%s' "$_BENCHALL_MISSING" | tr ' ' '\n' | sort -u | xargs)"
         fi
         [[ -z "$_BENCHALL_SUDO" ]] &&
-            printf -- '- sudo was unavailable, so raw-device and DMI sections were skipped.\n'
+            printf -- '- sudo was unavailable, so the raw-device read and SMART health sections were skipped.\n'
     } >>"$_BENCHALL_REPORT"
 
     echo "benchall: done -> $_BENCHALL_REPORT" >&2

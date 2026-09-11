@@ -405,12 +405,33 @@ Design notes:
 - Missing tools are reported as skipped sections rather than failing the run.
 - fio writes its scratch file under `~/.cache/benchall`, never `/tmp`, which is tmpfs on Arch and would measure RAM instead of disk.
 
-Install the full toolchain on Omarchy/Arch:
+Install the toolchain on Omarchy/Arch. Only five tools have no already-installed equivalent:
 
 ```bash
-omarchy pkg add speedtest-cli iperf3 fio hdparm sysbench stress-ng hyperfine \
-                glmark2 vkmark vulkan-tools mesa-utils smartmontools s-tui dmidecode 7zip
+omarchy pkg add fio stress-ng smartmontools speedtest-cli vkmark
 ```
+
+| Package | Why it earns its place |
+|---|---|
+| `fio` | Only source of random 4K IOPS at queue depth; `dd` cannot do it |
+| `stress-ng` | STREAM memory bandwidth **and** CPU throughput, so no separate `sysbench` |
+| `smartmontools` | Only source of NVMe wear level and health |
+| `speedtest-cli` | Only source of WAN throughput |
+| `vkmark` | Only actual GPU render benchmark; `nvtop`/`nvidia-smi` only monitor |
+
+Deliberately not installed, because something already on the system covers it:
+
+| Skipped | Covered by |
+|---|---|
+| `dmidecode` | `inxi -Fxxxzm` reads `/sys/firmware/dmi/tables` for DIMM speed/part-no, no root needed |
+| `sysbench` | `stress-ng --cpu` |
+| `s-tui` | `btop` |
+| `glmark2`, `mesa-utils` | `vkmark`; OpenGL is legacy next to Vulkan on a modern Wayland box |
+| `hyperfine`, `7zip` | Not used by `benchall` — `hyperfine` benchmarks *your* commands, a different job |
+
+Optional extras: `hdparm` (raw-device read, versus fio's through-filesystem read) and `vulkan-tools` (device enumeration; `vkmark` already prints the device it selected). `iperf3` is unrelated to `benchall` but is required by the existing `netspeed` function.
+
+Note on `speedtest-cli`: it is single-threaded Python and undershoots badly above ~1 Gbps. If your link is faster than that, use Ookla's official client instead (`omarchy pkg aur add speedtest`).
 
 ## AI Diagnostics
 
