@@ -63,7 +63,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `cmux/`: cmux app configuration (symlinked to `~/.config/cmux/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
-- `voice-to-text/`: Dictation tooling automation, e.g. a daily launchd job that regenerates the TypeWhisper dictionary from a project glossary markdown file.
+- `voice-to-text/`: Dictation tooling automation. A daily job regenerates the dictation engine's custom vocabulary from a project glossary markdown file — via launchd into TypeWhisper on macOS, via a systemd user timer into VoxType on Omarchy.
 - `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
@@ -431,7 +431,13 @@ Deliberately not installed, because something already on the system covers it:
 
 Optional extras: `hdparm` (raw-device read, versus fio's through-filesystem read) and `vulkan-tools` (device enumeration; `vkmark` already prints the device it selected). `iperf3` is unrelated to `benchall` but is required by the existing `netspeed` function.
 
-Note on `speedtest-cli`: it is single-threaded Python and undershoots badly above ~1 Gbps. If your link is faster than that, use Ookla's official client instead (`omarchy pkg aur add speedtest`).
+Note on `speedtest-cli`: it is single-threaded Python and undershoots badly above ~1 Gbps. If your link is faster than that, use Ookla's official client instead:
+
+```bash
+omarchy pkg aur add ookla-speedtest-bin
+```
+
+The AUR package is `ookla-speedtest-bin` (there is no package named `speedtest`), it installs the binary as `speedtest`, and it **conflicts with `speedtest-cli`** — pacman will offer to remove that one. `benchall` prefers `speedtest` when present and falls back to `speedtest-cli`, so either package works without further configuration. The Ookla client is invoked with `--accept-license --accept-gdpr` so an unattended run never blocks on its first-run prompt.
 
 ## AI Diagnostics
 

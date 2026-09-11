@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "22ca962c35dc41aa3be5193e34ca568b921edc7d",
-  "source_hash": "75d0a8750b7c",
+  "git_revision": "167deb720cfe347852c4a2993a96e510cf12e253",
+  "source_hash": "6b2d59d57e90",
   "stats": {
     "aliases": 69,
     "functions": 42,
@@ -1544,8 +1544,8 @@ window.DOTFILES_DOCS_DATA = {
       "source": "zsh/install.sh"
     },
     {
-      "source_path": "voice-to-text/$LABEL.plist",
-      "target_path": "~/Library/LaunchAgents/$LABEL.plist",
+      "source_path": "voice-to-text/$label.plist",
+      "target_path": "~/Library/LaunchAgents/$label.plist",
       "source": "voice-to-text/install.sh"
     },
     {

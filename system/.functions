@@ -844,6 +844,10 @@ Missing tools are reported as skipped sections. The five that have no
 already-installed equivalent:
   omarchy pkg add fio stress-ng smartmontools speedtest-cli vkmark
 
+On links faster than ~1 Gbps use Ookla's client instead; it is multi-threaded
+and this function prefers it automatically when present:
+  omarchy pkg aur add ookla-speedtest-bin   # conflicts with speedtest-cli
+
 Optional extras: hdparm (raw-device read, vs fio's through-filesystem read),
 vulkan-tools (device enumeration), glmark2 (OpenGL, legacy next to Vulkan).
 inxi covers DIMM detail, btop covers live thermals, nvidia-smi covers the GPU.
@@ -914,7 +918,17 @@ EOF
 
     if [[ $run_net -eq 1 ]]; then
         _benchall_section "Network — latency" ping ping -c 20 -i 0.2 1.1.1.1
-        _benchall_section "Network — throughput" speedtest-cli speedtest-cli --secure --simple
+        # Prefer Ookla's client, which is multi-threaded; speedtest-cli is
+        # single-threaded Python and undershoots badly above ~1 Gbps. The two
+        # packages conflict, so only one of these binaries can exist. The accept
+        # flags stop the first run from blocking on an interactive licence prompt.
+        if command -v speedtest >/dev/null 2>&1; then
+            _benchall_section "Network — throughput (Ookla)" speedtest \
+                speedtest --accept-license --accept-gdpr --progress=no
+        else
+            _benchall_section "Network — throughput" speedtest-cli \
+                speedtest-cli --secure --simple
+        fi
     fi
 
     _benchall_section "Disk — SMART health" smartctl \
