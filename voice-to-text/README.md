@@ -90,11 +90,16 @@ only fixes derivable from the term's own spelling are emitted — never a change
 of word choice. The "Aliases to avoid" column is deliberately **not** mapped:
 `"account" = "Product"` would rewrite every "account" you ever dictate.
 
+A compound term gets two keys, because the engine may hear it either split or
+run together — `Sub-Ledger` was observed transcribing as `subledger`, which the
+spaced key alone missed. Watch for a run-together form that lands on a real
+word (`Co-Op` → `coop`); that needs a `DENYLIST` entry.
+
 | Term | Entry | Why |
 | ---- | ----- | --- |
 | `Ledger Transfer` | `"ledger transfer"` | multi-word |
-| `Sub-Ledger` | `"sub ledger"` | hyphen, spoken as a space |
-| `FedNow` | `"fed now"` | CamelCase compound |
+| `Sub-Ledger` | `"sub ledger"` + `"subledger"` | hyphen, heard either way |
+| `FedNow` | `"fed now"` + `"fednow"` | CamelCase compound |
 | `ACH` | `"ach"` | acronym |
 | `Card` | *(skipped)* | bare English word — would capitalise ordinary prose |
 | `BIN` | *(skipped)* | acronym that's also an English word; see `DENYLIST` |
@@ -132,3 +137,31 @@ bash voice-to-text/test-generate-voxtype-vocabulary.sh
 Runs the generator against a throwaway glossary and config, covering the TOML
 splice, the term filter and idempotency. Does not touch the real config or
 restart the daemon.
+
+#### Checking that a replacement actually fired
+
+The suite covers what the generator *writes*, not what VoxType *does* with it.
+To confirm a term is being substituted on real audio, dictate a short sentence
+containing it and read the journal:
+
+```bash
+journalctl --user -u voxtype --since "-5 min" -o cat | sed -E 's/\x1b\[[0-9;]*m//g'
+```
+
+Both the `Transcription completed` and `Transcribed:` lines are logged
+**before** the replacements run, so they always show the raw engine output —
+diffing them proves nothing. The receipt is the character count on the last
+line:
+
+```
+Transcribed: "We settle that over Fed now. ... "   <- 103 characters
+Text pasted via clipboard + ctrl+v (102 chars)     <- 102, so a substitution ran
+```
+
+Pick a probe the engine can't produce on its own. `fed now` → `FedNow` is a
+good one; an acronym like `sar` → `SAR` is not, because parakeet often
+uppercases those unprompted and the test can't distinguish the two.
+
+Verified this way on VoxType 1.0.1: matching is **case-insensitive and
+word-bounded**, so short acronym keys (`ach`, `cif`, `sar`) do not fire inside
+`approach`, `specific` or `Caesar`.

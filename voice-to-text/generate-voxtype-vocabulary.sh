@@ -101,15 +101,26 @@ replacements="$(
 				n = split(manual, m, "\n"); for (i = 1; i <= n; i++) if (m[i] != "") taken[m[i]] = 1
 				n = split(denylist, d, " "); for (i = 1; i <= n; i++) if (d[i] != "") denied[d[i]] = 1
 			}
+			function emit(k, t) {
+				if (k == "" || k in denied || k in taken) return
+				taken[k] = 1
+				printf "\"%s\" = \"%s\"\n", k, t
+			}
 			{
 				key = $1; term = $2
 				# Worth an entry only if speech-to-text has something to get
 				# wrong beyond capitalising a single ordinary word.
 				if (term !~ / / && term !~ /-/ && term !~ /^[A-Z0-9]{2,6}$/ && key == tolower(term)) next
 				if (key in denied) next
-				if (key in taken) next
-				taken[key] = 1
-				printf "\"%s\" = \"%s\"\n", key, term
+				emit(key, term)
+				# The spoken form splits a compound apart ("Sub-Ledger" => "sub
+				# ledger"), but parakeet often hears it as one word. Observed
+				# live: "sub ledger" transcribed as "subledger", which the
+				# spaced key misses. Cover the run-together form too. Watch for
+				# a join that lands on an English word (Co-Op => "coop") - that
+				# needs a DENYLIST entry.
+				joined = tolower(term); gsub(/-/, "", joined)
+				if (joined != key) emit(joined, term)
 			}
 		'
 )"
