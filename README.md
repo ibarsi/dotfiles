@@ -1,17 +1,35 @@
 # Igor's `dotfiles`
 
-A modern, topic-based dotfile configuration for macOS and Bash-based Linux environments such as Omarchy. It keeps macOS in Zsh while adding shared shell aliases and functions to Bash without replacing the host's `~/.bashrc`.
+A modern, topic-based dotfile configuration for macOS and Omarchy (Arch Linux
+/ Hyprland), used daily as peers. A shared Bash/Zsh layer of aliases and
+functions works on both; platform-specific setup lives in dedicated guides
+linked below.
+
+## Guides
+
+- **[macOS guide](docs/guides/macos.md)** — Homebrew bootstrap, Brewfile,
+  macOS system defaults, keyboard tuning, Obsidian.
+- **[Omarchy guide](docs/guides/omarchy.md)** — additive bootstrap, hardware
+  benchmarking (`benchall`), VoxType voice-to-text sync.
+- **[Shared workflows](docs/guides/workflows.md)** — Ghostty, cmux, tmux, SSH,
+  networking, Kubernetes, FZF, git worktrees, mise, pre-commit, Codex, Claude,
+  Agy, Zed, and the docs site itself.
 
 ## Installation
 
+### macOS
+
 ```bash
-# macOS
 git clone https://github.com/ibarsi/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./bootstrap.sh
 ```
 
-For Omarchy and other Bash-based Linux systems, clone the same repository and run the additive setup instead:
+Installs Homebrew, syncs `Brewfile`, links every topic's config, sets Zsh as
+the default shell, and applies macOS defaults. Details in the
+[macOS guide](docs/guides/macos.md).
+
+### Omarchy (and other Bash-based Linux)
 
 ```bash
 git clone https://github.com/ibarsi/dotfiles.git ~/dotfiles
@@ -19,9 +37,49 @@ cd ~/dotfiles
 ./bootstrap-omarchy.sh
 ```
 
-`bootstrap-omarchy.sh` adds the shared Bash aliases/functions and Git aliases without replacing Omarchy's `~/.bashrc` or `~/.gitconfig`, and links the repository Gitmoji preferences to `~/.config/gitmoji-nodejs/config.json`. It deliberately does not install packages, apply macOS defaults, or change the default shell.
+Adds the shared Bash aliases/functions, Git aliases, Gitmoji preferences,
+tmux config, and the VoxType vocabulary sync — additively, without replacing
+Omarchy's `~/.bashrc` or `~/.gitconfig`, and without installing packages or
+changing the default shell. Details in the
+[Omarchy guide](docs/guides/omarchy.md).
 
-Both scripts use the repository root internally, so they can be re-run reliably even when invoked from different working directories.
+Both scripts use the repository root internally, so they can be re-run
+reliably even when invoked from different working directories.
+
+## Platform Support
+
+Generated from `bootstrap.sh`, `bootstrap-omarchy.sh`, and each topic's
+`install.sh`. Regenerate with `mise run docs-build`; `mise run docs-check`
+fails the build if this table is stale. A topic marked macOS-only is
+intentional — it's managed natively through that platform rather than through
+this repo, not a gap to fill.
+
+<!-- BEGIN GENERATED: platform-matrix -->
+
+| Topic | macOS | Omarchy |
+|-------|-------|---------|
+| `bash` | ✅ | ✅ |
+| `claude` | ✅ | — macOS only |
+| `cmux` | ✅ | — macOS only |
+| `codex` | ✅ | — macOS only |
+| `ghostty` | ✅ | — macOS only |
+| `git` | ✅ | ◐ aliases only |
+| `gitmoji` | ✅ | ✅ |
+| `glow` | ✅ | — macOS only |
+| `k9s` | ✅ | — macOS only |
+| `launchagents` | ✅ | — macOS only |
+| `macos` | ✅ | — macOS only |
+| `mise` | ✅ | — macOS only |
+| `ssh` | ✅ | — macOS only |
+| `system` | ✅ | — macOS only |
+| `theme` | ✅ | — macOS only |
+| `tmux` | ✅ | ✅ |
+| `vim` | ✅ | — macOS only |
+| `voice-to-text` | ✅ | ✅ |
+| `zed` | ✅ | — macOS only |
+| `zsh` | ✅ | — macOS only |
+
+<!-- END GENERATED: platform-matrix -->
 
 ## Quick Commands
 
@@ -64,7 +122,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `cmux/`: cmux app configuration (symlinked to `~/.config/cmux/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `voice-to-text/`: Dictation tooling automation. A daily job regenerates the dictation engine's custom vocabulary from a project glossary markdown file — via launchd into TypeWhisper on macOS, via a systemd user timer into VoxType on Omarchy.
-- `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
+- `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features. `docs/guides/` holds the hand-written platform and workflow guides linked above.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
 - `AGENTS.md`: Agent operating guidance for this repository.
@@ -79,7 +137,6 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Shared Bash/Zsh shell layer**: OS-aware paths, aliases, and functions work on macOS and Linux; Bash integrates additively with an existing `~/.bashrc`.
 - **tmux workflow**: Catppuccin-styled tmux with AI-friendly pane/window ergonomics and Claude quiet-window notifications.
 - **Auto-update**: Automatically checks for updates to your dotfiles once a day.
-- **macOS keyboard tuning**: Bootstrap applies fast key repeat, short repeat delay, disables press-and-hold accent popups, and reloads a Caps Lock to Control remap at login.
 - **Mise integration**: Configured global settings + project tool/tasks for reproducible shell workflows.
 - **AI workflow diagnostics**: One-command checks for toolchain health and bootstrap verification.
 - **Generated reference site**: A searchable docs app under `docs/` inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, and major repo capabilities from source files.
@@ -95,527 +152,11 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
 - **NAS Arr import monitoring**: A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
+- **Hardware benchmarking**: `benchall` runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent. See the [Omarchy guide](docs/guides/omarchy.md).
+
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
 - Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
 - History-backed zsh autosuggestions: type the start of a previous command, then press `Shift-Tab` to accept the gray suggestion; use `Tab` for normal expansion/completion
 - Interactive completion menu + clearer completion descriptions
 - **Startup smart tips**: On new terminal sessions, generate one practical AI tip from your dotfiles context (can be disabled).
-
-## Docs Site
-
-The repo includes a lightweight static docs app in `docs/` for browsing the current shell surface area and major dotfiles capabilities.
-
-- Source-driven generator: `scripts/generate-docs.py`
-- Generated data file: `docs/site-data.json`
-- Includes: aliases, functions, git shortcuts from `git/aliases.gitconfig` plus git-focused shell helpers, mise tasks, bootstrap-managed symlinks, and curated repo feature summaries
-
-Refresh the docs after any feature, alias, function, task, or bootstrap link change:
-
-```bash
-mise run docs-build
-```
-
-Serve the site locally from the repo root:
-
-```bash
-mise install
-mise run docs-serve
-```
-
-Then open `http://localhost:4173`.
-
-From any directory, `dotdocs` will start the server if needed and open the same URL automatically.
-
-## Ghostty Terminal
-
-[Ghostty](https://ghostty.org) is configured as the primary terminal. Config lives in `ghostty/` and is symlinked to `~/.config/ghostty/` by `bootstrap.sh`.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `ghostty/config` | `~/.config/ghostty/config` | Terminal settings, theme, keybindings |
-
-**Key settings:**
-- **Theme**: Catppuccin Mocha (dark) / Catppuccin Latte (light), follows system appearance — built-in to Ghostty, no extra install needed
-- **Font**: Fira Code 13px with ligatures (`calt`, `liga`)
-- **Cursor**: Blinking bar (ported from iTerm2)
-- **Shell integration**: Auto-detected — enables semantic zones, prompt detection, sudo passthrough
-- **Privacy**: Crash reporting disabled
-
-**Keybindings (ported from iTerm2):**
-
-| Shortcut | Action |
-|----------|--------|
-| `cmd+]` / `cmd+[` | Next / previous tab |
-| `cmd+shift+←` / `cmd+shift+→` | Split pane left / right |
-| `cmd+shift+↑` / `cmd+shift+↓` | Split pane up / down |
-| `cmd+w` | Close pane / tab |
-| `cmd+k cmd+z` | Toggle fullscreen (zen mode) |
-| `cmd+=` / `cmd+-` | Increase / decrease font size |
-| `cmd+0` | Reset font size |
-
-> **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
-
-## cmux
-
-[cmux](https://github.com/manaflow-ai/cmux) is installed from the `manaflow-ai/cmux` Homebrew tap and configured from the repo-managed JSONC file in `cmux/`.
-Bootstrap also runs `cmux themes set --dark "Catppuccin Mocha"` so the dark theme is applied consistently.
-The workspace color picker is file-managed with Catppuccin Mocha colors matching the Ghostty palette used by cmux themes.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `cmux/cmux.json` | `~/.config/cmux/cmux.json` | App settings and configurable defaults |
-
-## Obsidian Workflow
-
-[Obsidian](https://obsidian.md) is installed from `Brewfile`, but this repo does not automate its CLI setup or theme activation.
-
-If you want Obsidian to match the Catppuccin theme used elsewhere, enable Obsidian's CLI yourself and then run:
-
-**Theme commands used:**
-
-```bash
-obsidian theme:install name=Catppuccin
-obsidian theme:set name=Catppuccin
-```
-
-## Markdown Workflow
-
-`glow` is installed from `Brewfile` and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering.
-
-**Markdown functions (`system/.functions`):**
-- `md [file|url|repo]` → render Markdown with Glow; with no argument it opens `README.md` when present, otherwise starts Glow's current-directory browser
-- `mdf` → fuzzy-pick a local Markdown file and preview it with Glow before rendering
-- `mdrepo <owner/repo>` → render a GitHub/GitLab README; shorthand like `mdrepo charmbracelet/glow` expands to `github.com/charmbracelet/glow`
-
-This gives you a fast terminal path for local READMEs, generated docs, changelogs, and remote project docs without leaving the shell.
-
-## tmux Workflow
-
-`tmux` is configured for a keyboard-first, AI-session-friendly terminal workflow.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `tmux/.tmux.conf` | `~/.config/tmux/tmux.conf` | Session/window/pane behavior + statusline (sources Omarchy's tmux base first, when present) |
-
-**Key choices:**
-- Prefix: `Ctrl+a`
-- Split panes in current working directory
-- Pane movement with arrow keys
-- Fast pane resizing (`Shift+Arrow`)
-- Catppuccin-inspired statusline and borders
-- Copy mode with vim keys
-- AI helpers:
-  - `Ctrl+a M` toggles quiet-window monitoring (`monitor-silence`) for the current window
-  - `Ctrl+a A` renames the current window and enables a 15s quiet alert for AI sessions
-
-**Claude Teams fit:**
-- Includes a quiet-window notification hook (`alert-silence`) for windows using `monitor-silence`.
-- Useful pattern per Claude window:
-  - `Ctrl+a A` and name it `claude-impl`, `claude-review`, etc.
-  - Or toggle it manually with `Ctrl+a M`
-  - Shell equivalent: `tmux setw monitor-silence 15`
-
-**Recommended Claude layout:**
-- One tmux session per project (`tn <project>`)
-- Window 1: editor/build/test loop
-- Window 2: `claude-impl` for implementation work
-- Window 3: `claude-review` for code review, debugging, or a second thread
-- Window 4: logs, watch mode, or git operations
-
-Prefer separate windows over many panes for independent Claude threads so quiet notifications and window switching stay clean. Use panes when two terminals belong to the same task in the same directory.
-
-**tmux aliases:**
-- `tl` → list sessions
-- `ta <name>` → attach session
-- `tn <name>` → create new named session
-
-**Omen remote sessions (macOS Zsh only):**
-- `omux` → attach/create an Omen tmux session named from the current Mac repo and branch
-- `omux <session>` → attach/create a custom named Omen tmux session
-- `omux ls` → list Omen tmux sessions
-- `omux kill <session>` → confirm, then kill one Omen tmux session
-
-`omux` connects as `ibarsi@omen`. When creating a new session from a Mac worktree under `~/worktrees/`, it starts in the matching Omen worktree if that directory exists; otherwise it starts in Omen's login directory. Reattached sessions retain their existing working directory. It is intentionally defined only in `zsh/aliases.zsh`, so it does not change the shared shell layer or Omarchy bootstrap.
-
-## SSH Workflow
-
-Use `sshx` instead of `ssh` for remote hosts that mis-handle Ghostty's default `xterm-ghostty` terminal type.
-
-- `sshx user@host` → run SSH with `TERM=xterm-256color`
-- `sshx -p 2222 user@host` → same behavior with explicit port/flags
-
-This is mainly useful for older appliances and NAS shells that render broken line editing or arrow-key behavior over SSH.
-
-The Synology NAS is available as `nas` (`ssh nas`), and the Omen host is pinned as `omen` (`ssh omen`).
-
-## Networking Workflow
-
-This repo now includes a lightweight, practical network-debug toolkit for daily use.
-
-**Added tools (Brewfile):**
-- `doggo` — modern DNS client (`dig` alternative)
-- `mtr` — traceroute + ping combined
-- `iperf3` — throughput testing
-
-Use your existing aliases for basics (`ip`, `lip`, `ips`, `flushdns`), and call modern tools directly (`doggo`, `curl`, `tcpdump`). (`flushdns` runs both `dscacheutil` and `mDNSResponder` refresh.)
-
-**Network functions (`system/.functions`):**
-- `dnstrace <domain>` — DNS trace path
-- `httptime <url>` — DNS/connect/TLS/TTFB/total timing
-- `listeners` — compact open listener view
-- `nclisten [port]` / `ncprobe <host> <port>` — netcat helpers
-- `pcap [iface] [file] [filter...]` — capture packets to `.pcap` (for Wireshark/offline analysis)
-- `sniffweb [iface]` — quick live console view for web ports (80/443), no file output
-- `netpath <host>` — MTR report (20 cycles, quick path/latency snapshot)
-- `netspeed <iperf3-server> [seconds]` — iperf3 client run
-
-This keeps the setup lean: mostly thin wrappers over proven tools, with sensible defaults.
-
-## Kubernetes Workflow
-
-`kubectl`, `k9s`, and `jq` are installed from `Brewfile`; the shell adds a small Kubernetes shortcut set for common inspect, log, rollout, and context-switching work.
-
-**Kubernetes aliases (`system/.aliases`):**
-- `k` -> `kubectl`
-- `kgp` / `kgpa` -> get pods in the current namespace / all namespaces
-- `kd` -> describe resources
-- `klf` / `klp` -> follow logs with a 1000-line tail / show previous container logs
-- `kex` -> interactive exec
-- `ke` -> cluster events
-- `krs` / `krr` -> rollout status / restart
-- `kctx` / `kctxs` / `kuc` / `kns` -> show context, list contexts, switch context, or set the current namespace
-
-**Kubernetes functions (`system/.functions`):**
-- `klogj <pod|resource/name> [kubectl logs flags...]` -> follow logs through `jq` in `less`, pretty-printing JSON lines while leaving plain text untouched
-
-Use `KLOG_TAIL=200 klogj pod/my-pod -n my-namespace` to override the default 1000-line tail for a single command.
-Inside `less`, press `Ctrl-C` to pause live follow mode, `/` to search, and `Shift-F` to resume following.
-
-## FZF Workflow
-
-`fzf` is already installed via Brewfile; this repo now includes practical shell functions in `system/.functions` tailored for your setup (`bat`, `rg`, `zed`, git-heavy workflow).
-
-**Included functions:**
-- `ff` → fuzzy-find file and open in Zed (fallback: `$EDITOR`)
-- `fcd` → fuzzy-find directory and `cd` into it
-- `fbr` → fuzzy-switch git branches (supports remote tracking branches)
-- `frg [query]` → fuzzy-select from `rg` results and jump to file+line
-- `fkill` → fuzzy-select running process and kill it
-- `fwt` → fuzzy-pick a git worktree from the current repo and `cd` into it
-- `fwtr` → fuzzy-pick a sibling git worktree and remove it with `git wtr`
-
-These are designed for daily terminal usage with your current tooling stack and should work across your repos out of the box.
-
-## Git Worktree Workflow
-
-The shell and git config now include a minimal worktree layer aimed at parallel agent sessions without adding much ceremony.
-
-**Git aliases:**
-- `git rh` → hard reset the current branch to `origin/<current-branch>`
-- `git wt` → raw `git worktree`
-- `git wtl` → list worktrees
-- `git wtp` → prune stale worktree metadata
-- `git wtr <path>` → remove a worktree
-- `git wtx` → porcelain worktree listing for scripting
-- `git bparent [base-ref]` → print the parent commit of the oldest commit on the current branch not found in the given base
-- `git onto [base-ref]` → rebase the current branch onto `origin/<base>` using `git bparent` as the boundary
-
-**Shell helpers:**
-- `wtpath [name]` → print the conventional path for the current repo under `~/worktrees/<repo>/<name>`
-- `wtnew <branch> [base]` → create a new worktree at that path, print the exact branch/base/path used, and `cd` into it
-- `fwt` → fuzzy-pick any worktree from the current repo and `cd` into it
-- `wtsesh` → attach/create a tmux session named from the current repo and branch
-- `fwtr` → fuzzy-search removable worktrees from the current repo and pass the selected path to `git wtr`
-
-**Recommended flow:**
-- From any repo root, run `wtnew feature/my-task`
-- Use `fwt` any time you want to jump between existing worktrees for that repo
-- Start or attach your worktree tmux session with `wtsesh`
-- Run your agent inside that session so each branch/worktree has isolated terminal context
-- If `wtnew` fails, it now prints whether the problem is missing `git`, missing repo context, or a rejected `git worktree add`
-- When the repo contains `.mise.toml` or `mise.toml`, `wtnew` also runs `mise trust` inside the new worktree
-
-**Three-feature routing example:**
-- `wtnew feat/auth-refresh`
-- `wtnew feat/billing-export`
-- `wtnew feat/mobile-nav`
-- Run `wtsesh` inside each worktree and keep one Claude session per worktree
-- Treat each worktree as the local checkout for exactly one branch and PR
-
-**When feature work is done in a worktree:**
-- Review and commit from inside that worktree:
-
-```bash
-git status
-git add -A
-git commit -m "Implement feature"
-git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
-pr
-```
-
-- The branch already exists at that point; the worktree is just the local directory attached to it
-- `pr` opens the existing PR or creates one for the current branch
-
-**After the PR is merged:**
-- Leave the merged worktree and return to the main repo checkout
-- Remove the worktree, then delete the local branch
-
-```bash
-git wtl
-git wtr ~/worktrees/<repo>/feat/auth-refresh
-git branch -d feat/auth-refresh
-git wtr ~/worktrees/<repo>/feat/billing-export
-git branch -d feat/billing-export
-git wtr ~/worktrees/<repo>/feat/mobile-nav
-git branch -d feat/mobile-nav
-git wtp
-```
-
-- If you also want to delete merged remote branches manually:
-
-```bash
-git push origin --delete feat/auth-refresh
-git push origin --delete feat/billing-export
-git push origin --delete feat/mobile-nav
-```
-
-Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
-If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
-
-## Hardware Benchmarking
-
-`benchall` (`system/.functions`) runs a bounded (~3 minute) sweep across network, disk, RAM, CPU, GPU, and thermals, then prints a Markdown report to stdout and saves a copy under `~/.cache/benchall/`.
-
-```bash
-benchall                  # full run
-benchall --no-net         # skip the internet speed test (metered connections)
-benchall --help
-```
-
-Progress goes to stderr and the report to stdout, so it pipes straight into an agent:
-
-```bash
-benchall | claude -p "analyze this benchmark for bottlenecks"
-```
-
-Design notes:
-- Every section is wrapped in `timeout`, so no single test can hang the run.
-- Privileged sections (raw-device read, SMART, DMI) prime `sudo` once up front only when a TTY is attached, then use `sudo -n`. An agent-driven run degrades to "skipped" instead of blocking on a password prompt.
-- Missing tools are reported as skipped sections rather than failing the run.
-- fio writes its scratch file under `~/.cache/benchall`, never `/tmp`. On Arch `/tmp` is tmpfs, i.e. RAM: it **silently ignores `O_DIRECT`** rather than rejecting it, so `--direct=1` would return memcpy speed (measured: 5.5 GB/s on tmpfs vs 2.7 GB/s on the real btrfs volume) and quietly consume 1 GB of RAM.
-- Nothing on the system sweeps `~/.cache`, so `benchall` cleans up after itself on every run: it deletes any 1 GB scratch file orphaned by an interrupted run, and retains only the 20 most recent reports (~20 KB each). Reports deliberately do not live in `/tmp` either — that is cleared on reboot and after 10 days by `systemd-tmpfiles-clean.timer`, which would destroy the run history you keep them for.
-
-Install the toolchain on Omarchy/Arch. Only five tools have no already-installed equivalent:
-
-```bash
-omarchy pkg add fio stress-ng smartmontools speedtest-cli vkmark
-```
-
-| Package | Why it earns its place |
-|---|---|
-| `fio` | Only source of random 4K IOPS at queue depth; `dd` cannot do it |
-| `stress-ng` | STREAM memory bandwidth **and** CPU throughput, so no separate `sysbench` |
-| `smartmontools` | Only source of NVMe wear level and health |
-| `speedtest-cli` | Only source of WAN throughput |
-| `vkmark` | Only actual GPU render benchmark; `nvtop`/`nvidia-smi` only monitor |
-
-Deliberately not installed, because something already on the system covers it:
-
-| Skipped | Covered by |
-|---|---|
-| `dmidecode` | `inxi -Fxxxzm` reads `/sys/firmware/dmi/tables` for DIMM speed/part-no, no root needed |
-| `sysbench` | `stress-ng --cpu` |
-| `s-tui` | `btop` |
-| `glmark2`, `mesa-utils` | `vkmark`; OpenGL is legacy next to Vulkan on a modern Wayland box |
-| `hyperfine`, `7zip` | Not used by `benchall` — `hyperfine` benchmarks *your* commands, a different job |
-
-Optional extras: `hdparm` (raw-device read, versus fio's through-filesystem read) and `vulkan-tools` (device enumeration; `vkmark` already prints the device it selected). `iperf3` is unrelated to `benchall` but is required by the existing `netspeed` function.
-
-Note on `speedtest-cli`: it is single-threaded Python and undershoots badly above ~1 Gbps. If your link is faster than that, use Ookla's official client instead:
-
-```bash
-omarchy pkg aur add ookla-speedtest-bin
-```
-
-The AUR package is `ookla-speedtest-bin` (there is no package named `speedtest`), it installs the binary as `speedtest`, and it **conflicts with `speedtest-cli`** — pacman will offer to remove that one. `benchall` prefers `speedtest` when present and falls back to `speedtest-cli`, so either package works without further configuration. The Ookla client is invoked with `--accept-license --accept-gdpr` so an unattended run never blocks on its first-run prompt.
-
-## AI Diagnostics
-
-Scripts under `scripts/`:
-- `doctor-ai.sh` → checks binaries, config presence, and env presence
-- `bootstrap-verify.sh` → validates expected post-bootstrap symlinks/files
-
-## Deterministic Checks (Pre-commit)
-
-Optional pre-commit config is included in `.pre-commit-config.yaml`:
-- merge conflict checks
-- trailing whitespace / EOF hygiene
-- `shellcheck`
-- `shfmt`
-- `gitleaks` secret scanning on staged changes
-
-Setup:
-```bash
-pre-commit install
-pre-commit run --all-files
-```
-
-## Mise Workflow
-
-[mise](https://mise.jdx.dev/) is now wired as an active part of this repo instead of just being installed.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `mise/config.toml` | `~/.config/mise/config.toml` | Global mise behavior/settings |
-| `mise.toml` | `~/dotfiles/mise.toml` | Project tools + tasks for dotfiles maintenance |
-
-**Best-practice defaults applied (from official mise docs):**
-- `auto_install = true` for smoother `mise run` / `mise exec` workflows
-- `env_cache = true` and `env_cache_ttl = "2h"` for faster repeated prompt/env resolution
-- `color_theme = "catppuccin"` to match terminal/editor theme choices
-- `min_version` soft floor in project config to reduce config drift
-
-**Project tools managed by mise:**
-- `shellcheck`
-- `shfmt`
-
-**Project tasks:**
-- `mise run mise-install` → install configured tools
-- `mise run lint-shell` → lint shell scripts
-- `mise run fmt-shell` → format shell scripts
-- `mise run fmt-check` → check formatting without writing
-- `mise run check` → full local validation pipeline
-- `mise run bootstrap-verify` → verify expected post-bootstrap links/files
-- `mise run ai-doctor` → verify AI toolchain binaries/config/env
-- `mise run verify` → run both AI doctor + bootstrap verification
-- `mise run doctor` → run mise diagnostics
-
-**Shell helpers:**
-- `ms` / `msi` / `msu` / `msr` / `msd`
-
-> Note: `mise activate zsh` is intentionally loaded near the end of `.zshrc` so later PATH edits don’t override mise-managed tool versions.
-
-## Local Environment Conventions
-
-- Use `.env.example` as the reference for expected local AI environment variables.
-- Keep real values in untracked local files/shell env (for example `.env.local` or your shell profile).
-
-## Codex CLI Workflow
-
-[Codex CLI](https://developers.openai.com/codex/cli/) is configured for a secure, fast terminal-first AI coding flow.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `codex/config.toml` | `~/.codex/config.toml` | Default model, approvals/sandbox, search mode, feature toggles |
-| `codex/mcp-grafana-nas` | Invoked by Codex | Read-only Grafana MCP launcher; loads its token from macOS Keychain |
-
-**Install Codex CLI:**
-
-```bash
-brew install --cask codex
-npm i -g @openai/codex  # cross-platform alternative
-```
-
-**Key defaults in this repo:**
-- `model = "gpt-5.5"`
-- `approval_policy = "on-request"`
-- `sandbox_mode = "workspace-write"`
-- `web_search = "cached"` (safer default than live web)
-- `/review` uses `review_model = "gpt-5.3-codex"`
-- Native TUI footer enabled for non-tmux use (`model-with-reasoning`, `git-branch`, `project`, `context-window`, `five-hour`)
-
-**Enabled quality-of-life features:**
-- `shell_snapshot` (faster repeated command runs)
-- `unified_exec` (improved command execution path)
-- `undo` (safer edit iteration)
-- `voice_transcription` (hold Space to speak in supported Codex CLI builds)
-
-**Grafana MCP:**
-- Connects to the NAS Grafana instance at `http://192.168.0.39:3340` in read-only mode.
-- Create a Grafana Viewer service-account token and store it in the login keychain under service name `codex-grafana-mcp` and your macOS username before starting Codex.
-
-**TUI footer:**
-- Use `/statusline` in Codex to interactively reorder or trim footer items.
-- The repo default shows model/reasoning, git branch, project, context-window usage, and the 5-hour usage meter.
-
-**Shell shortcuts:**
-- `cx` → `codex`
-- `cxe` → `codex exec`
-- `cxr` → `codex resume --last`
-- `cxreview` → start Codex with `/review`
-- `cxup` → upgrade Codex CLI (uses Homebrew cask when Codex was installed with brew; otherwise npm)
-
-> Security note: This setup intentionally avoids `danger-full-access` / `--yolo` defaults, and `sandbox_mode = "workspace-write"` prevents destructive commands like `rm -rf ~/` from writing outside the workspace.
-
-## Claude Code Workflow
-
-[Claude Code](https://code.claude.com/docs/en/setup) is configured for a reliable daily-driver workflow that can coexist with Codex.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `claude/settings.json` | `~/.claude/settings.json` | Update channel and attribution preferences |
-
-**Install Claude Code CLI:**
-
-```bash
-brew install --cask claude-code
-# or native installer (recommended by Anthropic):
-curl -fsSL https://claude.ai/install.sh | bash
-```
-
-**Key defaults in this repo:**
-- `$schema` enabled for editor validation/autocomplete
-- `autoUpdatesChannel = "stable"` to reduce surprise regressions
-- `cleanupPeriodDays = 30` to avoid keeping transcripts indefinitely
-- `respectGitignore = true` to keep ignored/private files out of file suggestions
-- `permissions.disableBypassPermissionsMode = "disable"` to block bypass mode
-- `permissions.ask` prompts on high-risk network/sensitive reads (`git push`, `curl`, `wget`, `.env`, `./secrets/**`)
-- `permissions.deny` blocks obviously dangerous shell patterns (`sudo *`, `rm -rf /`, `rm -rf ~/`)
-- `attribution.commit` / `attribution.pr` are blanked to avoid automatic AI bylines in commits/PRs
-
-**Shell shortcuts:**
-- `cc` → `claude`
-- `cce` → `claude -p`
-- `ccr` → `claude --continue`
-- `ccreview` → start Claude with `/review`
-- `ccyolo` → `claude --dangerously-skip-permissions`
-- `ccdoctor` → `claude doctor`
-- `ccupdate` → upgrade Claude Code (brew cask if installed via Homebrew, otherwise `claude update`)
-
-> Workflow note: Codex and Claude configs are independent (`~/.codex/` and `~/.claude/`), so switching between them is frictionless.
-
-## Agy CLI Workflow
-
-Agy is wired into the shared shell shortcut set with aliases that mirror the Codex and Claude Code patterns where the CLI exposes matching flags.
-
-**Shell shortcuts:**
-- `agye` → `agy -p`
-- `agyr` → `agy --continue`
-- `agyreview` → start Agy with `/review`
-- `agyyolo` → `agy --dangerously-skip-permissions`
-
-## Zed Editor
-
-[Zed](https://zed.dev) is configured as the primary editor. Config files live in `zed/` and are symlinked to `~/.config/zed/` by `bootstrap.sh`.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `zed/settings.json` | `~/.config/zed/settings.json` | Editor settings, theme, formatting |
-| `zed/keymap.json` | `~/.config/zed/keymap.json` | Custom keybindings |
-
-**Key settings:**
-- **Theme**: Catppuccin Mocha (dark) / Catppuccin Latte (light), follows system appearance
-- **Font**: Fira Code 13px with ligatures
-- **Formatting**: Prettier on save for JS/TS/TSX/JSON/HTML/Markdown
-- **Extensions**: Auto-installed on first launch (Catppuccin, Prettier, ESLint, Dockerfile, etc.)
-- **Telemetry**: Disabled
-
-**Keybindings:**
-
-| Shortcut | Action |
-|----------|--------|
-| `cmd+]` / `cmd+[` | Next / previous terminal pane |
-| `cmd+d` | New terminal |
-| `cmd+w` | Close active item |
-| `cmd+k cmd+z` | Toggle centered layout (zen mode) |

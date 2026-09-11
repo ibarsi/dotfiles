@@ -1,5 +1,5 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "443a3ad105fd30cadaa02c31fc172e22feaec27c",
+  "git_revision": "b273e5690727801f253a7e86375af9e110149738",
   "source_hash": "88b794ea39e1",
   "stats": {
     "aliases": 69,
@@ -9,7 +9,8 @@ window.DOTFILES_DOCS_DATA = {
     "tasks": 15,
     "bootstrap_links": 23,
     "brews": 36,
-    "casks": 26
+    "casks": 26,
+    "platforms": 20
   },
   "aliases": [
     {
@@ -1624,6 +1625,189 @@ window.DOTFILES_DOCS_DATA = {
       "typewhisper/tap/typewhisper",
       "font-fira-code-nerd-font\" # Nerd font for icons (eza/starship)"
     ]
-  }
+  },
+  "platforms": [
+    {
+      "topic": "bash",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
+      "topic": "claude",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "cmux",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "codex",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "ghostty",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "git",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "partial",
+        "detail": "aliases only"
+      }
+    },
+    {
+      "topic": "gitmoji",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
+      "topic": "glow",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "k9s",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "launchagents",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "macos",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "mise",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "ssh",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "system",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "theme",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "tmux",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
+      "topic": "vim",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "voice-to-text",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
+      "topic": "zed",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "zsh",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    }
+  ]
 }
 ;

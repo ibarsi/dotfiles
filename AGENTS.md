@@ -14,8 +14,8 @@ Applies to the entire dotfiles repo.
 - Make focused, minimal changes.
 - Follow existing patterns in `Brewfile`, `bootstrap.sh`, `zsh/`, and `system/`.
 - Prefer deterministic checks over stylistic guesswork.
-- Update README when user-facing behavior changes.
-- Regenerate `docs/site-data.json` and keep the `docs/` site accurate when aliases, functions, tasks, bootstrap links, or user-visible features change.
+- When user-facing behavior changes, update the guide it belongs to, not `README.md` directly: `docs/guides/macos.md` for macOS-only behavior, `docs/guides/omarchy.md` for Omarchy-only behavior, `docs/guides/workflows.md` for anything that works the same on both. Keep `README.md` itself limited to the landing page, install steps, Quick Commands, Structure, Features, and the generated platform matrix.
+- Regenerate `docs/site-data.json` and keep the `docs/` site accurate — and the platform matrix embedded in `README.md` current — when aliases, functions, tasks, bootstrap links, topic install scripts, or user-visible features change. Run `mise run docs-build`.
 
 ## Safety
 - Never commit API keys, tokens, passwords, or local secret files.

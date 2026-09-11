@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCS_FILES = [ROOT / "docs" / "site-data.json", ROOT / "docs" / "site-data.js"]
+DOCS_FILES = [ROOT / "docs" / "site-data.json", ROOT / "docs" / "site-data.js", ROOT / "README.md"]
 
 
 def read_text(path: Path) -> str:

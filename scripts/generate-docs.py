@@ -12,6 +12,18 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = ROOT / "docs"
 DATA_PATH = DOCS_DIR / "site-data.json"
 DATA_JS_PATH = DOCS_DIR / "site-data.js"
+README_PATH = ROOT / "README.md"
+
+PLATFORM_MATRIX_BEGIN = "<!-- BEGIN GENERATED: platform-matrix -->"
+PLATFORM_MATRIX_END = "<!-- END GENERATED: platform-matrix -->"
+
+# Maps an Omarchy installer script name to the detail text shown when that
+# script is not the topic's full install.sh (i.e. only part of the topic is
+# wired up on Omarchy). An installer not listed here fails the build instead
+# of guessing a label — a wrong label is worse than a build failure.
+PARTIAL_INSTALLER_DETAIL = {
+    "install-aliases.sh": "aliases only",
+}
 
 
 FEATURE_NOTES = {
@@ -441,6 +453,75 @@ def parse_brewfile(path: Path) -> dict:
     return {"taps": taps, "brews": brews, "casks": casks}
 
 
+def build_platform_matrix(install_scripts: list[Path], omarchy_bootstrap: Path) -> list[dict]:
+    """Derive macOS/Omarchy support per topic from the bootstrap scripts.
+
+    macOS support is derived from the existence of an install.sh, since
+    bootstrap.sh globs `*/install.sh` unconditionally — adding a topic there
+    needs no matrix update. Omarchy support is parsed from the explicit
+    installer lines in bootstrap-omarchy.sh, since that script is additive
+    and lists only the topics (and sometimes only a partial script) it wires
+    up.
+    """
+    omarchy_script_by_topic: dict[str, str] = {}
+    pattern = re.compile(r'\$DOTFILES_ROOT/([A-Za-z0-9_-]+)/([A-Za-z0-9_.-]+\.sh)"')
+    for line in read_lines(omarchy_bootstrap):
+        match = pattern.search(line)
+        if match:
+            omarchy_script_by_topic[match.group(1)] = match.group(2)
+
+    matrix = []
+    for script in install_scripts:
+        topic = script.parent.name
+        omarchy_script = omarchy_script_by_topic.get(topic)
+        if omarchy_script is None:
+            omarchy = {"state": "absent"}
+        elif omarchy_script == "install.sh":
+            omarchy = {"state": "full"}
+        else:
+            detail = PARTIAL_INSTALLER_DETAIL.get(omarchy_script)
+            if detail is None:
+                raise ValueError(
+                    f"No PARTIAL_INSTALLER_DETAIL entry for {omarchy_script!r} "
+                    f"(topic {topic!r}); add one rather than guessing a label."
+                )
+            omarchy = {"state": "partial", "detail": detail}
+        matrix.append({"topic": topic, "macos": {"state": "full"}, "omarchy": omarchy})
+
+    matrix.sort(key=lambda item: item["topic"])
+    return matrix
+
+
+def render_platform_matrix_markdown(matrix: list[dict]) -> str:
+    lines = [PLATFORM_MATRIX_BEGIN, "", "| Topic | macOS | Omarchy |", "|-------|-------|---------|"]
+    for entry in matrix:
+        omarchy = entry["omarchy"]
+        if omarchy["state"] == "full":
+            cell = "✅"
+        elif omarchy["state"] == "partial":
+            cell = f"◐ {omarchy['detail']}"
+        else:
+            cell = "— macOS only"
+        lines.append(f"| `{entry['topic']}` | ✅ | {cell} |")
+    lines.append("")
+    lines.append(PLATFORM_MATRIX_END)
+    return "\n".join(lines)
+
+
+def update_readme_platform_matrix(matrix: list[dict]) -> None:
+    text = README_PATH.read_text()
+    if PLATFORM_MATRIX_BEGIN not in text or PLATFORM_MATRIX_END not in text:
+        raise RuntimeError(
+            f"README.md is missing the {PLATFORM_MATRIX_BEGIN} / {PLATFORM_MATRIX_END} markers"
+        )
+    block_pattern = re.compile(
+        re.escape(PLATFORM_MATRIX_BEGIN) + r".*?" + re.escape(PLATFORM_MATRIX_END), re.S
+    )
+    new_text = block_pattern.sub(render_platform_matrix_markdown(matrix), text, count=1)
+    if new_text != text:
+        README_PATH.write_text(new_text)
+
+
 def build_features() -> list[dict]:
     entries = []
     for slug, note in FEATURE_NOTES.items():
@@ -519,6 +600,9 @@ def main() -> None:
 
     packages = parse_brewfile(ROOT / "Brewfile")
 
+    platform_matrix = build_platform_matrix(install_scripts, ROOT / "bootstrap-omarchy.sh")
+    update_readme_platform_matrix(platform_matrix)
+
     docs = {
         "git_revision": git_revision(),
         "source_hash": source_hash(
@@ -548,6 +632,7 @@ def main() -> None:
             "bootstrap_links": len(bootstrap_links),
             "brews": len(packages["brews"]),
             "casks": len(packages["casks"]),
+            "platforms": len(platform_matrix),
         },
         "aliases": aliases,
         "functions": functions,
@@ -556,6 +641,7 @@ def main() -> None:
         "tasks": tasks,
         "bootstrap_links": bootstrap_links,
         "packages": packages,
+        "platforms": platform_matrix,
     }
 
     DOCS_DIR.mkdir(exist_ok=True)
