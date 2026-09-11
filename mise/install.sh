@@ -9,8 +9,8 @@ mkdir -p "$HOME/.config/mise/conf.d"
 ln -sf "$DOTFILES_ROOT/mise/config.toml" "$HOME/.config/mise/conf.d/00-dotfiles.toml"
 
 # Keep ~/.config/mise/config.toml a REAL file (not a symlink into this repo) so
-# mise treats it as a genuine global config. Tools like the maximum monorepo
-# write trusted_config_paths into the global config via `mise settings add`;
+# mise treats it as a genuine global config. Large monorepos write
+# trusted_config_paths into the global config via `mise settings add`;
 # mise only honors that (and stays quiet) when the global config is a real file
 # at the canonical path. A symlink resolves to the repo path and gets classified
 # non-global -> "trusted_config_paths ... is ignored for security reasons".

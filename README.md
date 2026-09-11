@@ -63,6 +63,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
 - `cmux/`: cmux app configuration (symlinked to `~/.config/cmux/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
+- `voice-to-text/`: Dictation tooling automation, e.g. a daily launchd job that regenerates the TypeWhisper dictionary from a project glossary markdown file.
 - `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features.
 - `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
 - `zsh/`: Zsh configuration, plugins, and modular initialization.
@@ -92,6 +93,7 @@ The repository is organized into **topics**, making it easy to modularize your c
 - **Zed editor**: Primary editor with Catppuccin theme, Fira Code font, Prettier formatting, and custom keybindings — all managed as dotfiles.
 - **Obsidian theme notes**: Obsidian stays in `Brewfile`, and the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI workflow**: Safe-by-default Codex config, shell shortcuts, and completion for day-to-day AI coding.
+- **NAS Arr import monitoring**: A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.
 - **Claude Code workflow**: Claude Code settings + shell shortcuts tuned for regular use alongside Codex.
 ### Shell quality-of-life defaults
 - Completion caching via `.zcompdump` (faster shell startup)
