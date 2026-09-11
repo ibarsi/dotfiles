@@ -861,6 +861,19 @@ EOF
     local dir="$HOME/.cache/benchall"
     mkdir -p "$dir" || return 1
 
+    # Keep the cache bounded. Nothing else sweeps ~/.cache, and this cannot live
+    # in /tmp: that is tmpfs (RAM) on Arch, which silently ignores O_DIRECT and
+    # would report memcpy speed as the disk result.
+    #   - Remove any scratch file orphaned by an interrupted run (1 GB).
+    #   - Retain the 20 most recent reports (~20 KB each).
+    # Globbing our own timestamped filenames is safe; they contain no spaces.
+    rm -f "$dir"/fio-scratch*
+    # shellcheck disable=SC2012 # ls -t sorts by mtime; find cannot, and these
+    # are our own timestamped filenames with no spaces or newlines.
+    ls -t "$dir"/report-*.md 2>/dev/null | tail -n +20 | while read -r stale; do
+        rm -f "$stale"
+    done
+
     _BENCHALL_REPORT="$dir/report-$(date +%Y%m%d-%H%M%S).md"
     _BENCHALL_MISSING=""
 

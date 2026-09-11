@@ -403,7 +403,8 @@ Design notes:
 - Every section is wrapped in `timeout`, so no single test can hang the run.
 - Privileged sections (raw-device read, SMART, DMI) prime `sudo` once up front only when a TTY is attached, then use `sudo -n`. An agent-driven run degrades to "skipped" instead of blocking on a password prompt.
 - Missing tools are reported as skipped sections rather than failing the run.
-- fio writes its scratch file under `~/.cache/benchall`, never `/tmp`, which is tmpfs on Arch and would measure RAM instead of disk.
+- fio writes its scratch file under `~/.cache/benchall`, never `/tmp`. On Arch `/tmp` is tmpfs, i.e. RAM: it **silently ignores `O_DIRECT`** rather than rejecting it, so `--direct=1` would return memcpy speed (measured: 5.5 GB/s on tmpfs vs 2.7 GB/s on the real btrfs volume) and quietly consume 1 GB of RAM.
+- Nothing on the system sweeps `~/.cache`, so `benchall` cleans up after itself on every run: it deletes any 1 GB scratch file orphaned by an interrupted run, and retains only the 20 most recent reports (~20 KB each). Reports deliberately do not live in `/tmp` either — that is cleared on reboot and after 10 days by `systemd-tmpfiles-clean.timer`, which would destroy the run history you keep them for.
 
 Install the toolchain on Omarchy/Arch. Only five tools have no already-installed equivalent:
 
