@@ -112,15 +112,22 @@ replacements="$(
 				# wrong beyond capitalising a single ordinary word.
 				if (term !~ / / && term !~ /-/ && term !~ /^[A-Z0-9]{2,6}$/ && key == tolower(term)) next
 				if (key in denied) next
+				# A hyphenated compound comes back from the engine in any of
+				# three renderings, and a lookup table has no fuzzy matching to
+				# fall back on - all three need a key or the fix lands at
+				# random. Observed live: "Sub-Ledger" transcribed as
+				# "subledger", "Non-Accrual" as "non-accrual".
+				#   spaced      "sub ledger"   (the derived spoken form)
+				#   hyphenated  "sub-ledger"   (the term itself, lowercased)
+				#   joined      "subledger"
+				# emit() dedupes, so a term with no hyphen just no-ops twice.
+				# Watch for a join that lands on an English word (Co-Op =>
+				# "coop") - that needs a DENYLIST entry.
 				emit(key, term)
-				# The spoken form splits a compound apart ("Sub-Ledger" => "sub
-				# ledger"), but parakeet often hears it as one word. Observed
-				# live: "sub ledger" transcribed as "subledger", which the
-				# spaced key misses. Cover the run-together form too. Watch for
-				# a join that lands on an English word (Co-Op => "coop") - that
-				# needs a DENYLIST entry.
-				joined = tolower(term); gsub(/-/, "", joined)
-				if (joined != key) emit(joined, term)
+				variant = tolower(term)
+				emit(variant, term)
+				gsub(/-/, "", variant)
+				emit(variant, term)
 			}
 		'
 )"

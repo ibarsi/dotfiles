@@ -81,8 +81,10 @@ has() { [[ "$parsed" == *"$1"* ]] && echo yes || echo no; }
 check "multi-word term gets a casing fix" yes "$(has "'ledger transfer': 'Ledger Transfer'")"
 check "hyphenated term maps from its spoken form" yes "$(has "'sub ledger': 'Sub-Ledger'")"
 check "CamelCase term is split" yes "$(has "'fed now': 'FedNow'")"
-# Parakeet hears "sub ledger" as "subledger", so the spaced key alone misses.
+# The engine renders a hyphenated compound three different ways; all three
+# were observed live, and a missing one makes the fix land at random.
 check "compound also gets a run-together key" yes "$(has "'subledger': 'Sub-Ledger'")"
+check "compound also gets a hyphenated key" yes "$(has "'sub-ledger': 'Sub-Ledger'")"
 check "bare English word is skipped" no "$(has "'card'")"
 check "English-word acronym is denylisted" no "$(has "'bin': 'BIN'")"
 check "bold text outside a table is ignored" no "$(has "bold prose")"

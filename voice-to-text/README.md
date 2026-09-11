@@ -90,15 +90,27 @@ only fixes derivable from the term's own spelling are emitted — never a change
 of word choice. The "Aliases to avoid" column is deliberately **not** mapped:
 `"account" = "Product"` would rewrite every "account" you ever dictate.
 
-A compound term gets two keys, because the engine may hear it either split or
-run together — `Sub-Ledger` was observed transcribing as `subledger`, which the
-spaced key alone missed. Watch for a run-together form that lands on a real
-word (`Co-Op` → `coop`); that needs a `DENYLIST` entry.
+A hyphenated compound gets **three** keys, because that's how many ways the
+engine can render one and a lookup table has no fuzzy matching to fall back
+on — with a variant missing, the fix lands at random. Both misses below were
+found on real audio, not in the test suite:
+
+| Rendering | Key | |
+| --------- | --- | - |
+| spaced | `"sub ledger"` | the derived spoken form |
+| hyphenated | `"sub-ledger"` | the term itself, lowercased |
+| run-together | `"subledger"` | |
+
+Watch for a run-together form that lands on a real word (`Co-Op` → `coop`);
+that needs a `DENYLIST` entry.
+
+Phonetic mishearings (`omaci` → `Omarchy`, `hyperlind` → `Hyprland`) can't be
+derived from spelling. Add those by hand above the generated markers.
 
 | Term | Entry | Why |
 | ---- | ----- | --- |
 | `Ledger Transfer` | `"ledger transfer"` | multi-word |
-| `Sub-Ledger` | `"sub ledger"` + `"subledger"` | hyphen, heard either way |
+| `Sub-Ledger` | `"sub ledger"` `"sub-ledger"` `"subledger"` | hyphen, heard three ways |
 | `FedNow` | `"fed now"` + `"fednow"` | CamelCase compound |
 | `ACH` | `"ach"` | acronym |
 | `Card` | *(skipped)* | bare English word — would capitalise ordinary prose |
