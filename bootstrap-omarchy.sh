@@ -12,7 +12,7 @@ fi
 echo "Setting up the shared Bash shell layer..."
 bash "$DOTFILES_ROOT/bash/install.sh"
 
-echo "Adding portable Git aliases..."
+echo "Adding portable Git aliases and delta pager..."
 bash "$DOTFILES_ROOT/git/install-aliases.sh"
 
 echo "Linking Gitmoji preferences..."
