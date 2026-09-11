@@ -32,19 +32,50 @@ just extra vocabulary bias, not a wrong correction) but worth knowing.
 
 VoxType runs the parakeet engine, which has no decoder-side vocabulary bias
 (`whisper.initial_prompt` is whisper-only). So terms are applied *after*
-transcription, in two passes:
+transcription, by **`[text.replacements]`** in `~/.config/voxtype/config.toml`
+— deterministic casing, hyphen and acronym fixes, at zero latency.
 
-1. **`[text.replacements]`** in `~/.config/voxtype/config.toml` — deterministic
-   casing, hyphen and acronym fixes. Zero latency, always applied.
-2. **`voxtype-glossary-correct.sh`** — wired up as `output.post_process.command`.
-   Pipes the transcription through the local `llama-server` with the glossary
-   in the system prompt, so terms are corrected with the sentence in view
-   (`"the account accrues interest"` → `"the Product accrues interest"`, while
-   `"my bank account"` is left alone). Roughly 1.5s on a warm prompt cache.
+`generate-voxtype-vocabulary.sh` writes that block, and also dumps the plain
+term list to `~/.config/voxtype/glossary.txt` for the (currently disabled) LLM
+pass described below.
 
-`generate-voxtype-vocabulary.sh` writes both: it splices a marker-delimited
-block into `[text.replacements]` and dumps the plain term list to
-`~/.config/voxtype/glossary.txt`.
+### The LLM pass — built, tested, currently OFF
+
+`voxtype-glossary-correct.sh` is a `output.post_process.command` script that
+pipes the transcription through a local `llama-server` with the glossary in
+the system prompt, correcting terms with the sentence in view
+(`"the account accrues interest"` → `"the Product accrues interest"`, while
+`"my bank account"` is left alone).
+
+It works, but **it is not wired up**, because no suitable local model is
+installed. The only one available, `muse-glimmer`, is a custom 28B
+architecture that reasons unconditionally — it emits `reasoning_content`
+before `content` and cannot be told to stop (`enable_thinking: false`,
+`reasoning_budget: 0` and a prefilled `<think></think>` were all ignored).
+In practice that meant:
+
+- 2891 generated tokens in reply to a 126-character sentence
+- a 10s stall, then a timeout fallback to the raw transcription
+- capping `max_tokens` fixed the stall but truncated the reply mid-thought,
+  so the pass never corrected anything
+
+To revisit, install a small **non-reasoning** instruct model — Qwen3-4B-
+Instruct-2507 or Qwen2.5-7B-Instruct are good fits; note plain `Qwen3-4B` is
+hybrid-reasoning and reproduces the bug. Then:
+
+```bash
+voxtype config set output.post_process.command \
+  ~/dotfiles/voice-to-text/voxtype-glossary-correct.sh
+export VOXTYPE_LLM_MODEL=<preset-name>   # in system/.extra
+systemctl --user restart voxtype
+```
+
+Watch out for VRAM: `muse-glimmer` is configured with a 512k context and
+leaves ~600 MiB free on a 32 GB card, so its `ctx-size` needs lowering first.
+
+`voxtype config unset output.post_process.command` does **not** work — it
+leaves an empty `[output.post_process]` table, which VoxType rejects as
+`missing field 'command'`. Delete the whole two-line section instead.
 
 `voxtype-vocabulary-sync.timer` runs it daily at 07:00 (`Persistent=true`, so
 a run missed while the machine was off fires at next login). Adjust with
@@ -87,8 +118,9 @@ term from the glossary removes it here too.**
 | `VOXTYPE_LLM_MODEL` | `muse-glimmer` |
 | `VOXTYPE_LLM_TIMEOUT_SECS` | `10` |
 
-The LLM pass fails open: no glossary, no `llama-server`, a timeout, a refusal,
-or a suspiciously long reply all fall back to the raw transcription. The
+The `VOXTYPE_LLM_*` variables only matter if the LLM pass is re-enabled. It
+fails open: no glossary, no `llama-server`, a timeout, a refusal, or a
+suspiciously long reply all fall back to the raw transcription. The
 replacements table still applies in that case, since it runs inside VoxType.
 
 ### Tests

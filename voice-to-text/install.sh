@@ -26,15 +26,12 @@ install_linux() {
 		ln -sf "$DOTFILES_ROOT/voice-to-text/$unit" "$unit_dir/$unit"
 	done
 
-	if command -v voxtype >/dev/null 2>&1; then
-		# Only .command is settable - .timeout_ms is in VoxType's README but
-		# not in `voxtype config schema`, so the timeout lives in the script's
-		# `curl --max-time` instead.
-		voxtype config set output.post_process.command \
-			"$DOTFILES_ROOT/voice-to-text/voxtype-glossary-correct.sh" >/dev/null
-	else
-		echo "voxtype not on PATH - skipped wiring output.post_process.command." >&2
-	fi
+	# The LLM correction pass is deliberately NOT wired up. The only local
+	# model available (muse-glimmer) reasons unconditionally, which cost 10s
+	# per dictation for no correction. See README.md > "The LLM pass" before
+	# re-enabling, and re-enable with:
+	#   voxtype config set output.post_process.command \
+	#     "$DOTFILES_ROOT/voice-to-text/voxtype-glossary-correct.sh"
 
 	if command -v systemctl >/dev/null 2>&1; then
 		systemctl --user daemon-reload

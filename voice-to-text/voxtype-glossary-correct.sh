@@ -19,7 +19,15 @@ fallback() { printf '%s' "$text"; exit 0; }
 GLOSSARY_FILE="${VOXTYPE_GLOSSARY:-$HOME/.config/voxtype/glossary.txt}"
 ENDPOINT="${VOXTYPE_LLM_ENDPOINT:-http://127.0.0.1:1234/v1/chat/completions}"
 MODEL="${VOXTYPE_LLM_MODEL:-muse-glimmer}"
-TIMEOUT_SECS="${VOXTYPE_LLM_TIMEOUT_SECS:-10}"
+TIMEOUT_SECS="${VOXTYPE_LLM_TIMEOUT_SECS:-8}"
+
+# A correction returns roughly the input back, so cap generation near the
+# input's own length. Without this the request is unbounded, and a model that
+# decides to explain itself instead of complying burns the whole timeout - a
+# 126-character sentence once drew 2891 tokens and stalled dictation for 10s.
+# Truncation here is harmless: a clipped reply trips the length guard below
+# and falls back to the raw transcription.
+max_tokens=$(( ${#text} / 3 + 32 ))
 
 [[ -n "${text//[[:space:]]/}" ]] || fallback
 [[ -s "$GLOSSARY_FILE" ]] || fallback
@@ -55,7 +63,8 @@ payload="$(
 		--arg model "$MODEL" \
 		--arg system "$system_prompt" \
 		--arg user "$text" \
-		'{model: $model, temperature: 0, stream: false,
+		--argjson max_tokens "$max_tokens" \
+		'{model: $model, temperature: 0, stream: false, max_tokens: $max_tokens,
 		  messages: [{role: "system", content: $system}, {role: "user", content: $user}]}'
 )" || fallback
 
