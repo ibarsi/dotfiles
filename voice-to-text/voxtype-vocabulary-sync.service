@@ -1,0 +1,7 @@
+[Unit]
+Description=Sync VoxType custom vocabulary from the project glossary
+Documentation=https://github.com/ibarsi/dotfiles
+
+[Service]
+Type=oneshot
+ExecStart=%h/dotfiles/voice-to-text/generate-voxtype-vocabulary.sh

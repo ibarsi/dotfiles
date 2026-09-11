@@ -21,4 +21,7 @@ bash "$DOTFILES_ROOT/gitmoji/install.sh"
 echo "Linking tmux config..."
 bash "$DOTFILES_ROOT/tmux/install.sh"
 
+echo "Scheduling the VoxType vocabulary sync..."
+bash "$DOTFILES_ROOT/voice-to-text/install.sh"
+
 echo "Omarchy setup complete. Restart Bash or run: source ~/.bashrc"
