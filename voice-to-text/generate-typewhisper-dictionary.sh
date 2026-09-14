@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# launchd supplies only system paths; include the standard Homebrew locations
+# so scheduled runs can find the TypeWhisper CLI as well as interactive ones.
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 # Regenerates a TypeWhisper dictionary import file from a markdown glossary
 # (a table with a bolded Term column, e.g. "| **Term** | definition | ... |"),
-# writes it to a synced folder, and (if the app is running) imports it live
+# writes it to Application Support, and (if the app is running) imports it live
 # via the `typewhisper` CLI.
 #
 # Set GLOSSARY_MARKDOWN_PATH to the glossary file to read - this is
@@ -13,7 +17,7 @@ set -euo pipefail
 DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 [[ -f "$DOTFILES_ROOT/system/.extra" ]] && source "$DOTFILES_ROOT/system/.extra"
 
-OUTPUT_DIR="${TYPEWHISPER_DICTIONARY_DIR:-$HOME/Documents/obsidian/voice-to-text}"
+OUTPUT_DIR="${TYPEWHISPER_DICTIONARY_DIR:-$HOME/Library/Application Support/typewhisper-dictionary-sync}"
 OUTPUT_FILE="$OUTPUT_DIR/typewhisper-dictionary.json"
 
 if [[ -z "${GLOSSARY_MARKDOWN_PATH:-}" ]]; then

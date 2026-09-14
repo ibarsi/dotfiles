@@ -5,15 +5,15 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 install_macos() {
 	local label="com.ibarsi.typewhisper-dictionary-sync"
+	local agent_path="$HOME/Library/LaunchAgents/$label.plist"
 
 	mkdir -p "$HOME/Library/LaunchAgents"
-	ln -sf "$DOTFILES_ROOT/voice-to-text/$label.plist" "$HOME/Library/LaunchAgents/$label.plist"
+	ln -sf "$DOTFILES_ROOT/voice-to-text/$label.plist" "$agent_path"
 
 	if command -v launchctl >/dev/null 2>&1; then
 		launchctl bootout "gui/$(id -u)/$label" >/dev/null 2>&1 || true
-		launchctl bootstrap "gui/$(id -u)" \
-			"$HOME/Library/LaunchAgents/$label.plist" >/dev/null 2>&1 || true
-		launchctl kickstart -k "gui/$(id -u)/$label" >/dev/null 2>&1 || true
+		launchctl bootstrap "gui/$(id -u)" "$agent_path" >/dev/null
+		launchctl kickstart -k "gui/$(id -u)/$label" >/dev/null
 	fi
 }
 

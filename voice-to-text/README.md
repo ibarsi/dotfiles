@@ -14,9 +14,10 @@ elsewhere in the doc.
 ## macOS - TypeWhisper
 
 - `generate-typewhisper-dictionary.sh` writes a TypeWhisper
-  settings-backup-shaped JSON to `~/Documents/obsidian/voice-to-text/`
-  (Syncthing-shared with the Omen machine) and imports it into a running
-  TypeWhisper instance via the `typewhisper` CLI if it's on `PATH`.
+  settings-backup-shaped JSON to
+  `~/Library/Application Support/typewhisper-dictionary-sync/` and imports it
+  into a running TypeWhisper instance via the `typewhisper` CLI if it's on
+  `PATH`.
 - `com.ibarsi.typewhisper-dictionary-sync.plist` runs that script every day
   at 7:00 AM via launchd. Change `StartCalendarInterval` to adjust the time.
 - Re-running is safe: TypeWhisper dedupes dictionary entries by
