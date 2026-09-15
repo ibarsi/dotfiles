@@ -27,12 +27,12 @@ check_link "$HOME/.config/mise/config.toml"
 check_link "$HOME/.config/glow/glow.yml"
 check_link "$HOME/.config/glow/catppuccin-mocha.json"
 check_link "$HOME/.config/cmux/cmux.json"
+check_link "$HOME/.config/karabiner/assets/complex_modifications/brave-control-shortcuts.json"
 check_link "$HOME/.codex/config.toml"
 check_link "$HOME/.codex/hooks.json"
 check_link "$HOME/.codex/hooks"
 check_link "$HOME/.claude/settings.json"
 check_link "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
-check_link "$HOME/Library/LaunchAgents/com.ibarsi.capslock-control.plist"
 
 if [ "$status" -eq 0 ]; then
 	echo "Done."

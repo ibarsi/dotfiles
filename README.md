@@ -67,7 +67,7 @@ this repo, not a gap to fill.
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
 | `k9s` | ✅ | — macOS only |
-| `launchagents` | ✅ | — macOS only |
+| `karabiner` | ✅ | — macOS only |
 | `macos` | ✅ | — macOS only |
 | `mise` | ✅ | — macOS only |
 | `ssh` | ✅ | — macOS only |

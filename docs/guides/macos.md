@@ -31,10 +31,20 @@ Re-run it any time; every step is idempotent.
 ## Keyboard Tuning
 
 Bootstrap applies fast key repeat and a short initial repeat delay, disables
-the press-and-hold accent-character popup, and installs a launchd job
-(`launchagents/com.ibarsi.capslock-control.plist`, linked by
-`launchagents/install.sh`) that remaps Caps Lock to Control and reloads it at
-login.
+the press-and-hold accent-character popup, and maps Caps Lock to left Control
+through Karabiner-Elements.
+
+Karabiner-Elements is installed through the Brewfile. The `karabiner/` topic
+links an app-scoped Brave rule and enables it in the selected Karabiner profile:
+physical Control matches browser-style shortcuts while Command remains the
+macOS modifier. It covers new, close, and reopen tab; next and previous tab;
+address bar; and find. The rule applies only to Brave (`com.brave.Browser`), so
+Control keeps its normal behavior everywhere else.
+
+Karabiner must have its Input Monitoring permission approved once in
+**System Settings → Privacy & Security → Input Monitoring**. Re-run
+`./bootstrap.sh` after a fresh Karabiner install if its profile did not yet
+exist during the first bootstrap.
 
 ## Obsidian
 
@@ -52,7 +62,8 @@ obsidian theme:set name=Catppuccin
 ## Directories
 
 - `macos/` — macOS system defaults and UI/UX settings (`macos/.macos`).
-- `launchagents/` — launchd jobs, symlinked to `~/Library/LaunchAgents/`.
+- `karabiner/` — app-scoped keyboard mappings, linked to Karabiner's Complex
+  Modifications assets directory.
 - `gitmoji/` — on macOS, linked to `~/Library/Preferences/gitmoji-nodejs/config.json`.
 - `voice-to-text/` — on macOS, a daily launchd job regenerates TypeWhisper's
   dictionary from a project glossary file. See `voice-to-text/README.md` for

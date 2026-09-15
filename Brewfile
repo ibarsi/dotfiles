@@ -44,6 +44,7 @@ brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 
 # Casks (Apps)
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
+cask "karabiner-elements" # App-scoped keyboard shortcut remapping
 cask "codex"             # OpenAI Codex CLI
 cask "cmux"
 cask "1password-cli"

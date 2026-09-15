@@ -1,15 +1,15 @@
 {
-  "git_revision": "1e4cd35eba3d54edfde6c36a4290e89c23ac77b0",
-  "source_hash": "89321a1408cb",
+  "git_revision": "0837c7a88fd5360116929a0cdf71fec6d54b3dec",
+  "source_hash": "3ebf9e73eec4",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
     "features": 29,
     "tasks": 15,
-    "bootstrap_links": 22,
+    "bootstrap_links": 21,
     "brews": 36,
-    "casks": 26,
+    "casks": 27,
     "platforms": 20
   },
   "aliases": [
@@ -1686,11 +1686,6 @@
       "source_path": "zsh/.zshrc",
       "target_path": "~/.zshrc",
       "source": "zsh/install.sh"
-    },
-    {
-      "source_path": "launchagents/com.ibarsi.capslock-control.plist",
-      "target_path": "~/Library/LaunchAgents/com.ibarsi.capslock-control.plist",
-      "source": "launchagents/install.sh"
     }
   ],
   "packages": {
@@ -1737,6 +1732,7 @@
     ],
     "casks": [
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
+      "karabiner-elements\" # App-scoped keyboard shortcut remapping",
       "codex\"             # OpenAI Codex CLI",
       "cmux",
       "1password-cli",
@@ -1848,7 +1844,7 @@
       }
     },
     {
-      "topic": "launchagents",
+      "topic": "karabiner",
       "macos": {
         "state": "full"
       },
