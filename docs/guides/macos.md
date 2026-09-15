@@ -35,11 +35,15 @@ the press-and-hold accent-character popup, and maps Caps Lock to left Control
 through Karabiner-Elements.
 
 Karabiner-Elements is installed through the Brewfile. The `karabiner/` topic
-links an app-scoped Brave rule and enables it in the selected Karabiner profile:
-physical Control matches browser-style shortcuts while Command remains the
-macOS modifier. It covers new, close, and reopen tab; next and previous tab;
-address bar; and find. The rule applies only to Brave (`com.brave.Browser`), so
-Control keeps its normal behavior everywhere else.
+links app-scoped Brave, Zen, and Slack rules and enables them in the selected
+Karabiner profile: physical Control matches application shortcuts while Command
+remains the macOS modifier. Browser rules cover new, close, and reopen tab;
+next and previous tab; address bar; find; and reload. Slack maps Control-K to
+Quick Switcher, Control-G to message search, and Control-T, Control-F, and
+Control-R to their native Command equivalents. The rules apply only to Brave
+(`com.brave.Browser`), Zen (`app.zen-browser.zen`), and Slack
+(`com.tinyspeck.slackmacgap`), so Control keeps its normal behavior everywhere
+else.
 
 Karabiner must have its Input Monitoring permission approved once in
 **System Settings → Privacy & Security → Input Monitoring**. Re-run
