@@ -50,8 +50,12 @@ where the colour goes. `omarchy/install.sh` symlinks it into
 `~/.config/omarchy/themed/`, where Omarchy's template renderer picks up any
 `*.tpl` and writes the result to
 `~/.local/state/omarchy/current/theme/starship.toml` on every theme switch.
-`bash/bashrc` points `STARSHIP_CONFIG` at that rendered file when it exists,
-so non-Omarchy Linux hosts are unaffected.
+`bash/bashrc` points `STARSHIP_CONFIG` at that rendered file whenever Omarchy
+is installed, so non-Omarchy Linux hosts are unaffected. The gate is on
+Omarchy rather than on the file, because `omarchy theme set` deletes the
+current-theme directory before moving the new one into place — a shell
+started in that window would otherwise be stuck on starship's defaults until
+it was restarted.
 
 Starship re-reads its config on every prompt, so `omarchy theme set <name>`
 re-colours already-open terminals with no reload.

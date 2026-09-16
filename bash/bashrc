@@ -20,7 +20,12 @@ fi
 if command -v starship >/dev/null 2>&1; then
     # Omarchy re-renders this from the active theme's accent colour on every
     # theme switch; starship re-reads it each prompt, so open shells follow along.
-    [ -r "$HOME/.local/state/omarchy/current/theme/starship.toml" ] &&
+    # Gate on Omarchy itself, not on the rendered file: `omarchy theme set`
+    # rm -rf's the current-theme directory before moving the new one into
+    # place, and a shell started inside that window would miss the export for
+    # its whole life. Pointing at the path unconditionally is self-healing,
+    # since starship re-reads the config on every prompt.
+    [ -d "$HOME/.local/state/omarchy" ] &&
         export STARSHIP_CONFIG="$HOME/.local/state/omarchy/current/theme/starship.toml"
     eval "$(starship init bash)"
 fi
