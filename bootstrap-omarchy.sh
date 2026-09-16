@@ -24,6 +24,9 @@ bash "$DOTFILES_ROOT/tmux/install.sh"
 echo "Linking the llama.cpp server configuration..."
 bash "$DOTFILES_ROOT/llama/install.sh"
 
+echo "Linking Omarchy theme templates..."
+bash "$DOTFILES_ROOT/omarchy/install.sh"
+
 echo "Scheduling the VoxType vocabulary sync..."
 bash "$DOTFILES_ROOT/voice-to-text/install.sh"
 

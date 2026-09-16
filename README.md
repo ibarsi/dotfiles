@@ -68,8 +68,10 @@ this repo, not a gap to fill.
 | `glow` | ✅ | — macOS only |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
+| `llama` | ✅ | ✅ |
 | `macos` | ✅ | — macOS only |
 | `mise` | ✅ | — macOS only |
+| `omarchy` | ✅ | ✅ |
 | `ssh` | ✅ | — macOS only |
 | `system` | ✅ | — macOS only |
 | `theme` | ✅ | — macOS only |

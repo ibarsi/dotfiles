@@ -15,7 +15,7 @@ cd ~/dotfiles
 
 Unlike `bootstrap.sh`, this is deliberately **additive**: it does not install
 packages, apply macOS-style defaults, or change the default shell. It runs
-five steps, each of which layers onto Omarchy's own configuration instead of
+six steps, each of which layers onto Omarchy's own configuration instead of
 replacing it:
 
 1. Sets up the shared Bash aliases/functions layer (`bash/install.sh`),
@@ -26,7 +26,9 @@ replacing it:
    (`gitmoji/install.sh`).
 4. Links the tmux config (`tmux/install.sh`), which sources Omarchy's own
    tmux base first when present.
-5. Schedules the VoxType vocabulary sync (`voice-to-text/install.sh`) via a
+5. Links the Omarchy theme templates (`omarchy/install.sh`), which makes the
+   Starship prompt follow the active theme — see below.
+6. Schedules the VoxType vocabulary sync (`voice-to-text/install.sh`) via a
    systemd user timer.
 
 Re-run it any time from any working directory; it resolves the repo root
@@ -35,6 +37,32 @@ internally.
 See the platform matrix in the top-level [README](../../README.md) for which
 of the other 15 topics are intentionally *not* wired up here — those tools are
 managed natively through Omarchy itself rather than through this repo.
+
+## Theme-Aware Starship Prompt
+
+Most terminal colour follows the theme for free: Omarchy rewrites Ghostty's
+ANSI palette on every `omarchy theme set`, so a config that says `cyan`
+already re-colours itself. The theme's `accent` — its signature colour — has
+no ANSI slot, so reaching it needs a template.
+
+`omarchy/themed/starship.toml.tpl` is the prompt config with `{{ accent }}`
+where the colour goes. `omarchy/install.sh` symlinks it into
+`~/.config/omarchy/themed/`, where Omarchy's template renderer picks up any
+`*.tpl` and writes the result to
+`~/.local/state/omarchy/current/theme/starship.toml` on every theme switch.
+`bash/bashrc` points `STARSHIP_CONFIG` at that rendered file when it exists,
+so non-Omarchy Linux hosts are unaffected.
+
+Starship re-reads its config on every prompt, so `omarchy theme set <name>`
+re-colours already-open terminals with no reload.
+
+Any value from the theme's `colors.toml` works in the template —
+`{{ foreground }}`, `{{ muted }}`, `{{ red }}` — plus the renderer's derived
+forms `{{ accent_strip }}` (no leading `#`), `{{ accent_rgb }}`, and
+`{{ mix accent background 30% }}`.
+
+Note: `theme/starship.toml` is a separate, macOS-only prompt config installed
+by `theme/install.sh`; `bootstrap-omarchy.sh` does not touch it.
 
 ## Hardware Benchmarking
 
@@ -125,6 +153,8 @@ first-run prompt.
   under `~/.config/ibarsi-dotfiles/` and sources it from the existing
   `~/.bashrc` without replacing Omarchy defaults.
 - `gitmoji/` — on Linux, linked to `~/.config/gitmoji-nodejs/config.json`.
+- `omarchy/` — theme templates rendered from the active theme's `colors.toml`
+  on every `omarchy theme set`. Omarchy-only.
 - `voice-to-text/` — on Omarchy, a systemd user timer regenerates VoxType's
   vocabulary from a project glossary file. See `voice-to-text/README.md` for
   the full TypeWhisper/VoxType setup on both platforms.

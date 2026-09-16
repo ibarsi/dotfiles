@@ -18,6 +18,10 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 if command -v starship >/dev/null 2>&1; then
+    # Omarchy re-renders this from the active theme's accent colour on every
+    # theme switch; starship re-reads it each prompt, so open shells follow along.
+    [ -r "$HOME/.local/state/omarchy/current/theme/starship.toml" ] &&
+        export STARSHIP_CONFIG="$HOME/.local/state/omarchy/current/theme/starship.toml"
     eval "$(starship init bash)"
 fi
 

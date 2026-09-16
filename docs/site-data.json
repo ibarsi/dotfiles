@@ -1,6 +1,6 @@
 {
-  "git_revision": "620cd9952840b1f6db66b95dea28bd5c401f7a1a",
-  "source_hash": "19e609a36119",
+  "git_revision": "27eb04410432cbf7d5a7850276ec0dfcc1388d95",
+  "source_hash": "e2f1d4354784",
   "stats": {
     "aliases": 69,
     "functions": 42,
@@ -10,7 +10,7 @@
     "bootstrap_links": 21,
     "brews": 36,
     "casks": 27,
-    "platforms": 20
+    "platforms": 22
   },
   "aliases": [
     {
@@ -1478,7 +1478,7 @@
         "bash -n k9s/install.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh",
-        "bash -n glow/install.sh",
+        "bash -n glow/install.sh omarchy/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh",
         "bash -n system/.aliases",
@@ -1522,7 +1522,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1530,7 +1530,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1538,7 +1538,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1853,6 +1853,15 @@
       }
     },
     {
+      "topic": "llama",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
       "topic": "macos",
       "macos": {
         "state": "full"
@@ -1868,6 +1877,15 @@
       },
       "omarchy": {
         "state": "absent"
+      }
+    },
+    {
+      "topic": "omarchy",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
       }
     },
     {
