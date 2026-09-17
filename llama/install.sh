@@ -6,9 +6,12 @@ set -euo pipefail
 # presets.ini is user-owned and read by llama-server running as this user, so
 # it is symlinked directly and needs no privileges.
 #
-# The systemd unit lives in /etc and is parsed by PID 1, so linking it needs
-# root. It is only touched when it has actually drifted, which keeps a re-run
-# of bootstrap-omarchy.sh from asking to authenticate for nothing.
+# The systemd unit lives in /etc and is parsed by PID 1 early in boot, before
+# /home is guaranteed, so it is copied rather than symlinked: a link into the
+# dotfiles checkout resolves to nothing at that point and the unit silently
+# disappears. Writing it needs root. It is only touched when it has actually
+# drifted, which keeps a re-run of bootstrap-omarchy.sh from asking to
+# authenticate for nothing.
 
 DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SOURCE_DIR="$DOTFILES_ROOT/llama"
@@ -46,7 +49,10 @@ install_presets() {
 }
 
 install_unit() {
-	if [[ "$(readlink -- "$UNIT_PATH" 2>/dev/null)" == "$SOURCE_DIR/$UNIT_NAME" ]]; then
+	# A symlink here is the old layout and always counts as drift, even when it
+	# points at an identical file, so upgrading a machine replaces it.
+	if [[ -f "$UNIT_PATH" && ! -L "$UNIT_PATH" ]] &&
+		cmp -s "$SOURCE_DIR/$UNIT_NAME" "$UNIT_PATH"; then
 		return 0
 	fi
 
@@ -58,10 +64,11 @@ install_unit() {
 	local snippet
 	snippet="
 		set -e
-		if [ -e '$UNIT_PATH' ] && [ ! -L '$UNIT_PATH' ]; then
-			mv '$UNIT_PATH' '$UNIT_PATH.bak.$(date +%s)'
+		if [ -f '$UNIT_PATH' ] && [ ! -L '$UNIT_PATH' ]; then
+			cp -p '$UNIT_PATH' '$UNIT_PATH.bak.$(date +%s)'
 		fi
-		ln -sfn '$SOURCE_DIR/$UNIT_NAME' '$UNIT_PATH'
+		rm -f '$UNIT_PATH'
+		install -m644 '$SOURCE_DIR/$UNIT_NAME' '$UNIT_PATH'
 		systemctl daemon-reload
 		systemctl restart '$UNIT_NAME'
 	"
@@ -72,7 +79,7 @@ install_unit() {
 
 	cat >&2 <<-EOF
 		llama: not authenticated, $UNIT_PATH left unchanged. To finish, run:
-		  sudo ln -sfn $SOURCE_DIR/$UNIT_NAME $UNIT_PATH
+		  sudo install -m644 $SOURCE_DIR/$UNIT_NAME $UNIT_PATH
 		  sudo systemctl daemon-reload
 		  sudo systemctl restart $UNIT_NAME
 	EOF
