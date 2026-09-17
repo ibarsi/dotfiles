@@ -38,7 +38,11 @@ Karabiner-Elements is installed through the Brewfile. The `karabiner/` topic
 links app-scoped Brave, Zen, Slack, and Discord rules and enables them in the selected
 Karabiner profile: physical Control matches application shortcuts while Command
 remains the macOS modifier. Browser rules cover new, close, and reopen tab;
-next and previous tab; address bar; find; and reload. Slack maps Control-K to
+address bar; find; and reload. Zen keeps its native Control-Tab and
+Control-Shift-Tab tab navigation. In all four apps, Control-Left/Right moves
+by word and Control-Shift-Left/Right selects by word, matching the native
+Option-Arrow behavior; Control-X, Control-C, and Control-V cut, copy, and paste.
+Control-Delete invokes its native Command-Delete equivalent. Slack maps Control-K to
 Quick Switcher, Control-G to message search, and Control-T, Control-F, and
 Control-R to their native Command equivalents. Discord maps those same five
 Control chords to Command. The rules apply only to Brave
