@@ -1,2 +1,8 @@
 # Strip machine-local settings (e.g. trusted_config_paths) before committing
 mise/config.toml filter=mise-local
+
+# Strip the generated glossary before committing. The block is synced from a
+# private work document, so it must never reach this public repo. The filter is
+# marked required, so git refuses the checkout/commit rather than silently
+# passing the glossary through on a clone where it was never registered.
+voice-to-text/voxtype-config.toml filter=voxtype-local

@@ -2,6 +2,25 @@
 set -euo pipefail
 
 DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+VOXTYPE_CONFIG="$HOME/.config/voxtype/config.toml"
+
+# Keep ~/.config/voxtype/config.toml a REAL file rather than a symlink into this
+# repo: the vocabulary sync writes a glossary generated from a private work
+# document into it, and this repo is public. A symlink would park that glossary
+# in the working tree permanently, one stray `git add` away from being pushed.
+# Seed the config from the repo copy only when there isn't one yet.
+install_config() {
+	mkdir -p "$(dirname "$VOXTYPE_CONFIG")"
+	[ -e "$VOXTYPE_CONFIG" ] || cp "$DOTFILES_ROOT/voice-to-text/voxtype-config.toml" "$VOXTYPE_CONFIG"
+
+	# Clean filter to strip the glossary should the repo copy ever be refreshed
+	# from a live config. required=true makes git fail loudly on a clone where
+	# this was never run, instead of committing the glossary verbatim.
+	git -C "$DOTFILES_ROOT" config filter.voxtype-local.clean \
+		"sed '/^# >>> glossary-sync/,/^# <<< glossary-sync/d'"
+	git -C "$DOTFILES_ROOT" config filter.voxtype-local.smudge cat
+	git -C "$DOTFILES_ROOT" config filter.voxtype-local.required true
+}
 
 install_macos() {
 	local label="com.ibarsi.typewhisper-dictionary-sync"
@@ -42,6 +61,8 @@ install_linux() {
 			echo "Initial vocabulary sync failed - see: journalctl --user -u voxtype-vocabulary-sync" >&2
 	fi
 }
+
+install_config
 
 case "$(uname -s)" in
 	Darwin) install_macos ;;

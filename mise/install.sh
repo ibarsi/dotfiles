@@ -22,3 +22,6 @@ touch "$HOME/.config/mise/config.toml"
 # not the symlinked repo file, so the repo file should stay clean on its own).
 git -C "$DOTFILES_ROOT" config filter.mise-local.clean 'grep -v "^trusted_config_paths"'
 git -C "$DOTFILES_ROOT" config filter.mise-local.smudge cat
+# Without this a clone that never ran this script silently commits the file
+# verbatim, because git treats an unregistered filter as a passthrough.
+git -C "$DOTFILES_ROOT" config filter.mise-local.required true
