@@ -115,8 +115,8 @@ Every current section has an explicit destination. Line counts are current.
 | Extracted from Installation | `bootstrap-omarchy.sh` additive behaviour |
 | Extracted from Structure | VoxType systemd timer, Gitmoji on Linux |
 
-**docs/guides/workflows.md** — the remaining 18 sections (~429 lines): Docs Site,
-Ghostty, cmux, Markdown, tmux, SSH, Networking, Kubernetes, FZF, Git Worktree,
+**docs/guides/workflows.md** — the remaining 17 sections (~429 lines): Docs Site,
+Ghostty, Markdown, tmux, SSH, Networking, Kubernetes, FZF, Git Worktree,
 AI Diagnostics, Pre-commit, Mise, Local Environment Conventions, Codex, Claude,
 Agy, Zed.
 

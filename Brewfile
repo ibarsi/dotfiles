@@ -1,7 +1,5 @@
 # Brewfile - Modernized Setup for ibarsi
 
-tap "manaflow-ai/cmux"
-
 # CLI Tools (Core)
 brew "coreutils"
 brew "moreutils"
@@ -46,9 +44,7 @@ brew "teamookla/speedtest/speedtest" # Ookla network speed testing
 cask "ghostty"           # GPU-accelerated terminal (replaces iTerm2)
 cask "karabiner-elements" # App-scoped keyboard shortcut remapping
 cask "codex"             # OpenAI Codex CLI
-cask "cmux"
 cask "1password-cli"
-# Optional/newer casks (higher rename/churn risk over time)
 cask "1password"
 cask "discord"
 cask "docker-desktop"

@@ -11,7 +11,7 @@ linked below.
   macOS system defaults, keyboard tuning, Obsidian.
 - **[Omarchy guide](docs/guides/omarchy.md)** — additive bootstrap, hardware
   benchmarking (`benchall`), VoxType voice-to-text sync.
-- **[Shared workflows](docs/guides/workflows.md)** — Ghostty, cmux, tmux, SSH,
+- **[Shared workflows](docs/guides/workflows.md)** — Ghostty, tmux, SSH,
   networking, Kubernetes, FZF, git worktrees, mise, pre-commit, Codex, Claude,
   Agy, Zed, and the docs site itself.
 
@@ -60,7 +60,6 @@ this repo, not a gap to fill.
 |-------|-------|---------|
 | `bash` | ✅ | ✅ |
 | `claude` | ✅ | — macOS only |
-| `cmux` | ✅ | — macOS only |
 | `codex` | ✅ | — macOS only |
 | `ghostty` | ✅ | — macOS only |
 | `git` | ✅ | ◐ aliases only |
@@ -121,7 +120,6 @@ The repository is organized into **topics**, making it easy to modularize your c
 - `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
 - `mise/`: Mise global config (symlinked to `~/.config/mise/`).
 - `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
-- `cmux/`: cmux app configuration (symlinked to `~/.config/cmux/`).
 - `claude/`: Claude Code settings (symlinked to `~/.claude/`).
 - `voice-to-text/`: Dictation tooling automation. A daily job regenerates the dictation engine's custom vocabulary from a project glossary markdown file — via launchd into TypeWhisper on macOS, via a systemd user timer into VoxType on Omarchy.
 - `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features. `docs/guides/` holds the hand-written platform and workflow guides linked above.
@@ -158,7 +156,6 @@ is stale.
 - **Zed editor config**: Stores editor settings and keybindings in-repo and links them into ~/.config/zed.
 - **k9s defaults**: Bootstrap links a repo-managed k9s config using the Catppuccin Mocha skin, a 1000-line log tail, and wrapped log lines by default.
 - **Obsidian theme notes**: Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
-- **cmux config**: Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.
 - **Codex CLI config**: Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.
 - **Claude Code config**: Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.
 - **Mise integration**: Configured global settings and project tools/tasks for reproducible shell workflows.

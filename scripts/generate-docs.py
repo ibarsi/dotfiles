@@ -203,16 +203,6 @@ FEATURE_NOTES = {
             "This repo does not automate Obsidian's CLI setup or theme activation.",
         ],
     },
-    "cmux": {
-        "title": "cmux config",
-        "summary": "Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.",
-        "source": "cmux/cmux.json",
-        "details": [
-            "Homebrew installs cmux from the manaflow-ai/cmux tap.",
-            "Bootstrap links ~/.config/cmux/cmux.json to the repository-managed JSONC file.",
-            "Bootstrap sets the dark theme to Catppuccin Mocha through the cmux CLI.",
-        ],
-    },
     "codex": {
         "title": "Codex CLI config",
         "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",

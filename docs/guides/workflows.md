@@ -57,16 +57,6 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
 
-## cmux
-
-[cmux](https://github.com/manaflow-ai/cmux) is installed from the `manaflow-ai/cmux` Homebrew tap and configured from the repo-managed JSONC file in `cmux/`.
-Bootstrap also runs `cmux themes set --dark "Catppuccin Mocha"` so the dark theme is applied consistently.
-The workspace color picker is file-managed with Catppuccin Mocha colors matching the Ghostty palette used by cmux themes.
-
-| File | Destination | Purpose |
-|------|-------------|---------|
-| `cmux/cmux.json` | `~/.config/cmux/cmux.json` | App settings and configurable defaults |
-
 ## Markdown Workflow
 
 `glow` is installed from `Brewfile` and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering.

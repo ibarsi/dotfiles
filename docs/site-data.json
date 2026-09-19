@@ -1,16 +1,16 @@
 {
-  "git_revision": "b43cccfb35feeef943d9fcd8f778bebb46de5812",
-  "source_hash": "0c4d8ade4f40",
+  "git_revision": "1c2ccaeb3f38f0f629c820cced534652466b0850",
+  "source_hash": "592e99f5e623",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
-    "features": 29,
+    "features": 28,
     "tasks": 15,
-    "bootstrap_links": 21,
+    "bootstrap_links": 20,
     "brews": 36,
-    "casks": 27,
-    "platforms": 22
+    "casks": 26,
+    "platforms": 21
   },
   "aliases": [
     {
@@ -71,7 +71,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest claude-devtools codex; agy update",
+      "command": "brew upgrade claude-code@latest codex grok-build",
       "group": "General",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1361,17 +1361,6 @@
       "source": "docs/guides/macos.md"
     },
     {
-      "slug": "cmux",
-      "title": "cmux config",
-      "summary": "Tracks cmux settings in-repo and links them into ~/.config/cmux during bootstrap.",
-      "details": [
-        "Homebrew installs cmux from the manaflow-ai/cmux tap.",
-        "Bootstrap links ~/.config/cmux/cmux.json to the repository-managed JSONC file.",
-        "Bootstrap sets the dark theme to Catppuccin Mocha through the cmux CLI."
-      ],
-      "source": "cmux/cmux.json"
-    },
-    {
       "slug": "codex",
       "title": "Codex CLI config",
       "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
@@ -1603,11 +1592,6 @@
       "source": "codex/install.sh"
     },
     {
-      "source_path": "cmux/cmux.json",
-      "target_path": "~/.config/cmux/cmux.json",
-      "source": "cmux/install.sh"
-    },
-    {
       "source_path": "ghostty/config",
       "target_path": "~/.config/ghostty/config",
       "source": "ghostty/install.sh"
@@ -1689,9 +1673,7 @@
     }
   ],
   "packages": {
-    "taps": [
-      "manaflow-ai/cmux"
-    ],
+    "taps": [],
     "brews": [
       "coreutils",
       "moreutils",
@@ -1734,7 +1716,6 @@
       "ghostty\"           # GPU-accelerated terminal (replaces iTerm2)",
       "karabiner-elements\" # App-scoped keyboard shortcut remapping",
       "codex\"             # OpenAI Codex CLI",
-      "cmux",
       "1password-cli",
       "1password",
       "discord",
@@ -1772,15 +1753,6 @@
     },
     {
       "topic": "claude",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "absent"
-      }
-    },
-    {
-      "topic": "cmux",
       "macos": {
         "state": "full"
       },
