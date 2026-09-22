@@ -56,9 +56,11 @@ window-new-tab-position = end
 # Keybindings
 # =============================================================================
 
-# Pass Option-Left/Right to Herdr for pane focus instead of sending word moves.
-keybind = alt+left=unbind
-keybind = alt+right=unbind
+# Send modified-arrow sequences to Herdr instead of Ghostty's word moves.
+keybind = alt+left=text:\x1b[1;3D
+keybind = alt+right=text:\x1b[1;3C
+keybind = alt+up=text:\x1b[1;3A
+keybind = alt+down=text:\x1b[1;3B
 
 # Navigate tabs (mirrors former iTerm2 / VS Code terminal bindings)
 keybind = cmd+right_bracket=next_tab

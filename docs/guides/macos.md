@@ -28,9 +28,9 @@ the Herdr config on Omen, with Alt-arrow keys on the Mac reserved for pane
 focus when attaching through `herdr --remote omen`. Ctrl-Alt-arrow also focuses
 panes; prefix-P/N switches tabs, and prefix-Shift-P/N switches workspaces.
 Pane focus needs an adjacent split in the current tab.
-Ghostty passes Option-Left/Right through to Herdr instead of treating them as
-word navigation shortcuts. Use the left Option key, which `ghostty/config`
-configures as Alt.
+Ghostty sends modified-arrow sequences for Option-arrow instead of treating
+Option-Left/Right as word navigation shortcuts. Use the left Option key, which
+`ghostty/config` configures as Alt.
 
 ## macOS System Defaults
 
