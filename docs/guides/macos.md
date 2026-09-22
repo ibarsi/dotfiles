@@ -23,6 +23,10 @@ cd ~/dotfiles
 
 Re-run it any time; every step is idempotent.
 
+The `herdr/` topic links `~/.config/herdr/config.toml`. Its keybindings match
+the Herdr config on Omen, including Ctrl-Space as the prefix, pane controls,
+Alt-arrow tab and workspace navigation, and the matching resize shortcuts.
+
 ## macOS System Defaults
 
 `macos/install.sh` applies `macos/.macos` (requires sudo): standard macOS

@@ -1,16 +1,16 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "1c2ccaeb3f38f0f629c820cced534652466b0850",
-  "source_hash": "592e99f5e623",
+  "git_revision": "a80c1ea8cc8ec9804fd1f489399b60f0d8b003fd",
+  "source_hash": "5e52541b5429",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
     "features": 28,
     "tasks": 15,
-    "bootstrap_links": 20,
+    "bootstrap_links": 21,
     "brews": 36,
     "casks": 26,
-    "platforms": 21
+    "platforms": 22
   },
   "aliases": [
     {
@@ -1607,6 +1607,11 @@ window.DOTFILES_DOCS_DATA = {
       "source": "glow/install.sh"
     },
     {
+      "source_path": "herdr/config.toml",
+      "target_path": "~/.config/herdr/config.toml",
+      "source": "herdr/install.sh"
+    },
+    {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/conf.d/00-dotfiles.toml",
       "source": "mise/install.sh"
@@ -1799,6 +1804,15 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "topic": "glow",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
+      }
+    },
+    {
+      "topic": "herdr",
       "macos": {
         "state": "full"
       },

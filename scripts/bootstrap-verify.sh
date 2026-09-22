@@ -16,6 +16,7 @@ check_link() {
 }
 
 check_link "$HOME/.config/ghostty/config"
+check_link "$HOME/.config/herdr/config.toml"
 check_link "$HOME/.config/ibarsi-dotfiles/bashrc"
 check_link "$HOME/.config/ibarsi-dotfiles/git-aliases.gitconfig"
 check_link "$HOME/.config/ibarsi-dotfiles/git-delta.gitconfig"
