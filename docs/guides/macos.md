@@ -23,11 +23,11 @@ cd ~/dotfiles
 
 Re-run it any time; every step is idempotent.
 
-The `herdr/` topic links `~/.config/herdr/config.toml`. Its keybindings follow
-the Herdr config on Omen, with Alt-arrow keys on the Mac reserved for pane
-focus when attaching through `herdr --remote omen`. Ctrl-Alt-arrow also focuses
-panes; prefix-P/N switches tabs, and prefix-Shift-P/N switches workspaces.
-Pane focus needs an adjacent split in the current tab.
+The `herdr/` topic links `~/.config/herdr/config.toml`. Its complete `[keys]`
+table matches Omen's Herdr config. Alt-Left/Right switches tabs, Alt-Up/Down
+switches workspaces, and Ctrl-Alt-arrow focuses adjacent panes. The same
+prefix, split, resize, rename, copy-mode, and close shortcuts also apply when
+attaching through `herdr --remote omen`.
 Ghostty sends modified-arrow sequences for Option-arrow instead of treating
 Option-Left/Right as word navigation shortcuts. Use the left Option key, which
 `ghostty/config` configures as Alt.
