@@ -56,6 +56,10 @@ window-new-tab-position = end
 # Keybindings
 # =============================================================================
 
+# Pass Option-Left/Right to Herdr for pane focus instead of sending word moves.
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+
 # Navigate tabs (mirrors former iTerm2 / VS Code terminal bindings)
 keybind = cmd+right_bracket=next_tab
 keybind = cmd+left_bracket=previous_tab
