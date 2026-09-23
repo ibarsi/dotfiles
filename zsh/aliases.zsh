@@ -1,8 +1,8 @@
 # shellcheck shell=bash
 # zsh/aliases.zsh
 
-# macOS/Homebrew-only upgrade command.
-alias aiup="brew upgrade claude-code@latest codex grok-build"
+# macOS AI tool upgrades (Homebrew and mise).
+alias aiup="brew upgrade claude-code@latest codex grok-build && mise upgrade herdr"
 
 # macOS-only Omen tmux sessions. This deliberately stays out of system/ so it
 # is never sourced by the Bash-based Omarchy bootstrap.

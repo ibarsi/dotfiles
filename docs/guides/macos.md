@@ -23,6 +23,9 @@ cd ~/dotfiles
 
 Re-run it any time; every step is idempotent.
 
+`aiup` upgrades Claude Code, Codex, and Grok Build through Homebrew, then
+upgrades Herdr through mise.
+
 The `herdr/` topic links `~/.config/herdr/config.toml`. Its complete `[keys]`
 table matches Omen's Herdr config. Alt-Left/Right switches tabs, Alt-Up/Down
 switches workspaces, and Ctrl-Alt-arrow focuses adjacent panes. The same
