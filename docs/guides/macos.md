@@ -23,6 +23,16 @@ cd ~/dotfiles
 
 Re-run it any time; every step is idempotent.
 
+## Starship Prompt
+
+`theme/starship.toml` is linked to `~/.config/starship.toml`. The first line
+keeps the Mac icon in a Catppuccin powerline segment, then shows the current
+directory with the repository root emphasized. The branch and compact Git
+changes follow; a clean repository has no status marker. Commands taking at
+least five seconds show their duration. The second line is reserved for the
+command arrow, which turns red after a failed command. Username, language
+versions, and an always-on clock are omitted.
+
 `aiup` upgrades Claude Code, Codex, and Grok Build through Homebrew, then
 upgrades Herdr through mise.
 

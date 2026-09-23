@@ -1,23 +1,13 @@
 # Starship Prompt - Catppuccin Mocha Theme
 
 format = """
-[](#cba6f7)\
 $os\
-$username\
-[](bg:#89b4fa fg:#cba6f7)\
+[](fg:mauve bg:blue)\
 $directory\
-[](fg:#89b4fa bg:#74c7ec)\
+[](blue) \
 $git_branch\
 $git_status\
-[](fg:#74c7ec bg:#94e2d5)\
-$nodejs\
-$rust\
-$golang\
-$python\
-$ruby\
-[](fg:#94e2d5 bg:#313244)\
-$time\
-[ ](fg:#313244)\
+$cmd_duration\
 $line_break$character"""
 
 palette = 'catppuccin_mocha'
@@ -52,69 +42,44 @@ crust = "#11111b"
 
 [os]
 disabled = false
-style = "bg:#cba6f7 fg:#1e1e2e"
+style = "bg:mauve fg:base"
 
 [os.symbols]
-Macos = "󰀵 "
-
-[username]
-show_always = true
-style_user = "bg:#cba6f7 fg:#1e1e2e"
-style_root = "bg:#cba6f7 fg:#1e1e2e"
-format = '[ $user ]($style)'
+Macos = " 󰀵 "
 
 [directory]
-style = "fg:#1e1e2e bg:#89b4fa"
+style = "fg:base bg:blue"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
+repo_root_style = "bold fg:base bg:blue"
+repo_root_format = '[ $repo_root]($repo_root_style)[$path ]($style)'
 
 [directory.substitutions]
 "Documents" = "󰈙 "
-"Downloads" = " "
 "Music" = "󰝚 "
-"Pictures" = " "
 "Developer" = "󰲋 "
 
 [git_branch]
-symbol = ""
-style = "bg:#74c7ec fg:#1e1e2e"
-format = '[ $symbol $branch ]($style)'
+style = "fg:teal"
+format = '[ $branch ]($style)'
 
 [git_status]
-style = "bg:#74c7ec fg:#1e1e2e"
-format = '[$all_status$ahead_behind ]($style)'
+style = "fg:peach"
+format = '([$all_status$ahead_behind]($style))'
+conflicted = '=${count} '
+staged = '+${count} '
+modified = '!${count} '
+untracked = '?${count} '
+deleted = 'x${count} '
+renamed = '»${count} '
+ahead = '⇡${count} '
+behind = '⇣${count} '
+diverged = '⇡${ahead_count}⇣${behind_count} '
 
-[nodejs]
-symbol = ""
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = '[ $symbol ($version) ]($style)'
-
-[rust]
-symbol = ""
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = '[ $symbol ($version) ]($style)'
-
-[golang]
-symbol = ""
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = '[ $symbol ($version) ]($style)'
-
-[python]
-symbol = ""
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = '[ $symbol ($version) ]($style)'
-
-[ruby]
-symbol = ""
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = '[ $symbol ($version) ]($style)'
-
-[time]
-disabled = false
-time_format = "%R"
-style = "bg:#313244 fg:#cdd6f4"
-format = '[ ♥ $time ]($style)'
+[cmd_duration]
+min_time = 5000
+format = '[· $duration](fg:subtext0)'
 
 [line_break]
 disabled = false
@@ -123,7 +88,3 @@ disabled = false
 disabled = false
 success_symbol = '[➜](bold green)'
 error_symbol = '[➜](bold red)'
-vimcmd_symbol = '[](bold green)'
-vimcmd_replace_one_symbol = '[](bold purple)'
-vimcmd_replace_symbol = '[](bold purple)'
-vimcmd_visual_symbol = '[](bold yellow)'

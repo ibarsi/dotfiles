@@ -9,7 +9,14 @@
 # the renderer substitutes tokens in comments too, so don't write one here.
 add_newline = true
 command_timeout = 200
-format = "[$directory$git_branch$git_status]($style)$character"
+format = "${custom.omarchy}[$directory$git_branch$git_status]($style)$character"
+
+[custom.omarchy]
+when = 'grep -q "^ID=omarchy$" /etc/os-release'
+# U+E900 is the Omarchy logo in the icon font installed on Omen.
+symbol = " "
+format = '[$symbol]($style)'
+style = "bold {{ accent }}"
 
 [character]
 error_symbol = "[✗](bold {{ accent }})"
