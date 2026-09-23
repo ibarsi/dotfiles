@@ -71,10 +71,9 @@ this repo, not a gap to fill.
 | `llama` | ✅ | ✅ |
 | `macos` | ✅ | — macOS only |
 | `mise` | ✅ | — macOS only |
-| `omarchy` | ✅ | ✅ |
 | `ssh` | ✅ | — macOS only |
 | `system` | ✅ | — macOS only |
-| `theme` | ✅ | — macOS only |
+| `theme` | ✅ | ◐ Starship only |
 | `tmux` | ✅ | ✅ |
 | `vim` | ✅ | — macOS only |
 | `voice-to-text` | ✅ | ✅ |

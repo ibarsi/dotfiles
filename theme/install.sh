@@ -9,8 +9,7 @@ echo "🎨 Installing Catppuccin theme..."
 
 # Symlink starship config
 echo "→ Symlinking Starship config..."
-mkdir -p "$HOME/.config"
-ln -sf "$DOTFILES_ROOT/theme/starship.toml" "$HOME/.config/starship.toml"
+bash "$DOTFILES_ROOT/theme/install-starship.sh"
 
 # Install bat themes
 echo "→ Installing bat themes..."

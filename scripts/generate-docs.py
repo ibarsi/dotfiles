@@ -26,6 +26,7 @@ FEATURES_END = "<!-- END GENERATED: features -->"
 # of guessing a label — a wrong label is worse than a build failure.
 PARTIAL_INSTALLER_DETAIL = {
     "install-aliases.sh": "aliases only",
+    "install-starship.sh": "Starship only",
 }
 
 

@@ -1,16 +1,16 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "b630b5ac0aa8e9536c0062251afa4f45445b570d",
-  "source_hash": "e2a47f56e492",
+  "git_revision": "09f538b2596e0a4625c161f59edbafb3ac370e7a",
+  "source_hash": "693619ebbfdb",
   "stats": {
     "aliases": 69,
     "functions": 42,
     "git": 53,
     "features": 28,
     "tasks": 15,
-    "bootstrap_links": 21,
+    "bootstrap_links": 20,
     "brews": 36,
     "casks": 26,
-    "platforms": 22
+    "platforms": 21
   },
   "aliases": [
     {
@@ -1466,8 +1466,8 @@ window.DOTFILES_DOCS_DATA = {
         "bash -n bash/install.sh",
         "bash -n k9s/install.sh",
         "bash -n macos/.macos",
-        "bash -n theme/install.sh",
-        "bash -n glow/install.sh omarchy/install.sh",
+        "bash -n theme/install.sh theme/install-starship.sh",
+        "bash -n glow/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh",
         "bash -n system/.aliases",
@@ -1511,7 +1511,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1519,7 +1519,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1527,7 +1527,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh glow/install.sh omarchy/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1615,11 +1615,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/conf.d/00-dotfiles.toml",
       "source": "mise/install.sh"
-    },
-    {
-      "source_path": "theme/starship.toml",
-      "target_path": "~/.config/starship.toml",
-      "source": "theme/install.sh"
     },
     {
       "source_path": "tmux/.tmux.conf",
@@ -1866,15 +1861,6 @@ window.DOTFILES_DOCS_DATA = {
       }
     },
     {
-      "topic": "omarchy",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "full"
-      }
-    },
-    {
       "topic": "ssh",
       "macos": {
         "state": "full"
@@ -1898,7 +1884,8 @@ window.DOTFILES_DOCS_DATA = {
         "state": "full"
       },
       "omarchy": {
-        "state": "absent"
+        "state": "partial",
+        "detail": "Starship only"
       }
     },
     {

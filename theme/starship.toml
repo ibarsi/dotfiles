@@ -46,6 +46,7 @@ style = "bg:mauve fg:base"
 
 [os.symbols]
 Macos = " 󰀵 "
+Linux = " 󰣇 "
 
 [directory]
 style = "fg:base bg:blue"
