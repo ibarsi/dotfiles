@@ -13,8 +13,7 @@ format = "${custom.omarchy}[$directory$git_branch$git_status]($style)$character"
 
 [custom.omarchy]
 when = 'grep -q "^ID=omarchy$" /etc/os-release'
-# U+E900 is the Omarchy logo in the icon font installed on Omen.
-symbol = " "
+symbol = "󰣇 "
 format = '[$symbol]($style)'
 style = "bold {{ accent }}"
 

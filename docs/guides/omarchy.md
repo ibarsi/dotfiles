@@ -50,9 +50,8 @@ where the colour goes. `omarchy/install.sh` symlinks it into
 `~/.config/omarchy/themed/`, where Omarchy's template renderer picks up any
 `*.tpl` and writes the result to
 `~/.local/state/omarchy/current/theme/starship.toml` on every theme switch.
-The prompt shows Omarchy's own logo glyph from its installed icon font before
-the directory when `/etc/os-release` reports `ID=omarchy`. Starship's generic
-Linux symbol is left unchanged.
+The prompt shows an Arch icon before the directory when `/etc/os-release`
+reports `ID=omarchy`. Starship's generic Linux symbol is left unchanged.
 `bash/bashrc` points `STARSHIP_CONFIG` at that rendered file whenever Omarchy
 is installed, so non-Omarchy Linux hosts are unaffected. The gate is on
 Omarchy rather than on the file, because `omarchy theme set` deletes the
