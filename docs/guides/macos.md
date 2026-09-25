@@ -58,20 +58,22 @@ the press-and-hold accent-character popup, and maps Caps Lock to left Control
 through Karabiner-Elements.
 
 Karabiner-Elements is installed through the Brewfile. The `karabiner/` topic
-links app-scoped Brave, Zen, Slack, and Discord rules and enables them in the selected
-Karabiner profile: physical Control matches application shortcuts while Command
-remains the macOS modifier. Browser rules cover new, close, and reopen tab;
-address bar; find; and reload. Zen keeps its native Control-Tab and
-Control-Shift-Tab tab navigation. In all four apps, Control-Left/Right moves
-by word and Control-Shift-Left/Right selects by word, matching the native
-Option-Arrow behavior; Control-X, Control-C, and Control-V cut, copy, and paste.
-Control-Delete invokes its native Command-Delete equivalent. Slack maps Control-K to
-Quick Switcher, Control-G to message search, and Control-T, Control-F, and
-Control-R to their native Command equivalents. Discord maps those same five
-Control chords to Command. The rules apply only to Brave
-(`com.brave.Browser`), Zen (`app.zen-browser.zen`), and Slack
-(`com.tinyspeck.slackmacgap`), and Discord (`com.hnc.Discord`), so Control
-keeps its normal behavior everywhere else.
+links app-scoped Brave, Zen, Slack, Discord, and Linear rules and enables them
+in the selected Karabiner profile. In all five apps, Control-Left/Right moves
+by word, Control-Shift-Left/Right selects by word, and Control-X/C/V cuts,
+copies, and pastes. These mappings emit the corresponding Option or Command
+shortcuts; Control keeps its normal behavior in other apps.
+
+Browser rules also cover new, close, and reopen tab; address bar; find; and
+reload. Zen retains its native Control-Tab and Control-Shift-Tab navigation.
+Slack maps Control-K to Quick Switcher and Control-G to message search.
+Discord carries the same Control-T/F/R/K/G mappings as Slack. In these four
+apps, Control-Delete emits Command-Delete.
+
+Linear (`com.linear`) maps Control-T/W/F/K to its tab, find, and command-menu
+shortcuts. Its Control-Delete emits Option-Delete to remove a word while
+editing: Command-Delete can delete a selected issue in Linear. Linear keeps
+its native Control-Tab and Control-R shortcuts.
 
 Karabiner must have its Input Monitoring permission approved once in
 **System Settings → Privacy & Security → Input Monitoring**. Re-run

@@ -32,6 +32,7 @@ check_link "$HOME/.config/karabiner/assets/complex_modifications/brave-control-s
 check_link "$HOME/.config/karabiner/assets/complex_modifications/zen-control-shortcuts.json"
 check_link "$HOME/.config/karabiner/assets/complex_modifications/slack-control-shortcuts.json"
 check_link "$HOME/.config/karabiner/assets/complex_modifications/discord-control-shortcuts.json"
+check_link "$HOME/.config/karabiner/assets/complex_modifications/linear-control-shortcuts.json"
 check_link "$HOME/.codex/config.toml"
 check_link "$HOME/.codex/hooks.json"
 check_link "$HOME/.codex/hooks"
