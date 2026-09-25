@@ -12,7 +12,7 @@ pr_summary() {
 	gh pr view --json number,state,statusCheckRollup --jq '
     (.statusCheckRollup | map(.conclusion // .state)) as $c |
     "#\(.number)\t" +
-    (if .state == "MERGED" then "⊕"
+    (if .state == "MERGED" then "⤮"
      elif ($c | length) == 0 then ""
      elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "✗"
      elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "…"
