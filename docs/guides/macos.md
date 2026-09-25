@@ -38,7 +38,9 @@ the same file on Omarchy.
 upgrades Herdr through mise.
 
 The `herdr/` topic links `~/.config/herdr/config.toml`. Its complete `[keys]`
-table matches Omen's Herdr config. Alt-Left/Right switches tabs, Alt-Up/Down
+table matches Omen's Herdr config. Agent finished and needs-input sounds are
+off (`[ui.sound] enabled = false`); reload a running session with
+`herdr server reload-config`. Alt-Left/Right switches tabs, Alt-Up/Down
 switches workspaces, and Ctrl-Alt-arrow focuses adjacent panes. The same
 prefix, split, resize, rename, copy-mode, and close shortcuts also apply when
 attaching through `herdr --remote omen`.
