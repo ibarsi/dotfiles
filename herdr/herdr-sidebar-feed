@@ -9,8 +9,8 @@ pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
 	gh pr view --json number,state,isDraft,statusCheckRollup --jq '
     (.statusCheckRollup | map(.conclusion // .state)) as $c |
-    "#\(.number) " +
-    (if .isDraft then "draft" else (.state | ascii_downcase) end) +
+    "#\(.number)" +
+    (if .isDraft then " draft" elif .state == "OPEN" then "" else " " + (.state | ascii_downcase) end) +
     (if ($c | length) == 0 then ""
      elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then " ✗"
      elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then " …"
