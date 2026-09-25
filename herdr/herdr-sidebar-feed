@@ -7,7 +7,7 @@ PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the A
 
 # Prints the PR number plus an invisible zero-width marker for its state,
 # since config.toml rules can only colour $pr by matching its text:
-# U+200B merged, U+200C CI failed, U+200D CI running, U+2060 CI passed
+# U+200B merged, U+200C CI failed, U+2061 CI running, U+2060 CI passed
 pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
 	gh pr view --json number,state,statusCheckRollup --jq '
@@ -16,7 +16,7 @@ pr_summary() {
     (if .state == "MERGED" then "\u200b"
      elif ($c | length) == 0 then ""
      elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u200c"
-     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u200d"
+     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u2061"
      else "\u2060" end)' 2>/dev/null
 }
 
