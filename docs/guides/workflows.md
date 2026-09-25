@@ -63,8 +63,10 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 (systemd on Omarchy, launchd on macOS). It adds two cmux-style lines to
 each workspace in Herdr's sidebar:
 
-- **`$pr`**: the PR for the workspace's branch, e.g. `#3750 ✗` (state shown only for draft, merged or closed), where
-  `✓` / `✗` / `…` summarise CI. Refreshed every 60s through `gh`.
+- **`$pr`**: the PR for the workspace's branch, e.g. `#3750` (state shown
+  only for draft, merged or closed). Refreshed every 60s through `gh`.
+- **`$ci`**: the PR's CI summary, pushed alongside `$pr` and coloured by
+  rules in `config.toml`: red `✗` failed, yellow `…` running, green `✓` passed.
 - **`$ports`**: TCP ports listened on by processes started from the
   workspace's panes, e.g. `:3000,8080`. Refreshed every 5s. Docker-published
   ports belong to the Docker daemon, not a pane, so they don't show.

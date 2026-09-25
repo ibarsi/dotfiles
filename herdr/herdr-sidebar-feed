@@ -1,34 +1,43 @@
 #!/usr/bin/env bash
-# Pushes cmux-style $pr and $ports workspace tokens into herdr's sidebar.
+# Pushes cmux-style $pr, $ci and $ports workspace tokens into herdr's sidebar.
 # Rendered via [ui.sidebar.spaces] rows in ~/.config/herdr/config.toml.
 set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
 
+# Prints "<pr>\t<ci>": PR number (plus state unless open) and a CI symbol,
+# split so config.toml can colour the symbol on its own
 pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
 	gh pr view --json number,state,isDraft,statusCheckRollup --jq '
     (.statusCheckRollup | map(.conclusion // .state)) as $c |
     "#\(.number)" +
     (if .isDraft then " draft" elif .state == "OPEN" then "" else " " + (.state | ascii_downcase) end) +
+    "\t" +
     (if ($c | length) == 0 then ""
-     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then " ✗"
-     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then " …"
-     else " ✓" end)' 2>/dev/null
+     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "✗"
+     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "…"
+     else "✓" end)' 2>/dev/null
 }
 
-# report <ws> <source> <token> <value> <ttl-ms>; empty value clears the token
+# report <ws> <source> <ttl-ms> <token>=<value>...; empty value clears the token
 report() {
-	if [ -n "$4" ]; then tok=(--token "$3=$4"); else tok=(--clear-token "$3"); fi
-	herdr workspace report-metadata "$1" --source "$2" --ttl-ms "$5" "${tok[@]}" >/dev/null
+	local ws=$1 src=$2 ttl=$3 kv tok=()
+	shift 3
+	for kv; do
+		if [ -n "${kv#*=}" ]; then tok+=(--token "$kv"); else tok+=(--clear-token "${kv%%=*}"); fi
+	done
+	herdr workspace report-metadata "$ws" --source "$src" --ttl-ms "$ttl" "${tok[@]}" >/dev/null
 }
 
 update_prs() {
 	herdr pane list 2>/dev/null |
 		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"' |
 		while IFS=$'\t' read -r ws cwd; do
+			IFS=$'\t' read -r pr ci < <(cd "$cwd" 2>/dev/null && pr_summary)
+			# One source for both tokens: herdr didn't render $ci pushed under its own source.
 			# TTL outlives two refreshes so a dead feeder clears stale values
-			report "$ws" sidebar-pr pr "$(cd "$cwd" 2>/dev/null && pr_summary)" $((TICK * PR_EVERY * 2500))
+			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "ci=${ci:-}"
 		done
 }
 
@@ -67,7 +76,7 @@ update_ports() {
       for (ws in all) print ws "\t" ports[ws]
     }' |
 		while IFS=$'\t' read -r ws ports; do
-			report "$ws" sidebar-ports ports "${ports:+:$ports}" $((TICK * 2500))
+			report "$ws" sidebar-ports $((TICK * 2500)) "ports=${ports:+:$ports}"
 		done
 }
 
