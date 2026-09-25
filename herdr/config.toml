@@ -64,6 +64,9 @@ move_tab_next = "alt+shift+right"
 
 # Sessions -> workspaces
 new_workspace = "prefix+shift+c"
+
+# Worktrees: the g family - goto (prefix+g), new (prefix+shift+g), open (prefix+ctrl+g)
+open_worktree = "prefix+ctrl+g"
 rename_workspace = "prefix+shift+r"
 close_workspace = "prefix+shift+k"
 previous_workspace = ["prefix+shift+p", "alt+up"]
@@ -104,3 +107,7 @@ delivery = "terminal"
 # Agent finished / needs-input chimes. Ghostty does not play these.
 [ui.sound]
 enabled = false
+
+[worktrees]
+# Keep herdr-created checkouts alongside the existing ~/worktrees/<repo>/... layout
+directory = "~/worktrees"
