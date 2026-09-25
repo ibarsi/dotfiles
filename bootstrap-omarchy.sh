@@ -21,6 +21,9 @@ bash "$DOTFILES_ROOT/gitmoji/install.sh"
 echo "Linking tmux config..."
 bash "$DOTFILES_ROOT/tmux/install.sh"
 
+echo "Linking Herdr config..."
+bash "$DOTFILES_ROOT/herdr/install.sh"
+
 echo "Linking the llama.cpp server configuration..."
 bash "$DOTFILES_ROOT/llama/install.sh"
 

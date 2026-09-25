@@ -15,7 +15,7 @@ cd ~/dotfiles
 
 Unlike `bootstrap.sh`, this is deliberately **additive**: it does not install
 packages, apply macOS-style defaults, or change the default shell. It runs
-six steps, each of which layers onto Omarchy's own configuration instead of
+eight steps, each of which layers onto Omarchy's own configuration instead of
 replacing it:
 
 1. Sets up the shared Bash aliases/functions layer (`bash/install.sh`),
@@ -26,16 +26,22 @@ replacing it:
    (`gitmoji/install.sh`).
 4. Links the tmux config (`tmux/install.sh`), which sources Omarchy's own
    tmux base first when present.
-5. Links the shared Starship prompt (`theme/install-starship.sh`) to
+5. Links the Herdr config (`herdr/install.sh`) to
+   `~/.config/herdr/config.toml`, shared with macOS.
+6. Sets up the llama.cpp server (`llama/install.sh`): links
+   `~/models/presets.ini` and installs `llama-server.service` into
+   `/etc/systemd/system` — the one step that asks for root, and only when the
+   unit has drifted. See [`llama/README.md`](../../llama/README.md).
+7. Links the shared Starship prompt (`theme/install-starship.sh`) to
    `~/.config/starship.toml` — see below.
-6. Schedules the VoxType vocabulary sync (`voice-to-text/install.sh`) via a
+8. Schedules the VoxType vocabulary sync (`voice-to-text/install.sh`) via a
    systemd user timer.
 
 Re-run it any time from any working directory; it resolves the repo root
 internally.
 
 See the platform matrix in the top-level [README](../../README.md) for which
-of the other 15 topics are intentionally *not* wired up here — those tools are
+of the other 13 topics are intentionally *not* wired up here — those tools are
 managed natively through Omarchy itself rather than through this repo.
 
 ## Starship Prompt

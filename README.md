@@ -65,7 +65,7 @@ this repo, not a gap to fill.
 | `git` | ✅ | ◐ aliases only |
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
-| `herdr` | ✅ | — macOS only |
+| `herdr` | ✅ | ✅ |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
 | `llama` | ✅ | ✅ |

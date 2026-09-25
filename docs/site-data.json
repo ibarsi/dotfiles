@@ -1,6 +1,6 @@
 {
-  "git_revision": "f372d321e5839c570b553dc6e7461f57f511e56c",
-  "source_hash": "eaca138ccb47",
+  "git_revision": "aaa57b9f7a39c63057bc265ea2c6fc66ad3199fa",
+  "source_hash": "3ee378c7b3f3",
   "stats": {
     "aliases": 69,
     "functions": 42,
@@ -1812,7 +1812,7 @@
         "state": "full"
       },
       "omarchy": {
-        "state": "absent"
+        "state": "full"
       }
     },
     {
