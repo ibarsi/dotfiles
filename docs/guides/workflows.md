@@ -60,7 +60,7 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 ## Herdr Sidebar
 
 `herdr/install.sh` runs `herdr/herdr-sidebar-feed` as a user service
-(systemd on Omarchy, launchd on macOS). It adds a cmux-style third line to
+(systemd on Omarchy, launchd on macOS). It adds two cmux-style lines to
 each workspace in Herdr's sidebar:
 
 - **`$pr`**: the PR for the workspace's branch, e.g. `#3750 ✗` (state shown only for draft, merged or closed), where
