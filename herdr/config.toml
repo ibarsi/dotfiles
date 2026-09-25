@@ -112,17 +112,18 @@ enabled = false
 # Keep herdr-created checkouts alongside the existing ~/worktrees/<repo>/... layout
 directory = "~/worktrees"
 
-# $pr, $ci and $ports are pushed by herdr-sidebar-feed in this directory (herdr/install.sh runs it as a service)
+# $pr and $ports are pushed by herdr-sidebar-feed in this directory (herdr/install.sh runs it as a service)
 [ui.sidebar.spaces]
 rows = [
   ["state_icon", "workspace"],
   ["branch", "git_status"],
-  ["$pr", { token = "$ci", rules = [
-    # Catppuccin Mocha mauve / red / yellow / green
-    { equals = "⤮", fg = "#cba6f7" },
-    { equals = "✗", fg = "#f38ba8" },
-    { equals = "…", fg = "#f9e2af" },
-    { equals = "✓", fg = "#a6e3a1" },
+  # herdr-sidebar-feed tags $pr with a zero-width marker per state.
+  # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed
+  [{ token = "$pr", rules = [
+    { contains = "\u200B", fg = "#cba6f7" },
+    { contains = "\u200C", fg = "#f38ba8" },
+    { contains = "\u200D", fg = "#f9e2af" },
+    { contains = "\u2060", fg = "#a6e3a1" },
   ] }],
   ["$ports"],
 ]

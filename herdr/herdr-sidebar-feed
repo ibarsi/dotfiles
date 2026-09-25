@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
-# Pushes cmux-style $pr, $ci and $ports workspace tokens into herdr's sidebar.
+# Pushes cmux-style $pr and $ports workspace tokens into herdr's sidebar.
 # Rendered via [ui.sidebar.spaces] rows in ~/.config/herdr/config.toml.
 set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
 
-# Prints "<pr>\t<ci>": PR number and a merged or CI symbol,
-# split so config.toml can colour the symbol on its own
+# Prints the PR number plus an invisible zero-width marker for its state,
+# since config.toml rules can only colour $pr by matching its text:
+# U+200B merged, U+200C CI failed, U+200D CI running, U+2060 CI passed
 pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
 	gh pr view --json number,state,statusCheckRollup --jq '
     (.statusCheckRollup | map(.conclusion // .state)) as $c |
-    "#\(.number)\t" +
-    (if .state == "MERGED" then "⤮"
+    "#\(.number)" +
+    (if .state == "MERGED" then "\u200b"
      elif ($c | length) == 0 then ""
-     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "✗"
-     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "…"
-     else "✓" end)' 2>/dev/null
+     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u200c"
+     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u200d"
+     else "\u2060" end)' 2>/dev/null
 }
 
 # report <ws> <source> <ttl-ms> <token>=<value>...; empty value clears the token
@@ -33,10 +34,9 @@ update_prs() {
 	herdr pane list 2>/dev/null |
 		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"' |
 		while IFS=$'\t' read -r ws cwd; do
-			IFS=$'\t' read -r pr ci < <(cd "$cwd" 2>/dev/null && pr_summary)
-			# One source for both tokens: herdr didn't render $ci pushed under its own source.
+			pr=$(cd "$cwd" 2>/dev/null && pr_summary)
 			# TTL outlives two refreshes so a dead feeder clears stale values
-			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "ci=${ci:-}"
+			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}"
 		done
 }
 
