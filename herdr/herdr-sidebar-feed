@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Pushes cmux-style $pr and $ports workspace tokens into herdr's sidebar.
+# Rendered via [ui.sidebar.spaces] rows in ~/.config/herdr/config.toml.
+set -u
+TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
+PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
+
+pr_summary() {
+	# shellcheck disable=SC2016 # $c is a jq variable
+	gh pr view --json number,state,isDraft,statusCheckRollup --jq '
+    (.statusCheckRollup | map(.conclusion // .state)) as $c |
+    "#\(.number) " +
+    (if .isDraft then "draft" else (.state | ascii_downcase) end) +
+    (if ($c | length) == 0 then ""
+     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then " ✗"
+     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then " …"
+     else " ✓" end)' 2>/dev/null
+}
+
+# report <ws> <source> <token> <value> <ttl-ms>; empty value clears the token
+report() {
+	if [ -n "$4" ]; then tok=(--token "$3=$4"); else tok=(--clear-token "$3"); fi
+	herdr workspace report-metadata "$1" --source "$2" --ttl-ms "$5" "${tok[@]}" >/dev/null
+}
+
+update_prs() {
+	herdr pane list 2>/dev/null |
+		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"' |
+		while IFS=$'\t' read -r ws cwd; do
+			# TTL outlives two refreshes so a dead feeder clears stale values
+			report "$ws" sidebar-pr pr "$(cd "$cwd" 2>/dev/null && pr_summary)" $((TICK * PR_EVERY * 2500))
+		done
+}
+
+# Prints "L <pid> <port>" per listening TCP socket. ss is Linux-only and
+# Omarchy ships no lsof; macOS ships no ss.
+listeners() {
+	if [ "$(uname -s)" = Darwin ]; then
+		lsof -nP -iTCP -sTCP:LISTEN -Fpn 2>/dev/null |
+			awk '/^p/ { pid = substr($0, 2) } /^n/ { n = split($0, a, ":"); print "L", pid, a[n] }'
+	else
+		ss -ltnpH 2>/dev/null | awk '{n = split($4, a, ":"); port = a[n]
+      while (match($0, /pid=[0-9]+/)) { print "L", substr($0, RSTART+4, RLENGTH-4), port; $0 = substr($0, RSTART+RLENGTH) }}'
+	fi
+}
+
+# Credits each listening TCP port to the workspace whose pane shell is an
+# ancestor of the listening process. Docker-published ports are owned by
+# dockerd, not a pane descendant, so they don't show.
+update_ports() {
+	local shells
+	shells=$(herdr pane list 2>/dev/null | jq -r '.result.panes[] | "\(.pane_id)\t\(.workspace_id)"' |
+		while IFS=$'\t' read -r pane ws; do
+			herdr pane process-info --pane "$pane" 2>/dev/null |
+				jq -r --arg ws "$ws" '"S \(.result.process_info.shell_pid) \($ws)"'
+		done)
+	{
+		echo "$shells"
+		ps -e -o pid=,ppid= | awk '{print "P", $1, $2}'
+		listeners
+	} | awk '
+    $1 == "S" { shell[$2] = $3; all[$3] = 1 }
+    $1 == "P" { parent[$2] = $3 }
+    $1 == "L" { for (p = $2; p > 1; p = parent[p]) if (p in shell) { seen[shell[p], $3] = 1; break } }
+    END {
+      for (k in seen) { split(k, a, SUBSEP); ports[a[1]] = ports[a[1]] (ports[a[1]] ? "," : "") a[2] }
+      for (ws in all) print ws "\t" ports[ws]
+    }' |
+		while IFS=$'\t' read -r ws ports; do
+			report "$ws" sidebar-ports ports "${ports:+:$ports}" $((TICK * 2500))
+		done
+}
+
+i=0
+while :; do
+	((i++ % PR_EVERY == 0)) && update_prs
+	update_ports
+	sleep "$TICK"
+done

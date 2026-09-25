@@ -111,3 +111,7 @@ enabled = false
 [worktrees]
 # Keep herdr-created checkouts alongside the existing ~/worktrees/<repo>/... layout
 directory = "~/worktrees"
+
+# $pr and $ports are pushed by herdr-sidebar-feed in this directory (herdr/install.sh runs it as a service)
+[ui.sidebar.spaces]
+rows = [["state_icon", "workspace"], ["branch", "git_status"], ["$pr", "$ports"]]

@@ -57,6 +57,23 @@ From any directory, `dotdocs` will start the server if needed and open the same 
 
 > **Note:** `theme/iterm2-catppuccin.json` is preserved in the repo for historical reference but is no longer used.
 
+## Herdr Sidebar
+
+`herdr/install.sh` runs `herdr/herdr-sidebar-feed` as a user service
+(systemd on Omarchy, launchd on macOS). It adds a cmux-style third line to
+each workspace in Herdr's sidebar:
+
+- **`$pr`**: the PR for the workspace's branch, e.g. `#3750 open ✗`, where
+  `✓` / `✗` / `…` summarise CI. Refreshed every 60s through `gh`.
+- **`$ports`**: TCP ports listened on by processes started from the
+  workspace's panes, e.g. `:3000,8080`. Refreshed every 5s. Docker-published
+  ports belong to the Docker daemon, not a pane, so they don't show.
+
+The rows live in `[ui.sidebar.spaces]` in `herdr/config.toml`. Check the
+service with `systemctl --user status herdr-sidebar-feed` (Omarchy) or
+`~/Library/Logs/herdr-sidebar-feed.log` (macOS). See the pushed values with
+`herdr api snapshot | jq -c '.. | objects | select(has("tokens")) | {label, tokens}'`.
+
 ## Markdown Workflow
 
 `glow` is installed from `Brewfile` and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering.

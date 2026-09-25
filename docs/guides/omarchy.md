@@ -27,7 +27,9 @@ replacing it:
 4. Links the tmux config (`tmux/install.sh`), which sources Omarchy's own
    tmux base first when present.
 5. Links the Herdr config (`herdr/install.sh`) to
-   `~/.config/herdr/config.toml`, shared with macOS.
+   `~/.config/herdr/config.toml`, shared with macOS, and enables the
+   `herdr-sidebar-feed` systemd user service — see
+   [Herdr Sidebar](workflows.md#herdr-sidebar).
 6. Sets up the llama.cpp server (`llama/install.sh`): links
    `~/models/presets.ini` and installs `llama-server.service` into
    `/etc/systemd/system` — the one step that asks for root, and only when the

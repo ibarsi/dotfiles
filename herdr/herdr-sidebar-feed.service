@@ -1,0 +1,13 @@
+[Unit]
+Description=Push PR status and listening ports into the herdr sidebar
+Documentation=https://github.com/ibarsi/dotfiles
+
+[Service]
+# gh, jq and herdr come from mise; a user unit doesn't inherit the login PATH
+Environment=PATH=%h/.local/share/mise/shims:/usr/local/bin:/usr/bin
+ExecStart=%h/dotfiles/herdr/herdr-sidebar-feed
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
