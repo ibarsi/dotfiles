@@ -118,7 +118,8 @@ rows = [
   ["state_icon", "workspace"],
   ["branch", "git_status"],
   ["$pr", { token = "$ci", rules = [
-    # Catppuccin Mocha red / yellow / green
+    # Catppuccin Mocha mauve / red / yellow / green
+    { equals = "⊕", fg = "#cba6f7" },
     { equals = "✗", fg = "#f38ba8" },
     { equals = "…", fg = "#f9e2af" },
     { equals = "✓", fg = "#a6e3a1" },

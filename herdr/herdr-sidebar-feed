@@ -5,16 +5,15 @@ set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
 
-# Prints "<pr>\t<ci>": PR number (plus state unless open) and a CI symbol,
+# Prints "<pr>\t<ci>": PR number and a merged or CI symbol,
 # split so config.toml can colour the symbol on its own
 pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
-	gh pr view --json number,state,isDraft,statusCheckRollup --jq '
+	gh pr view --json number,state,statusCheckRollup --jq '
     (.statusCheckRollup | map(.conclusion // .state)) as $c |
-    "#\(.number)" +
-    (if .isDraft then " draft" elif .state == "OPEN" then "" else " " + (.state | ascii_downcase) end) +
-    "\t" +
-    (if ($c | length) == 0 then ""
+    "#\(.number)\t" +
+    (if .state == "MERGED" then "⊕"
+     elif ($c | length) == 0 then ""
      elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "✗"
      elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "…"
      else "✓" end)' 2>/dev/null
