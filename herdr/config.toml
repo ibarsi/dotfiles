@@ -119,7 +119,7 @@ rows = [
   ["branch", "git_status"],
   # herdr-sidebar-feed tags $pr with a zero-width marker per state.
   # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed
-  [{ token = "$pr", rules = [
+  [{ token = "$pr", dim = true, rules = [
     { contains = "\u200B", fg = "#cba6f7" },
     { contains = "\u200C", fg = "#f38ba8" },
     { contains = "\u2061", fg = "#f9e2af" },
