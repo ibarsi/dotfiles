@@ -133,6 +133,9 @@ disable_symbolic_hotkey 80 65535 123 8781824   # Move left a space, fn variant
 disable_symbolic_hotkey 81 65535 124 8650752   # Move right a space, Control+Right
 disable_symbolic_hotkey 82 65535 124 8781824   # Move right a space, fn variant
 unset -f disable_symbolic_hotkey
+# Dock and SystemUIServer restarts do not reload this table. Without this,
+# the plist reads as disabled while Control+arrow still fires.
+/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
 # Remap Caps Lock to Control globally.
 # This removes Caps Lock toggle behavior, so the Caps Lock LED no longer flips on/off when the key is pressed.
