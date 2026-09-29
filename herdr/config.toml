@@ -126,13 +126,13 @@ directory = "~/worktrees"
 rows = [
   ["state_icon", "workspace"],
   ["branch", "git_status"],
-  # herdr-sidebar-feed tags $pr with a zero-width marker per state.
+  # herdr-sidebar-feed suffixes $pr with a width-1 icon per state.
   # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed
   [{ token = "$pr", dim = true, rules = [
-    { contains = "\u200B", fg = "#cba6f7" },
-    { contains = "\u200C", fg = "#f38ba8" },
-    { contains = "\u2061", fg = "#f9e2af" },
-    { contains = "\u2060", fg = "#a6e3a1" },
+    { contains = "⤮", fg = "#cba6f7" },
+    { contains = "✗", fg = "#f38ba8" },
+    { contains = "…", fg = "#f9e2af" },
+    { contains = "✓", fg = "#a6e3a1" },
   ] }],
   ["$ports"],
 ]
