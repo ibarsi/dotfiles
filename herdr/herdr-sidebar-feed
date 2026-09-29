@@ -5,33 +5,19 @@ set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
 
-# Prints "#N <icon>" so config.toml can colour $pr by matching the glyph.
-# Width-1 icons, not format characters: herdr draws Cf markers on the last digit.
-# Required checks only — statusCheckRollup keeps superseded and optional FAILURE rows.
-# ⤮ merged, ✗ required failed/cancelled, … required pending, ✓ required passed
+# Prints the PR number plus an invisible zero-width marker for its state,
+# since config.toml rules can only colour $pr by matching its text:
+# U+200B merged, U+200C CI failed, U+2061 CI running, U+2060 CI passed
 pr_summary() {
-	local view number state checks icon
-	view=$(gh pr view --json number,state 2>/dev/null) || return
-	number=$(jq -r '.number' <<<"$view")
-	state=$(jq -r '.state' <<<"$view")
-	[ -n "$number" ] && [ "$number" != null ] || return
-	if [ "$state" = MERGED ]; then
-		printf '#%s ⤮\n' "$number"
-		return
-	fi
-	checks=$(gh pr checks --required --json bucket 2>/dev/null) || true
-	if ! jq -e 'type == "array"' >/dev/null 2>&1 <<<"${checks:-}"; then
-		printf '#%s\n' "$number"
-		return
-	fi
-	icon=$(jq -r '
-		map(.bucket) as $b |
-		if ($b | length) == 0 then ""
-		elif any($b[]; . == "fail" or . == "cancel") then " ✗"
-		elif any($b[]; . == "pending") then " …"
-		else " ✓"
-		end' <<<"$checks")
-	printf '#%s%s\n' "$number" "$icon"
+	# shellcheck disable=SC2016 # $c is a jq variable
+	gh pr view --json number,state,statusCheckRollup --jq '
+    (.statusCheckRollup | map(.conclusion // .state)) as $c |
+    "#\(.number)" +
+    (if .state == "MERGED" then "\u200b"
+     elif ($c | length) == 0 then ""
+     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u200c"
+     elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u2061"
+     else "\u2060" end)' 2>/dev/null
 }
 
 # report <ws> <source> <ttl-ms> <token>=<value>...; empty value clears the token
@@ -93,10 +79,9 @@ update_ports() {
 		done
 }
 
-update_prs
 i=0
 while :; do
+	((i++ % PR_EVERY == 0)) && update_prs
 	update_ports
 	sleep "$TICK"
-	((++i % PR_EVERY == 0)) && update_prs
 done
