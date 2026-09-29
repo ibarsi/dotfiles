@@ -39,7 +39,16 @@ focus_pane_down = "ctrl+alt+down"
 focus_pane_up = "ctrl+alt+up"
 focus_pane_right = "ctrl+alt+right"
 
-resize_mode = ["prefix+ctrl+left", "prefix+ctrl+down", "prefix+ctrl+up", "prefix+ctrl+right"]
+# Swap the focused pane with its neighbor. Herdr's default for this was
+# prefix+shift+h/j/k/l; those chords now enter resize mode.
+swap_pane_left = "prefix+ctrl+left"
+swap_pane_down = "prefix+ctrl+down"
+swap_pane_up = "prefix+ctrl+up"
+swap_pane_right = "prefix+ctrl+right"
+
+# prefix+shift+k stays close_workspace, which already owned that chord
+# (it shadowed the default swap-up binding).
+resize_mode = ["prefix+shift+h", "prefix+shift+j", "prefix+shift+l"]
 
 # Like resize-pane on C-M-S-arrows
 resize_pane_left = "ctrl+alt+shift+left"
