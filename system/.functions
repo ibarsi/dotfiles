@@ -164,8 +164,8 @@ function upall() {
         echo "Skipping: managed by the platform package manager on ${DOTFILES_OS:-this OS}."
     fi
 
-    echo "== mise upgrade =="
-    mise upgrade -C "$repo_root" || return
+    echo "== mise up =="
+    mise up -C "$repo_root" || return
 
 }
 
