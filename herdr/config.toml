@@ -130,7 +130,7 @@ rows = [
   # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed
   [{ token = "$pr", dim = true, rules = [
     { contains = "\u200B", fg = "#cba6f7" },
-    { contains = "\u200C", fg = "#f38ba8" },
+    { contains = "\u2062", fg = "#f38ba8" },
     { contains = "\u2061", fg = "#f9e2af" },
     { contains = "\u2060", fg = "#a6e3a1" },
   ] }],

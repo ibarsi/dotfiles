@@ -6,16 +6,22 @@ TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
 
 # Prints the PR number plus an invisible zero-width marker for its state,
-# since config.toml rules can only colour $pr by matching its text:
-# U+200B merged, U+200C CI failed, U+2061 CI running, U+2060 CI passed
+# since config.toml rules can only colour $pr by matching its text.
+# Markers must not be Grapheme_Extend (U+200C/U+200D are): herdr glues those
+# onto the last digit and mangles it.
+# U+200B merged, U+2062 CI failed, U+2061 CI running, U+2060 CI passed
 pr_summary() {
 	# shellcheck disable=SC2016 # $c is a jq variable
 	gh pr view --json number,state,statusCheckRollup --jq '
-    (.statusCheckRollup | map(.conclusion // .state)) as $c |
+    # A re-triggered workflow leaves the older run in the rollup, and the new
+    # run may skip jobs, so keep only the latest run (highest id) per workflow
+    def run: [.detailsUrl // "" | scan("/runs/([0-9]+)")[0] | tonumber] | first // 0;
+    (.statusCheckRollup | group_by(.workflowName // .context)
+      | map((map(run) | max) as $r | .[] | select(run == $r) | .conclusion // .state)) as $c |
     "#\(.number)" +
     (if .state == "MERGED" then "\u200b"
      elif ($c | length) == 0 then ""
-     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u200c"
+     elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u2062"
      elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u2061"
      else "\u2060" end)' 2>/dev/null
 }
