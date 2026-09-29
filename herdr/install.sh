@@ -5,6 +5,8 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 mkdir -p "$HOME/.config/herdr"
 ln -sf "$DOTFILES_ROOT/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+# A running server doesn't watch config.toml; no-op when herdr isn't running
+herdr server reload-config >/dev/null 2>&1 || true
 
 # herdr-sidebar-feed pushes the $pr and $ports tokens config.toml renders in
 # the sidebar, so it runs as a long-lived user service on both platforms.
