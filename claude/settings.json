@@ -53,7 +53,7 @@
       "Read(./.env)",
       "Read(./secrets/**)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "model": "opus",
   "hooks": {
