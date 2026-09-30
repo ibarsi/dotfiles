@@ -124,14 +124,14 @@ disable_symbolic_hotkey() {
 			</dict>
 		</dict>"
 }
-disable_symbolic_hotkey 32 65535 126 8650752   # Mission Control, Control+Up
-disable_symbolic_hotkey 34 65535 126 8781824   # Mission Control, fn variant
-disable_symbolic_hotkey 33 65535 125 8650752   # Application windows, Control+Down
-disable_symbolic_hotkey 35 65535 125 8781824   # Application windows, fn variant
-disable_symbolic_hotkey 79 65535 123 8650752   # Move left a space, Control+Left
-disable_symbolic_hotkey 80 65535 123 8781824   # Move left a space, fn variant
-disable_symbolic_hotkey 81 65535 124 8650752   # Move right a space, Control+Right
-disable_symbolic_hotkey 82 65535 124 8781824   # Move right a space, fn variant
+disable_symbolic_hotkey 32 65535 126 8650752 # Mission Control, Control+Up
+disable_symbolic_hotkey 34 65535 126 8781824 # Mission Control, fn variant
+disable_symbolic_hotkey 33 65535 125 8650752 # Application windows, Control+Down
+disable_symbolic_hotkey 35 65535 125 8781824 # Application windows, fn variant
+disable_symbolic_hotkey 79 65535 123 8650752 # Move left a space, Control+Left
+disable_symbolic_hotkey 80 65535 123 8781824 # Move left a space, fn variant
+disable_symbolic_hotkey 81 65535 124 8650752 # Move right a space, Control+Right
+disable_symbolic_hotkey 82 65535 124 8781824 # Move right a space, fn variant
 unset -f disable_symbolic_hotkey
 # Dock and SystemUIServer restarts do not reload this table. Without this,
 # the plist reads as disabled while Control+arrow still fires.
