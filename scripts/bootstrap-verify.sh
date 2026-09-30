@@ -39,6 +39,15 @@ check_link "$HOME/.codex/hooks"
 check_link "$HOME/.claude/settings.json"
 check_link "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
 
+for alias in ci mq; do
+	if gh alias list 2>/dev/null | grep -q "^$alias: "; then
+		echo "✅ gh alias $alias"
+	else
+		echo "⚠️  missing: gh alias $alias (run gh/install.sh)"
+		status=1
+	fi
+done
+
 if [ "$status" -eq 0 ]; then
 	echo "Done."
 else

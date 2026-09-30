@@ -1,0 +1,17 @@
+# GitHub CLI aliases, loaded by gh/install.sh via `gh alias import --clobber`.
+# Edit here, then re-run gh/install.sh; `gh alias set` changes won't be kept.
+mq: |
+    !gh api graphql -F owner='{owner}' -F repo='{repo}' -f query='
+    query($owner:String!,$repo:String!){repository(owner:$owner,name:$repo){mergeQueue(branch:"main"){entries(first:50){nodes{
+      position state pullRequest{number title author{login}}}}}}}' --jq '
+      {MERGEABLE:"32",AWAITING_CHECKS:"33",QUEUED:"36",UNMERGEABLE:"31",LOCKED:"35"} as $c
+      | .data.repository.mergeQueue.entries.nodes[]
+      | "\(.position)\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\u001b[1m#\(.pullRequest.number)\u001b[0m\t\u001b[2m\(.pullRequest.author.login)\u001b[0m\t\(.pullRequest.title)"'
+ci: |
+    !f='.[]'
+    for a; do shift; if [ "$a" = --failed ]; then f='.[] | select(.bucket == "fail")'; else set -- "$@" "$a"; fi; done
+    gh pr checks "$@" --json bucket,name,workflow,link --jq '
+      {fail:"31",cancel:"35",pending:"33",pass:"32",skipping:"2"} as $c
+      | {fail:0,cancel:1,pending:2,pass:3,skipping:4} as $o
+      | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
+      | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'

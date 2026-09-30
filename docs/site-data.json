@@ -1,6 +1,6 @@
 {
-  "git_revision": "8c268fad2e7de89cc54b5b060ecebab3222cb317",
-  "source_hash": "32527d98c693",
+  "git_revision": "1b268e27006c0ae333e686f13a89907282562fd0",
+  "source_hash": "c55e638f9ae4",
   "stats": {
     "aliases": 69,
     "functions": 42,
@@ -10,7 +10,7 @@
     "bootstrap_links": 20,
     "brews": 36,
     "casks": 26,
-    "platforms": 21
+    "platforms": 22
   },
   "aliases": [
     {
@@ -1767,6 +1767,15 @@
       },
       "omarchy": {
         "state": "absent"
+      }
+    },
+    {
+      "topic": "gh",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
       }
     },
     {

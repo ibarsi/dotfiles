@@ -280,6 +280,13 @@ git push origin --delete feat/mobile-nav
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
 
+## GitHub CLI Aliases
+
+`gh/aliases.yml` holds GitHub CLI aliases; bootstrap imports them on both platforms with `gh/install.sh` (`gh alias import --clobber`). Edit the file and re-run the installer — changes made with `gh alias set` are overwritten on the next import.
+
+- `gh ci` lists the current branch's PR checks, colour-coded and sorted failures first. Pass a PR number, URL, or branch to inspect another PR: `gh ci 123`. Add `--failed` to show only failed checks.
+- `gh mq` lists the `main` merge queue with each entry's position, state, PR number, author, and title.
+
 ## AI Diagnostics
 
 Scripts under `scripts/`:

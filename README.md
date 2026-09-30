@@ -61,6 +61,7 @@ this repo, not a gap to fill.
 | `bash` | ✅ | ✅ |
 | `claude` | ✅ | — macOS only |
 | `codex` | ✅ | — macOS only |
+| `gh` | ✅ | ✅ |
 | `ghostty` | ✅ | — macOS only |
 | `git` | ✅ | ◐ aliases only |
 | `gitmoji` | ✅ | ✅ |
