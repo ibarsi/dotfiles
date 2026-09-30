@@ -355,33 +355,6 @@ function pr() {
     gh pr view --web 2>/dev/null || gh pr create --web
 }
 
-# Truecolor SGR from a #RRGGBB Catppuccin token. Callers decide whether to use
-# the sequence (TTY / NO_COLOR / CLICOLOR_FORCE); this helper always emits it.
-function _catppuccin_sgr() {
-    local hex="${1#\#}"
-    [[ ${#hex} -eq 6 ]] || return 0
-    printf '\e[38;2;%d;%d;%dm' "$((16#${hex:0:2}))" "$((16#${hex:2:2}))" "$((16#${hex:4:2}))"
-}
-
-# List failing GitHub PR checks for the current branch, or a given PR.
-function ghc() {
-    local red="" overlay="" reset="" output status name state link force=0
-    output="$(gh pr checks "$@" --json name,state,bucket,link --jq '.[] | select(.bucket == "fail") | [.name, .state, .link] | @tsv')"
-    status=$?
-    case "${CLICOLOR_FORCE:-}" in 1 | true | TRUE | yes | YES) force=1 ;; esac
-    if [[ -z "${NO_COLOR:-}" && ( "$force" -eq 1 || ( -t 1 && ${TERM:-} != dumb ) ) ]]; then
-        red="$(_catppuccin_sgr "${CATPPUCCIN_RED:-#f38ba8}")"
-        overlay="$(_catppuccin_sgr "${CATPPUCCIN_OVERLAY1:-#7f849c}")"
-        reset=$'\e[0m'
-    fi
-    if [[ -n "$output" ]]; then
-        while IFS=$'\t' read -r name state link; do
-            printf '%s\t%s\t%s\n' "${red}${name}${reset}" "${red}${state}${reset}" "${overlay}${link}${reset}"
-        done <<<"$output"
-    fi
-    return "$status"
-}
-
 # Determine size of a file or total size of a directory
 function fs() {
     if du -b /dev/null > /dev/null 2>&1; then

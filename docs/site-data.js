@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "dd72c69f3808b4cc5d5772b152b10a7adfd17d8f",
-  "source_hash": "b3ad12a804fe",
+  "git_revision": "17c54dc72f432815936fe19c8d608f809da59f23",
+  "source_hash": "32527d98c693",
   "stats": {
     "aliases": 69,
-    "functions": 43,
-    "git": 54,
+    "functions": 42,
+    "git": 53,
     "features": 28,
     "tasks": 15,
     "bootstrap_links": 20,
@@ -597,13 +597,6 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
-      "name": "ghc",
-      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
-      "usage": "",
-      "source": "system/.functions",
-      "source_kind": "system function"
-    },
-    {
       "name": "glow",
       "summary": "Run Glow with the repo-managed config and Catppuccin Glamour style by default.",
       "usage": "",
@@ -826,13 +819,6 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fwtr",
       "command": "fwtr",
       "summary": "Fuzzy-pick a git worktree and remove it with git wtr",
-      "kind": "function",
-      "source": "system/.functions"
-    },
-    {
-      "name": "ghc",
-      "command": "ghc",
-      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
       "kind": "function",
       "source": "system/.functions"
     },
