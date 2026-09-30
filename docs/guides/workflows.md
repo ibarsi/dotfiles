@@ -285,6 +285,7 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 `gh/aliases.yml` holds GitHub CLI aliases; bootstrap imports them on both platforms with `gh/install.sh` (`gh alias import --clobber`). Edit the file and re-run the installer — changes made with `gh alias set` are overwritten on the next import.
 
 - `gh ci` lists the current branch's PR checks, colour-coded and sorted failures first. Pass a PR number, URL, or branch to inspect another PR: `gh ci 123`. Add `--failed` to show only failed checks.
+- `gh url` prints the current branch's PR URL. Pass a PR number or branch for another PR: `gh url 123`.
 - `gh mq` lists the `main` merge queue with each entry's position, state, PR number, author, and title.
 
 ## AI Diagnostics

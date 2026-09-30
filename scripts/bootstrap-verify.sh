@@ -39,7 +39,7 @@ check_link "$HOME/.codex/hooks"
 check_link "$HOME/.claude/settings.json"
 check_link "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
 
-for alias in ci mq; do
+for alias in ci mq url; do
 	if gh alias list 2>/dev/null | grep -q "^$alias: "; then
 		echo "✅ gh alias $alias"
 	else

@@ -15,3 +15,4 @@ ci: |
       | {fail:0,cancel:1,pending:2,pass:3,skipping:4} as $o
       | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
       | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
+url: pr view --json url --jq .url
