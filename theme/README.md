@@ -9,7 +9,29 @@ Soothing pastel theme for your entire development environment.
 - **Frappé**: Subdued, muted aesthetic
 - **Latte**: Light theme (solarized-style)
 
-To switch flavors, edit `catppuccin.zsh` and change `CATPPUCCIN_FLAVOR`.
+To switch flavors, see [Switching Flavors](#switching-flavors).
+
+## Colour Rule: Reference the Palette, Never Hardcode Hex
+
+`palette.sh` is the single source of truth for theme colours. Any config that
+can read variables must use the `CATPPUCCIN_*` names instead of repeating hex
+values, so a theme change is one edit:
+
+- **Shell env** (`catppuccin.zsh`): `$CATPPUCCIN_RED` directly, or
+  `$(_ctp_rgb "$CATPPUCCIN_RED")` where a tool wants `r;g;b` truecolor (eza, less).
+- **tmux** (`tmux/theme.conf`): `$CATPPUCCIN_RED` inside double quotes. Colour
+  settings must stay in `theme.conf`, not `.tmux.conf`: tmux parses a whole file
+  before running it, so the variables only expand in a file sourced after
+  `palette.sh`.
+- **Shell functions and scripts**: read the exported `CATPPUCCIN_*` variables.
+
+Keep `palette.sh` as plain `NAME="#hex"` lines (no `export`, no logic) so both
+shells and tmux can parse it.
+
+Still hardcoded, because these formats can't read environment variables:
+`starship.toml` (own palette table), `git/delta.gitconfig`, `herdr/config.toml`,
+and the vendored upstream theme files (`claude/themes/`, `glow/`,
+`zsh/catppuccin_mocha-zsh-syntax-highlighting.theme`). Don't add new ones.
 
 ## Installation
 
@@ -83,7 +105,8 @@ obsidian theme:set name=Catppuccin
 
 ```
 theme/
-├── catppuccin.zsh        # Shell env vars & FZF/bat/eza config
+├── palette.sh            # Colour source of truth (shells + tmux)
+├── catppuccin.zsh        # Exports palette; FZF/bat/eza/less config built from it
 ├── starship.toml         # Prompt theme configuration
 ├── iterm2-catppuccin.json # iTerm2 color preset
 ├── install.sh            # One-command setup
@@ -95,8 +118,8 @@ theme/
 
 To use a different flavor (e.g., Macchiato):
 
-1. Edit `catppuccin.zsh`: Change `CATPPUCCIN_FLAVOR="mocha"` to `"macchiato"`
-2. Update colors in the export statements
+1. Replace the hex values in `palette.sh` (shell tools and tmux follow automatically)
+2. Update the still-hardcoded configs listed under the colour rule above
 3. For Ghostty: Already included (no extra setup)
 4. For iTerm2: Import the Macchiato variant (see catppuccin.org for downloads)
 
