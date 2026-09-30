@@ -282,7 +282,7 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 
 ## GitHub PR checks
 
-`prcf` lists failing checks for the current branch's pull request as `name`, `state`, and `link`. Pass a PR number, URL, or branch to inspect another PR: `prcf 123`.
+`ghc` lists failing checks for the current branch's pull request as `name`, `state`, and `link`. Pass a PR number, URL, or branch to inspect another PR: `ghc 123`.
 
 ## AI Diagnostics
 

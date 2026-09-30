@@ -1,6 +1,6 @@
 {
-  "git_revision": "73a646ef0d4a87834efeb0c5aabb1ec9e8d1ad6e",
-  "source_hash": "b070618526ae",
+  "git_revision": "6297893bf132cb37bcbca123917b9214a528f04d",
+  "source_hash": "2ea1abd92c05",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -597,6 +597,13 @@
       "source_kind": "system function"
     },
     {
+      "name": "ghc",
+      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "glow",
       "summary": "Run Glow with the repo-managed config and Catppuccin Glamour style by default.",
       "usage": "",
@@ -737,13 +744,6 @@
       "source_kind": "system function"
     },
     {
-      "name": "prcf",
-      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
-      "usage": "",
-      "source": "system/.functions",
-      "source_kind": "system function"
-    },
-    {
       "name": "reload-dotfiles",
       "summary": "Reload shell only (no git/network side effects)",
       "usage": "",
@@ -830,6 +830,13 @@
       "source": "system/.functions"
     },
     {
+      "name": "ghc",
+      "command": "ghc",
+      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
       "name": "groot",
       "command": "groot",
       "summary": "Jump to the current git repository root",
@@ -840,13 +847,6 @@
       "name": "pr",
       "command": "pr",
       "summary": "Open existing PR in browser, or create one if missing",
-      "kind": "function",
-      "source": "system/.functions"
-    },
-    {
-      "name": "prcf",
-      "command": "prcf",
-      "summary": "List failing GitHub PR checks for the current branch, or a given PR.",
       "kind": "function",
       "source": "system/.functions"
     },
