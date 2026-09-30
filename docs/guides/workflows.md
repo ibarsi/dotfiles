@@ -280,6 +280,10 @@ git push origin --delete feat/mobile-nav
 Use `git wtl` before cleanup so you can verify the exact worktree paths and avoid removing the wrong checkout.
 If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the repo to fuzzy-pick a sibling worktree and remove it directly.
 
+## GitHub PR checks
+
+`prcf` lists failing checks for the current branch's pull request as `name`, `state`, and `link`. Pass a PR number, URL, or branch to inspect another PR: `prcf 123`.
+
 ## AI Diagnostics
 
 Scripts under `scripts/`:

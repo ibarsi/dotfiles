@@ -355,6 +355,11 @@ function pr() {
     gh pr view --web 2>/dev/null || gh pr create --web
 }
 
+# List failing GitHub PR checks for the current branch, or a given PR.
+function prcf() {
+    gh pr checks "$@" --json name,state,bucket,link --jq '.[] | select(.bucket == "fail") | [.name, .state, .link] | @tsv'
+}
+
 # Determine size of a file or total size of a directory
 function fs() {
     if du -b /dev/null > /dev/null 2>&1; then
