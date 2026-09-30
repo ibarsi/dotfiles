@@ -11,7 +11,8 @@ PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the A
 # onto the last digit and mangles it.
 # U+200B merged, U+2062 CI failed, U+2061 CI running, U+2060 CI passed
 # Then "|"-separated $review (✓ approved, ✗ changes requested) and $merge
-# (↯ conflict, ≡ in merge queue) icons, empty unless the PR is open.
+# (↯ conflict, ≡ in merge queue, which hides $review) icons, empty unless
+# the PR is open.
 pr_summary() {
 	local pr review merge num
 	# shellcheck disable=SC2016 # $c is a jq variable
@@ -38,6 +39,8 @@ pr_summary() {
       query($owner: String!, $name: String!, $n: Int!) {
         repository(owner: $owner, name: $name) { pullRequest(number: $n) { mergeQueueEntry { state } } }
       }' --jq 'if .data.repository.pullRequest.mergeQueueEntry then "≡" else "" end' 2>/dev/null)
+		# Queued implies approved, so the review icon is noise
+		[ "$merge" = "≡" ] && review=
 	fi
 	echo "$pr|$review|$merge"
 }
