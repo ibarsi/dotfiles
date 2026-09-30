@@ -9,6 +9,10 @@ esac
 
 export DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
+# Palette tokens plus FZF/bat/eza/less colors. Filename is historical; the
+# file is POSIX exports that Bash can source.
+[ -r "$DOTFILES/theme/catppuccin.zsh" ] && . "$DOTFILES/theme/catppuccin.zsh"
+
 for file in "$DOTFILES/system/.path" "$DOTFILES/system/.exports" "$DOTFILES/system/.aliases" "$DOTFILES/system/.functions" "$DOTFILES/system/.extra"; do
     [ -r "$file" ] && . "$file"
 done

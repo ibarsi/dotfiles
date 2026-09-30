@@ -284,6 +284,8 @@ If you prefer an interactive cleanup flow, run `fwtr` from any checkout in the r
 
 `ghc` lists failing checks for the current branch's pull request as `name`, `state`, and `link`. Pass a PR number, URL, or branch to inspect another PR: `ghc 123`.
 
+On a TTY, the name and state use Catppuccin Mocha red (`CATPPUCCIN_RED`, the same token as Herdr's failed-CI colour) and the link uses `CATPPUCCIN_OVERLAY1`. Piped output stays plain TSV. `NO_COLOR` disables colour; `CLICOLOR_FORCE=1` keeps it in pipes.
+
 ## AI Diagnostics
 
 Scripts under `scripts/`:
