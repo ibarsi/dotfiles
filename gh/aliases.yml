@@ -2,10 +2,10 @@
 # Edit here, then re-run gh/install.sh; `gh alias set` changes won't be kept.
 mq: |
     !gh api graphql -F owner='{owner}' -F repo='{repo}' -f query='
-    query($owner:String!,$repo:String!){repository(owner:$owner,name:$repo){mergeQueue(branch:"main"){entries(first:50){nodes{
+    query($owner:String!,$repo:String!){repository(owner:$owner,name:$repo){mergeQueue{entries(first:50){nodes{
       position state pullRequest{number title author{login}}}}}}}' --jq '
       {MERGEABLE:"32",AWAITING_CHECKS:"33",QUEUED:"36",UNMERGEABLE:"31",LOCKED:"35"} as $c
-      | .data.repository.mergeQueue.entries.nodes[]
+      | .data.repository.mergeQueue.entries.nodes[]?
       | "\(.position)\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\u001b[1m#\(.pullRequest.number)\u001b[0m\t\u001b[2m\(.pullRequest.author.login)\u001b[0m\t\(.pullRequest.title)"'
 ci: |
     !f='.[]'
