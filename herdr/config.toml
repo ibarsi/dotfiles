@@ -121,7 +121,7 @@ enabled = false
 # Keep herdr-created checkouts alongside the existing ~/worktrees/<repo>/... layout
 directory = "~/worktrees"
 
-# $pr, $review, $merge and $ports are pushed by herdr-sidebar-feed in this directory (herdr/install.sh runs it as a service)
+# $pr, $review, $merge, $deploy and $ports are pushed by herdr-sidebar-feed in this directory (herdr/install.sh runs it as a service)
 [ui.sidebar.spaces]
 rows = [
   ["state_icon", "workspace"],
@@ -129,6 +129,7 @@ rows = [
   # herdr-sidebar-feed tags $pr with a zero-width marker per state.
   # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed.
   # $review: green approved, red changes requested. $merge: peach conflict, sky queued
+  # $deploy: green ▲ live, yellow △ in progress, red ▼ failed, ▵ (no rule, dim) replaced
   [{ token = "$pr", dim = true, rules = [
     { contains = "\u200B", fg = "#cba6f7" },
     { contains = "\u2062", fg = "#f38ba8" },
@@ -140,6 +141,10 @@ rows = [
   ] }, { token = "$merge", dim = true, rules = [
     { contains = "↯", fg = "#fab387" },
     { contains = "≡", fg = "#89dceb" },
+  ] }, { token = "$deploy", dim = true, rules = [
+    { contains = "▲", fg = "#a6e3a1" },
+    { contains = "△", fg = "#f9e2af" },
+    { contains = "▼", fg = "#f38ba8" },
   ] }],
   ["$ports"],
 ]

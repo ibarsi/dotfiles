@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pushes cmux-style $pr, $review, $merge and $ports workspace tokens into herdr's sidebar.
+# Pushes cmux-style $pr, $review, $merge, $deploy and $ports workspace tokens into herdr's sidebar.
 # Rendered via [ui.sidebar.spaces] rows in ~/.config/herdr/config.toml.
 set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
@@ -12,9 +12,10 @@ PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the A
 # U+200B merged, U+2062 CI failed, U+2061 CI running, U+2060 CI passed
 # Then "|"-separated $review (✓ approved, ✗ changes requested) and $merge
 # (↯ conflict, ≡ in merge queue, which hides $review) icons, empty unless
-# the PR is open.
+# the PR is open, and $deploy for the head commit's latest GitHub deployment
+# (▲ live, △ in progress, ▼ failed, ▵ replaced by a newer deploy).
 pr_summary() {
-	local pr review merge num
+	local pr review merge num queued deploy=
 	# shellcheck disable=SC2016 # $c is a jq variable
 	IFS='|' read -r pr review merge num < <(gh pr view --json number,state,reviewDecision,mergeable,statusCheckRollup --jq '
     # A re-triggered workflow leaves the older run in the rollup, and the new
@@ -32,17 +33,26 @@ pr_summary() {
       "\($pr)|" +
       ({APPROVED: "✓", CHANGES_REQUESTED: "✗"}[.reviewDecision // ""] // "") +
       "|\(if .mergeable == "CONFLICTING" then "↯" else "" end)|\(.number)" end' 2>/dev/null) || return
-	# gh pr view has no merge queue field; a conflicting PR can't be queued
-	if [ -n "$num" ] && [ -z "$merge" ]; then
+	# gh pr view has no merge queue or deployment fields
+	if [ -n "$num" ]; then
 		# shellcheck disable=SC2016 # GraphQL variables
-		merge=$(gh api graphql -F owner='{owner}' -F name='{repo}' -F n="$num" -f query='
+		IFS='|' read -r queued deploy < <(gh api graphql -F owner='{owner}' -F name='{repo}' -F n="$num" -f query='
       query($owner: String!, $name: String!, $n: Int!) {
-        repository(owner: $owner, name: $name) { pullRequest(number: $n) { mergeQueueEntry { state } } }
-      }' --jq 'if .data.repository.pullRequest.mergeQueueEntry then "≡" else "" end' 2>/dev/null)
+        repository(owner: $owner, name: $name) { pullRequest(number: $n) {
+          mergeQueueEntry { state }
+          commits(last: 1) { nodes { commit { deployments(last: 1) { nodes { latestStatus { state } } } } } }
+        } }
+      }' --jq '.data.repository.pullRequest |
+        (if .mergeQueueEntry then "≡" else "" end) + "|" +
+        ({SUCCESS: "▲", IN_PROGRESS: "△", QUEUED: "△", PENDING: "△", WAITING: "△",
+          FAILURE: "▼", ERROR: "▼", INACTIVE: "▵"}
+         [.commits.nodes[0].commit.deployments.nodes[0].latestStatus.state // ""] // "")' 2>/dev/null)
+		# A conflicting PR can't be queued
+		[ -z "$merge" ] && merge=$queued
 		# Queued implies approved, so the review icon is noise
 		[ "$merge" = "≡" ] && review=
 	fi
-	echo "$pr|$review|$merge"
+	echo "$pr|$review|$merge|$deploy"
 }
 
 # report <ws> <source> <ttl-ms> <token>=<value>...; empty value clears the token
@@ -59,9 +69,9 @@ update_prs() {
 	herdr pane list 2>/dev/null |
 		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"' |
 		while IFS=$'\t' read -r ws cwd; do
-			IFS='|' read -r pr review merge < <(cd "$cwd" 2>/dev/null && pr_summary)
+			IFS='|' read -r pr review merge deploy < <(cd "$cwd" 2>/dev/null && pr_summary)
 			# TTL outlives two refreshes so a dead feeder clears stale values
-			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "review=${review:-}" "merge=${merge:-}"
+			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "review=${review:-}" "merge=${merge:-}" "deploy=${deploy:-}"
 		done
 }
 
