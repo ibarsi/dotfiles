@@ -4,6 +4,9 @@
 set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
 PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the API)
+# GitHub environment each PR deploys to, {n} is the PR number. Looked up by
+# environment, not commit, because rebasing orphans the deployed SHA.
+DEPLOY_ENV=${HERDR_SIDEBAR_DEPLOY_ENV:-"max1-dev-pr-{n}"}
 
 # Prints the PR number plus an invisible zero-width marker for its state,
 # since config.toml rules can only colour $pr by matching its text.
@@ -12,7 +15,7 @@ PR_EVERY=${HERDR_SIDEBAR_PR_EVERY:-12} # PR refresh every N ticks (gh hits the A
 # U+200B merged, U+2062 CI failed, U+2061 CI running, U+2060 CI passed
 # Then "|"-separated $review (✓ approved, ✗ changes requested) and $merge
 # (↯ conflict, ≡ in merge queue, which hides $review) icons, empty unless
-# the PR is open, and $deploy for the head commit's latest GitHub deployment
+# the PR is open, and $deploy for the latest deployment to its $DEPLOY_ENV
 # (▲ live, △ in progress, ▼ failed, ▵ replaced by a newer deploy).
 pr_summary() {
 	local pr review merge num queued deploy=
@@ -36,17 +39,18 @@ pr_summary() {
 	# gh pr view has no merge queue or deployment fields
 	if [ -n "$num" ]; then
 		# shellcheck disable=SC2016 # GraphQL variables
-		IFS='|' read -r queued deploy < <(gh api graphql -F owner='{owner}' -F name='{repo}' -F n="$num" -f query='
-      query($owner: String!, $name: String!, $n: Int!) {
-        repository(owner: $owner, name: $name) { pullRequest(number: $n) {
-          mergeQueueEntry { state }
-          commits(last: 1) { nodes { commit { deployments(last: 1) { nodes { latestStatus { state } } } } } }
-        } }
-      }' --jq '.data.repository.pullRequest |
-        (if .mergeQueueEntry then "≡" else "" end) + "|" +
+		IFS='|' read -r queued deploy < <(gh api graphql -F owner='{owner}' -F name='{repo}' -F n="$num" \
+			-f env="${DEPLOY_ENV//\{n\}/$num}" -f query='
+      query($owner: String!, $name: String!, $n: Int!, $env: String!) {
+        repository(owner: $owner, name: $name) {
+          pullRequest(number: $n) { mergeQueueEntry { state } }
+          deployments(environments: [$env], last: 1) { nodes { latestStatus { state } } }
+        }
+      }' --jq '.data.repository |
+        (if .pullRequest.mergeQueueEntry then "≡" else "" end) + "|" +
         ({SUCCESS: "▲", IN_PROGRESS: "△", QUEUED: "△", PENDING: "△", WAITING: "△",
           FAILURE: "▼", ERROR: "▼", INACTIVE: "▵"}
-         [.commits.nodes[0].commit.deployments.nodes[0].latestStatus.state // ""] // "")' 2>/dev/null)
+         [.deployments.nodes[0].latestStatus.state // ""] // "")' 2>/dev/null)
 		# A conflicting PR can't be queued
 		[ -z "$merge" ] && merge=$queued
 		# Queued implies approved, so the review icon is noise
