@@ -9,7 +9,12 @@ mq: |
       | "\(.position)\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\u001b[1m#\(.pullRequest.number)\u001b[0m\t\u001b[2m\(.pullRequest.author.login)\u001b[0m\t\(.pullRequest.title)"'
 ci: |
     !f='.[]'
-    for a; do shift; if [ "$a" = --failed ]; then f='.[] | select(.bucket == "fail")'; else set -- "$@" "$a"; fi; done
+    for a; do shift; case "$a" in
+      --failed) f='.[] | select(.bucket == "fail")' ;;
+      --passed) f='.[] | select(.bucket == "pass")' ;;
+      --pending) f='.[] | select(.bucket == "pending")' ;;
+      *) set -- "$@" "$a" ;;
+    esac; done
     gh pr checks "$@" --json bucket,name,workflow,link --jq '
       {fail:"31",cancel:"35",pending:"33",pass:"32",skipping:"2"} as $c
       | {fail:0,cancel:1,pending:2,pass:3,skipping:4} as $o
