@@ -1,0 +1,26 @@
+# Dependabot supports the pre-commit hooks in this repo, but not Brewfile or mise.
+# Add other ecosystems only when their dependency manifests are checked in.
+version: 2
+updates:
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Toronto"
+    # Let new releases settle before proposing an update.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    assignees:
+      - "ibarsi"
+    groups:
+      # Major updates remain individual PRs for focused review.
+      pre-commit-minor-and-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
