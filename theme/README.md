@@ -108,7 +108,6 @@ theme/
 ├── starship.toml         # Prompt theme configuration
 ├── install-starship.sh   # Shared prompt symlink
 ├── install.sh            # macOS theme setup
-├── vim-colors.vim        # Vim colorscheme config
 └── README.md             # This file
 ```
 

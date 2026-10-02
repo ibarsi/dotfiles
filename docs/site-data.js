@@ -1,11 +1,11 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "8b026437a6dc59c365d5fa0892b146063d296ece",
+  "git_revision": "431c1437159811a1565aeeb011dc13f0f77b5f6c",
   "source_hash": "ca41d68fa201",
   "stats": {
     "aliases": 69,
     "functions": 43,
     "git": 53,
-    "features": 26,
+    "features": 25,
     "tasks": 15,
     "bootstrap_links": 15,
     "brews": 36,
@@ -1403,15 +1403,6 @@ window.DOTFILES_DOCS_DATA = {
         "shellcheck, shfmt, gitleaks, plus merge-conflict and trailing-whitespace checks."
       ],
       "source": ".pre-commit-config.yaml"
-    },
-    {
-      "slug": "nas-arr",
-      "title": "NAS Arr import monitoring",
-      "summary": "A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.",
-      "details": [
-        "Read-only: it reports queue state and never triggers an import itself."
-      ],
-      "source": "system/nas/arr-queue-exporter.py"
     },
     {
       "slug": "benchall",

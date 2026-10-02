@@ -126,4 +126,4 @@ Each folder owns its documentation.
 | [docs](docs/README.md) | Reference site and documentation conventions |
 | [.rtk](.rtk/README.md) | RTK command guidance and filters |
 
-Nested operations: [NAS Arr queue monitoring](system/nas/README.md). Root agent entry points: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
+Root agent entry points: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).

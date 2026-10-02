@@ -235,14 +235,6 @@ FEATURE_NOTES = {
             "shellcheck, shfmt, gitleaks, plus merge-conflict and trailing-whitespace checks.",
         ],
     },
-    "nas-arr": {
-        "title": "NAS Arr import monitoring",
-        "summary": "A read-only Sonarr/Radarr queue exporter backs Grafana alerts for completed downloads that need manual import.",
-        "source": "system/nas/arr-queue-exporter.py",
-        "details": [
-            "Read-only: it reports queue state and never triggers an import itself.",
-        ],
-    },
     "benchall": {
         "title": "Hardware benchmarking",
         "summary": "benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.",
