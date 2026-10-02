@@ -696,6 +696,49 @@ function httptime() {
     curl -sS -o /dev/null -w 'dns=%{time_namelookup}s connect=%{time_connect}s tls=%{time_appconnect}s ttfb=%{time_starttransfer}s total=%{time_total}s\n' "$1"
 }
 
+# Serve the current directory over HTTP. Picks a free port unless one is given.
+# Listens on every interface, so a tailnet peer allowed by the ACL can open it.
+function server() {
+    local port="${1:-}"
+
+    if [[ -n "$port" ]]; then
+        if [[ ! "$port" =~ ^[0-9]+$ ]] || (( port < 1 || port > 65535 )); then
+            echo "Usage: server [port]" >&2
+            return 1
+        fi
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo "python3 is not installed or not in PATH" >&2
+        return 1
+    fi
+
+    if [[ -z "$port" ]]; then
+        port="$(python3 -c 'import socket; s = socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')" || {
+            echo "Could not find a free TCP port" >&2
+            return 1
+        }
+    fi
+
+    echo "http://127.0.0.1:${port}/"
+    if command -v tailscale >/dev/null 2>&1; then
+        local ts_name
+        ts_name="$(
+            tailscale status --json 2>/dev/null | python3 -c 'import json,sys
+try:
+    print(json.load(sys.stdin)["Self"]["DNSName"].rstrip("."))
+except Exception:
+    pass' 2>/dev/null || true
+        )"
+        if [[ -n "$ts_name" ]]; then
+            echo "http://${ts_name}:${port}/"
+        fi
+    fi
+
+    (sleep 1 && dotfiles-open "http://127.0.0.1:${port}/") &
+    python3 -m http.server "$port"
+}
+
 # Check open TCP/UDP listeners in a compact view
 function listeners() {
     sudo lsof -nP -iTCP -sTCP:LISTEN -iUDP
