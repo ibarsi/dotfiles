@@ -67,7 +67,6 @@ the macOS bootstrap.
 | `llama` | — Linux only | ✅ |
 | `macos` | ✅ | — macOS only |
 | `mise` | ✅ | — macOS only |
-| `ssh` | ✅ | — macOS only |
 | `system` | ✅ | — macOS only |
 | `theme` | ✅ | ◐ Starship only |
 | `tmux` | ✅ | ✅ |
@@ -111,7 +110,6 @@ Each folder owns its documentation.
 | [git](git/README.md) | Git config and worktrees |
 | [gh](gh/README.md) | GitHub CLI aliases |
 | [gitmoji](gitmoji/README.md) | Commit preferences |
-| [ssh](ssh/README.md) | Managed hosts and terminal compatibility |
 | [ghostty](ghostty/README.md) | Terminal settings and keybindings |
 | [herdr](herdr/README.md) | Workspaces, remote sessions and sidebar feed |
 | [tmux](tmux/README.md) | Sessions, panes and notifications |

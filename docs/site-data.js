@@ -1,16 +1,16 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "5689bdd5549f2eafc05eafc067a398f5e4d93e8a",
-  "source_hash": "d3ee43328d90",
+  "git_revision": "8c8cebb2f106e4a322561efa2d5bd21c9fd5b8e9",
+  "source_hash": "a5d34c7e3635",
   "stats": {
     "aliases": 69,
-    "functions": 42,
+    "functions": 43,
     "git": 53,
     "features": 28,
     "tasks": 15,
-    "bootstrap_links": 20,
+    "bootstrap_links": 19,
     "brews": 36,
     "casks": 26,
-    "platforms": 22
+    "platforms": 21
   },
   "aliases": [
     {
@@ -740,6 +740,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "reload-dotfiles",
       "summary": "Reload shell only (no git/network side effects)",
       "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "server",
+      "summary": "Serve the current directory over HTTP. Picks a free port unless one is given. Listens on every interface, so a tailnet peer allowed by the ACL can open it.",
+      "usage": "server [port]",
       "source": "system/.functions",
       "source_kind": "system function"
     },
@@ -1660,11 +1667,6 @@ window.DOTFILES_DOCS_DATA = {
       "source": "git/install.sh"
     },
     {
-      "source_path": "ssh/config",
-      "target_path": "~/.ssh/config",
-      "source": "ssh/install.sh"
-    },
-    {
       "source_path": "vim/.vimrc",
       "target_path": "~/.vimrc",
       "source": "vim/install.sh"
@@ -1866,15 +1868,6 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "topic": "mise",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "absent"
-      }
-    },
-    {
-      "topic": "ssh",
       "macos": {
         "state": "full"
       },

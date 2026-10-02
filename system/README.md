@@ -38,7 +38,7 @@ Keep credentials and project-specific paths in the gitignored `system/.extra` or
 - [AI shell shortcuts](docs/ai-tools.md)
 - [Git worktrees](../git/README.md#git-worktree-workflow)
 - [Markdown rendering](../glow/README.md#markdown-workflow)
-- [SSH compatibility](../ssh/README.md#ssh-workflow)
+- [SSH compatibility](docs/networking.md#ssh-compatibility)
 - [NAS queue monitoring](nas/README.md)
 
 ## Verification

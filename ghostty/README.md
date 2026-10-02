@@ -38,7 +38,7 @@ On macOS, [bootstrap](../macos/README.md#bootstrap) runs `bash ghostty/install.s
 
 The left Option key is configured as Alt. Alt-arrow sends modified-arrow sequences for [Herdr](../herdr/README.md#keyboard-and-remote-sessions), including when attached to Omen; Option-Left/Right therefore does not perform Ghostty word navigation.
 
-Ghostty also enables SSH environment and terminfo integration. For appliances that still mishandle `xterm-ghostty`, use [`sshx`](../ssh/README.md#ssh-workflow).
+Ghostty also enables SSH environment and terminfo integration. For appliances that still mishandle `xterm-ghostty`, use [`sshx`](../system/docs/networking.md#ssh-compatibility).
 
 ## Verification
 

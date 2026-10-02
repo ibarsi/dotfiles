@@ -25,4 +25,13 @@ This keeps the setup lean: mostly thin wrappers over proven tools, with sensible
 
 These helpers are loaded by the [shared shell layer](../README.md); macOS packages come from `Brewfile`, while Linux packages are host-managed.
 
+## SSH compatibility
+
+Keep SSH host definitions in your machine-local `~/.ssh/config`; bootstrap does not create or symlink that file.
+
+Use `sshx` for remote hosts that mishandle Ghostty's `xterm-ghostty` terminal type. The shared shell helper runs SSH with `TERM=xterm-256color`:
+
+- `sshx user@host`
+- `sshx -p 2222 user@host`
+
 [System topic](../README.md)

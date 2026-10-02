@@ -2,3 +2,6 @@
 system/.extra
 pi/auth.json
 .antigravitycli/
+
+# SSH configuration stays machine-local, outside this repository.
+/ssh/
