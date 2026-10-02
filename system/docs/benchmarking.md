@@ -1,60 +1,4 @@
-# Omarchy Guide
-
-Setup and behavior specific to [Omarchy](https://omarchy.org/) (Arch Linux /
-Hyprland) and other Bash-based Linux hosts. Content that applies to both
-Omarchy and macOS lives in [workflows.md](workflows.md) instead; see the
-[macOS guide](macos.md) for the Mac side.
-
-## Bootstrap
-
-```bash
-git clone https://github.com/ibarsi/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-./bootstrap-omarchy.sh
-```
-
-Unlike `bootstrap.sh`, this is deliberately **additive**: it does not install
-packages, apply macOS-style defaults, or change the default shell. It runs
-eight steps, each of which layers onto Omarchy's own configuration instead of
-replacing it:
-
-1. Sets up the shared Bash aliases/functions layer (`bash/install.sh`),
-   sourced from an existing `~/.bashrc` rather than replacing it.
-2. Adds portable Git aliases (`git/install-aliases.sh`) without touching the
-   rest of `~/.gitconfig`.
-3. Links Gitmoji preferences to `~/.config/gitmoji-nodejs/config.json`
-   (`gitmoji/install.sh`).
-4. Links the tmux config (`tmux/install.sh`), which sources Omarchy's own
-   tmux base first when present.
-5. Links the Herdr config (`herdr/install.sh`) to
-   `~/.config/herdr/config.toml`, shared with macOS, and enables the
-   `herdr-sidebar-feed` systemd user service — see
-   [Herdr Sidebar](workflows.md#herdr-sidebar).
-6. Sets up the llama.cpp server (`llama/install.sh`): links
-   `~/models/presets.ini` and installs `llama-server.service` into
-   `/etc/systemd/system` — the one step that asks for root, and only when the
-   unit has drifted. See [`llama/README.md`](../../llama/README.md).
-7. Links the shared Starship prompt (`theme/install-starship.sh`) to
-   `~/.config/starship.toml` — see below.
-8. Schedules the VoxType vocabulary sync (`voice-to-text/install.sh`) via a
-   systemd user timer.
-
-Re-run it any time from any working directory; it resolves the repo root
-internally.
-
-See the platform matrix in the top-level [README](../../README.md) for which
-of the other 13 topics are intentionally *not* wired up here — those tools are
-managed natively through Omarchy itself rather than through this repo.
-
-## Starship Prompt
-
-Omarchy uses the same Catppuccin Mocha prompt as macOS — `theme/starship.toml`
-is symlinked to `~/.config/starship.toml`, so edits there apply to both. The
-`os` module reports Omarchy as `Linux`, which maps to the Arch icon. The
-prompt keeps its fixed Catppuccin colours rather than following
-`omarchy theme set`.
-
-## Hardware Benchmarking
+# Hardware Benchmarking
 
 `benchall` (`system/.functions`) runs a bounded (~3 minute) sweep across
 network, disk, RAM, CPU, GPU, and thermals, then prints a Markdown report to
@@ -74,16 +18,19 @@ benchall | claude -p "analyze this benchmark for bottlenecks"
 ```
 
 Design notes:
+
 - Every section is wrapped in `timeout`, so no single test can hang the run.
 - Privileged sections (raw-device read, SMART) prime `sudo` once up front only
   when a TTY is attached, then use `sudo -n`. An agent-driven run degrades to
   "skipped" instead of blocking on a password prompt.
+
 - Missing tools are reported as skipped sections rather than failing the run.
 - fio writes its scratch file under `~/.cache/benchall`, never `/tmp`. On Arch
   `/tmp` is tmpfs, i.e. RAM: it **silently ignores `O_DIRECT`** rather than
   rejecting it, so `--direct=1` would return memcpy speed (measured: 5.5 GB/s
   on tmpfs vs 2.7 GB/s on the real btrfs volume) and quietly consume 1 GB of
   RAM.
+
 - Nothing on the system sweeps `~/.cache`, so `benchall` cleans up after
   itself on every run: it deletes any 1 GB scratch file orphaned by an
   interrupted run, and retains only the 20 most recent reports (~20 KB each).
@@ -137,14 +84,6 @@ works without further configuration. The Ookla client is invoked with
 `--accept-license --accept-gdpr` so an unattended run never blocks on its
 first-run prompt.
 
-## Directories
+The implementation lives in `system/.functions`, loaded by the [shared shell layer](../README.md). This toolchain setup targets Omarchy/Arch; missing tools on other hosts are reported as skipped.
 
-- `bash/` — additive Bash shell configuration; bootstrap links its fragment
-  under `~/.config/ibarsi-dotfiles/` and sources it from the existing
-  `~/.bashrc` without replacing Omarchy defaults.
-- `gitmoji/` — on Linux, linked to `~/.config/gitmoji-nodejs/config.json`.
-- `theme/` — only `starship.toml` is used on Linux, linked to
-  `~/.config/starship.toml`.
-- `voice-to-text/` — on Omarchy, a systemd user timer regenerates VoxType's
-  vocabulary from a project glossary file. See `voice-to-text/README.md` for
-  the full TypeWhisper/VoxType setup on both platforms.
+[Omarchy setup](../../omarchy/README.md) · [System topic](../README.md)

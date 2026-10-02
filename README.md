@@ -2,18 +2,12 @@
 
 A modern, topic-based dotfile configuration for macOS and Omarchy (Arch Linux
 / Hyprland), used daily as peers. A shared Bash/Zsh layer of aliases and
-functions works on both; platform-specific setup lives in dedicated guides
-linked below.
+functions works on both; platform-specific setup and tool documentation live beside their configuration.
 
-## Guides
+## Documentation
 
-- **[macOS guide](docs/guides/macos.md)** — Homebrew bootstrap, Brewfile,
-  macOS system defaults, keyboard tuning, Obsidian.
-- **[Omarchy guide](docs/guides/omarchy.md)** — additive bootstrap, hardware
-  benchmarking (`benchall`), VoxType voice-to-text sync.
-- **[Shared workflows](docs/guides/workflows.md)** — Ghostty, tmux, SSH,
-  networking, Kubernetes, FZF, git worktrees, mise, pre-commit, Codex, Claude,
-  Agy, Zed, and the docs site itself.
+- [macOS setup](macos/README.md) · [Omarchy/Linux setup](omarchy/README.md)
+- [Topic documentation](#structure) · [Documentation maintenance and reference site](docs/README.md)
 
 ## Installation
 
@@ -27,7 +21,7 @@ cd ~/dotfiles
 
 Installs Homebrew, syncs `Brewfile`, links every topic's config, sets Zsh as
 the default shell, and applies macOS defaults. Details in the
-[macOS guide](docs/guides/macos.md).
+[macOS guide](macos/README.md).
 
 ### Omarchy (and other Bash-based Linux)
 
@@ -37,11 +31,11 @@ cd ~/dotfiles
 ./bootstrap-omarchy.sh
 ```
 
-Adds the shared Bash aliases/functions, Git aliases, Gitmoji preferences,
-tmux config, and the VoxType vocabulary sync — additively, without replacing
+Adds the shared Bash layer, Git/delta includes, GitHub aliases, Gitmoji,
+tmux, Herdr, llama server configuration, Starship, and VoxType vocabulary sync — additively, without replacing
 Omarchy's `~/.bashrc` or `~/.gitconfig`, and without installing packages or
 changing the default shell. Details in the
-[Omarchy guide](docs/guides/omarchy.md).
+[Omarchy guide](omarchy/README.md).
 
 Both scripts use the repository root internally, so they can be re-run
 reliably even when invoked from different working directories.
@@ -52,7 +46,8 @@ Generated from `bootstrap.sh`, `bootstrap-omarchy.sh`, and each topic's
 `install.sh`. Regenerate with `mise run docs-build`; `mise run docs-check`
 fails the build if this table is stale. A topic marked macOS-only is
 intentional — it's managed natively through that platform rather than through
-this repo, not a gap to fill.
+this repo, not a gap to fill. Linux-only installers are invoked but skipped by
+the macOS bootstrap.
 
 <!-- BEGIN GENERATED: platform-matrix -->
 
@@ -63,13 +58,13 @@ this repo, not a gap to fill.
 | `codex` | ✅ | — macOS only |
 | `gh` | ✅ | ✅ |
 | `ghostty` | ✅ | — macOS only |
-| `git` | ✅ | ◐ aliases only |
+| `git` | ✅ | ◐ aliases + optional delta |
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
 | `herdr` | ✅ | ✅ |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
-| `llama` | ✅ | ✅ |
+| `llama` | — Linux only | ✅ |
 | `macos` | ✅ | — macOS only |
 | `mise` | ✅ | — macOS only |
 | `ssh` | ✅ | — macOS only |
@@ -91,7 +86,7 @@ Use `mise run ...` directly for project workflows:
 - `mise run verify` → AI doctor + bootstrap link verification
 - `mise run ai-doctor` → AI CLI/tooling health check
 - `mise run docs-build` → regenerate the docs site data from repo sources
-- `mise run docs-check` → fail if regenerating docs would change `docs/site-data.*`
+- `mise run docs-check` → validate topic coverage, local links/anchors, and generated output
 - `mise run docs-serve` → serve the docs site locally with mise-managed Python
 - `dotdocs` → start the docs site from any directory and open it in the browser
 - `mise run lint-shell` / `mise run fmt-shell` / `mise run fmt-check`
@@ -106,32 +101,43 @@ Use `mise run ...` directly for project workflows:
 
 ## Structure
 
-The repository is organized into **topics**, making it easy to modularize your configuration:
+Each folder owns its documentation.
 
-- `git/`: Git configuration and a portable aliases include. On Linux, `bash git/install-aliases.sh` adds only the aliases without replacing the host Git config.
-- `ssh/`: SSH client configuration for GitHub and related tooling.
-- `macos/`: macOS system defaults and UI/UX settings.
-- `system/`: Global environment variables, paths, and generic aliases.
-- `bash/`: Additive Bash shell configuration. Bootstrap links its fragment under `~/.config/ibarsi-dotfiles/` and sources it from the existing `~/.bashrc` without replacing Omarchy defaults.
-- `vim/`: Vim configuration.
-- `tmux/`: tmux configuration (symlinked to `~/.config/tmux/tmux.conf`).
-- `ghostty/`: Ghostty terminal configuration (symlinked to `~/.config/ghostty/`).
-- `gitmoji/`: Global `gitmoji-cli` preferences (symlinked to `~/Library/Preferences/gitmoji-nodejs/` on macOS and `~/.config/gitmoji-nodejs/` on Linux).
-- `k9s/`: Kubernetes TUI configuration (symlinked to `~/Library/Application Support/k9s/config.yaml`).
-- `zed/`: Zed editor settings and keybindings (symlinked to `~/.config/zed/`).
-- `mise/`: Mise global config (symlinked to `~/.config/mise/`).
-- `codex/`: Codex CLI configuration (symlinked to `~/.codex/`).
-- `claude/`: Claude Code settings (symlinked to `~/.claude/`).
-- `voice-to-text/`: Dictation tooling automation. A daily job regenerates the dictation engine's custom vocabulary from a project glossary markdown file — via launchd into TypeWhisper on macOS, via a systemd user timer into VoxType on Omarchy.
-- `docs/`: Lightweight static documentation app for aliases, functions, tasks, links, and features. `docs/guides/` holds the hand-written platform and workflow guides linked above.
-- `scripts/`: Repository automation scripts (`doctor-ai`, `bootstrap-verify`).
-- `zsh/`: Zsh configuration, plugins, and modular initialization.
-- `AGENTS.md`: Agent operating guidance for this repository.
+| Topic | Documentation |
+|---|---|
+| [bash](bash/README.md) | Additive Bash startup |
+| [zsh](zsh/README.md) | Modular Zsh startup and plugins |
+| [system](system/README.md) | Shared environment, aliases and workflows |
+| [git](git/README.md) | Git config and worktrees |
+| [gh](gh/README.md) | GitHub CLI aliases |
+| [gitmoji](gitmoji/README.md) | Commit preferences |
+| [ssh](ssh/README.md) | Managed hosts and terminal compatibility |
+| [ghostty](ghostty/README.md) | Terminal settings and keybindings |
+| [herdr](herdr/README.md) | Workspaces, remote sessions and sidebar feed |
+| [tmux](tmux/README.md) | Sessions, panes and notifications |
+| [glow](glow/README.md) | Markdown rendering |
+| [k9s](k9s/README.md) | Kubernetes TUI |
+| [mise](mise/README.md) | Global tools and repository tasks |
+| [codex](codex/README.md) | Codex config, hooks and Grafana MCP |
+| [claude](claude/README.md) | Claude Code settings and themes |
+| [zed](zed/README.md) | Editor settings and keybindings |
+| [vim](vim/README.md) | Vim configuration |
+| [karabiner](karabiner/README.md) | App-scoped macOS keyboard mappings |
+| [macos](macos/README.md) | macOS bootstrap and system defaults |
+| [omarchy](omarchy/README.md) | Additive Linux bootstrap |
+| [theme](theme/README.md) | Palette rules, Starship and app themes |
+| [llama](llama/README.md) | Local inference server |
+| [voice-to-text](voice-to-text/README.md) | Dictation vocabulary automation |
+| [scripts](scripts/README.md) | Validation and maintenance |
+| [docs](docs/README.md) | Reference site and documentation conventions |
+| [.rtk](.rtk/README.md) | RTK command guidance and filters |
+
+Nested operations: [NAS Arr queue monitoring](system/nas/README.md). Root agent entry points: [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md).
 
 ## Features
 
 Generated from `FEATURE_NOTES` in `scripts/generate-docs.py` — the same data
-that backs the [docs site](docs/guides/workflows.md#docs-site). Regenerate
+that backs the [docs site](docs/README.md#docs-site). Regenerate
 with `mise run docs-build`; `mise run docs-check` fails the build if this list
 is stale.
 
@@ -139,7 +145,7 @@ is stale.
 
 - **Topic-based organization**: Splits configuration into independent topic directories so any tool's setup can be added, edited, or removed without touching the rest.
 - **Bootstrap workflow**: Installs Homebrew dependencies, creates config symlinks, applies themes, and runs macOS setup.
-- **Omarchy bootstrap**: Sets up shared Bash, Git-alias, Gitmoji, tmux, and VoxType layers on Linux, additively, without applying macOS-only configuration.
+- **Omarchy bootstrap**: Adds shared Bash, Git/delta, GitHub aliases, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.
 - **Modular Zsh shell**: Loads shared paths, Zsh modules, system aliases/functions, plugin integrations, and shell quality-of-life defaults.
 - **Additive Bash shell**: Integrates the shared shell layer with an existing Bash startup file without replacing host-managed configuration.
 - **Zsh power-ups**: Catppuccin Mocha syntax highlighting and history-backed autosuggestions, plus fzf shell integration, through Homebrew-managed paths.
@@ -159,7 +165,7 @@ is stale.
 - **Obsidian theme notes**: Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.
 - **Codex CLI config**: Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.
 - **Claude Code config**: Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.
-- **Mise integration**: Configured global settings and project tools/tasks for reproducible shell workflows.
+- **Mise integration**: Layers global settings through conf.d and provides project tools/tasks for reproducible shell workflows.
 - **Validation scripts**: Provides deterministic checks for AI tooling and bootstrap results.
 - **Generated reference site**: A searchable docs app under docs/ inventories aliases, functions, git shortcuts, mise tasks, bootstrap links, features, and the platform support matrix from source files.
 - **Deterministic guardrails**: Optional pre-commit hooks for shell lint/format, merge hygiene, and secret scanning.
@@ -167,9 +173,3 @@ is stale.
 - **Hardware benchmarking**: benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.
 
 <!-- END GENERATED: features -->
-
-### Shell quality-of-life defaults
-- Completion caching via `.zcompdump` (faster shell startup)
-- Better history ergonomics (`HIST_IGNORE_SPACE`, `EXTENDED_HISTORY`)
-- History-backed zsh autosuggestions: type the start of a previous command, then press `Shift-Tab` to accept the gray suggestion; use `Tab` for normal expansion/completion
-- Interactive completion menu + clearer completion descriptions

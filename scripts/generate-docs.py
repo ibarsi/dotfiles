@@ -25,7 +25,7 @@ FEATURES_END = "<!-- END GENERATED: features -->"
 # wired up on Omarchy). An installer not listed here fails the build instead
 # of guessing a label — a wrong label is worse than a build failure.
 PARTIAL_INSTALLER_DETAIL = {
-    "install-aliases.sh": "aliases only",
+    "install-aliases.sh": "aliases + optional delta",
     "install-starship.sh": "Starship only",
 }
 
@@ -51,10 +51,10 @@ FEATURE_NOTES = {
     },
     "omarchy-bootstrap": {
         "title": "Omarchy bootstrap",
-        "summary": "Sets up shared Bash, Git-alias, Gitmoji, tmux, and VoxType layers on Linux, additively, without applying macOS-only configuration.",
+        "summary": "Adds shared Bash, Git/delta, GitHub aliases, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
         "source": "bootstrap-omarchy.sh",
         "details": [
-            "Runs the additive Bash, Git-alias, Gitmoji, tmux, and VoxType-vocabulary-sync installers.",
+            "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
             "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
             "Refuses to run outside Linux and does not manage system packages.",
         ],
@@ -199,7 +199,7 @@ FEATURE_NOTES = {
     "obsidian": {
         "title": "Obsidian theme notes",
         "summary": "Obsidian stays in Brewfile; the Catppuccin docs include the manual CLI commands if you want Obsidian to match.",
-        "source": "docs/guides/macos.md",
+        "source": "theme/README.md",
         "details": [
             "This repo does not automate Obsidian's CLI setup or theme activation.",
         ],
@@ -224,7 +224,7 @@ FEATURE_NOTES = {
     },
     "mise": {
         "title": "Mise integration",
-        "summary": "Configured global settings and project tools/tasks for reproducible shell workflows.",
+        "summary": "Layers global settings through conf.d and provides project tools/tasks for reproducible shell workflows.",
         "source": "mise.toml",
         "details": [
             "auto_install, env_cache, and a catppuccin color theme are set as best-practice defaults.",
@@ -268,7 +268,7 @@ FEATURE_NOTES = {
         "summary": "benchall runs a bounded network/disk/RAM/CPU/GPU/thermal sweep and emits a Markdown report suited for handing to an agent.",
         "source": "system/.functions",
         "details": [
-            "See docs/guides/omarchy.md for the full toolchain rationale.",
+            "See system/docs/benchmarking.md for the full toolchain rationale.",
         ],
     },
 }
@@ -577,9 +577,10 @@ def parse_brewfile(path: Path) -> dict:
 def build_platform_matrix(install_scripts: list[Path], omarchy_bootstrap: Path) -> list[dict]:
     """Derive macOS/Omarchy support per topic from the bootstrap scripts.
 
-    macOS support is derived from the existence of an install.sh, since
+    macOS invocation is derived from the existence of an install.sh, since
     bootstrap.sh globs `*/install.sh` unconditionally — adding a topic there
-    needs no matrix update. Omarchy support is parsed from the explicit
+    needs no matrix update. A Linux-only guard marks the macOS invocation as
+    skipped. Omarchy support is parsed from the explicit
     installer lines in bootstrap-omarchy.sh, since that script is additive
     and lists only the topics (and sometimes only a partial script) it wires
     up.
@@ -607,7 +608,13 @@ def build_platform_matrix(install_scripts: list[Path], omarchy_bootstrap: Path) 
                     f"(topic {topic!r}); add one rather than guessing a label."
                 )
             omarchy = {"state": "partial", "detail": detail}
-        matrix.append({"topic": topic, "macos": {"state": "full"}, "omarchy": omarchy})
+        linux_only_guard = re.search(
+            r'if \[\[ "\$\(uname -s\)" != "Linux" \]\]; then\s+'
+            r'echo [^\n]+\n\s*exit 0',
+            script.read_text(),
+        )
+        macos = {"state": "absent", "detail": "Linux only"} if linux_only_guard else {"state": "full"}
+        matrix.append({"topic": topic, "macos": macos, "omarchy": omarchy})
 
     matrix.sort(key=lambda item: item["topic"])
     return matrix
@@ -616,6 +623,7 @@ def build_platform_matrix(install_scripts: list[Path], omarchy_bootstrap: Path) 
 def render_platform_matrix_markdown(matrix: list[dict]) -> str:
     lines = [PLATFORM_MATRIX_BEGIN, "", "| Topic | macOS | Omarchy |", "|-------|-------|---------|"]
     for entry in matrix:
+        macos = "✅" if entry["macos"]["state"] == "full" else f"— {entry['macos']['detail']}"
         omarchy = entry["omarchy"]
         if omarchy["state"] == "full":
             cell = "✅"
@@ -623,7 +631,7 @@ def render_platform_matrix_markdown(matrix: list[dict]) -> str:
             cell = f"◐ {omarchy['detail']}"
         else:
             cell = "— macOS only"
-        lines.append(f"| `{entry['topic']}` | ✅ | {cell} |")
+        lines.append(f"| `{entry['topic']}` | {macos} | {cell} |")
     lines.append("")
     lines.append(PLATFORM_MATRIX_END)
     return "\n".join(lines)

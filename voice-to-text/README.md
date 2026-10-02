@@ -18,8 +18,10 @@ elsewhere in the doc.
   `~/Library/Application Support/typewhisper-dictionary-sync/` and imports it
   into a running TypeWhisper instance via the `typewhisper` CLI if it's on
   `PATH`.
+
 - `com.ibarsi.typewhisper-dictionary-sync.plist` runs that script every day
   at 7:00 AM via launchd. Change `StartCalendarInterval` to adjust the time.
+
 - Re-running is safe: TypeWhisper dedupes dictionary entries by
   `(type, original)`, so nothing is duplicated or overwritten.
 
@@ -178,3 +180,9 @@ uppercases those unprompted and the test can't distinguish the two.
 Verified this way on VoxType 1.0.1: matching is **case-insensitive and
 word-bounded**, so short acronym keys (`ach`, `cif`, `sar`) do not fire inside
 `approach`, `specific` or `Caesar`.
+
+## Installation and configuration privacy
+
+Both platform bootstraps run `bash voice-to-text/install.sh`. The installer seeds `~/.config/voxtype/config.toml` from the tracked template only when absent and keeps it a real, machine-local file so generated private glossary terms never write through a symlink into the public repo. It also registers the `voxtype-local` Git clean filter. On macOS it loads/kickstarts the launchd job; on Linux it enables the user timer and attempts an initial sync.
+
+[Local overrides](../system/README.md#local-environment-conventions) · [Local inference server](../llama/README.md) · [Repository index](../README.md)

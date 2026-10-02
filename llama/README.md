@@ -3,19 +3,17 @@
 A local OpenAI-compatible inference endpoint on `127.0.0.1:1234`, served by
 llama.cpp in router mode on the Omen's RTX 5090.
 
-Two files are the whole configuration. There is no environment file, no
+Two tracked files define the configuration. There is no environment file, no
 drop-in, no `~/.config` entry:
 
-| File | Symlinked to | Privileges |
+| File | Installed to | Privileges |
 |------|--------------|------------|
 | `presets.ini` | `~/models/presets.ini` | none |
-| `llama-server.service` | `/etc/systemd/system/llama-server.service` | sudo |
+| `llama-server.service` | Root-owned copy at `/etc/systemd/system/llama-server.service` | root |
 
-`install.sh` creates both links and is called from `bootstrap-omarchy.sh`. It
-only touches the unit when the link is missing or wrong, so re-running the
-bootstrap is silent and asks for nothing.
+`install.sh` links the presets and copies the unit, and is called from `bootstrap-omarchy.sh`. It backs up existing regular files before replacement and only updates the unit when its contents drift or it is an old symlink. It skips on macOS.
 
-Linking the unit needs root, and the script picks how to ask: `sudo` when
+Installing the unit needs root, and the script picks how to ask: `sudo` when
 there's a terminal to type into, and `pkexec`'s graphical dialog when there
 isn't — run from an agent, a hook or a menu entry, where `sudo` has nowhere to
 prompt and simply fails. Either way it's one prompt for the whole job, not one
@@ -24,24 +22,13 @@ per command. If neither route is available the script prints the equivalent
 
 ## Applying changes
 
-Because both files are symlinks, editing them here edits the live config. What
-is *not* automatic is the reload:
+The presets are symlinked and read at server startup. After editing them:
 
 ```bash
-# presets.ini - read by llama-server at process start
-sudo systemctl restart llama-server
-
-# llama-server.service - systemd caches parsed units
-sudo systemctl daemon-reload
 sudo systemctl restart llama-server
 ```
 
-**Forgetting `daemon-reload` is the classic trap.** `restart` on its own
-re-runs the *cached* unit, so a unit edit appears to apply while changing
-nothing. The preset has no such problem.
-
-In practice the preset is the file that changes; the unit has been stable for
-months, since all it does is pick a GPU and point at the preset.
+The systemd unit is a root-owned copy. After editing its tracked source, re-run `bash llama/install.sh`; when it detects drift, it installs the new copy, runs `systemctl daemon-reload`, and restarts the server. A manual copy must likewise be followed by daemon-reload and restart. Restart alone does not apply edits to the repository’s unit file.
 
 ## Why a system unit and not the packaged one
 
@@ -54,15 +41,7 @@ the model directory passed explicitly.
 The packaged user unit stays installed but disabled. Don't enable both — they
 would both bind port 1234.
 
-**Note on the symlink:** a unit file in `/etc/systemd/system` is parsed by PID
-1 as root, and this one resolves into a home directory the unprivileged user
-can write. That is a deliberate trade for keeping the config tracked. Two
-consequences worth knowing: anything running as `ibarsi` can rewrite the unit
-and gain root at the next restart without a password prompt, and `/home` is a
-separate btrfs subvolume, so a late mount would leave the unit unresolvable at
-boot. Both are accepted here on a single-user laptop; neither would be
-acceptable on a shared or server host, where the unit should be a root-owned
-copy instead.
+The unit is copied into `/etc/systemd/system` so PID 1 can resolve it before the home directory is mounted, and unprivileged edits to the checkout cannot rewrite the installed unit. Re-running the installer migrates an old symlink to this layout.
 
 ## Setting it up on another machine
 
@@ -77,7 +56,7 @@ sudo systemctl enable --now llama-server
 curl -s localhost:1234/v1/models | jq -r '.data[].id'   # expect: muse-glimmer
 ```
 
-**If your username isn't `ibarsi`,** the symlink approach has a catch: the
+**If your username isn't `ibarsi`,** the tracked configuration has a catch: the
 paths are baked into the tracked files, and editing them dirties the working
 tree. `/home/ibarsi` appears five times across the two files. Either keep a
 local commit rewriting them:
@@ -87,8 +66,7 @@ sed -i "s|/home/ibarsi|$HOME|g; s|User=ibarsi|User=$USER|" \
 	~/dotfiles/llama/llama-server.service ~/dotfiles/llama/presets.ini
 ```
 
-…or skip `install.sh` and copy the two files into place instead of linking
-them, which keeps the repo clean at the cost of manual syncing.
+…or keep machine-local copies of the presets and unit instead, which keeps the repo clean at the cost of manual syncing. The installer already copies the unit but links the presets.
 
 ## Model files
 
@@ -147,3 +125,5 @@ gitignored `system/.extra` is where host- and work-specific values belong.
 `VOXTYPE_LLM_ENDPOINT`, but that pass is currently disabled — see
 `voice-to-text/README.md` for why (muse-glimmer reasons unconditionally and
 cannot be told not to). Nothing else on the machine depends on the server.
+
+[Omarchy bootstrap](../omarchy/README.md) · [Repository index](../README.md)

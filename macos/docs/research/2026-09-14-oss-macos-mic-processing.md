@@ -1,5 +1,9 @@
 # OSS macOS microphone processing alternatives to Krisp
 
+Research recorded on 2026-09-14. Product details and recommendations are a dated snapshot.
+
+[macOS topic](../../README.md)
+
 ## Recommendation
 
 Try [NoNoise Mac](https://github.com/ivalsaraj/NoNoise-Mac) first. It is the

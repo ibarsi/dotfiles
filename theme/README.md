@@ -19,10 +19,12 @@ values, so a theme change is one edit:
 
 - **Shell env** (`catppuccin.zsh`): `$CATPPUCCIN_RED` directly, or
   `$(_ctp_rgb "$CATPPUCCIN_RED")` where a tool wants `r;g;b` truecolor (eza, less).
+
 - **tmux** (`tmux/theme.conf`): `$CATPPUCCIN_RED` inside double quotes. Colour
   settings must stay in `theme.conf`, not `.tmux.conf`: tmux parses a whole file
   before running it, so the variables only expand in a file sourced after
   `palette.sh`.
+
 - **Shell functions and scripts**: read the exported `CATPPUCCIN_*` variables.
 
 Keep `palette.sh` as plain `NAME="#hex"` lines (no `export`, no logic) so both
@@ -43,12 +45,8 @@ Run the install script:
 
 Or apply manually to each tool:
 
-### Terminal (iTerm2)
-1. Open iTerm2 → Preferences → Profiles → Colors
-2. Color Presets → Import → Select `theme/iterm2-catppuccin.json`
-3. Select "Catppuccin Mocha"
-
 ### Vim
+
 Install the colorscheme:
 
 ```bash
@@ -64,15 +62,16 @@ bat cache --build
 ```
 
 ### Starship
-Already configured in `starship.toml`. Ensure your `.zshrc` loads it:
 
-```zsh
-eval "$(starship init zsh)"
-```
+`starship.toml` is linked to `~/.config/starship.toml` by `install-starship.sh` on both platforms. Zsh and Bash initialize Starship when it is installed.
+
+The prompt has an OS icon and directory in Catppuccin segments, followed by branch and compact Git status. Clean repos have no status marker. Commands taking at least five seconds show duration; the second-line arrow turns red after failure. Username, language versions and a persistent clock are omitted.
+
+macOS uses the Mac icon. The checked-in `Linux` symbol is the Arch icon for all Linux hosts, including Omarchy. The prompt uses a fixed Mocha palette rather than following Omarchy theme changes.
 
 ### k9s
 
-Bootstrap downloads the Catppuccin Mocha k9s skin into:
+On macOS, the theme installer downloads the Catppuccin Mocha k9s skin into:
 
 ```text
 ~/Library/Application Support/k9s/skins/catppuccin-mocha.yaml
@@ -91,9 +90,8 @@ obsidian theme:set name=Catppuccin
 
 ## Tools Integrated
 
-- ✅ iTerm2 terminal colors
 - ✅ Starship prompt
-- ✅ Ghostty editor theme
+- ✅ Ghostty terminal theme
 - ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
@@ -108,8 +106,8 @@ theme/
 ├── palette.sh            # Colour source of truth (shells + tmux)
 ├── catppuccin.zsh        # Exports palette; FZF/bat/eza/less config built from it
 ├── starship.toml         # Prompt theme configuration
-├── iterm2-catppuccin.json # iTerm2 color preset
-├── install.sh            # One-command setup
+├── install-starship.sh   # Shared prompt symlink
+├── install.sh            # macOS theme setup
 ├── vim-colors.vim        # Vim colorscheme config
 └── README.md             # This file
 ```
@@ -121,8 +119,15 @@ To use a different flavor (e.g., Macchiato):
 1. Replace the hex values in `palette.sh` (shell tools and tmux follow automatically)
 2. Update the still-hardcoded configs listed under the colour rule above
 3. For Ghostty: Already included (no extra setup)
-4. For iTerm2: Import the Macchiato variant (see catppuccin.org for downloads)
 
 ## Credits
 
 [Catppuccin](https://catppuccin.com) - Soothing pastel theme for the high-spirited!
+
+## Platforms and verification
+
+macOS bootstrap runs `theme/install.sh`, installing Starship, bat/Vim themes and the k9s skin. Omarchy bootstrap runs only `theme/install-starship.sh`; its Bash fragment still sources the shared shell palette. Other app themes are host-managed there.
+
+Check `readlink ~/.config/starship.toml`, then open a fresh shell. For the terminal’s built-in dark/light themes, see [Ghostty](../ghostty/README.md).
+
+[Repository index](../README.md)

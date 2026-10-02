@@ -67,8 +67,11 @@ description = "Regenerate the docs site data from repo sources"
 run = "python3 ./scripts/generate-docs.py"
 
 [tasks.docs-check]
-description = "Ensure generated docs data is up to date"
-run = ["python3 ./scripts/check-docs.py"]
+description = "Check topic documentation, local links, and generated data"
+run = [
+  "python3 -m unittest discover -s scripts -p test_check_docs.py",
+  "python3 ./scripts/check-docs.py",
+]
 
 [tasks.docs-serve]
 description = "Serve the docs site locally with mise-managed Python"

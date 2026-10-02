@@ -3,6 +3,8 @@
 **Date:** 2026-09-11
 **Status:** Approved, pending implementation plan
 
+> Superseded on 2026-10-02 by [topic-owned documentation](../../README.md). Paths and policies below describe the historical design.
+
 ## Problem
 
 `README.md` has grown to 621 lines across 24 sections, covering everything from
