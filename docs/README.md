@@ -8,7 +8,7 @@ Handwritten documentation lives beside the configuration it describes. This fold
 - Keep short topics in one README. Put larger workflows under the owning topic’s `docs/` directory and link them from its README.
 - Document each workflow once. Cross-link related topics even when its helpers are implemented in `system/.functions`.
 - [macOS](../macos/README.md) and [Omarchy](../omarchy/README.md) explain bootstrap and link to topic setup; detailed tool behavior belongs to its topic.
-- The root [README](../README.md) is the entry point: installation, quick commands, topic index and generated platform/features overview.
+- The root [README](../README.md) is the entry point: installation, quick commands, topic index and generated platform matrix.
 - Historical decisions belong under the owning topic’s `docs/research/` or `design/archive/`, with a date and explicit historical status.
 - Keep `AGENTS.md` and `CLAUDE.md` at the root for agent discovery; shared RTK guidance lives under [.rtk](../.rtk/README.md).
 
@@ -19,7 +19,7 @@ Use relative Markdown links to real files and headings. Commands assume the repo
 The static app inventories aliases, functions, Git shortcuts, mise tasks, bootstrap links, feature summaries and platform support from repository sources. Handwritten topic READMEs are browsed through the [repository index](../README.md#structure) or `mdf`; the site remains the generated command reference.
 
 - Generator: [scripts/generate-docs.py](../scripts/generate-docs.py)
-- Generated outputs: `site-data.json`, `site-data.js`, root README platform matrix and feature list
+- Generated outputs: `site-data.json`, `site-data.js`, root README platform matrix
 - Site sources: [index.html](index.html), [app.js](app.js), [styles.css](styles.css)
 
 Refresh after aliases, functions, tasks, installers or feature summaries change:

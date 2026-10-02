@@ -40,7 +40,7 @@ mise run bootstrap-verify
 
 ## Documentation automation
 
-[generate-docs.py](generate-docs.py) builds site data, the platform matrix and feature list. [check-docs.py](check-docs.py) checks generated freshness, README coverage for installable topics, local Markdown links and anchors, and agent document imports. See the [docs maintenance guide](../docs/README.md).
+[generate-docs.py](generate-docs.py) builds site data and the root README platform matrix. [check-docs.py](check-docs.py) checks generated freshness, README coverage for installable topics, local Markdown links and anchors, and agent document imports. See the [docs maintenance guide](../docs/README.md).
 
 ## Checker tests
 

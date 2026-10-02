@@ -17,8 +17,6 @@ README_PATH = ROOT / "README.md"
 PLATFORM_MATRIX_BEGIN = "<!-- BEGIN GENERATED: platform-matrix -->"
 PLATFORM_MATRIX_END = "<!-- END GENERATED: platform-matrix -->"
 
-FEATURES_BEGIN = "<!-- BEGIN GENERATED: features -->"
-FEATURES_END = "<!-- END GENERATED: features -->"
 
 # Maps an Omarchy installer script name to the detail text shown when that
 # script is not the topic's full install.sh (i.e. only part of the topic is
@@ -652,15 +650,6 @@ def build_features() -> list[dict]:
     return entries
 
 
-def render_features_markdown(features: list[dict]) -> str:
-    lines = [FEATURES_BEGIN, ""]
-    for feature in features:
-        lines.append(f"- **{feature['title']}**: {feature['summary']}")
-    lines.append("")
-    lines.append(FEATURES_END)
-    return "\n".join(lines)
-
-
 def replace_readme_block(text: str, begin: str, end: str, content: str) -> str:
     if begin not in text or end not in text:
         raise RuntimeError(f"README.md is missing the {begin} / {end} markers")
@@ -668,13 +657,10 @@ def replace_readme_block(text: str, begin: str, end: str, content: str) -> str:
     return block_pattern.sub(content, text, count=1)
 
 
-def update_readme_generated_blocks(matrix: list[dict], features: list[dict]) -> None:
+def update_readme_generated_blocks(matrix: list[dict]) -> None:
     text = README_PATH.read_text()
     text = replace_readme_block(
         text, PLATFORM_MATRIX_BEGIN, PLATFORM_MATRIX_END, render_platform_matrix_markdown(matrix)
-    )
-    text = replace_readme_block(
-        text, FEATURES_BEGIN, FEATURES_END, render_features_markdown(features)
     )
     if text != README_PATH.read_text():
         README_PATH.write_text(text)
@@ -745,7 +731,7 @@ def main() -> None:
 
     platform_matrix = build_platform_matrix(install_scripts, ROOT / "bootstrap-omarchy.sh")
     features = build_features()
-    update_readme_generated_blocks(platform_matrix, features)
+    update_readme_generated_blocks(platform_matrix)
 
     docs = {
         "git_revision": git_revision(),

@@ -15,7 +15,7 @@ Applies to the entire dotfiles repo.
 - Follow existing patterns in `Brewfile`, `bootstrap.sh`, `zsh/`, and `system/`.
 - Prefer deterministic checks over stylistic guesswork.
 - Never hardcode theme hex colours in configs that can read variables — reference `CATPPUCCIN_*` from `theme/palette.sh`. See the colour rule in `theme/README.md`.
-- When user-facing behavior changes, update the owning topic’s `README.md` or linked topic-local docs. Document a workflow once and cross-link related topics. Keep `macos/README.md` and `omarchy/README.md` focused on platform bootstrap, and root `README.md` limited to the landing page, install steps, Quick Commands, linked topic index, Features, and the generated platform matrix. See `docs/README.md` for documentation conventions.
+- When user-facing behavior changes, update the owning topic’s `README.md` or linked topic-local docs. Document a workflow once and cross-link related topics. Keep `macos/README.md` and `omarchy/README.md` focused on platform bootstrap, and root `README.md` limited to the landing page, install steps, Quick Commands, linked topic index and the generated platform matrix. See `docs/README.md` for documentation conventions.
 - Regenerate `docs/site-data.json` and keep the `docs/` site accurate — and the platform matrix embedded in `README.md` current — when aliases, functions, tasks, bootstrap links, topic install scripts, or user-visible features change. Run `mise run docs-build`.
 
 ## Safety
