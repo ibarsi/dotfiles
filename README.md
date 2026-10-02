@@ -54,8 +54,6 @@ the macOS bootstrap.
 | Topic | macOS | Omarchy |
 |-------|-------|---------|
 | `bash` | ✅ | ✅ |
-| `claude` | ✅ | — macOS only |
-| `codex` | ✅ | — macOS only |
 | `gh` | ✅ | ✅ |
 | `ghostty` | ✅ | — macOS only |
 | `git` | ✅ | ◐ aliases + optional delta |
@@ -116,8 +114,6 @@ Each folder owns its documentation.
 | [glow](glow/README.md) | Markdown rendering |
 | [k9s](k9s/README.md) | Kubernetes TUI |
 | [mise](mise/README.md) | Global tools and repository tasks |
-| [codex](codex/README.md) | Codex config, hooks and Grafana MCP |
-| [claude](claude/README.md) | Claude Code settings and themes |
 | [zed](zed/README.md) | Editor settings and keybindings |
 | [vim](vim/README.md) | Vim configuration |
 | [karabiner](karabiner/README.md) | App-scoped macOS keyboard mappings |

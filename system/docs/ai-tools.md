@@ -13,10 +13,12 @@ Agy is wired into the shared shell shortcut set with aliases that mirror the Cod
 - `agyreview` → start Agy with `/review`
 - `agyyolo` → `agy --dangerously-skip-permissions`
 
-## Configured tools
+## Machine-local configuration
 
-- [Codex](../../codex/README.md#shell-shortcuts) owns its config, hooks and shortcuts.
-- [Claude Code](../../claude/README.md#shell-shortcuts) owns its settings and shortcuts.
+Codex configuration and hooks under `~/.codex/`, and Claude Code settings and themes under `~/.claude/`, are machine-local. This repository does not store or symlink them. The shared shell retains shortcuts for the installed tools.
+
+- Codex: `cx`, `cxe`, `cxr`, `cxreview`, `cxup`.
+- Claude Code: `cc`, `cce`, `ccr`, `ccreview`, `ccdoctor`, `ccupdate`.
 - `cxyolo` and `ccyolo` explicitly request bypass modes; normal launch aliases retain the tool’s configured policy.
 - The macOS-only `aiup` updater is documented under [Zsh](../../zsh/README.md#updates).
 

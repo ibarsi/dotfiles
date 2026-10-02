@@ -202,24 +202,6 @@ FEATURE_NOTES = {
             "This repo does not automate Obsidian's CLI setup or theme activation.",
         ],
     },
-    "codex": {
-        "title": "Codex CLI config",
-        "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
-        "source": "codex/config.toml",
-        "details": [
-            "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
-            "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
-            "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode.",
-        ],
-    },
-    "claude": {
-        "title": "Claude Code config",
-        "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
-        "source": "claude/settings.json",
-        "details": [
-            "AI doctor validates the config path.",
-        ],
-    },
     "mise": {
         "title": "Mise integration",
         "summary": "Layers global settings through conf.d and provides project tools/tasks for reproducible shell workflows.",

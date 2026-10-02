@@ -5,3 +5,7 @@ pi/auth.json
 
 # SSH configuration stays machine-local, outside this repository.
 /ssh/
+
+# AI tool settings, hooks and themes stay machine-local.
+/codex/
+/claude/

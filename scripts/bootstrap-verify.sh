@@ -33,10 +33,6 @@ check_link "$HOME/.config/karabiner/assets/complex_modifications/zen-control-sho
 check_link "$HOME/.config/karabiner/assets/complex_modifications/slack-control-shortcuts.json"
 check_link "$HOME/.config/karabiner/assets/complex_modifications/discord-control-shortcuts.json"
 check_link "$HOME/.config/karabiner/assets/complex_modifications/linear-control-shortcuts.json"
-check_link "$HOME/.codex/config.toml"
-check_link "$HOME/.codex/hooks.json"
-check_link "$HOME/.codex/hooks"
-check_link "$HOME/.claude/settings.json"
 check_link "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
 
 for alias in ci mq url; do

@@ -1,16 +1,16 @@
 {
-  "git_revision": "8c8cebb2f106e4a322561efa2d5bd21c9fd5b8e9",
-  "source_hash": "a5d34c7e3635",
+  "git_revision": "8b026437a6dc59c365d5fa0892b146063d296ece",
+  "source_hash": "ca41d68fa201",
   "stats": {
     "aliases": 69,
     "functions": 43,
     "git": 53,
-    "features": 28,
+    "features": 26,
     "tasks": 15,
-    "bootstrap_links": 19,
+    "bootstrap_links": 15,
     "brews": 36,
     "casks": 26,
-    "platforms": 21
+    "platforms": 19
   },
   "aliases": [
     {
@@ -1368,26 +1368,6 @@
       "source": "theme/README.md"
     },
     {
-      "slug": "codex",
-      "title": "Codex CLI config",
-      "summary": "Maintains Codex defaults in-repo with trusted project settings and experimental workflow features.",
-      "details": [
-        "Bootstrap links ~/.codex/config.toml to the repository-managed file.",
-        "Bootstrap links ~/.codex/hooks.json so Codex can enforce Semble-first code discovery.",
-        "The Grafana MCP launcher reads its service-account token from the macOS login keychain and runs in read-only mode."
-      ],
-      "source": "codex/config.toml"
-    },
-    {
-      "slug": "claude",
-      "title": "Claude Code config",
-      "summary": "Stores Claude Code settings in the repo and links them into ~/.claude during bootstrap.",
-      "details": [
-        "AI doctor validates the config path."
-      ],
-      "source": "claude/settings.json"
-    },
-    {
       "slug": "mise",
       "title": "Mise integration",
       "summary": "Layers global settings through conf.d and provides project tools/tasks for reproducible shell workflows.",
@@ -1582,26 +1562,6 @@
   ],
   "bootstrap_links": [
     {
-      "source_path": "claude/settings.json",
-      "target_path": "~/.claude/settings.json",
-      "source": "claude/install.sh"
-    },
-    {
-      "source_path": "claude/themes",
-      "target_path": "~/.claude/themes",
-      "source": "claude/install.sh"
-    },
-    {
-      "source_path": "codex/config.toml",
-      "target_path": "~/.codex/config.toml",
-      "source": "codex/install.sh"
-    },
-    {
-      "source_path": "codex/hooks.json",
-      "target_path": "~/.codex/hooks.json",
-      "source": "codex/install.sh"
-    },
-    {
       "source_path": "ghostty/config",
       "target_path": "~/.config/ghostty/config",
       "source": "ghostty/install.sh"
@@ -1754,24 +1714,6 @@
       },
       "omarchy": {
         "state": "full"
-      }
-    },
-    {
-      "topic": "claude",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "absent"
-      }
-    },
-    {
-      "topic": "codex",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "absent"
       }
     },
     {
