@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "f5cb2d5973768f06f99886e43008ba29912957e5",
-  "source_hash": "ca41d68fa201",
+  "git_revision": "ed9e16b2114144fa56db4f4b7a1a98244968c322",
+  "source_hash": "f119d8ab999d",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -8,7 +8,7 @@ window.DOTFILES_DOCS_DATA = {
     "features": 25,
     "tasks": 15,
     "bootstrap_links": 15,
-    "brews": 36,
+    "brews": 37,
     "casks": 26,
     "platforms": 19
   },
@@ -1658,6 +1658,7 @@ window.DOTFILES_DOCS_DATA = {
       "bat\"              # Better 'cat",
       "eza\"              # Better 'ls",
       "glow",
+      "argocd\"           # ArgoCD CLI (gh bd stage drill-down)",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
       "zsh-autosuggestions",

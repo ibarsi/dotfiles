@@ -30,6 +30,7 @@ brew "zoxide"           # Better 'cd'
 brew "bat"              # Better 'cat'
 brew "eza"              # Better 'ls'
 brew "glow"
+brew "argocd"           # ArgoCD CLI (gh bd stage drill-down)
 brew "mise"             # Universal version manager
 brew "starship"         # Fast, minimal shell prompt
 brew "zsh-autosuggestions"

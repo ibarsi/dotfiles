@@ -35,7 +35,7 @@ check_link "$HOME/.config/karabiner/assets/complex_modifications/discord-control
 check_link "$HOME/.config/karabiner/assets/complex_modifications/linear-control-shortcuts.json"
 check_link "$HOME/Library/Preferences/gitmoji-nodejs/config.json"
 
-for alias in ci mq url; do
+for alias in bd ci mq url; do
 	if gh alias list 2>/dev/null | grep -q "^$alias: "; then
 		echo "✅ gh alias $alias"
 	else

@@ -21,3 +21,23 @@ ci: |
       | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
       | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
 url: pr view --json url --jq .url
+bd: |
+    !stage=$1; pr=${2:-$(gh pr view --json number -q .number)}
+    if [ -z "$stage" ]; then
+      gh pr view "$pr" --json comments \
+        --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body' |
+        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -
+      exit
+    fi
+    app="sys-argocd/max1-dev-us-gcp-e4-bnk-pr-$pr-$stage"
+    json=$(argocd app get "$app" -o json --grpc-web) || exit 1
+    echo "== $app"
+    echo "$json" | jq -r '.status | "sync: \(.sync.status)  health: \(.health.status)\nlast op: \(.operationState.phase // "-") \(.operationState.message // "")"'
+    echo; echo "== not healthy"
+    argocd app resources "$app" --output tree=detailed --grpc-web | grep -vE 'Healthy|^[[:space:]]*$' || echo "(none)"
+    echo "$json" | jq -r '.status.resources[] | select((.health.status // "Healthy") != "Healthy")
+      | select(.kind == "Deployment" or .kind == "StatefulSet") | "\(.kind) \(.name)"' |
+      while read -r kind name; do
+        echo; echo "== logs: $kind/$name (last 30)"
+        argocd app logs "$app" --kind "$kind" --group apps --name "$name" --tail 30 --grpc-web 2>&1
+      done
