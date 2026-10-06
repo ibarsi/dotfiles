@@ -19,11 +19,8 @@ PR_FRAGMENT='fragment P on PullRequest {
   mergeQueueEntry { state }
   reviews(last: 100) { nodes { author { login } submittedAt } }
   commits(last: 100) { nodes { commit { committedDate messageHeadline } } }
-  head: commits(last: 1) { nodes { commit { statusCheckRollup { contexts(first: 100) { nodes {
-    __typename
-    ... on CheckRun { name conclusion detailsUrl checkSuite { workflowRun { workflow { name } } } }
-    ... on StatusContext { context state }
-  } } } } } }
+  # Rollup state covers every check; contexts pages at 100, which big PRs exceed
+  head: commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
 }'
 
 # Prints "<index>\t<pr>|<review>|<comment>|<merge>|<deploy>|<number>" per
@@ -40,26 +37,16 @@ PR_FRAGMENT='fragment P on PullRequest {
 # progress, ▼ failed, ▵ replaced by a newer deploy).
 # shellcheck disable=SC2016 # jq variables
 PR_JQ='
-  # A re-triggered workflow leaves the older run in the rollup, and the new
-  # run may skip jobs, so keep only the latest run (highest id) per workflow
-  def run: [.u // "" | scan("/runs/([0-9]+)")[0] | tonumber] | first // 0;
   .data | to_entries[] | (.key[1:]) as $i | .value |
   ({SUCCESS: "▲", IN_PROGRESS: "△", QUEUED: "△", PENDING: "△", WAITING: "△",
     FAILURE: "▼", ERROR: "▼", INACTIVE: "▵"}
    [.deployments.nodes[0].latestStatus.state // ""] // "") as $deploy |
   # Prefer an open PR for the branch, else the newest one
   (.pullRequests.nodes | map(select(.state == "OPEN"))[0] // .[0]) // empty |
-  ([.head.nodes[0].commit.statusCheckRollup.contexts.nodes // [] | .[]
-    | if .__typename == "CheckRun"
-      then {w: (.checkSuite.workflowRun.workflow.name // .name), u: .detailsUrl, c: .conclusion}
-      else {w: .context, u: "", c: .state} end]
-    | group_by(.w) | map((map(run) | max) as $r | .[] | select(run == $r) | .c)) as $c |
   "#\(.number)" +
   (if .state == "MERGED" then "\u200b"
-   elif ($c | length) == 0 then ""
-   elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u2062"
-   elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u2061"
-   else "\u2060" end) as $pr |
+   else {FAILURE: "\u2062", ERROR: "\u2062", PENDING: "\u2061", EXPECTED: "\u2061", SUCCESS: "\u2060"}
+     [.head.nodes[0].commit.statusCheckRollup.state // ""] // "" end) as $pr |
   if .state != "OPEN" then "\($i)\t\($pr)|||||" else
     (if .mergeable == "CONFLICTING" then "↯" elif .mergeQueueEntry then "≡" else "" end) as $merge |
     # Queued implies approved, so the review icon is noise
