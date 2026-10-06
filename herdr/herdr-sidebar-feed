@@ -38,7 +38,7 @@ pr_summary() {
       ({APPROVED: "✓", CHANGES_REQUESTED: "✗"}[.reviewDecision // ""] // "") + "|" +
       # Same "since" rule as gh reviews
       (.author.login as $me
-        | ([.commits[] | select(.messageHeadline | test("^Merge ") | not) | .authoredDate] | max) as $push
+        | ([.commits[] | select(.messageHeadline | test("^Merge ") | not) | .committedDate] | max) as $push
         | if any(.reviews[]; .author.login != $me and .submittedAt > $push) then "※" else "" end) +
       "|\(if .mergeable == "CONFLICTING" then "↯" else "" end)|\(.number)" end' 2>/dev/null) || return
 	# gh pr view has no merge queue or deployment fields

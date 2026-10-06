@@ -42,7 +42,7 @@ reviews: |
     gh api --paginate "repos/{owner}/{repo}/pulls/$(echo "$pr" | jq .number)/reviews" --jq '.[]' |
       jq -rs --arg me "$me" --argjson pr "$pr" '
         {APPROVED:"32",CHANGES_REQUESTED:"31",COMMENTED:"2",DISMISSED:"35"} as $c
-        | [$pr.commits[] | select(.messageHeadline | test("^Merge ") | not) | .authoredDate] as $a
+        | [$pr.commits[] | select(.messageHeadline | test("^Merge ") | not) | .committedDate] as $a
         | .[] | select(.user.login != $me) | .submitted_at as $t | ([$a[] | select(. > $t)] | length) as $n
         | (if $n == 0 then "\u001b[32mup to date" else "\u001b[33m\($n) commit\(if $n > 1 then "s" else "" end) since" end) as $s
         | "\u001b[2m\(.id)\u001b[0m\t\($t)\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
