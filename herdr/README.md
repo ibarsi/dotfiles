@@ -24,11 +24,11 @@ Use the left Option key in [Ghostty](../ghostty/README.md#option-arrow-integrati
 (systemd on Omarchy, launchd on macOS). It adds two cmux-style lines to
 each workspace in Herdr's sidebar:
 
-- **`$pr`**: the PR for the workspace's branch, e.g. `#3750`, coloured by
+- **`$pr`**: the PR for the workspace's branch (the first pane branch with an open PR, so a worktree pane beats a `main` checkout), e.g. `#3750`, coloured by
   rules in `config.toml`: mauve merged, red CI failed, yellow running,
   green passed. The feed tags the number with an invisible zero-width
   character per state for the rules to match. Refreshed every 60s by one
-  batched `gh api graphql` query for all workspaces, about 1 point of the
+  batched `gh api graphql` query for all workspaces, 1 point of the
   5,000/hour GraphQL budget; a failed refresh (rate limit, offline) leaves the
   icons to expire rather than blanking them.
   Icons follow it on the same line: `$review` (green ✓ approved, red ✗

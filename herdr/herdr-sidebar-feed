@@ -104,18 +104,20 @@ report() {
 declare -A PR_NUMS=()
 
 update_prs() {
-	local ws cwd key i owner repo branch decl='' q='' out line pr review comment merge deploy
+	local ws cwd key i owner repo branch decl='' q='' out line l pr review comment merge deploy
 	local -A ws_key=() idx=() res=()
 	local -a keys=() vars=()
 	while IFS=$'\t' read -r ws cwd; do
 		key=$(pr_key "$cwd")
-		ws_key[$ws]=$key
+		# A workspace's panes can sit on different branches (a main checkout
+		# beside a worktree), so keep every pane's key
+		ws_key[$ws]+=${key:+$key$'\n'}
 		if [ -n "$key" ] && [ -z "${idx[$key]:-}" ]; then
 			idx[$key]=${#keys[@]}
 			keys+=("$key")
 		fi
 	done < <(herdr pane list 2>/dev/null |
-		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"')
+		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique[] | "\(.workspace_id)\t\(.cwd)"')
 
 	for i in "${!keys[@]}"; do
 		read -r owner repo branch <<<"${keys[i]}"
@@ -142,9 +144,14 @@ update_prs() {
 	fi
 
 	for ws in "${!ws_key[@]}"; do
-		key=${ws_key[$ws]}
+		# First pane branch with an open PR wins, else the first with any PR
 		line=
-		[ -n "$key" ] && line=${res[${idx[$key]}]:-}
+		while read -r key; do
+			[ -n "$key" ] || continue
+			l=${res[${idx[$key]}]:-}
+			[ -n "$l" ] && [ -z "$line" ] && line=$l
+			[ -n "${l##*|}" ] && line=$l && break
+		done <<<"${ws_key[$ws]}"
 		IFS='|' read -r pr review comment merge deploy _ <<<"$line"
 		# TTL outlives two refreshes so a dead feeder clears stale values
 		report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "review=${review:-}" "comment=${comment:-}" "merge=${merge:-}" "deploy=${deploy:-}"
