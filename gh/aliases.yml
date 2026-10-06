@@ -21,7 +21,7 @@ ci: |
       | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
       | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
 reviews: |
-    !show= want=
+    !export TZ=America/New_York show= want=
     for a; do shift
       if [ -n "$want" ]; then show=$a want=; continue; fi
       case "$a" in
@@ -33,7 +33,7 @@ reviews: |
     [ -n "$want" ] && { echo "--show needs a review ID (first column of gh reviews)" >&2; exit 1; }
     if [ -n "$show" ]; then
       base="repos/{owner}/{repo}/pulls/$(gh pr view "$@" --json number -q .number)/reviews/$show"
-      head=$(gh api "$base" --jq '"# \(.user.login) · \(.state)\n\n\(.submitted_at) · \(.html_url)\n\n\(.body)"') || exit 1
+      head=$(gh api "$base" --jq '"# \(.user.login) · \(.state)\n\n\(.submitted_at | fromdate | strflocaltime("%Y-%m-%d %H:%M %Z")) · \(.html_url)\n\n\(.body)"') || exit 1
       { echo "$head"; gh api --paginate "$base/comments" --jq '.[] | "\n---\n\n**`\(.path)\(.line // .original_line | if . then ":\(.)" else "" end)`**\n\n```diff\n\(.diff_hunk | split("\n") | .[-6:] | join("\n"))\n```\n\n\(.body)"'; } | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
@@ -45,7 +45,7 @@ reviews: |
         | [$pr.commits[] | select(.messageHeadline | test("^Merge ") | not) | .committedDate] as $a
         | .[] | select(.user.login != $me) | .submitted_at as $t | ([$a[] | select(. > $t)] | length) as $n
         | (if $n == 0 then "\u001b[32mup to date" else "\u001b[33m\($n) commit\(if $n > 1 then "s" else "" end) since" end) as $s
-        | "\u001b[2m\(.id)\u001b[0m\t\($t)\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
+        | "\u001b[2m\(.id)\u001b[0m\t\($t | fromdate | strflocaltime("%Y-%m-%d %H:%M %Z"))\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
 url: pr view --json url --jq .url
 bd: |
     !stage= want=
