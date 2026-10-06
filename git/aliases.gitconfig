@@ -7,6 +7,8 @@
     l = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
     # View abbreviated SHAs between two branches, excluding cherry picks
     lcp = l --no-merges --cherry-pick --right-only
+    # View the `l` history of the current directory only; extra flags pass through (e.g. -p, --stat)
+    lh = !"f() { cd \"${GIT_PREFIX:-.}\" && git l \"$@\" -- .; }; f"
     # View the current working tree status using the short format
     s = status -s
     # Show the diff between the latest commit and the current state
