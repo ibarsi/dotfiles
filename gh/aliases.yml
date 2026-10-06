@@ -62,11 +62,13 @@ bd: |
     if [ -z "$stage" ]; then
       gh pr view "$pr" --json comments \
         --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body' |
-        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -
+        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s auto -
       exit
     fi
     app="sys-argocd/max1-dev-us-gcp-e4-bnk-pr-$pr-$stage"
     json=$(argocd app get "$app" -o json --grpc-web) || exit 1
+    e=$(printf '\033')
+    {
     echo "== $app"
     echo "$json" | jq -r '.status | "sync: \(.sync.status)  health: \(.health.status)\nlast op: \(.operationState.phase // "-") \(.operationState.message // "")"'
     echo; echo "== not healthy"
@@ -77,3 +79,7 @@ bd: |
         echo; echo "== logs: $kind/$name (last 30)"
         argocd app logs "$app" --kind "$kind" --group apps --name "$name" --tail 30 --grpc-web 2>&1
       done
+    } | sed -E "s/^== .*/$e[1m&$e[0m/
+      s/(Healthy|Synced|Succeeded)/$e[32m&$e[0m/g
+      s/(Progressing|OutOfSync|Suspended|Pending)/$e[33m&$e[0m/g
+      s/(Degraded|Missing|Failed|Error|Unknown)/$e[31m&$e[0m/g"
