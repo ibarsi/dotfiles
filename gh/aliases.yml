@@ -58,14 +58,15 @@ bd: |
       esac
     done
     [ -n "$want" ] && { echo "--stage needs mesh, databases, infra, platform or ingress" >&2; exit 1; }
-    pr=$(gh pr view "$@" --json number -q .number) || exit 1
+    body=$(gh pr view "$@" --json comments \
+      --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body') || exit 1
     if [ -z "$stage" ]; then
-      gh pr view "$pr" --json comments \
-        --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body' |
-        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s "${GLAMOUR_STYLE:-auto}" -
+      echo "$body" | grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
-    app="sys-argocd/max1-dev-us-gcp-e4-bnk-pr-$pr-$stage"
+    # The bot's comment links each stage's ArgoCD app; take the name from there
+    app=$(echo "$body" | grep -oE "/applications/[^/]+/[^/?)]+-$stage\b" | head -1 | cut -d/ -f3-)
+    [ -n "$app" ] || { echo "no ArgoCD link for stage '$stage' in the branch-deploy comment" >&2; exit 1; }
     json=$(argocd app get "$app" -o json --grpc-web) || exit 1
     e=$(printf '\033')
     {
