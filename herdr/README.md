@@ -28,6 +28,11 @@ each workspace in Herdr's sidebar:
   rules in `config.toml`: mauve merged, red CI failed, yellow running,
   green passed. The feed tags the number with an invisible zero-width
   character per state for the rules to match. Refreshed every 60s through `gh`.
+  Icons follow it on the same line: `$review` (green ✓ approved, red ✗
+  changes requested), `$comment` (blue ※ someone else, bots included,
+  reviewed or commented since your last non-merge commit — see `gh reviews`
+  in [gh](../gh/README.md)), `$merge` (peach ↯ conflict, sky ≡ queued) and
+  `$deploy` (▲ live, △ deploying, ▼ failed).
 
 - **`$ports`**: TCP ports listened on by processes started from the
   workspace's panes, e.g. `:3000,8080`. Refreshed every 5s. Docker-published

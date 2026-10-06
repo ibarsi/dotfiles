@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pushes cmux-style $pr, $review, $merge, $deploy and $ports workspace tokens into herdr's sidebar.
+# Pushes cmux-style $pr, $review, $comment, $merge, $deploy and $ports workspace tokens into herdr's sidebar.
 # Rendered via [ui.sidebar.spaces] rows in ~/.config/herdr/config.toml.
 set -u
 TICK=${HERDR_SIDEBAR_TICK:-5}          # ports refresh
@@ -13,14 +13,15 @@ DEPLOY_ENV=${HERDR_SIDEBAR_DEPLOY_ENV:-"max1-dev-pr-{n}"}
 # Markers must not be Grapheme_Extend (U+200C/U+200D are): herdr glues those
 # onto the last digit and mangles it.
 # U+200B merged, U+2062 CI failed, U+2061 CI running, U+2060 CI passed
-# Then "|"-separated $review (✓ approved, ✗ changes requested) and $merge
+# Then "|"-separated $review (✓ approved, ✗ changes requested), $comment
+# (※ someone else reviewed after your last non-merge commit) and $merge
 # (↯ conflict, ≡ in merge queue, which hides $review) icons, empty unless
 # the PR is open, and $deploy for the latest deployment to its $DEPLOY_ENV
 # (▲ live, △ in progress, ▼ failed, ▵ replaced by a newer deploy).
 pr_summary() {
-	local pr review merge num queued deploy=
+	local pr review comment merge num queued deploy=
 	# shellcheck disable=SC2016 # $c is a jq variable
-	IFS='|' read -r pr review merge num < <(gh pr view --json number,state,reviewDecision,mergeable,statusCheckRollup --jq '
+	IFS='|' read -r pr review comment merge num < <(gh pr view --json number,state,reviewDecision,mergeable,statusCheckRollup,author,reviews,commits --jq '
     # A re-triggered workflow leaves the older run in the rollup, and the new
     # run may skip jobs, so keep only the latest run (highest id) per workflow
     def run: [.detailsUrl // "" | scan("/runs/([0-9]+)")[0] | tonumber] | first // 0;
@@ -32,9 +33,13 @@ pr_summary() {
      elif any($c[]; . == "FAILURE" or . == "ERROR" or . == "TIMED_OUT") then "\u2062"
      elif any($c[]; . == "PENDING" or . == "IN_PROGRESS" or . == "QUEUED" or . == "" or . == null) then "\u2061"
      else "\u2060" end) as $pr |
-    if .state != "OPEN" then "\($pr)|||" else
+    if .state != "OPEN" then "\($pr)||||" else
       "\($pr)|" +
-      ({APPROVED: "✓", CHANGES_REQUESTED: "✗"}[.reviewDecision // ""] // "") +
+      ({APPROVED: "✓", CHANGES_REQUESTED: "✗"}[.reviewDecision // ""] // "") + "|" +
+      # Same "since" rule as gh reviews
+      (.author.login as $me
+        | ([.commits[] | select(.messageHeadline | test("^Merge ") | not) | .authoredDate] | max) as $push
+        | if any(.reviews[]; .author.login != $me and .submittedAt > $push) then "※" else "" end) +
       "|\(if .mergeable == "CONFLICTING" then "↯" else "" end)|\(.number)" end' 2>/dev/null) || return
 	# gh pr view has no merge queue or deployment fields
 	if [ -n "$num" ]; then
@@ -56,7 +61,7 @@ pr_summary() {
 		# Queued implies approved, so the review icon is noise
 		[ "$merge" = "≡" ] && review=
 	fi
-	echo "$pr|$review|$merge|$deploy"
+	echo "$pr|$review|$comment|$merge|$deploy"
 }
 
 # report <ws> <source> <ttl-ms> <token>=<value>...; empty value clears the token
@@ -73,9 +78,9 @@ update_prs() {
 	herdr pane list 2>/dev/null |
 		jq -r '[.result.panes[] | {workspace_id, cwd}] | unique_by(.workspace_id)[] | "\(.workspace_id)\t\(.cwd)"' |
 		while IFS=$'\t' read -r ws cwd; do
-			IFS='|' read -r pr review merge deploy < <(cd "$cwd" 2>/dev/null && pr_summary)
+			IFS='|' read -r pr review comment merge deploy < <(cd "$cwd" 2>/dev/null && pr_summary)
 			# TTL outlives two refreshes so a dead feeder clears stale values
-			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "review=${review:-}" "merge=${merge:-}" "deploy=${deploy:-}"
+			report "$ws" sidebar-pr $((TICK * PR_EVERY * 2500)) "pr=${pr:-}" "review=${review:-}" "comment=${comment:-}" "merge=${merge:-}" "deploy=${deploy:-}"
 		done
 }
 
