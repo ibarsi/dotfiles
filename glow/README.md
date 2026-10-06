@@ -20,7 +20,7 @@ This gives you a fast terminal path for local READMEs, generated docs, changelog
 
 ## Managed files
 
-[glow.yml](glow.yml) and [catppuccin-mocha.json](catppuccin-mocha.json) are linked under `~/.config/glow/`.
+[glow.yml](glow.yml) and [catppuccin-mocha.json](catppuccin-mocha.json) are linked under `~/.config/glow/`. `GLAMOUR_STYLE` (set in [theme/catppuccin.zsh](../theme/catppuccin.zsh)) points at the repo copy of the style instead, so the shell helpers, `gh` markdown rendering and the `gh` aliases get Catppuccin on Linux too, where this installer doesn't run.
 
 ## Verification
 

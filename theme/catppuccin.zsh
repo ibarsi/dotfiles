@@ -30,7 +30,8 @@ export BAT_THEME="Catppuccin Mocha"
 
 # Glow/Glamour markdown rendering
 export GLOW_CONFIG_HOME="$HOME/.config/glow"
-export GLAMOUR_STYLE="$GLOW_CONFIG_HOME/catppuccin-mocha.json"
+# Repo copy, not ~/.config/glow: only the macOS glow installer links that one.
+export GLAMOUR_STYLE="$DOTFILES/glow/catppuccin-mocha.json"
 export GLOW_HIGH_PERFORMANCE_PAGER="true"
 
 # eza colors

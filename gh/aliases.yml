@@ -34,7 +34,7 @@ reviews: |
     if [ -n "$show" ]; then
       base="repos/{owner}/{repo}/pulls/$(gh pr view "$@" --json number -q .number)/reviews/$show"
       head=$(gh api "$base" --jq '"# \(.user.login) · \(.state)\n\n\(.submitted_at) · \(.html_url)\n\n\(.body)"') || exit 1
-      { echo "$head"; gh api --paginate "$base/comments" --jq '.[] | "\n---\n\n**`\(.path)\(.line // .original_line | if . then ":\(.)" else "" end)`**\n\n```diff\n\(.diff_hunk | split("\n") | .[-6:] | join("\n"))\n```\n\n\(.body)"'; } | glow -s "$(sed -n 's/^style: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "${GLOW_CONFIG_HOME:-$HOME/.config/glow}/glow.yml" 2>/dev/null | grep . || echo auto)" -
+      { echo "$head"; gh api --paginate "$base/comments" --jq '.[] | "\n---\n\n**`\(.path)\(.line // .original_line | if . then ":\(.)" else "" end)`**\n\n```diff\n\(.diff_hunk | split("\n") | .[-6:] | join("\n"))\n```\n\n\(.body)"'; } | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
     me=$(gh api user --jq .login)
@@ -62,7 +62,7 @@ bd: |
     if [ -z "$stage" ]; then
       gh pr view "$pr" --json comments \
         --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body' |
-        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s "$(sed -n 's/^style: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "${GLOW_CONFIG_HOME:-$HOME/.config/glow}/glow.yml" 2>/dev/null | grep . || echo auto)" -
+        grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
     app="sys-argocd/max1-dev-us-gcp-e4-bnk-pr-$pr-$stage"
