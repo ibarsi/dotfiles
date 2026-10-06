@@ -20,6 +20,14 @@ ci: |
       | {fail:0,cancel:1,pending:2,pass:3,skipping:4} as $o
       | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
       | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
+reviews: |
+    !me=$(gh api user --jq .login)
+    gh pr view "$@" --json reviews,commits --jq '
+      {APPROVED:"32",CHANGES_REQUESTED:"31",COMMENTED:"2",DISMISSED:"35"} as $c
+      | [.commits[] | select(.messageHeadline | test("^Merge ") | not) | .authoredDate] as $a
+      | .reviews[] | select(.author.login != "'"$me"'") | .submittedAt as $t | ([$a[] | select(. > $t)] | length) as $n
+      | (if $n == 0 then "\u001b[32mup to date" else "\u001b[33m\($n) commits since" end) as $s
+      | "\($t)\t\u001b[1m\(.author.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
 url: pr view --json url --jq .url
 bd: |
     !stage=$1; pr=${2:-$(gh pr view --json number -q .number)}
