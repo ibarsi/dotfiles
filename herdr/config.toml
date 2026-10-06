@@ -129,7 +129,7 @@ rows = [
   # herdr-sidebar-feed tags $pr with a zero-width marker per state.
   # Catppuccin Mocha mauve merged, red CI failed, yellow running, green passed.
   # $review: green approved, red changes requested. $comment: blue new review since last push. $merge: peach conflict, sky queued
-  # $deploy: green ▲ live, yellow △ in progress, red ▼ failed, ▵ (no rule, dim) replaced
+  # $deploy: green ▲ live, yellow △ in progress, red ▼ failed, ▵ (no rule, dim) paused
   [{ token = "$pr", dim = true, rules = [
     { contains = "\u200B", fg = "#cba6f7" },
     { contains = "\u2062", fg = "#f38ba8" },

@@ -35,7 +35,7 @@ each workspace in Herdr's sidebar:
   changes requested), `$comment` (blue ※ someone else, bots included,
   reviewed or commented since your last non-merge commit — see `gh reviews`
   in [gh](../gh/README.md)), `$merge` (peach ↯ conflict, sky ≡ queued) and
-  `$deploy` (▲ live, △ deploying, ▼ failed).
+  `$deploy` (▲ live, △ deploying, ▼ failed, ▵ paused).
 
 - **`$ports`**: TCP ports listened on by processes started from the
   workspace's panes, e.g. `:3000,8080`. Refreshed every 5s. Docker-published

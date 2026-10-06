@@ -34,7 +34,7 @@ PR_FRAGMENT='fragment P on PullRequest {
 # reviewed after your last non-merge commit) and $merge (↯ conflict, ≡ in
 # merge queue, which hides $review) icons, empty unless the PR is open, and
 # $deploy for the latest deployment to its $DEPLOY_ENV (▲ live, △ in
-# progress, ▼ failed, ▵ replaced by a newer deploy).
+# progress, ▼ failed, ▵ paused).
 # shellcheck disable=SC2016 # jq variables
 PR_JQ='
   .data | to_entries[] | (.key[1:]) as $i | .value |
