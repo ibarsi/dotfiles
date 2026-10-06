@@ -48,7 +48,17 @@ reviews: |
         | "\u001b[2m\(.id)\u001b[0m\t\($t)\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
 url: pr view --json url --jq .url
 bd: |
-    !stage=$1; pr=${2:-$(gh pr view --json number -q .number)}
+    !stage= want=
+    for a; do shift
+      if [ -n "$want" ]; then stage=$a want=; continue; fi
+      case "$a" in
+        --stage) want=1 ;;
+        --stage=*) stage=${a#*=} ;;
+        *) set -- "$@" "$a" ;;
+      esac
+    done
+    [ -n "$want" ] && { echo "--stage needs mesh, databases, infra, platform or ingress" >&2; exit 1; }
+    pr=$(gh pr view "$@" --json number -q .number) || exit 1
     if [ -z "$stage" ]; then
       gh pr view "$pr" --json comments \
         --jq '.comments[] | select(.body | contains("<!-- branch-deploy-status -->")) | .body' |
