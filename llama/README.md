@@ -86,10 +86,15 @@ revision they came from.
 
 ## Tuning notes
 
-`ctx-size = 524288` (512K) fits in 32 GB of VRAM only because of the two
-settings under it: `cache-type-k`/`cache-type-v = q8_0` halves the KV cache,
-and `cache-ram = 16384` spills 16 GB of it to system RAM. Change one and the
+`ctx-size = 524288` (512K) fits in 32 GB of VRAM only because
+`cache-type-k`/`cache-type-v = q8_0` halves the KV cache. Drop that and the
 context has to come down.
+
+`cache-ram = 4096` caps the prompt cache, which holds the saved KV state of idle
+slots so a returning conversation can skip reprocessing. It lives in anonymous
+system RAM, survives `sleep-idle-seconds`, and can only go to swap under memory
+pressure. At 16 GB it sat in zram for days alongside the k8s stack. Raising the
+cap means more cache hits on long contexts and more swap.
 
 `sleep-idle-seconds = 900` unloads the model from VRAM after 15 minutes idle,
 which matters on a laptop that also runs a desktop. First request after a
