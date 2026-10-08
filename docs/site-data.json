@@ -1,6 +1,6 @@
 {
-  "git_revision": "7cac38b36c3f22c59516f7fe3651b0305a56c0c4",
-  "source_hash": "a7a206f6e966",
+  "git_revision": "151e6ddf19d485fd9bbeecc4ac608dcb037e6817",
+  "source_hash": "a03bd1f25888",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -204,7 +204,7 @@
     },
     {
       "name": "fzs",
-      "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become(${EDITOR:-vim} +{2} {1})\"",
+      "command": "rg --line-number --no-heading --color=always \"\" | fzf --ansi --delimiter \":\" --preview \"bat --color=always --highlight-line {2} {1}\" --preview-window \"+{2}-5\" --bind \"enter:become($(command -v nvim || echo vim) +{2} {1})\"",
       "group": "fzf content search",
       "source": "system/.aliases",
       "source_kind": "system alias"

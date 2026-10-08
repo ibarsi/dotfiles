@@ -2,9 +2,10 @@
 
 `fzf` is already installed via Brewfile; this repo includes practical shell functions in `system/.functions` tailored for your setup (`bat`, `rg`, `zed`, git-heavy workflow).
 
-**Included functions:**
+**Included helpers:**
 
 - `ff` → fuzzy-find file and open in Zed (fallback: `$EDITOR`)
+- `fzs` → fuzzy-search file contents with `rg`+`fzf` and open the selected line in nvim (fallback: vim)
 - `fcd` → fuzzy-find directory and `cd` into it
 - `fbr` → fuzzy-switch git branches (supports remote tracking branches)
 - `frg [query]` → fuzzy-select from `rg` results and jump to file+line
