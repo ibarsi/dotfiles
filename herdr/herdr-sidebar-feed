@@ -34,12 +34,12 @@ PR_FRAGMENT='fragment P on PullRequest {
 # reviewed after your last non-merge commit) and $merge (↯ conflict, ≡ in
 # merge queue, which hides $review) icons, empty unless the PR is open, and
 # $deploy for the latest deployment to its $DEPLOY_ENV (▲ live, △ in
-# progress, ▼ failed, ▵ paused).
+# progress, ▼ failed, ॥ paused).
 # shellcheck disable=SC2016 # jq variables
 PR_JQ='
   .data | to_entries[] | (.key[1:]) as $i | .value |
   ({SUCCESS: "▲", IN_PROGRESS: "△", QUEUED: "△", PENDING: "△", WAITING: "△",
-    FAILURE: "▼", ERROR: "▼", INACTIVE: "▵"}
+    FAILURE: "▼", ERROR: "▼", INACTIVE: "॥"}
    [.deployments.nodes[0].latestStatus.state // ""] // "") as $deploy |
   # Prefer an open PR for the branch, else the newest one
   (.pullRequests.nodes | map(select(.state == "OPEN"))[0] // .[0]) // empty |
