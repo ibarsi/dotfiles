@@ -1,7 +1,37 @@
 # GitHub CLI aliases, loaded by gh/install.sh via `gh alias import --clobber`.
 # Edit here, then re-run gh/install.sh; `gh alias set` changes won't be kept.
 mq: |
-    !gh api graphql -F owner='{owner}' -F repo='{repo}' -f query='
+    !show= want=
+    for a; do shift
+      if [ -n "$want" ]; then show=${a#\#} want=; continue; fi
+      case "$a" in
+        --show) want=1 ;;
+        --show=*) show=${a#*=} show=${show#\#} ;;
+        *) set -- "$@" "$a" ;;
+      esac
+    done
+    [ -n "$want" ] && { echo "--show needs a PR number (third column of gh mq)" >&2; exit 1; }
+    if [ -n "$show" ]; then
+      # Queue checks run on the merge-group commit, not the PR head, so gh pr checks can't see them
+      gh api graphql --paginate --slurp -F owner='{owner}' -F repo='{repo}' -F n="$show" -f query='
+      query($owner:String!,$repo:String!,$n:Int!,$endCursor:String){repository(owner:$owner,name:$repo){pullRequest(number:$n){mergeQueueEntry{
+        headCommit{statusCheckRollup{contexts(first:100,after:$endCursor){pageInfo{hasNextPage endCursor} nodes{
+          ... on CheckRun{name status conclusion detailsUrl checkSuite{workflowRun{workflow{name}}}}
+          ... on StatusContext{context state targetUrl}}}}}}}}}' | jq -r '
+        [.[].data.repository.pullRequest.mergeQueueEntry // empty | .headCommit.statusCheckRollup.contexts.nodes[]]
+        | if length == 0 then "#'"$show"' is not in the merge queue (or has no checks yet)\n" | halt_error(1) else . end
+        | {SUCCESS:"pass",NEUTRAL:"pass",SKIPPED:"skipping",CANCELLED:"cancel",FAILURE:"fail",ERROR:"fail",TIMED_OUT:"fail",
+           STARTUP_FAILURE:"fail",ACTION_REQUIRED:"fail",STALE:"fail",PENDING:"pending",EXPECTED:"pending"} as $b
+        | {fail:"31",cancel:"35",pending:"33",pass:"32",skipping:"2"} as $c
+        | {fail:0,cancel:1,pending:2,pass:3,skipping:4} as $o
+        | map(if .context then {bucket:$b[.state], name:.context, workflow:"", link:.targetUrl}
+              else {bucket:(if .status != "COMPLETED" then "pending" else $b[.conclusion] end),
+                    name, workflow:(.checkSuite.workflowRun.workflow.name // ""), link:.detailsUrl} end)
+        | sort_by($o[.bucket] // 9, .workflow, .name) | .[]
+        | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
+      exit
+    fi
+    gh api graphql -F owner='{owner}' -F repo='{repo}' -f query='
     query($owner:String!,$repo:String!){repository(owner:$owner,name:$repo){mergeQueue{entries(first:50){nodes{
       position state pullRequest{number title author{login}}}}}}}' --jq '
       {MERGEABLE:"32",AWAITING_CHECKS:"33",QUEUED:"36",UNMERGEABLE:"31",LOCKED:"35"} as $c
