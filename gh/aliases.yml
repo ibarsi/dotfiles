@@ -64,18 +64,24 @@ reviews: |
     if [ -n "$show" ]; then
       base="repos/{owner}/{repo}/pulls/$(gh pr view "$@" --json number -q .number)/reviews/$show"
       head=$(gh api "$base" --jq '"# \(.user.login) · \(.state)\n\n\(.submitted_at | fromdate | strflocaltime("%Y-%m-%d %H:%M %Z")) · \(.html_url)\n\n\(.body)"') || exit 1
-      { echo "$head"; gh api --paginate "$base/comments" --jq '.[] | "\n---\n\n**`\(.path)\(.line // .original_line | if . then ":\(.)" else "" end)`**\n\n```diff\n\(.diff_hunk | split("\n") | .[-6:] | join("\n"))\n```\n\n\(.body)"'; } | glow -s "${GLAMOUR_STYLE:-auto}" -
+      # printf, not echo: gh runs aliases with sh -c. macOS /bin/sh expands
+      # backslash escapes in echo; Omarchy's bash does not. A review body that
+      # contains \n would be rewritten on macOS before glow sees it.
+      { printf '%s\n' "$head"; gh api --paginate "$base/comments" --jq '.[] | "\n---\n\n**`\(.path)\(.line // .original_line | if . then ":\(.)" else "" end)`**\n\n```diff\n\(.diff_hunk | split("\n") | .[-6:] | join("\n"))\n```\n\n\(.body)"'; } | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
     me=$(gh api user --jq .login)
     pr=$(gh pr view "$@" --json number,commits) || exit 1
-    gh api --paginate "repos/{owner}/{repo}/pulls/$(echo "$pr" | jq .number)/reviews" --jq '.[]' |
+    # Same echo trap as above: commit messageBody is full of \n. jq -e stops
+    # the alias before an empty number becomes a /pulls//reviews 404.
+    number=$(printf '%s\n' "$pr" | jq -er .number) || exit 1
+    gh api --paginate "repos/{owner}/{repo}/pulls/$number/reviews" --jq '.[]' |
       jq -rs --arg me "$me" --argjson pr "$pr" '
         {APPROVED:"32",CHANGES_REQUESTED:"31",COMMENTED:"2",DISMISSED:"35"} as $c
         | [$pr.commits[] | select(.messageHeadline | test("^Merge ") | not) | .committedDate] as $a
         | .[] | select(.user.login != $me) | .submitted_at as $t | ([$a[] | select(. > $t)] | length) as $n
         | (if $n == 0 then "\u001b[32mup to date" else "\u001b[33m\($n) commit\(if $n > 1 then "s" else "" end) since" end) as $s
-        | "\u001b[2m\(.id)\u001b[0m\t\($t | fromdate | strflocaltime("%Y-%m-%d %H:%M %Z"))\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
+        | "\u001b[2m\(.id)\u001b[0m\t\($t | fromdate | strflocaltime("%Y-%m-%d %H:%M %Z"))\t\u001b[1m\(.user.login)\u001b[0m\t\u001b[\($c[(.state // "")] // "0")m\(.state)\u001b[0m\t\($s)\u001b[0m"'
 url: pr view --json url --jq .url
 bd: |
     !stage= want=
