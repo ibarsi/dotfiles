@@ -1,12 +1,11 @@
-.claude/settings.local.json
+# Local overrides
 system/.extra
-pi/auth.json
-.antigravitycli/
-__pycache__/
-
-# SSH configuration stays machine-local, outside this repository.
-/ssh/
 
 # AI tool settings, hooks and themes stay machine-local.
-/codex/
-/claude/
+.claude
+.codex
+.antigravitycli/
+.pi/auth.json
+
+# Build artifacts
+__pycache__/
