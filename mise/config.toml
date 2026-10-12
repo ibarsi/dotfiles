@@ -1,4 +1,4 @@
-# Global mise settings (symlinked to ~/.config/mise/config.toml)
+# Global mise settings (symlinked to ~/.config/mise/conf.d/00-dotfiles.toml by mise/install.sh)
 # Docs: https://mise.jdx.dev/configuration/settings.html
 
 [settings]
