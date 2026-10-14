@@ -11,6 +11,10 @@ echo "🎨 Installing Catppuccin theme..."
 echo "→ Symlinking Starship config..."
 bash "$DOTFILES_ROOT/theme/install-starship.sh"
 
+# btop config and palette-generated theme (Apple Silicon GPU panel enabled)
+echo "→ Installing btop config and Catppuccin theme..."
+bash "$DOTFILES_ROOT/theme/install-btop.sh"
+
 # Install bat themes
 echo "→ Installing bat themes..."
 mkdir -p "$(bat --config-dir)/themes"

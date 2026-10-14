@@ -88,10 +88,33 @@ obsidian theme:install name=Catppuccin
 obsidian theme:set name=Catppuccin
 ```
 
+### btop (MacBook)
+
+Homebrew installs btop from the [Brewfile](../Brewfile). macOS bootstrap runs
+`theme/install.sh`, which calls [install-btop.sh](install-btop.sh) to link
+[btop.conf](btop.conf) into `${XDG_CONFIG_HOME:-~/.config}/btop/btop.conf` and
+generate `themes/catppuccin_mocha.theme` from [palette.sh](palette.sh).
+An existing regular config is backed up beside it before linking.
+
+Refresh only btop with `bash theme/install-btop.sh` while btop is closed.
+The config uses truecolor and keeps the terminal background transparent.
+Edit the tracked config for persistent preferences; saving settings on exit
+is disabled so btop does not rewrite the repository file.
+
+The GPU panel is enabled with `gpu0`; press `5` to toggle it during a session.
+Apple Silicon GPU metrics work with the Homebrew btop build without sudo.
+Utilization, clock and power were verified on the MacBook's M5 Pro; a `0°C`
+temperature reading is unavailable data. Omarchy bootstrap does not run this
+MacBook setup.
+
+Verify `readlink ~/.config/btop/btop.conf`, then launch `btop` to check the
+Mocha colours and GPU panel. Rerun the installer after changing the palette.
+
 ## Tools Integrated
 
 - ✅ Starship prompt
 - ✅ Ghostty terminal theme
+- ✅ btop resource monitor and Apple Silicon GPU panel
 - ✅ Obsidian manual theme commands documented
 - ✅ Vim colorscheme
 - ✅ Bat syntax highlighting
@@ -107,6 +130,8 @@ theme/
 ├── catppuccin.zsh        # Exports palette; FZF/bat/eza/less config built from it
 ├── starship.toml         # Prompt theme configuration
 ├── install-starship.sh   # Shared prompt symlink
+├── btop.conf             # MacBook monitor preferences
+├── install-btop.sh       # btop config link and palette-generated theme
 ├── install.sh            # macOS theme setup
 └── README.md             # This file
 ```
@@ -125,7 +150,7 @@ To use a different flavor (e.g., Macchiato):
 
 ## Platforms and verification
 
-macOS bootstrap runs `theme/install.sh`, installing Starship, bat/Vim themes and the k9s skin. Omarchy bootstrap runs only `theme/install-starship.sh`; its Bash fragment still sources the shared shell palette. Other app themes are host-managed there.
+macOS bootstrap runs `theme/install.sh`, installing Starship, btop, bat/Vim themes and the k9s skin. Omarchy bootstrap runs only `theme/install-starship.sh`; its Bash fragment still sources the shared shell palette. Other app themes are host-managed there.
 
 Check `readlink ~/.config/starship.toml`, then open a fresh shell. For the terminal’s built-in dark/light themes, see [Ghostty](../ghostty/README.md).
 

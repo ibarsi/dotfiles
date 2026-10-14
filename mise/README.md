@@ -51,7 +51,7 @@ On macOS, [bootstrap](../macos/README.md#bootstrap) runs `bash mise/install.sh`.
 
 The installer keeps `~/.config/mise/config.toml` as a real, machine-local file and layers the tracked fragment through `conf.d`. It also registers the `mise-local` Git clean filter to strip `trusted_config_paths` from the tracked config. Zsh exports `MISE_TRUSTED_CONFIG_PATHS=$HOME/worktrees`.
 
-Global tools in [config.toml](config.toml) include Node, uv, Go, gitmoji-cli, gopls and RTK. The project [mise.toml](../mise.toml) owns maintenance tasks and tool versions.
+Global tools in [config.toml](config.toml) include Node, uv, Go, gitmoji-cli, gopls, RTK and the Antigravity CLI (`agy`). Run `mise install agy` to install it and `mise upgrade agy` to update it. The project [mise.toml](../mise.toml) owns maintenance tasks and tool versions.
 
 See [repository validation](../scripts/README.md) and [docs generation](../docs/README.md#docs-site) for the complete maintenance flow.
 

@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "17cdd3cc95e235db5e39bccfbe1bf5defbba2e2d",
-  "source_hash": "f0edcf309717",
+  "git_revision": "532b6cab87d0e3e803d0ab89ded7d58aca163513",
+  "source_hash": "f91641c29bc9",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -8,7 +8,7 @@ window.DOTFILES_DOCS_DATA = {
     "features": 25,
     "tasks": 15,
     "bootstrap_links": 15,
-    "brews": 37,
+    "brews": 38,
     "casks": 26,
     "platforms": 19
   },
@@ -1451,7 +1451,7 @@ window.DOTFILES_DOCS_DATA = {
         "bash -n bash/install.sh",
         "bash -n k9s/install.sh",
         "bash -n macos/.macos",
-        "bash -n theme/install.sh theme/install-starship.sh",
+        "bash -n theme/install.sh theme/install-starship.sh theme/install-btop.sh",
         "bash -n glow/install.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh",
@@ -1499,7 +1499,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1507,7 +1507,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1515,7 +1515,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1665,6 +1665,7 @@ window.DOTFILES_DOCS_DATA = {
       "bat\"              # Better 'cat",
       "eza\"              # Better 'ls",
       "glow",
+      "btop\"             # Interactive resource monitor",
       "argocd\"           # ArgoCD CLI (gh bd stage drill-down)",
       "mise\"             # Universal version manager",
       "starship\"         # Fast, minimal shell prompt",
