@@ -75,7 +75,7 @@ alias ccyolo="claude --dangerously-skip-permissions"
 # Agy CLI
 alias agye="agy -p"
 alias agyr="agy --continue"
-alias agyreview='agy "/review"'
+alias agyreview='agy -i "/review"'
 alias agyyolo="agy --dangerously-skip-permissions"
 
 # Mise

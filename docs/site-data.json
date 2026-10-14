@@ -1,6 +1,6 @@
 {
-  "git_revision": "30bce9e4dea6eb2aef7917554a18ea21764d6a63",
-  "source_hash": "3545efcae306",
+  "git_revision": "17cdd3cc95e235db5e39bccfbe1bf5defbba2e2d",
+  "source_hash": "f0edcf309717",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -57,7 +57,7 @@
     },
     {
       "name": "agyreview",
-      "command": "agy \"/review\"",
+      "command": "agy -i \"/review\"",
       "group": "Agy CLI",
       "source": "system/.aliases",
       "source_kind": "system alias"
