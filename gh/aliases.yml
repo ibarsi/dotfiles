@@ -1,11 +1,14 @@
 # GitHub CLI aliases, loaded by gh/install.sh via `gh alias import --clobber`.
 # Edit here, then re-run gh/install.sh; `gh alias set` changes won't be kept.
 mq: |
-    !show= want=
+    !show= want= f='.[]'
     for a; do shift
       if [ -n "$want" ]; then show=${a#\#} want=; continue; fi
       case "$a" in
         --show) want=1 ;;
+        --failed) f='.[] | select(.bucket == "fail")' ;;
+        --passed) f='.[] | select(.bucket == "pass")' ;;
+        --pending) f='.[] | select(.bucket == "pending")' ;;
         --show=*) show=${a#*=} show=${show#\#} ;;
         *) set -- "$@" "$a" ;;
       esac
@@ -27,7 +30,7 @@ mq: |
         | map(if .context then {bucket:$b[.state], name:.context, workflow:"", link:.targetUrl}
               else {bucket:(if .status != "COMPLETED" then "pending" else $b[.conclusion] end),
                     name, workflow:(.checkSuite.workflowRun.workflow.name // ""), link:.detailsUrl} end)
-        | sort_by($o[.bucket] // 9, .workflow, .name) | .[]
+        | sort_by($o[.bucket] // 9, .workflow, .name) | '"$f"'
         | "\u001b[\($c[.bucket] // "0")m\(.bucket)\u001b[0m\t\u001b[1m\(.name)\u001b[0m\t\u001b[2m\(.workflow)\t\(.link)\u001b[0m"'
       exit
     fi
