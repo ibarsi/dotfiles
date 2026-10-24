@@ -125,11 +125,18 @@ function dotfiles-sync() {
     )
 }
 
-# Upgrade Homebrew when available and mise tools.
+# Upgrade Homebrew and mise tools, then install Apple updates on macOS.
 function upall() {
     if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-        echo "Usage: upall"
+        echo "Usage: upall [--restart]"
+        echo "Update Homebrew and mise tools, then install available Apple updates on macOS."
+        echo "  --restart  Automatically restart macOS if an update requires it."
         return 0
+    fi
+
+    if [[ "$#" -gt 1 || ( "$#" -eq 1 && "$1" != "--restart" ) ]]; then
+        echo "Usage: upall [--restart]" >&2
+        return 1
     fi
 
     if ! command -v mise >/dev/null 2>&1; then
@@ -167,6 +174,21 @@ function upall() {
     echo "== mise up =="
     mise up -C "$repo_root" || return
 
+    if [[ "${DOTFILES_OS:-}" == "macos" ]]; then
+        local update_args=(--install --all)
+        if [[ "${1:-}" == "--restart" ]]; then
+            update_args+=(--restart)
+        fi
+
+        echo "== Apple software updates =="
+        echo "Administrator/volume-owner authentication may be required."
+        if [[ "${1:-}" == "--restart" ]]; then
+            echo "macOS will restart automatically if required; save your work first."
+        else
+            echo "If an update requires a restart, restart manually to finish installation."
+        fi
+        sudo /usr/sbin/softwareupdate "${update_args[@]}" || return
+    fi
 }
 
 # Reload shell only (no git/network side effects)

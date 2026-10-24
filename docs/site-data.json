@@ -1,6 +1,6 @@
 {
-  "git_revision": "88e32820ba59b73bb582eaee712f32a4fed5462b",
-  "source_hash": "f91641c29bc9",
+  "git_revision": "b4a84b8effa14a8ada0fca8d92ef89fb47fb2966",
+  "source_hash": "171d8bccdcdb",
   "stats": {
     "aliases": 69,
     "functions": 43,
@@ -766,8 +766,8 @@
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew when available and mise tools.",
-      "usage": "",
+      "summary": "Upgrade Homebrew and mise tools, then install Apple updates on macOS.",
+      "usage": "upall [--restart]",
       "source": "system/.functions",
       "source_kind": "system function"
     },

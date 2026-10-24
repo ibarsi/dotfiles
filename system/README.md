@@ -25,7 +25,9 @@ Keep credentials and project-specific paths in the gitignored `system/.extra` or
 
 ## Maintenance
 
-- `upall` upgrades Homebrew packages/casks when available and runs `mise up -C "$repo_root"`; global mise tools participate too.
+- `upall` upgrades Homebrew packages/casks when available and runs `mise up -C "$repo_root"`; global mise tools participate too. On macOS, after those steps succeed, it runs `sudo /usr/sbin/softwareupdate --install --all` to check for, download and install all applicable Apple updates (including macOS, Safari and Command Line Tools when offered). Earlier failures stop the sequence.
+- Plain `upall` leaves any required restart to you; installation of some OS updates finishes only after restarting. Use `upall --restart` to add `--restart` and let macOS restart automatically when needed. Save your work and connect power before running it. Linux skips the Apple update step.
+- The Apple step may prompt for administrator authentication and, on Apple silicon, volume-owner authorization. Passwords are not stored; this is an interactive terminal workflow, not a guaranteed unattended updater. It installs what Software Update offers this Mac, rather than downloading a full macOS installer or selecting a particular major version. See `man softwareupdate` for the installed tool's options and [Apple's update process](https://support.apple.com/guide/deployment/dep02c211f3e/web) for authorization requirements.
 - `dsync` fetches and previews dotfiles update status.
 - `dotdocs` opens the [generated reference site](../docs/README.md#docs-site).
 
