@@ -251,7 +251,12 @@ function dotdocs() {
             cd "$repo_root" || exit 1
             nohup mise run docs-serve >"$log_file" 2>&1 &
         )
-        sleep 1
+        # mise may install/prune tools before starting the server
+        local i
+        for i in {1..20}; do
+            lsof -ti tcp:"$port" -sTCP:LISTEN >/dev/null 2>&1 && break
+            sleep 0.5
+        done
     fi
 
     if lsof -ti tcp:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
