@@ -86,9 +86,20 @@ revision they came from.
 
 ## Tuning notes
 
-`ctx-size = 524288` (512K) fits in 32 GB of VRAM only because
-`cache-type-k`/`cache-type-v = q8_0` halves the KV cache. Drop that and the
-context has to come down.
+`ctx-size = 262144` with `parallel = 2` gives each slot 128K, the model's
+trained context and Pi's `contextWindow`. Two slots cover `pi:until-done`: a
+main turn plus one subagent, the peak concurrency in two weeks of logs. Each
+128K slot costs ~885 MiB of KV at `q8_0` (only 13 of 52 layers are
+full-attention; the rest use a 2K sliding window). The whole load is ~18.3 GiB
+— 14.4 weights, 1.8 KV, 1.6 draft, ~0.6 compute — so it fits beside a desktop
+using ~13 GiB of VRAM. The old 4 × 128K needed ~20.5 GiB and OOMed in warmup
+when Hyprland had bloated to 7 GiB.
+
+`ubatch-size = 256` shrinks the compute buffers (~450 → 350 MiB main) for a
+slightly slower prefill. It doesn't change output; drop it if VRAM is ample.
+
+Leave `n-gpu-layers` pinned. llama.cpp's auto-fit can't measure the dflash
+draft model and under-counts, and when it does act it moves layers to CPU.
 
 `cache-ram = 4096` caps the prompt cache, which holds the saved KV state of idle
 slots so a returning conversation can skip reprocessing. It lives in anonymous
