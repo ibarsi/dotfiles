@@ -6,6 +6,16 @@ Shared workspace configuration and sidebar status feed on macOS and Omarchy.
 
 Both [macOS](../macos/README.md#bootstrap) and [Omarchy](../omarchy/README.md#bootstrap) bootstrap run `bash herdr/install.sh`. Run it from the repository root to refresh this topic independently.
 
+Each run installs or refreshes [Plugin Manager](https://github.com/speardragon/herdr-plugin-manager)
+and [herdr-bar](https://github.com/jeffarese/herdr-bar) from their latest
+default-branch commits using `herdr plugin install <owner/repo> --yes`.
+This requires Git and network access. Existing plugin config and state are preserved;
+already running plugin panes use their existing version until reopened.
+herdr-bar requires Herdr 0.9.0+ and downloads a prebuilt binary; if unavailable,
+its installer falls back to building with Rust 1.88+. Open it with
+`herdr plugin action invoke herdr-bar.open`. Automatic task titles are enabled
+by default; its watcher starts on server startup, agent detection, or opening the bar.
+
 ## Keyboard and remote sessions
 
 The `herdr/` topic links `~/.config/herdr/config.toml`. Its complete `[keys]`
@@ -17,6 +27,13 @@ prefix, split, resize, rename, copy-mode, and close shortcuts also apply when
 attaching through `herdr --remote omen`.
 
 Use the left Option key in [Ghostty](../ghostty/README.md#option-arrow-integration).
+
+With [Plugin Manager](https://github.com/speardragon/herdr-plugin-manager) installed,
+Ctrl-Space then P opens it (`ray.plugin-manager.open`). Previous tab remains
+available on Alt-Left.
+
+Ctrl-Space then K opens herdr-bar's command bar (`herdr-bar.open`). Close tab
+uses Ctrl-Space then Ctrl-K to keep these bindings distinct.
 
 ## Herdr Sidebar
 

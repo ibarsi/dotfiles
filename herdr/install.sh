@@ -5,6 +5,11 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 mkdir -p "$HOME/.config/herdr"
 ln -sf "$DOTFILES_ROOT/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+
+# Reinstall without a pinned ref so each bootstrap gets the latest default branch.
+herdr plugin install speardragon/herdr-plugin-manager --yes
+herdr plugin install jeffarese/herdr-bar --yes
+
 # A running server doesn't watch config.toml; no-op when herdr isn't running
 herdr server reload-config >/dev/null 2>&1 || true
 
