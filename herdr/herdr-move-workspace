@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Move the active workspace one row up or down within its worktree group.
+
+Bound to keys in config.toml as a `type = "shell"` custom command, which gets
+HERDR_SOCKET_PATH and HERDR_ACTIVE_WORKSPACE_ID from herdr. Only swaps with a
+neighbouring linked worktree of the same repo, so a child never leaves its
+group or jumps above the parent row.
+"""
+import json
+import os
+import socket
+import sys
+
+
+def call(method, params):
+    with socket.socket(socket.AF_UNIX) as s:
+        s.connect(os.environ["HERDR_SOCKET_PATH"])
+        s.sendall(json.dumps({"id": "move", "method": method, "params": params}).encode() + b"\n")
+        reply = json.loads(s.makefile().readline())
+    if "error" in reply:
+        sys.exit(f"herdr {method}: {reply['error']}")
+    return reply["result"]
+
+
+def group_key(ws):
+    wt = ws.get("worktree") or {}
+    return wt.get("repo_key") if wt.get("is_linked_worktree") else None
+
+
+def main():
+    if len(sys.argv) != 2 or sys.argv[1] not in ("up", "down"):
+        sys.exit("usage: herdr-move-workspace up|down")
+    active = os.environ["HERDR_ACTIVE_WORKSPACE_ID"]
+    workspaces = call("workspace.list", {})["workspaces"]
+    i = next(n for n, ws in enumerate(workspaces) if ws["workspace_id"] == active)
+    key = group_key(workspaces[i])
+    if key is None:
+        return
+    # Unrelated workspaces can sit between group members in herdr's flat order
+    # while the sidebar still draws the group together, so step over members only.
+    members = [n for n, ws in enumerate(workspaces) if group_key(ws) == key]
+    target = members.index(i) + (-1 if sys.argv[1] == "up" else 1)
+    if not 0 <= target < len(members):
+        return
+    upper, lower = sorted((i, members[target]))
+    # Moving the lower row above the upper one swaps them.
+    call("workspace.move_block", {
+        "workspace_ids": [workspaces[lower]["workspace_id"]],
+        "before_workspace_id": workspaces[upper]["workspace_id"],
+    })
+
+
+main()

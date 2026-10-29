@@ -81,6 +81,20 @@ close_workspace = "prefix+shift+k"
 previous_workspace = ["prefix+shift+p", "alt+up"]
 next_workspace = ["prefix+shift+n", "alt+down"]
 
+# Reorder the active worktree within its repo group; herdr has no built-in
+# workspace move, so herdr-move-workspace calls workspace.move_block
+[[keys.command]]
+key = "prefix+shift+up"
+type = "shell"
+command = "\"$HOME/.config/herdr/herdr-move-workspace\" up"
+description = "move worktree up"
+
+[[keys.command]]
+key = "prefix+shift+down"
+type = "shell"
+command = "\"$HOME/.config/herdr/herdr-move-workspace\" down"
+description = "move worktree down"
+
 [[keys.command]]
 key = "prefix+p"
 type = "plugin_action"

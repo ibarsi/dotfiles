@@ -26,6 +26,11 @@ switches workspaces, and Ctrl-Alt-arrow focuses adjacent panes. The same
 prefix, split, resize, rename, copy-mode, and close shortcuts also apply when
 attaching through `herdr --remote omen`.
 
+Ctrl-Space then Shift-Up/Down moves the active worktree one row within its
+repo group. Herdr has no built-in workspace reorder, so the binding runs
+`herdr/herdr-move-workspace` (linked into `~/.config/herdr/` by `install.sh`,
+needs `python3`), which calls the socket API's `workspace.move_block`.
+
 Use the left Option key in [Ghostty](../ghostty/README.md#option-arrow-integration).
 
 With [Plugin Manager](https://github.com/speardragon/herdr-plugin-manager) installed,

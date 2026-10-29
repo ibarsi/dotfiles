@@ -5,6 +5,7 @@ DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 mkdir -p "$HOME/.config/herdr"
 ln -sf "$DOTFILES_ROOT/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+ln -sf "$DOTFILES_ROOT/herdr/herdr-move-workspace" "$HOME/.config/herdr/herdr-move-workspace"
 
 # Reinstall without a pinned ref so each bootstrap gets the latest default branch.
 herdr plugin install speardragon/herdr-plugin-manager --yes
