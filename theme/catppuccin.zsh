@@ -45,12 +45,12 @@ export EZA_COLORS="
 "
 
 # Less/man pages
-export LESS_TERMCAP_mb="\e[1;38;2;$(_ctp_rgb "$CATPPUCCIN_RED")m"
-export LESS_TERMCAP_md="\e[1;38;2;$(_ctp_rgb "$CATPPUCCIN_BLUE")m"
-export LESS_TERMCAP_me="\e[0m"
-export LESS_TERMCAP_se="\e[0m"
-export LESS_TERMCAP_so="\e[1;38;2;$(_ctp_rgb "$CATPPUCCIN_BASE");48;2;$(_ctp_rgb "$CATPPUCCIN_SURFACE1")m"
-export LESS_TERMCAP_ue="\e[0m"
-export LESS_TERMCAP_us="\e[1;38;2;$(_ctp_rgb "$CATPPUCCIN_LAVENDER")m"
+export LESS_TERMCAP_mb=$'\e'"[1;38;2;$(_ctp_rgb "$CATPPUCCIN_RED")m"
+export LESS_TERMCAP_md=$'\e'"[1;38;2;$(_ctp_rgb "$CATPPUCCIN_BLUE")m"
+export LESS_TERMCAP_me=$'\e'"[0m"
+export LESS_TERMCAP_se=$'\e'"[0m"
+export LESS_TERMCAP_so=$'\e'"[1;38;2;$(_ctp_rgb "$CATPPUCCIN_BASE");48;2;$(_ctp_rgb "$CATPPUCCIN_SURFACE1")m"
+export LESS_TERMCAP_ue=$'\e'"[0m"
+export LESS_TERMCAP_us=$'\e'"[1;38;2;$(_ctp_rgb "$CATPPUCCIN_LAVENDER")m"
 
 unset -f _ctp_rgb
