@@ -21,6 +21,15 @@ check_link "$HOME/.config/ibarsi-dotfiles/bashrc"
 check_link "$HOME/.config/ibarsi-dotfiles/git-aliases.gitconfig"
 check_link "$HOME/.config/ibarsi-dotfiles/git-delta.gitconfig"
 check_link "$HOME/.config/starship.toml"
+
+check_bin() {
+	if command -v "$1" >/dev/null 2>&1; then
+		echo "✅ $1"
+	else
+		echo "⚠️  missing: $1 ($2)"
+		status=1
+	fi
+}
 # macOS-only links; bootstrap-omarchy.sh does not install these.
 if [ "$(uname -s)" = "Darwin" ]; then
 	check_link "$HOME/Library/Application Support/k9s/config.yaml"
@@ -30,6 +39,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	check_link "$HOME/.config/mise/conf.d/00-dotfiles.toml"
 	check_link "$HOME/.config/glow/glow.yml"
 	check_link "$HOME/.config/glow/catppuccin-mocha.json"
+	check_bin glow "run mise install"
+	check_bin mermaid-ascii "run mise install"
 	check_link "${XDG_CONFIG_HOME:-$HOME/.config}/btop/btop.conf"
 	check_link "${XDG_CONFIG_HOME:-$HOME/.config}/btop/themes/catppuccin_mocha.theme"
 	check_link "$HOME/.config/karabiner/assets/complex_modifications/brave-control-shortcuts.json"

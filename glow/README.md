@@ -8,11 +8,11 @@ On macOS, [bootstrap](../macos/README.md#bootstrap) runs `bash glow/install.sh`.
 
 ## Markdown Workflow
 
-`glow` is installed from `Brewfile` and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering.
+`glow` is installed by mise (global tools in [mise/config.toml](../mise/config.toml)) and configured from `glow/glow.yml` with the Catppuccin Mocha Glamour style for paged terminal Markdown rendering. The `glow` shell function wraps at the terminal width up to 120 columns; pass `-w` to override.
 
 **Markdown functions (`system/.functions`):**
 
-- `md [file|url|repo]` → render Markdown with Glow; with no argument it opens `README.md` when present, otherwise starts Glow's current-directory browser
+- `md [file|url|repo]` → render Markdown with Glow; with no argument it opens `README.md` when present, otherwise starts Glow's current-directory browser. A local file with ```` ```mermaid ```` blocks has each flowchart or sequence diagram drawn as ASCII by `mermaid-ascii` (also installed by mise) and opens in `less -S`: prose wraps to the terminal, wide diagrams scroll sideways with the arrow keys. Other diagram types keep their source
 - `mdf` → fuzzy-pick a local Markdown file and preview it with Glow before rendering
 - `mdrepo <owner/repo>` → render a GitHub/GitLab README; shorthand like `mdrepo charmbracelet/glow` expands to `github.com/charmbracelet/glow`
 

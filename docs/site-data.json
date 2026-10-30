@@ -1,14 +1,14 @@
 {
-  "git_revision": "7357e60f572488f3e7d0b03e30211b572ca6f48b",
-  "source_hash": "83f37f136dab",
+  "git_revision": "07be11aee8b687a5beb807d6f24440e0c383b8fb",
+  "source_hash": "1b41bd53c0c3",
   "stats": {
     "aliases": 69,
     "functions": 43,
     "git": 54,
     "features": 25,
     "tasks": 15,
-    "bootstrap_links": 15,
-    "brews": 38,
+    "bootstrap_links": 16,
+    "brews": 37,
     "casks": 26,
     "platforms": 19
   },
@@ -598,7 +598,7 @@
     },
     {
       "name": "glow",
-      "summary": "Run Glow with the repo-managed config and Catppuccin Glamour style by default.",
+      "summary": "Run Glow with the repo-managed config and Catppuccin Glamour style by default, wrapping at the terminal width up to 120 columns. A -w passed by the caller comes later on the command line and wins.",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -1580,6 +1580,11 @@
       "source": "herdr/install.sh"
     },
     {
+      "source_path": "herdr/herdr-move-workspace",
+      "target_path": "~/.config/herdr/herdr-move-workspace",
+      "source": "herdr/install.sh"
+    },
+    {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/conf.d/00-dotfiles.toml",
       "source": "mise/install.sh"
@@ -1664,7 +1669,6 @@
       "zoxide\"           # Better 'cd",
       "bat\"              # Better 'cat",
       "eza\"              # Better 'ls",
-      "glow",
       "btop\"             # Interactive resource monitor",
       "argocd\"           # ArgoCD CLI (gh bd stage drill-down)",
       "mise\"             # Universal version manager",

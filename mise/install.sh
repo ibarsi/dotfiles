@@ -25,3 +25,6 @@ git -C "$DOTFILES_ROOT" config filter.mise-local.smudge cat
 # Without this a clone that never ran this script silently commits the file
 # verbatim, because git treats an unregistered filter as a passthrough.
 git -C "$DOTFILES_ROOT" config filter.mise-local.required true
+
+# Install the global tools declared in config.toml (glow, mermaid-ascii, node, ...).
+mise install

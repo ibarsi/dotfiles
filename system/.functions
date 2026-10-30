@@ -403,17 +403,27 @@ function tre() {
     tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRX;
 }
 
-# Run Glow with the repo-managed config and Catppuccin Glamour style by default.
+# Run Glow with the repo-managed config and Catppuccin Glamour style by default,
+# wrapping at the terminal width up to 120 columns. A -w passed by the caller
+# comes later on the command line and wins.
 function glow() {
-    local config_home style_path
+    local config_home style_path width
     config_home="${GLOW_CONFIG_HOME:-$HOME/.config/glow}"
     style_path="${GLAMOUR_STYLE:-$config_home/catppuccin-mocha.json}"
+    width=$(_term_cols)
+    ((width > 120)) && width=120
 
     if [[ -f "$config_home/glow.yml" && -f "$style_path" ]]; then
-        command glow --config "$config_home/glow.yml" --style "$style_path" "$@"
+        command glow --config "$config_home/glow.yml" --style "$style_path" -w "$width" "$@"
     else
-        command glow "$@"
+        command glow -w "$width" "$@"
     fi
+}
+
+# Terminal width. $COLUMNS comes first: tput inside $(...) can't see the
+# terminal on stdout and falls back to 80.
+function _term_cols() {
+    echo "${COLUMNS:-$(tput cols 2>/dev/null || echo 80)}"
 }
 
 # Render Markdown with Glow. With no argument, open README.md when present;
@@ -433,7 +443,51 @@ function md() {
         return
     fi
 
+    if [[ "$#" -eq 1 && -f "$1" ]] && command -v mermaid-ascii >/dev/null 2>&1 && grep -q '^```mermaid' "$1"; then
+        _md_mermaid "$1"
+        return
+    fi
+
     glow -p "$@"
+}
+
+# Page a Markdown file with each ```mermaid block drawn by mermaid-ascii.
+# Glamour wraps code blocks at the prose width, which shreds wide diagrams, so
+# the file is split into chunks: prose goes through Glow at terminal width,
+# diagrams bypass it, and `less -S` scrolls the diagrams sideways. HTML labels
+# (<b>, <br/>), quoted edge labels and %% directives are stripped first because
+# mermaid-ascii prints them literally. Diagram types it can't draw (anything
+# but flowcharts and sequence diagrams) keep their source.
+function _md_mermaid() {
+    local dir cols chunk
+    dir=$(mktemp -d) || return 1
+    cols=$(_term_cols)
+
+    awk -v dir="$dir" -v cols="$cols" '
+        function next_chunk(ext) { close(out); out = sprintf("%s/%03d.%s", dir, ++n, ext) }
+        BEGIN { next_chunk("md") }
+        /^```mermaid/ { inb = 1; src = dir "/src"; printf "" > src; next }
+        inb && /^```/ {
+            inb = 0; close(src); next_chunk("txt"); print "" > out
+            cmd = "mermaid-ascii --max-width " cols " -f \"" src "\" 2>/dev/null || cat \"" src "\""
+            while ((cmd | getline line) > 0) print "  " line > out
+            close(cmd); print "" > out; next_chunk("md"); next
+        }
+        inb {
+            if (/^[ \t]*%%/) next
+            gsub(/<br *\/?>/, " "); gsub(/<\/?[A-Za-z]+>/, ""); gsub(/\|"/, "|"); gsub(/"\|/, "|")
+            print > src; next
+        }
+        { print > out }
+    ' "$1"
+
+    for chunk in "$dir"/[0-9]*; do
+        case "$chunk" in
+        *.md) glow - <"$chunk" ;;
+        *) cat "$chunk" ;;
+        esac
+    done | less -RS
+    rm -rf "$dir"
 }
 
 # Fuzzy-pick a Markdown file and render it with Glow.
