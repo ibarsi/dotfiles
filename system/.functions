@@ -188,6 +188,13 @@ function upall() {
             echo "If an update requires a restart, restart manually to finish installation."
         fi
         sudo /usr/sbin/softwareupdate "${update_args[@]}" || return
+        if [[ "${1:-}" != "--restart" ]]; then
+            echo
+            echo "== Finish Apple updates =="
+            echo "If a macOS update was downloaded, save your work and open:"
+            echo "  System Settings → General → Software Update"
+            echo "Click Update Now or Restart Now (whichever is shown) to finish installation and restart manually."
+        fi
     fi
 }
 
