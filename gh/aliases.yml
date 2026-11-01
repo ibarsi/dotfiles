@@ -41,7 +41,15 @@ mq: |
       | .data.repository.mergeQueue.entries.nodes[]?
       | "\(.position)\t\u001b[\($c[.state] // "0")m\(.state)\u001b[0m\t\u001b[1m#\(.pullRequest.number)\u001b[0m\t\u001b[2m\(.pullRequest.author.login)\u001b[0m\t\(.pullRequest.title)"'
 ci: |
-    !f='.[]'
+    !f='.[]' rerun=
+    [ "$1" = rerun ] && { rerun=1; shift; }
+    if [ -n "$rerun" ]; then
+      # Only the failed jobs of this PR's pull_request runs on its head commit; skips push runs and older pushes
+      sha=$(gh pr view "$@" --json headRefOid --jq .headRefOid) || exit 1
+      gh run list --commit "$sha" --event pull_request --status failure --json databaseId --jq '.[].databaseId' |
+        while read -r id; do gh run rerun "$id" --failed; done
+      exit
+    fi
     for a; do shift; case "$a" in
       --failed) f='.[] | select(.bucket == "fail")' ;;
       --passed) f='.[] | select(.bucket == "pass")' ;;
