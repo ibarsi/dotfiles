@@ -619,6 +619,52 @@ function fkill() {
     kill -9 "$pid"
 }
 
+# Forward listening TCP ports on an SSH host to the same local ports. With ports
+# given, forward those; otherwise fuzzy-pick (TAB = multi-select). Blocks until Ctrl-C,
+# or with -b backgrounds once the forwards are up (stop with: pkill -f 'L <port>').
+function fpf() {
+    local -a bg args urls
+    if [[ "${1:-}" == "-b" ]]; then
+        bg=(-f)
+        shift
+    fi
+    local host="${1:-}" listening picks port addr _
+    if [[ -z "$host" ]]; then
+        echo "Usage: fpf [-b] <ssh-host> [port...]" >&2
+        return 1
+    fi
+    shift
+    listening=$(command ssh "$host" 'ss -tlnpH' \
+        | awk '{ addr=$4; port=addr; sub(/.*:/,"",port); sub(/:[0-9]+$/,"",addr); sub(/%.*/,"",addr);
+            if (addr=="0.0.0.0"||addr=="*"||addr=="[::]") addr="localhost";
+            proc="-"; if (match($0,/"[^"]+"/)) proc=substr($0,RSTART+1,RLENGTH-2);
+            if (!seen[port]++) printf "%-6s %-18s %s\n", port, proc, addr }' \
+        | sort -n) || return 1
+    if [[ $# -gt 0 ]]; then
+        for port in "$@"; do
+            if ! awk -v p="$port" '$1 == p { found=1 } END { exit !found }' <<<"$listening"; then
+                echo "fpf: nothing listening on $host:$port" >&2
+                return 1
+            fi
+        done
+        picks=$(awk -v ports=" $* " 'index(ports, " " $1 " ")' <<<"$listening")
+    else
+        picks=$(fzf -m --height=50% --layout=reverse --border \
+            --header="$host: TAB to multi-select, ENTER to forward" <<<"$listening") || return 1
+    fi
+    while read -r port _ addr; do
+        args+=(-L "$port:$addr:$port")
+        urls+=("http://localhost:$port")
+    done <<<"$picks"
+    if [[ ${#bg[@]} -gt 0 ]]; then
+        command ssh -f -N -o ExitOnForwardFailure=yes "${args[@]}" "$host" || return 1
+        printf '%s\n' "${urls[@]}"
+    else
+        printf '%s\n' "${urls[@]}"
+        command ssh -N -o ExitOnForwardFailure=yes "${args[@]}" "$host"
+    fi
+}
+
 # Fuzzy-pick a git worktree and remove it with git wtr
 function fwtr() {
     if ! command -v git >/dev/null 2>&1; then

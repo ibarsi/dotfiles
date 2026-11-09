@@ -1,9 +1,9 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "39c76a552aed2f4f94f0c4e77d4a26c8e865f6ce",
-  "source_hash": "bc35120099de",
+  "git_revision": "0fd0c3062624f51a74c5e12166dd20f13e8c54c3",
+  "source_hash": "50b3781ba956",
   "stats": {
     "aliases": 69,
-    "functions": 43,
+    "functions": 44,
     "git": 54,
     "features": 25,
     "tasks": 15,
@@ -565,6 +565,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "flushdns",
       "summary": "Clear the local DNS cache using the resolver available on the current OS.",
       "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "fpf",
+      "summary": "Forward listening TCP ports on an SSH host to the same local ports. With ports given, forward those; otherwise fuzzy-pick (TAB = multi-select). Blocks until Ctrl-C, or with -b backgrounds once the forwards are up (stop with: pkill -f 'L <port>').",
+      "usage": "fpf [-b] <ssh-host> [port...]",
       "source": "system/.functions",
       "source_kind": "system function"
     },
