@@ -1,10 +1,40 @@
 # gh
 
-GitHub CLI aliases imported on both platforms without replacing the rest of the CLI configuration.
+GitHub CLI aliases and extensions managed on both platforms without replacing the rest of the CLI configuration.
 
 ## Installation
 
 Both [macOS](../macos/README.md#bootstrap) and [Omarchy](../omarchy/README.md#bootstrap) bootstrap run `bash gh/install.sh`. Run it from the repository root to refresh this topic independently.
+
+## Extensions and updates
+
+[extensions.txt](extensions.txt) is the shared extension manifest, with one `owner/repository` per line. It currently tracks [github/gh-stack](https://github.com/github/gh-stack). Add new extensions here so another host installs them too. Blank lines and lines starting with `#` are ignored.
+
+Bootstrap installs missing extensions at their latest release and keeps existing installations. It skips GitHub CLI setup when `gh` is absent; install and authenticate the CLI with `gh auth login`, then rerun the installer. gh-stack requires GitHub CLI 2.0+ and Git 2.36+.
+
+[`upall`](../system/README.md#maintenance) installs missing manifest entries, then runs `gh extension upgrade --all` on both platforms. This updates every installed extension, including local additions outside the manifest, subject to GitHub CLI's pinning and local-extension rules. Add local additions to the manifest to reproduce them on other hosts. Upgrade failures stop the remaining update steps. To update extensions independently:
+
+```bash
+bash gh/install-extensions.sh
+gh extension upgrade --all
+```
+
+## Stacked pull requests
+
+Both Git installers link [stack.gitconfig](../git/stack.gitconfig), enabling `rerere` to remember conflict resolutions and setting `remote.pushDefault = origin`. These are global Git defaults; in repositories using another push remote, override with `git config remote.pushDefault <remote>`.
+
+Use the extension directly; stack membership and branches are created per repository when you start a stack:
+
+```bash
+gh stack init feature-auth
+# Commit the first layer, then add the next.
+gh stack add feature-api
+# Commit the second layer, then open the pull requests.
+gh stack submit
+gh stack view
+```
+
+See the [upstream guide](https://github.com/github/gh-stack#quick-start) for rebasing and syncing stacks.
 
 ## GitHub CLI Aliases
 
@@ -19,7 +49,7 @@ Both [macOS](../macos/README.md#bootstrap) and [Omarchy](../omarchy/README.md#bo
 
 ## Verification
 
-Run `gh alias list` and confirm `bd`, `ci`, `reviews`, `url` and `mq`. The installer skips when `gh` is absent; rerun it after installing the CLI.
+Run `gh alias list` and confirm `bd`, `ci`, `reviews`, `url` and `mq`. Run `gh extension list` and `gh stack --version` to inspect the installation. `mise run bootstrap-verify` checks every extension in the manifest and the shared Git configuration link. Inspect the effective defaults with `git config --get rerere.enabled` and `git config --get remote.pushDefault`.
 
 ## Related documentation
 

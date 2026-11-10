@@ -101,7 +101,7 @@ fi
         matrix = generator.build_platform_matrix([linux, git], bootstrap)
         rendered = generator.render_platform_matrix_markdown(matrix)
         self.assertIn("| `llama` | — Linux only | ✅ |", rendered)
-        self.assertIn("| `git` | ✅ | ◐ aliases + optional delta |", rendered)
+        self.assertIn("| `git` | ✅ | ◐ aliases + stack defaults + optional delta |", rendered)
 
 
 if __name__ == "__main__":

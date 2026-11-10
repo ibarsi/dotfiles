@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+DOTFILES_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+
 echo "== Bootstrap Verify =="
 
 status=0
@@ -20,6 +22,7 @@ check_link "$HOME/.config/herdr/config.toml"
 check_link "$HOME/.config/ibarsi-dotfiles/bashrc"
 check_link "$HOME/.config/ibarsi-dotfiles/git-aliases.gitconfig"
 check_link "$HOME/.config/ibarsi-dotfiles/git-delta.gitconfig"
+check_link "$HOME/.config/ibarsi-dotfiles/git-stack.gitconfig"
 check_link "$HOME/.config/starship.toml"
 
 check_bin() {
@@ -63,6 +66,20 @@ for alias in bd ci mq url; do
 		status=1
 	fi
 done
+
+gh_extensions=$(gh extension list 2>/dev/null || true)
+gh_repositories=$(awk '{print $3}' <<<"$gh_extensions")
+while IFS= read -r extension || [ -n "$extension" ]; do
+	case "$extension" in
+	'' | \#*) continue ;;
+	esac
+	if grep -Fxq "$extension" <<<"$gh_repositories"; then
+		echo "✅ gh extension $extension"
+	else
+		echo "⚠️  missing: gh extension $extension (run gh/install.sh)"
+		status=1
+	fi
+done <"$DOTFILES_ROOT/gh/extensions.txt"
 
 if [ "$status" -eq 0 ]; then
 	echo "Done."

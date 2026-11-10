@@ -14,7 +14,7 @@ The bootstrap resolves its repository root internally. It does not install packa
 
 1. Load the shared shell layer through [additive Bash](../bash/README.md).
 2. Add [Git aliases and optional delta](../git/README.md#configuration) without replacing the host config.
-3. Import [GitHub CLI aliases](../gh/README.md) when `gh` is available.
+3. Install [GitHub CLI aliases and extensions](../gh/README.md) when `gh` is available.
 4. Link [Gitmoji preferences](../gitmoji/README.md).
 5. Link [tmux](../tmux/README.md), preserving the Omarchy base configuration.
 6. Link [Herdr config and sidebar service](../herdr/README.md).
@@ -26,7 +26,7 @@ Re-running is safe, but Herdr and vocabulary installers may restart their servic
 
 ## Prerequisites and platform boundaries
 
-Install required applications through the host package manager before running their setup. The shell initializes zoxide, Starship and mise only when available; GitHub aliases skip when `gh` is missing. Herdr/sidebar, tmux, llama.cpp and VoxType need their respective tools installed to work. Follow the topic README for service and model prerequisites.
+Install required applications through the host package manager before running their setup. The shell initializes zoxide, Starship and mise only when available; GitHub CLI setup skips when `gh` is missing. Herdr/sidebar, tmux, llama.cpp and VoxType need their respective tools installed to work. Follow the topic README for service and model prerequisites.
 
 Other app configs remain host-managed. Consult the generated [platform matrix](../README.md#platform-support) for exactly which installers run; a macOS-only installer does not mean its portable shell helpers are unavailable on Linux.
 

@@ -1,0 +1,5 @@
+# Defaults for gh-stack; individual repositories can override the remote.
+[rerere]
+    enabled = true
+[remote]
+    pushDefault = origin

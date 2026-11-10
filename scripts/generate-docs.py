@@ -23,7 +23,7 @@ PLATFORM_MATRIX_END = "<!-- END GENERATED: platform-matrix -->"
 # wired up on Omarchy). An installer not listed here fails the build instead
 # of guessing a label — a wrong label is worse than a build failure.
 PARTIAL_INSTALLER_DETAIL = {
-    "install-aliases.sh": "aliases + optional delta",
+    "install-aliases.sh": "aliases + stack defaults + optional delta",
     "install-starship.sh": "Starship only",
 }
 
@@ -49,7 +49,7 @@ FEATURE_NOTES = {
     },
     "omarchy-bootstrap": {
         "title": "Omarchy bootstrap",
-        "summary": "Adds shared Bash, Git/delta, GitHub aliases, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+        "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
         "source": "bootstrap-omarchy.sh",
         "details": [
             "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
@@ -134,7 +134,7 @@ FEATURE_NOTES = {
         "source": "git/aliases.gitconfig",
         "details": [
             "macOS uses the include from the repository-managed global Git config.",
-            "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+            "On Linux, git/install-aliases.sh links aliases and stack defaults as global includes, with optional delta.",
             "Existing user identity, signing, and host-specific Git settings remain in the host configuration.",
         ],
     },
@@ -144,6 +144,16 @@ FEATURE_NOTES = {
         "source": "git/aliases.gitconfig",
         "details": [
             "Graph log with abbreviated hashes, relative dates, decorations, and author info.",
+        ],
+    },
+    "gh-extensions": {
+        "title": "GitHub CLI extensions",
+        "summary": "Installs manifest-managed extensions including gh-stack on both platforms and upgrades all installed extensions through upall.",
+        "source": "gh/extensions.txt",
+        "details": [
+            "gh/install.sh imports aliases and installs missing entries from gh/extensions.txt.",
+            "upall installs missing manifest entries and runs gh extension upgrade --all before Apple updates.",
+            "Shared Git defaults enable rerere and select origin as the push remote; repositories can override these locally.",
         ],
     },
     "gitmoji": {

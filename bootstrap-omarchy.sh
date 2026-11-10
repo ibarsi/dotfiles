@@ -15,7 +15,7 @@ bash "$DOTFILES_ROOT/bash/install.sh"
 echo "Adding portable Git aliases and delta pager..."
 bash "$DOTFILES_ROOT/git/install-aliases.sh"
 
-echo "Importing GitHub CLI aliases..."
+echo "Setting up GitHub CLI aliases and extensions..."
 bash "$DOTFILES_ROOT/gh/install.sh"
 
 echo "Linking Gitmoji preferences..."

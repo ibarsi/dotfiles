@@ -1,11 +1,11 @@
 {
-  "git_revision": "0fd0c3062624f51a74c5e12166dd20f13e8c54c3",
-  "source_hash": "50b3781ba956",
+  "git_revision": "6a532ae3c1be16abf1df4457322310fd1fa03d13",
+  "source_hash": "43ace90b5dd6",
   "stats": {
     "aliases": 69,
     "functions": 44,
-    "git": 54,
-    "features": 25,
+    "git": 55,
+    "features": 26,
     "tasks": 15,
     "bootstrap_links": 16,
     "brews": 37,
@@ -773,7 +773,7 @@
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew and mise tools, then install Apple updates on macOS.",
+      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
       "usage": "upall [--restart]",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -847,6 +847,13 @@
       "name": "pr",
       "command": "pr",
       "summary": "Open existing PR in browser, or create one if missing",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "upall",
+      "command": "upall [--restart]",
+      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
       "kind": "function",
       "source": "system/.functions"
     },
@@ -1211,7 +1218,7 @@
     {
       "slug": "omarchy-bootstrap",
       "title": "Omarchy bootstrap",
-      "summary": "Adds shared Bash, Git/delta, GitHub aliases, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
       "details": [
         "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
         "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
@@ -1304,7 +1311,7 @@
       "summary": "Shares Git aliases through an include file without replacing a host-managed Git configuration.",
       "details": [
         "macOS uses the include from the repository-managed global Git config.",
-        "On Linux, git/install-aliases.sh links the aliases file and adds one global include.path entry.",
+        "On Linux, git/install-aliases.sh links aliases and stack defaults as global includes, with optional delta.",
         "Existing user identity, signing, and host-specific Git settings remain in the host configuration."
       ],
       "source": "git/aliases.gitconfig"
@@ -1317,6 +1324,17 @@
         "Graph log with abbreviated hashes, relative dates, decorations, and author info."
       ],
       "source": "git/aliases.gitconfig"
+    },
+    {
+      "slug": "gh-extensions",
+      "title": "GitHub CLI extensions",
+      "summary": "Installs manifest-managed extensions including gh-stack on both platforms and upgrades all installed extensions through upall.",
+      "details": [
+        "gh/install.sh imports aliases and installs missing entries from gh/extensions.txt.",
+        "upall installs missing manifest entries and runs gh extension upgrade --all before Apple updates.",
+        "Shared Git defaults enable rerere and select origin as the push remote; repositories can override these locally."
+      ],
+      "source": "gh/extensions.txt"
     },
     {
       "slug": "gitmoji",
@@ -1460,6 +1478,7 @@
         "bash -n macos/.macos",
         "bash -n theme/install.sh theme/install-starship.sh theme/install-btop.sh",
         "bash -n glow/install.sh",
+        "bash -n gh/*.sh git/install*.sh",
         "bash -n scripts/doctor-ai.sh",
         "bash -n scripts/bootstrap-verify.sh",
         "bash -n system/.aliases",
@@ -1506,7 +1525,7 @@
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1514,7 +1533,7 @@
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1522,7 +1541,7 @@
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1752,7 +1771,7 @@
       },
       "omarchy": {
         "state": "partial",
-        "detail": "aliases + optional delta"
+        "detail": "aliases + stack defaults + optional delta"
       }
     },
     {

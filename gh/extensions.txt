@@ -1,0 +1,2 @@
+# GitHub CLI extensions installed on both platforms (owner/repository).
+github/gh-stack

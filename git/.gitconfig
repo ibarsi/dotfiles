@@ -7,6 +7,7 @@
     # Shared aliases are also safe to include from an existing Linux Git config.
     path = ~/.config/ibarsi-dotfiles/git-aliases.gitconfig
     path = ~/.config/ibarsi-dotfiles/git-delta.gitconfig
+    path = ~/.config/ibarsi-dotfiles/git-stack.gitconfig
 
 
 [apply]

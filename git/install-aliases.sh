@@ -9,7 +9,7 @@ CONFIG_DIR="$HOME/.config/ibarsi-dotfiles"
 mkdir -p "$CONFIG_DIR"
 
 # source name -> installed name; delta is skipped unless the binary is present.
-FRAGMENTS=(aliases)
+FRAGMENTS=(aliases stack)
 if command -v delta >/dev/null 2>&1; then
 	FRAGMENTS+=(delta)
 else

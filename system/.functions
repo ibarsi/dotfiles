@@ -125,11 +125,11 @@ function dotfiles-sync() {
     )
 }
 
-# Upgrade Homebrew and mise tools, then install Apple updates on macOS.
+# Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.
 function upall() {
     if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
         echo "Usage: upall [--restart]"
-        echo "Update Homebrew and mise tools, then install available Apple updates on macOS."
+        echo "Update Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS."
         echo "  --restart  Automatically restart macOS if an update requires it."
         return 0
     fi
@@ -173,6 +173,14 @@ function upall() {
 
     echo "== mise up =="
     mise up -C "$repo_root" || return
+
+    if command -v gh >/dev/null 2>&1; then
+        echo "== GitHub CLI extensions =="
+        bash "$repo_root/gh/install-extensions.sh" || return
+        gh extension upgrade --all || return
+    else
+        echo "Skipping GitHub CLI extensions: gh is not installed."
+    fi
 
     if [[ "${DOTFILES_OS:-}" == "macos" ]]; then
         local update_args=(--install --all)

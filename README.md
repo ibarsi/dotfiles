@@ -56,7 +56,7 @@ the macOS bootstrap.
 | `bash` | ✅ | ✅ |
 | `gh` | ✅ | ✅ |
 | `ghostty` | ✅ | — macOS only |
-| `git` | ✅ | ◐ aliases + optional delta |
+| `git` | ✅ | ◐ aliases + stack defaults + optional delta |
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
 | `herdr` | ✅ | ✅ |
@@ -106,7 +106,7 @@ Each folder owns its documentation.
 | [zsh](zsh/README.md) | Modular Zsh startup and plugins |
 | [system](system/README.md) | Shared environment, aliases and workflows |
 | [git](git/README.md) | Git config and worktrees |
-| [gh](gh/README.md) | GitHub CLI aliases |
+| [gh](gh/README.md) | GitHub CLI aliases and extensions |
 | [gitmoji](gitmoji/README.md) | Commit preferences |
 | [ghostty](ghostty/README.md) | Terminal settings and keybindings |
 | [herdr](herdr/README.md) | Workspaces, remote sessions and sidebar feed |

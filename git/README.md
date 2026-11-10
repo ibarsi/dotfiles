@@ -1,6 +1,6 @@
 # git
 
-Full Git configuration on macOS; additive aliases and an optional delta pager include on Omarchy.
+Full Git configuration on macOS; additive aliases, stacked PR defaults and an optional delta pager include on Omarchy.
 
 ## Installation
 
@@ -8,9 +8,9 @@ The macOS bootstrap runs `bash git/install.sh`; the Omarchy bootstrap runs `bash
 
 ## Configuration
 
-The macOS installer links `.gitconfig`, `.gitignore` and `.gitattributes` into the home directory and the aliases/delta fragments under `~/.config/ibarsi-dotfiles/`.
+The macOS installer links `.gitconfig`, `.gitignore` and `.gitattributes` into the home directory and the aliases/delta/stack fragments under `~/.config/ibarsi-dotfiles/`.
 
-On Linux, `bash git/install-aliases.sh` adds global includes without replacing the host Git config. It includes delta only when the `delta` binary is available.
+On Linux, `bash git/install-aliases.sh` adds global includes without replacing the host Git config. It includes delta only when the `delta` binary is available. Both platforms include [stack.gitconfig](stack.gitconfig) for the [gh-stack defaults and workflow](../gh/README.md#stacked-pull-requests).
 
 ## Signing and host-specific settings
 
