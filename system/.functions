@@ -817,6 +817,114 @@ function fwt() {
     cd "$worktree_path" || return 1
 }
 
+# Remove worktrees of the current repo that are neither on a branch with one of
+# your open PRs nor open as a herdr workspace. Never uses --force, so dirty
+# worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]
+function wtclean() {
+    local dry_run=0 tool current pr_branches herdr_json herdr_paths
+    local wt_list wt_dir wt_branch notes doomed removed=0 failed=0 kept=0 reply dir root
+
+    case "${1:-}" in
+        -n | --dry-run) dry_run=1 ;;
+        "") ;;
+        *)
+            echo "Usage: wtclean [-n|--dry-run]" >&2
+            return 1
+            ;;
+    esac
+
+    for tool in git gh herdr jq; do
+        command -v "$tool" >/dev/null 2>&1 || {
+            echo "wtclean: $tool is not installed or not in PATH" >&2
+            return 1
+        }
+    done
+
+    current=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "Not inside a git repository" >&2
+        return 1
+    }
+
+    # Abort rather than treat a failed lookup as "nothing is protected".
+    pr_branches=$(gh pr list --author @me --state open --limit 200 --json headRefName --jq '.[].headRefName') || {
+        echo "wtclean: could not list open PRs, nothing removed" >&2
+        return 1
+    }
+    herdr_json=$(herdr workspace list) || {
+        echo "wtclean: could not list herdr workspaces (is the herdr server running?), nothing removed" >&2
+        return 1
+    }
+    herdr_paths=$(printf '%s' "$herdr_json" | jq -r '.result.workspaces[].worktree.checkout_path // empty') || {
+        echo "wtclean: unexpected herdr workspace output, nothing removed" >&2
+        return 1
+    }
+
+    # First record is the main checkout; it is never a candidate.
+    wt_list=$(git worktree list --porcelain | awk '
+        /^worktree / { dir = substr($0, 10); branch = "(detached)"; next }
+        /^branch /   { branch = $2; sub(/^refs\/heads\//, "", branch); next }
+        /^$/         { if (dir != "" && n++) printf "%s\t%s\n", dir, branch; dir = "" }
+        END          { if (dir != "" && n++) printf "%s\t%s\n", dir, branch }
+    ')
+
+    doomed=""
+    while IFS=$'\t' read -r wt_dir wt_branch; do
+        [[ -z "$wt_dir" ]] && continue
+        if [[ "$wt_dir" == "$current" ]] ||
+            printf '%s\n' "$herdr_paths" | grep -qxF -- "$wt_dir" ||
+            printf '%s\n' "$pr_branches" | grep -qxF -- "$wt_branch"; then
+            kept=$((kept + 1))
+            continue
+        fi
+        notes=""
+        [[ -n "$(git -C "$wt_dir" status --porcelain 2>/dev/null)" ]] &&
+            notes="$notes [dirty: removal will be refused]"
+        [[ -d "$wt_dir/docs" ]] && git -C "$wt_dir" check-ignore -q docs &&
+            notes="$notes [gitignored docs/ would be lost]"
+        doomed="${doomed}${wt_dir}"$'\t'"${wt_branch}"$'\t'"${notes# }"$'\n'
+    done <<<"$wt_list"
+
+    if [[ -z "$doomed" ]]; then
+        echo "Nothing to remove ($kept worktree(s) kept: current, open PR, or open in herdr)"
+        return 0
+    fi
+
+    echo "Worktrees to remove (branches are kept):"
+    printf '%s' "$doomed" | awk -F'\t' '{ printf "  %s  (%s)%s\n", $1, $2, ($3 != "" ? "  " $3 : "") }'
+    echo "Kept: $kept"
+
+    if [[ "$dry_run" -eq 1 ]]; then
+        echo "Dry run: nothing removed"
+        return 0
+    fi
+
+    printf 'Remove these worktrees? [y/N] '
+    read -r reply
+    [[ "$reply" == [yY] ]] || {
+        echo "Aborted"
+        return 1
+    }
+
+    root="$HOME/worktrees"
+    while IFS=$'\t' read -r wt_dir _; do
+        [[ -z "$wt_dir" ]] && continue
+        if git worktree remove "$wt_dir"; then
+            removed=$((removed + 1))
+            # Drop now-empty branch-name directories left under ~/worktrees.
+            dir=$(dirname "$wt_dir")
+            while [[ "$dir" != "$root" && "$dir" == "$root"/* ]]; do
+                rmdir "$dir" 2>/dev/null || break
+                dir=$(dirname "$dir")
+            done
+        else
+            failed=$((failed + 1))
+        fi
+    done <<<"$doomed"
+    git worktree prune
+    echo "Removed $removed, refused $failed"
+    [[ "$failed" -eq 0 ]]
+}
+
 # NETWORK WORKFLOWS
 
 # Quick DNS trace (A + AAAA + CNAME + NS path)
