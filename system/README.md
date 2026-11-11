@@ -38,6 +38,7 @@ Keep credentials and project-specific paths in the gitignored `system/.extra` or
 - [Kubernetes](docs/kubernetes.md)
 - [Hardware benchmarking](docs/benchmarking.md)
 - [AI shell shortcuts](docs/ai-tools.md)
+- [NAS download-client monitoring](nas-download-monitor/README.md)
 - [Git worktrees](../git/README.md#git-worktree-workflow)
 - [Markdown rendering](../glow/README.md#markdown-workflow)
 - [SSH compatibility](docs/networking.md#ssh-compatibility)
