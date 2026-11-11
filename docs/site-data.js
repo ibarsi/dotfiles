@@ -1,10 +1,10 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "6a532ae3c1be16abf1df4457322310fd1fa03d13",
-  "source_hash": "43ace90b5dd6",
+  "git_revision": "7203a1133d69cf67dfdfb04b890a579519bdbf32",
+  "source_hash": "6489bafb4004",
   "stats": {
     "aliases": 69,
-    "functions": 44,
-    "git": 55,
+    "functions": 45,
+    "git": 56,
     "features": 26,
     "tasks": 15,
     "bootstrap_links": 16,
@@ -786,6 +786,13 @@ window.DOTFILES_DOCS_DATA = {
       "source_kind": "system function"
     },
     {
+      "name": "wtclean",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
+      "usage": "wtclean [-n|--dry-run]",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
       "name": "wtnew",
       "summary": "Create a new worktree in ~/worktrees/<repo>/<branch> and cd into it",
       "usage": "wtnew <branch> [base]",
@@ -854,6 +861,13 @@ window.DOTFILES_DOCS_DATA = {
       "name": "upall",
       "command": "upall [--restart]",
       "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
+      "kind": "function",
+      "source": "system/.functions"
+    },
+    {
+      "name": "wtclean",
+      "command": "wtclean [-n|--dry-run]",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
       "kind": "function",
       "source": "system/.functions"
     },
