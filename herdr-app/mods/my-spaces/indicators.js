@@ -54,11 +54,25 @@ const busy = { prs: 0, ports: 0 };
 const STUCK = 120000;
 const claim = (k) => { if (Date.now() - busy[k] < STUCK) return false; busy[k] = Date.now(); return true; };
 
+const RETRY = 10000; // a failed PR refresh (rate limit, offline, refused exec) tries again this soon
+let prsNext = 0; // when the next PR refresh is due
+let version = 0; // bumped whenever prs or ports may have changed
+
+// The app can start this mod more than once (a layout switch plus a layout file
+// rewrite), and a discarded instance's tasks notify a view nobody sees. So each
+// view polls `version` and repaints itself, and a new view takes over any
+// refresh a discarded one left marked busy.
 export function startIndicators(cx) {
-  refreshPrs(cx);
-  refreshPorts(cx);
-  cx.timer.every(PR_EVERY, refreshPrs);
-  cx.timer.every(PORTS_EVERY, refreshPorts);
+  busy.prs = busy.ports = 0;
+  prsNext = 0;
+  const tick = (cx) => {
+    if (Date.now() >= prsNext) refreshPrs(cx);
+    refreshPorts(cx);
+  };
+  tick(cx);
+  cx.timer.every(PORTS_EVERY, tick);
+  let seen = version;
+  cx.timer.every(1000, (cx) => { if (seen !== version) { seen = version; cx.notify(); } });
 }
 
 // Space id -> its terminal panes' [machine, cwd], in pane order.
@@ -103,6 +117,7 @@ function summarize(repo) {
 
 function refreshPrs(cx) {
   if (!claim("prs")) return;
+  prsNext = Date.now() + RETRY;
   cx.spawn(async (cx) => {
     try {
       const places = spacePlaces();
@@ -142,11 +157,12 @@ function refreshPrs(cx) {
         const pick = found.find((s) => s.open) ?? found[0];
         if (pick) prs[id] = pick;
       }
+      prsNext = Date.now() + PR_EVERY;
     } catch {
       // Machine away, rate limit, gh missing: keep showing the last values
     } finally {
       busy.prs = 0;
-      cx.notify();
+      version++;
     }
   });
 }
@@ -182,7 +198,7 @@ function refreshPorts(cx) {
       ports = next;
     } finally {
       busy.ports = 0;
-      cx.notify();
+      version++;
     }
   });
 }
