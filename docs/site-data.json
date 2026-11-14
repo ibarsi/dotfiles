@@ -1,12 +1,12 @@
 {
-  "git_revision": "c7a5d7e5d52b74a23a4873f84e738503658997fa",
-  "source_hash": "72683651bef7",
+  "git_revision": "d1cf9ab32010ddfe444eeb8e3c5cd85f61b7e513",
+  "source_hash": "50cb27ed1eb5",
   "stats": {
     "aliases": 70,
     "functions": 45,
     "git": 56,
     "features": 26,
-    "tasks": 15,
+    "tasks": 16,
     "bootstrap_links": 15,
     "brews": 37,
     "casks": 26,
@@ -1559,6 +1559,14 @@
       "source": "mise.toml"
     },
     {
+      "name": "herdr-settings-check",
+      "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom",
+      "run": [
+        "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
+      ],
+      "source": "mise.toml"
+    },
+    {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
@@ -1622,7 +1630,7 @@
       "source": "glow/install.sh"
     },
     {
-      "source_path": "herdr-app/$f",
+      "source_path": "herdr-app/$src",
       "target_path": "~/.config/herdr-app/$f",
       "source": "herdr-app/install.sh"
     },

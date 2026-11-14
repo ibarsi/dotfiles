@@ -26,9 +26,15 @@ Alt and Ctrl-Alt bindings behave the same on both.
   (Shift-C/R/K), plus Alt-arrows for tabs and spaces, Ctrl-Alt-arrows to
   focus panes and Alt-1..9 for tabs. Because the file has been edited, app
   updates no longer add new default shortcuts to it; add them by hand.
-- `settings.json` is linked too. It selects the `catppuccin-mocha` theme and
-  turns on font ligatures and turns off sounds and pane scrollbars. The app writes through the
-  link, so changes made in Settings show up in `git diff`.
+- `settings.json` is linked to `settings.macos.json` on macOS and
+  `settings.linux.json` elsewhere (Omarchy). Both select the `catppuccin-mocha`
+  theme, turn on font ligatures and turn off sounds and pane scrollbars. The app
+  writes through the link, so zoom (Cmd +/-) and other Settings changes land in
+  that platform's file only and show up in `git diff`. Keep everything except
+  `zoom` identical: copy other changes to the other file by hand.
+  `mise run herdr-settings-check` reports drift, and the `herdr-settings-sync`
+  pre-commit hook runs it when either file is staged. To commit an intentional
+  difference, use `SKIP=herdr-settings-sync git commit`.
 - `themes/catppuccin-mocha.json` is generated from
   [palette.sh](../theme/palette.sh) on each install, following the
   [colour rule](../theme/README.md#colour-rule-reference-the-palette-never-hardcode-hex).
@@ -52,7 +58,10 @@ each keeps its place when the other is absent. The status icon is the
 first that applies (none while queued): ↯ merge conflict (peach), ✓ approved,
 ※ changes requested or a new review since your last non-merge commit
 (`mods/my-spaces/status.js`, tested with `node --test
-herdr-app/mods/my-spaces/status.test.mjs`). PR data comes from one `gh api graphql` query every 60s; ports from one
+herdr-app/mods/my-spaces/status.test.mjs`). Click ↯ to split a
+`claude --model haiku /rebase` pane (skipping permissions) into that space's shown
+tab without switching to it. A second click does nothing while that session is
+still running. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
 Rows have no letter avatar. Instead, a bar down the row's left edge shows each
