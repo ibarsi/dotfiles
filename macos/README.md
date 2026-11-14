@@ -32,7 +32,7 @@ Re-run it any time; every step is idempotent.
 - [Zsh](../zsh/README.md), [shared shell](../system/README.md), and [mise](../mise/README.md)
 - [Keyboard remapping](../karabiner/README.md)
 - [Starship and app themes](../theme/README.md)
-- [Ghostty](../ghostty/README.md), [Herdr](../herdr/README.md), [Herdr app](../herdr-app/README.md), and [tmux](../tmux/README.md)
+- [Ghostty](../ghostty/README.md), [Herdr app](../herdr-app/README.md), and [tmux](../tmux/README.md)
 - [Dictation vocabulary sync](../voice-to-text/README.md#macos---typewhisper)
 - [Microphone processing research](docs/research/2026-09-14-oss-macos-mic-processing.md)
 

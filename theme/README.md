@@ -31,7 +31,7 @@ Keep `palette.sh` as plain `NAME="#hex"` lines (no `export`, no logic) so both
 shells and tmux can parse it.
 
 Still hardcoded, because these formats can't read environment variables:
-`starship.toml` (own palette table), `git/delta.gitconfig`, `herdr/config.toml`,
+`starship.toml` (own palette table), `git/delta.gitconfig`,
 and the vendored upstream theme files (`glow/`,
 `zsh/catppuccin_mocha-zsh-syntax-highlighting.theme`). Don't add new ones.
 

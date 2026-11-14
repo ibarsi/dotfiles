@@ -32,7 +32,7 @@ cd ~/dotfiles
 ```
 
 Adds the shared Bash layer, Git/delta includes, GitHub aliases, Gitmoji,
-tmux, Herdr, llama server configuration, Starship, and VoxType vocabulary sync — additively, without replacing
+tmux, llama server configuration, Starship, and VoxType vocabulary sync — additively, without replacing
 Omarchy's `~/.bashrc` or `~/.gitconfig`, and without installing packages or
 changing the default shell. Details in the
 [Omarchy guide](omarchy/README.md).
@@ -59,7 +59,6 @@ the macOS bootstrap.
 | `git` | ✅ | ◐ aliases + stack defaults + optional delta |
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
-| `herdr` | ✅ | ✅ |
 | `herdr-app` | ✅ | — macOS only |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
@@ -95,7 +94,7 @@ Use `mise run ...` directly for project workflows:
 - `groot` → jump to git repo root quickly
 - `wtnew <branch> [base]` → create a worktree under `~/worktrees/<repo>/<branch>` and enter it
 - `wtsesh` → attach/create a tmux session for the current repo+branch
-- `wtclean [-n]` → remove worktrees with no open PR and no herdr workspace (`-n` = dry run)
+- `wtclean [-n]` → remove worktrees with no open PR and no live hc terminal in them (`-n` = dry run)
 - `pr` → open existing PR in browser or create one
 
 ## Structure
@@ -111,7 +110,6 @@ Each folder owns its documentation.
 | [gh](gh/README.md) | GitHub CLI aliases and extensions |
 | [gitmoji](gitmoji/README.md) | Commit preferences |
 | [ghostty](ghostty/README.md) | Terminal settings and keybindings |
-| [herdr](herdr/README.md) | Workspaces, remote sessions and sidebar feed |
 | [herdr-app](herdr-app/README.md) | Herdr desktop app keys, settings and theme |
 | [tmux](tmux/README.md) | Sessions, panes and notifications |
 | [glow](glow/README.md) | Markdown rendering |

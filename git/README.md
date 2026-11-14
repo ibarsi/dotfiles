@@ -38,7 +38,7 @@ The shell and git config now include a minimal worktree layer aimed at parallel 
 - `fwt` → fuzzy-pick any worktree from the current repo and `cd` into it
 - `wtsesh` → attach/create a tmux session named from the current repo and branch
 - `fwtr` → fuzzy-search removable worktrees from the current repo and pass the selected path to `git wtr`
-- `wtclean [-n|--dry-run]` → remove every worktree of the current repo that is neither on a branch with one of your open PRs (`gh`) nor open as a herdr workspace. `--dry-run` only lists what would go. It flags dirty worktrees (git refuses them; there is no `--force`) and gitignored `docs/` folders that would be lost, asks `[y/N]` before removing, and keeps the branches. Aborts without removing anything if `gh` or `herdr` cannot be queried. Needs `git`, `gh`, `herdr` and `jq`; works in zsh (macOS) and bash (Omarchy)
+- `wtclean [-n|--dry-run]` → remove every worktree of the current repo that is neither on a branch with one of your open PRs (`gh`) nor the folder (or a parent of the folder) of a live hc terminal (`hc ls`, every connected machine). `--dry-run` only lists what would go. It flags dirty worktrees (git refuses them; there is no `--force`) and gitignored `docs/` folders that would be lost, asks `[y/N]` before removing, and keeps the branches. Aborts without removing anything if `gh` or `hc` cannot be queried. Needs `git`, `gh`, `hc` and `jq`; works in zsh (macOS) and bash (Omarchy)
 
 **Recommended flow:**
 

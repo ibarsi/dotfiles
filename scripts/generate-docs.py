@@ -49,7 +49,7 @@ FEATURE_NOTES = {
     },
     "omarchy-bootstrap": {
         "title": "Omarchy bootstrap",
-        "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+        "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
         "source": "bootstrap-omarchy.sh",
         "details": [
             "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",

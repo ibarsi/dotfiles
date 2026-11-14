@@ -1,9 +1,8 @@
 # Herdr app
 
 Settings, keybindings and Catppuccin Mocha theme for the Herdr desktop app
-(`/Applications/Herdr.app`). This is separate from the terminal UI in
-[herdr](../herdr/README.md): the app runs on its own `herdr-core` (`hc`) and
-keeps its config in `~/.config/herdr-app/`, not `~/.config/herdr/config.toml`.
+(`/Applications/Herdr.app`). The app runs on its own `herdr-core` (`hc`) and
+keeps its config in `~/.config/herdr-app/`.
 
 ## Installation
 
@@ -40,8 +39,7 @@ the layout once with `herdr-app do layout.switch '{"name":"my-main"}'` (or
 Ctrl-Shift-L).
 
 `my-spaces` is a clone of Herdr's spaces mod. `indicators.js` adds a line under
-each space with the same PR and port data the TUI sidebar showed (see
-[herdr](../herdr/README.md#herdr-sidebar)): on the left the PR number
+each space with its PR and ports: on the left the PR number
 coloured by CI, grey while the PR is a draft and teal in the merge queue (click it to open the PR in your browser) and listening ports;
 the deploy icon and then one status icon in fixed columns on the right edge, so
 each keeps its place when the other is absent. The status icon is the
@@ -56,10 +54,11 @@ agent in the space as one segment, most urgent on top: blocked (pulses), done,
 working, then idle (dimmed), at most four. Spaces without agents have no bar.
 Those lines are marked `// agents`. The collapsed rail still shows one dot.
 
-Each row's white title is the space's git branch (the space name when it isn't
-a repo). The grey text on the right is the repo, unless the row is a worktree
-or the space is named after the repo, then the space name, unless it matches
-the branch. Those lines are marked `// branch-first`.
+Each row's white title is the name you gave the space (Shift-R), else its git
+branch, else the folder its first terminal is in (`~` for the home folder). The
+grey text on the right is the repo, unless the row is a worktree or the space is
+named after the repo, then the branch for a renamed space or the space name for
+the rest, unless it matches the branch. Those lines are marked `// branch-first`.
 
 Worktree rows sit at half the upstream indent (11px). Those lines are marked
 `// indent`.
