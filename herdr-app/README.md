@@ -43,7 +43,11 @@ Ctrl-Shift-L).
 each space with the same PR and port data the TUI sidebar showed (see
 [herdr](../herdr/README.md#herdr-sidebar)): on the left the PR number
 coloured by CI (click it to open the PR in your browser) and listening ports;
-review, comment, merge and deploy icons on the right edge. PR data comes from one `gh api graphql` query every 60s; ports from one
+one status icon and the deploy icon on the right edge. The status icon is the
+first that applies: ≡ in merge queue, ↯ merge conflict (peach), ✓ approved,
+※ changes requested or a new review since your last non-merge commit
+(`mods/my-spaces/status.js`, tested with `node --test
+herdr-app/mods/my-spaces/status.test.mjs`). PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
 Each row's white title is the space's git branch (the space name when it isn't

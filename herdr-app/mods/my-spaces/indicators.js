@@ -2,12 +2,13 @@
 // Kept out of main.js so re-cloning Herdr's `spaces` mod only needs the few lines
 // marked "indicators" there (herdr-update merges them automatically).
 //
-// Line under the space name: #PR (coloured by CI) + review/comment/merge/deploy
-// icons on the left, listening ports on the right.
+// Line under the space name: #PR (coloured by CI) and listening ports on the left,
+// one review/merge status icon (status.js) and the deploy icon on the right.
 
 import { div } from "gpui-kit";
 import { h_flex } from "gpui-base";
 import { exec, spaces, panes, terminals } from "herdr";
+import { prStatus } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -96,16 +97,8 @@ function summarize(repo) {
   if (!p) return null;
   const ci = p.state === "MERGED" ? "merged" : CI[p.head.nodes[0]?.commit.statusCheckRollup?.state ?? ""] ?? "";
   if (p.state !== "OPEN") return { num: p.number, url: p.url, ci, open: false };
-  const merge = p.mergeable === "CONFLICTING" ? "↯" : p.mergeQueueEntry ? "≡" : "";
-  // Queued implies approved, so the review icon is noise
-  const review = merge === "≡" ? "" : ({ APPROVED: "✓", CHANGES_REQUESTED: "✗" })[p.reviewDecision ?? ""] ?? "";
-  // Same "since" rule as gh reviews: someone else reviewed after your last non-merge commit
-  const me = p.author?.login;
-  const push = p.commits.nodes.map((c) => c.commit).filter((c) => !/^Merge /.test(c.messageHeadline))
-    .map((c) => c.committedDate).sort().pop() ?? "";
-  const comment = p.reviews.nodes.some((v) => v.author?.login !== me && v.submittedAt > push) ? "※" : "";
   const deploy = DEPLOY[repo.deployments?.nodes?.[0]?.latestStatus?.state ?? ""] ?? "";
-  return { num: p.number, url: p.url, ci, open: true, merge, review, comment, deploy };
+  return { num: p.number, url: p.url, ci, open: true, status: prStatus(p), deploy };
 }
 
 function refreshPrs(cx) {
@@ -195,32 +188,28 @@ function refreshPorts(cx) {
 }
 
 // The extra line for space `id`, or null when there's nothing to show.
-// `indent`: px to line it up under the space name.
+// `indent`: px to line it up under the space name. Layout A: #PR and ports on the
+// left, the status and deploy icons pinned right. Each piece is its own element
+// (pr-, ports-, status-, deploy-<space>) so a panel can hang a click on it later.
 export function indicators(id, t, indent) {
   const p = prs[id];
   const po = ports[id];
   if (!p && !po?.length) return null;
   const ci = { merged: t.ansi5, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
-  const icon = (glyph, color) => div().flex_none().text_color(color).child(glyph);
-  const icons = !p ? [] : [
-    p.review === "✓" && icon("✓", t.ansi2),
-    p.review === "✗" && icon("✗", t.ansi1),
-    p.comment && icon("※", t.ansi4),
-    p.merge === "↯" && icon("↯", t.ansi1),
-    p.merge === "≡" && icon("≡", t.ansi6),
-    p.deploy && icon(p.deploy, { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 }[p.deploy] ?? t.dim),
-  ].filter(Boolean);
-  // #PR and ports on the left, state icons pinned to the right edge.
-  return h_flex().pl(indent).pr(4).gap(8).items_center().text_size(11).text_color(t.dim)
-    .when(Boolean(p), (el) => el.child(icon(`#${p.num}`, ci[p.ci] ?? t.dim)
-      .id(`pr-${id}`).cursor_pointer().hover((s) => s.underline())
+  const status = { "≡": t.ansi6, "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
+  const deploy = { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 };
+  const chip = (key, text, color) => div().id(`${key}-${id}`).flex_none().px(4).rounded(4)
+    .text_color(color).cursor_pointer().hover((s) => s.bg(t.hover)).child(text);
+  return h_flex().pl(indent - 4).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
+    .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
       .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
-    .when(Boolean(po?.length), (el) => el.child(div().min_w(0).truncate().child(`:${po.join(",")}`)))
+    .when(Boolean(po?.length), (el) => el.child(chip("ports", `:${po.join(",")}`, t.dim).min_w(0).truncate()))
     .child(div().flex_1())
-    .children(icons);
+    .when(Boolean(p?.status), (el) => el.child(chip("status", p.status, status[p.status])))
+    .when(Boolean(p?.deploy), (el) => el.child(chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)));
 }
 
 // Opens in the default browser on this computer (open on macOS, xdg-open elsewhere).
