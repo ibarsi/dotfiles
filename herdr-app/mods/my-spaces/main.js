@@ -412,7 +412,7 @@ export default class Spaces extends View {
   row({ w, i, g, tree }, t) {
     const on = w.active;
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(s => s.id === this.pressed);
-    const extra = indicators(w.id, t, tree ? 44 : 0); // indicators agents: no avatar, so no indent
+    const extra = indicators(w.id, t, tree ? 33 : 0); // indicators agents indent: no avatar, so 11 indent + 13 icon + 9 gap
     const bar = agentBar(w.id, t); // agents
     return v_flex()
       .relative()
@@ -458,7 +458,7 @@ export default class Spaces extends View {
         h_flex()
           .gap(9)
           .items_center()
-          .when(Boolean(tree), el => el.pl(22).child(svg("mods/workspace-chrome/branch.svg").size(13).text_color(t.dim)))
+          .when(Boolean(tree), el => el.pl(11).child(svg("mods/workspace-chrome/branch.svg").size(13).text_color(t.dim))) // indent: half the upstream worktree indent
           .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(g?.branch ?? w.name)) // branch-first
           .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()),
       )

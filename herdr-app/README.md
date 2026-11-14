@@ -61,8 +61,11 @@ a repo). The grey text on the right is the repo, unless the row is a worktree
 or the space is named after the repo, then the space name, unless it matches
 the branch. Those lines are marked `// branch-first`.
 
+Worktree rows sit at half the upstream indent (11px). Those lines are marked
+`// indent`.
+
 The clone's `main.js` differs from upstream only in lines marked
-`// indicators`, `// agents`, `// sticky`, `// branch-first` and `// local: <repo>#<n>`.
+`// indicators`, `// agents`, `// sticky`, `// branch-first`, `// indent` and `// local: <repo>#<n>`.
 Mark every new change to it the same way so `herdr-update` can merge
 upstream changes around it.
 
