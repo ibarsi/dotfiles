@@ -6,9 +6,9 @@
 // one review/merge status icon (status.js) and the deploy icon on the right.
 
 import { div } from "gpui-kit";
-import { h_flex } from "gpui-base";
-import { exec, spaces, panes, terminals } from "herdr";
-import { prStatus, alpha } from "./status.js";
+import { h_flex, v_flex } from "gpui-base";
+import { exec, spaces, panes, terminals, agents } from "herdr";
+import { prStatus, alpha, segments } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -226,8 +226,8 @@ export function indicators(id, t, indent) {
     return el.border_1().border_color(alpha(color, "00"))
       .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(text);
   };
-  // pl cancels the PR chip's px(7) + 1px border so its text lines up under the space name
-  return h_flex().pl(indent - 8).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
+  // Shift left by the PR chip's px(7) + 1px border so its text lines up under the branch name
+  return h_flex().when(indent >= 8, (el) => el.pl(indent - 8)).when(indent < 8, (el) => el.ml(indent - 8)).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
@@ -244,6 +244,17 @@ export function indicators(id, t, indent) {
 // one comes or goes. Wide enough for the widest glyph (॥, ※) at 11px plus a hover margin.
 const SLOT = 24;
 const slot = (el) => (el ? el.w(SLOT).px(0).flex().justify_center() : div().flex_none().w(SLOT));
+
+// The bar down the left edge of space `id`'s row: one segment per agent, most urgent on
+// top (status.js segments). Blocked pulses, idle is dimmed. Null without agents.
+export function agentBar(id, t) {
+  const segs = segments(agents().filter((a) => a.space === id).map((a) => a.status));
+  if (!segs.length) return null;
+  return v_flex().absolute().left(0).top(6).bottom(6).w(3).gap(2)
+    .children(segs.map((s) => div().flex_1().rounded(2).bg(t[s] ?? t.unknown)
+      .when(s === "blocked", (el) => el.loop("opacity", { from: 1, to: 0.35, period: 1400 }))
+      .when(s === "idle", (el) => el.opacity(0.5))));
+}
 
 // Opens in the default browser on this computer (open on macOS, xdg-open elsewhere).
 function openUrl(url) {

@@ -51,13 +51,18 @@ first that applies (none while queued): ↯ merge conflict (peach), ✓ approved
 herdr-app/mods/my-spaces/status.test.mjs`). PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
+Rows have no letter avatar. Instead, a bar down the row's left edge shows each
+agent in the space as one segment, most urgent on top: blocked (pulses), done,
+working, then idle (dimmed), at most four. Spaces without agents have no bar.
+Those lines are marked `// agents`. The collapsed rail still shows one dot.
+
 Each row's white title is the space's git branch (the space name when it isn't
 a repo). The grey text on the right is the repo, unless the row is a worktree
 or the space is named after the repo, then the space name, unless it matches
 the branch. Those lines are marked `// branch-first`.
 
 The clone's `main.js` differs from upstream only in lines marked
-`// indicators`, `// sticky`, `// branch-first` and `// local: <repo>#<n>`.
+`// indicators`, `// agents`, `// sticky`, `// branch-first` and `// local: <repo>#<n>`.
 Mark every new change to it the same way so `herdr-update` can merge
 upstream changes around it.
 

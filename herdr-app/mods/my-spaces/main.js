@@ -6,7 +6,7 @@
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { spaces, machines, panes, run, openOverlay, exec, hc, theme, shared, setShared, watchFolder, window, layout } from "herdr";
-import { startIndicators, indicators } from "./indicators.js"; // indicators
+import { startIndicators, indicators, agentBar } from "./indicators.js"; // indicators agents
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -412,10 +412,8 @@ export default class Spaces extends View {
   row({ w, i, g, tree }, t) {
     const on = w.active;
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(s => s.id === this.pressed);
-    const colors = shared("space.colors") ?? {};
-    const color = colors[w.id] ?? "ansi6";
-    const fill = color.startsWith("#") ? color : (MARK[color] ?? t[color]);
-    const extra = indicators(w.id, t, tree ? 44 : 27); // indicators
+    const extra = indicators(w.id, t, tree ? 44 : 0); // indicators agents: no avatar, so no indent
+    const bar = agentBar(w.id, t); // agents
     return v_flex()
       .relative()
       .id(`space-${w.id}`)
@@ -461,11 +459,11 @@ export default class Spaces extends View {
           .gap(9)
           .items_center()
           .when(Boolean(tree), el => el.pl(22).child(svg("mods/workspace-chrome/branch.svg").size(13).text_color(t.dim)))
-          .when(!tree, el => el.child(h_flex().size(18).flex_none().rounded(5).bg(fill).items_center().justify_center().text_size(10.5).font_bold().text_color("#ffffff").child([...w.name][0]?.toUpperCase() ?? "?")))
           .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(g?.branch ?? w.name)) // branch-first
           .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()),
       )
-      .when(Boolean(extra), (el) => el.child(extra)); // indicators
+      .when(Boolean(extra), (el) => el.child(extra)) // indicators
+      .when(Boolean(bar), (el) => el.child(bar)); // agents
   }
 
   compact({ w, i }, t) {

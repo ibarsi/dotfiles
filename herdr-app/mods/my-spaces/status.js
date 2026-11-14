@@ -16,3 +16,8 @@ export function prStatus(pr) {
 
 // `color` with a two-hex-digit alpha appended, or null unless it's plain #rrggbb.
 export const alpha = (color, aa) => (/^#[0-9a-f]{6}$/i.test(color ?? "") ? color + aa : null);
+
+// A space's agent statuses, most urgent first, at most 4 (one bar segment each).
+const URGENCY = ["blocked", "done", "working", "idle"];
+const rank = (s) => (URGENCY.includes(s) ? URGENCY.indexOf(s) : URGENCY.length);
+export const segments = (statuses) => [...statuses].sort((a, b) => rank(a) - rank(b)).slice(0, 4);
