@@ -1,0 +1,198 @@
+#!/usr/bin/env bash
+# herdr-update: update herdr-core here and on every connected machine, then check
+# that this repo's Herdr app customizations still fit the installed app.
+#
+#   herdr-update            update cores, then report
+#   herdr-update --check    report only
+#   herdr-update --apply    also write clean merges and accept upstream changes
+#                           (refreshes herdr-app/upstream/ snapshots)
+#
+# herdr-app/upstream/ holds the Herdr files our customizations were last
+# reconciled against: the spaces mod my-spaces was cloned from, the default
+# keymap and the mod API types. A difference there is what an update changed.
+set -uo pipefail
+
+D="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd -P)"
+A="${HERDR_APP_HOME:-$HOME/.config/herdr-app}"
+UP="$D/upstream"
+APP_BIN=/Applications/Herdr.app/Contents/MacOS/Herdr
+mode=update
+case "${1:-}" in
+--check) mode=check ;;
+--apply) mode=apply ;;
+"") ;;
+*) sed -n '2,9s/^# \{0,1\}//p' "$0" && exit 2 ;;
+esac
+
+todo=0
+ok() { printf '  \033[32mok\033[0m    %s\n' "$*"; }
+warn() { printf '  \033[33mwarn\033[0m  %s\n' "$*"; }
+fix() { printf '  \033[31mfix\033[0m   %s\n' "$*"; todo=$((todo + 1)); }
+note() { printf '        %s\n' "$@"; }
+section() { printf '\n\033[1m%s\033[0m\n' "$*"; }
+
+machines() { hc machine ls --json 2>/dev/null | jq -r '.machines[] | select(.temporary | not) | "\(.name)\t\(.state)\t\(.version // "?")"'; }
+
+# --- cores ------------------------------------------------------------------
+section "herdr-core"
+before=$(hc --version 2>/dev/null | awk '{print $2}')
+declare -A mbefore=()
+while IFS=$'\t' read -r name state version; do mbefore[$name]=$version; done < <(machines)
+
+if [[ $mode != check ]]; then
+	hc update >/dev/null 2>&1 || fix "hc update failed: run it by hand to see why"
+	while IFS=$'\t' read -r name state _; do
+		if [[ $state == connected ]]; then
+			hc machine update "$name" >/dev/null 2>&1 || fix "hc machine update $name failed"
+		else
+			warn "$name is $state: not updated (hc machine update $name once it's back)"
+		fi
+	done < <(machines)
+fi
+
+after=$(hc --version 2>/dev/null | awk '{print $2}')
+if [[ $before == "$after" ]]; then ok "this computer $after"; else ok "this computer $before -> $after"; fi
+while IFS=$'\t' read -r name state version; do
+	was=${mbefore[$name]:-?}
+	if [[ $version != "$after" && $state == connected ]]; then
+		fix "$name runs $version, this computer $after (hc machine update $name)"
+	elif [[ $was == "$version" ]]; then ok "$name $version ($state)"; else ok "$name $was -> $version"; fi
+done < <(machines)
+
+if ! command -v herdr-app >/dev/null 2>&1 || [[ ! -d $A ]]; then
+	section "Herdr app"
+	warn "not installed here: skipped the customization checks"
+	exit $((todo > 0))
+fi
+
+# --- app --------------------------------------------------------------------
+app=$(herdr-app --version 2>/dev/null | awk '{print $2}')
+section "Herdr app $app"
+note "The app updates itself and updates herdr-core on its first start after that;" \
+	"its mods and layouts are rewritten then, so re-run herdr-update after an app restart."
+
+# Clones: 3-way merge each cloned mod's code with what changed upstream.
+for modjson in "$D"/mods/*/mod.json; do
+	dir=$(dirname "$modjson") mod=$(basename "$(dirname "$modjson")")
+	src=$(jq -r '.cloned_from.name // empty' "$modjson")
+	[[ -n $src ]] || continue
+	cloned=$(jq -r '.cloned_from.version' "$modjson")
+	changed=0 conflicts=0
+	for base in "$UP/mods/$src"/*.js; do
+		f=$(basename "$base") shipped="$A/mods/$src/$f"
+		if [[ ! -f $shipped ]]; then
+			fix "$mod: upstream $src/$f is gone; my-spaces still uses it"
+			continue
+		fi
+		cmp -s "$base" "$shipped" && continue
+		changed=1
+		merged=$(mktemp)
+		cp "$dir/$f" "$merged"
+		git merge-file -L "$mod" -L "$src@$cloned" -L "$src@$app" "$merged" "$base" "$shipped"
+		n=$?
+		if ((n == 0)); then
+			if [[ $mode == apply ]]; then
+				cp "$merged" "$dir/$f" && cp "$shipped" "$base"
+				ok "$mod/$f: merged upstream $src changes"
+			else
+				fix "$mod/$f: upstream $src changed, merges cleanly (herdr-update --apply)"
+			fi
+		else
+			conflicts=$((conflicts + n))
+			cp "$merged" "$dir/$f.merge"
+			fix "$mod/$f: $n conflict(s) with upstream $src; resolve $dir/$f.merge," \
+				"move it over $f, then copy $shipped to $base"
+			note "upstream diff: diff $base $shipped"
+		fi
+		rm -f "$merged"
+	done
+	((changed)) || ok "$mod: upstream $src unchanged since $cloned"
+	if ((changed && conflicts == 0)) && [[ $mode == apply ]]; then
+		jq --arg v "$app" '.cloned_from.version = $v' "$modjson" >"$modjson.tmp" && mv "$modjson.tmp" "$modjson"
+	fi
+	if out=$(herdr-app check "$A/mods/$mod" 2>&1); then ok "$mod: herdr-app check passed"; else
+		fix "$mod: herdr-app check failed"
+		note "$out"
+	fi
+done
+
+# Mod API: exported functions that changed, flagged where our mods import them.
+if ! cmp -s "$UP/herdr.d.ts" "$A/herdr.d.ts"; then
+	used=$(cat "$D"/mods/*/*.js | grep -o 'import {[^}]*} from "herdr"' | grep -o '{[^}]*}' | tr -d '{}' | tr ',' '\n' | awk '{print $1}' | sort -u)
+	gone=$(diff <(grep -E '^export function' "$UP/herdr.d.ts") <(grep -E '^export function' "$A/herdr.d.ts") |
+		sed -n 's/^< export function \([A-Za-z_]*\).*/\1/p' | sort -u)
+	hit=$(comm -12 <(echo "$used") <(echo "$gone"))
+	if [[ -n $hit ]]; then
+		fix "mod API changed for functions our mods use: $(echo "$hit" | paste -sd, -)"
+		note "diff $UP/herdr.d.ts $A/herdr.d.ts"
+	else
+		warn "mod API types changed ($(diff "$UP/herdr.d.ts" "$A/herdr.d.ts" | grep -c '^[<>]') lines), none of it in functions our mods import"
+	fi
+	[[ $mode == apply && -z $hit ]] && cp "$A/herdr.d.ts" "$UP/herdr.d.ts"
+else
+	ok "mod API unchanged"
+fi
+
+# Keys: bindings to commands that no longer exist, and default shortcuts that
+# changed since the snapshot (an edited keys.json never gets new defaults).
+cmds=$(herdr-app commands 2>/dev/null | jq -r '.[].name')
+# Mod commands (<mod>.<command>) aren't in the app's list: only flag those whose mod is gone.
+bad=$(jq -r '.[] | to_entries[] | "\(.key)\t\(.value | if type == "object" then .command else . end)"' "$D/keys.json" |
+	while IFS=$'\t' read -r key action; do
+		c=${action%%:*}
+		[[ $c == send || $c == terminal ]] && continue
+		grep -qxF "$c" <<<"$cmds" || [[ -d $A/mods/${c%%.*} ]] || printf '%s -> %s\n' "$key" "$action"
+	done)
+if [[ -n $bad ]]; then
+	fix "keys.json binds commands this app doesn't have:"
+	note "$bad"
+else
+	ok "keys.json: every bound command exists"
+fi
+
+# ponytail: the default keymap is only in the app binary, read with strings;
+# replace if the app ever exposes its defaults.
+defaults=$(strings "$APP_BIN" 2>/dev/null | awk '
+	!on && /^  "global": \{$/ { on = 1; print "{" }
+	on { print }
+	on && /^  "terminal": \{$/ { term = 1 }
+	term && /^    "[^"]+": "[^"]*"$/ { print "}}"; exit }')
+if ! jq -e '.global["cmd-q"]' <<<"$defaults" >/dev/null 2>&1; then
+	warn "couldn't read the default keymap from the app; compare new shortcuts by hand"
+elif ! diff -q <(jq -S . "$UP/keys.json") <(jq -S . <<<"$defaults") >/dev/null; then
+	changes=$(jq -rn --slurpfile old "$UP/keys.json" --argjson new "$defaults" --slurpfile mine "$D/keys.json" '
+		[$old[0], $new, $mine[0]] as [$o, $n, $m] |
+		($o + $n | keys[]) as $s | (($o[$s] // {}) + ($n[$s] // {}) | keys[]) as $k |
+		select(($o[$s][$k] // null) != ($n[$s][$k] // null)) |
+		"\($s) \($k): \($o[$s][$k] // "-" | tostring) -> \($n[$s][$k] // "-" | tostring)  (yours: \($m[$s][$k] // "-" | tostring))"')
+	fix "default shortcuts changed; copy the ones you want into herdr-app/keys.json:"
+	note "$changes"
+	[[ $mode == apply ]] && jq . <<<"$defaults" >"$UP/keys.json"
+else
+	ok "default shortcuts unchanged"
+fi
+
+# Re-derive my-main from the shipped main layout, then re-show it: the app
+# doesn't hot-reload mods through the dotfiles symlink.
+bash "$D/install.sh" >/dev/null || fix "herdr-app/install.sh failed"
+if [[ $(herdr-app status 2>/dev/null | jq -r '.layout // empty') == my-main ]]; then
+	herdr-app 'do' layout.switch '{"name":"main"}' >/dev/null 2>&1
+	herdr-app 'do' layout.switch '{"name":"my-main"}' >/dev/null 2>&1
+fi
+sleep 1
+errs=$(herdr-app status 2>/dev/null | jq -r '.errors[]? | tostring')
+files=$(find "$A" -maxdepth 3 -name '*.error' 2>/dev/null)
+if [[ -n $errs || -n $files ]]; then
+	fix "the running app reports errors:"
+	[[ -n $errs ]] && note "$errs"
+	for f in $files; do note "$f: $(head -3 "$f")"; done
+else
+	ok "running app reports no errors"
+fi
+
+section "Result"
+if ((todo)); then
+	echo "  $todo thing(s) to fix above. Re-run herdr-update --check when done."
+	exit 1
+fi
+echo "  All customizations fit herdr-app $app."

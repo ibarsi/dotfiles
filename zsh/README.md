@@ -18,7 +18,7 @@ Homebrew supplies autosuggestions, syntax highlighting and FZF completion/keybin
 
 ## Updates
 
-`aiup` upgrades Claude Code, Codex and Grok Build through Homebrew, then herdr-core (the Herdr app's backend) with `hc update`. Shared `upall` and `dsync` are documented under [system](../system/README.md#maintenance).
+`aiup` upgrades Claude Code, Codex and Grok Build through Homebrew, then runs `herdr-update` (herdr-core here and on Omen, plus a [Herdr app compatibility report](../herdr-app/README.md#updating)). Shared `upall` and `dsync` are documented under [system](../system/README.md#maintenance).
 
 ## Omen remote sessions
 

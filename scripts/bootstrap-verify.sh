@@ -40,6 +40,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	check_link "$HOME/.config/zed/settings.json"
 	check_link "$HOME/.config/herdr-app/keys.json"
 	check_link "$HOME/.config/herdr-app/settings.json"
+	check_link "$HOME/.config/herdr-app/mods/my-spaces"
 	check_link "$HOME/.config/zed/keymap.json"
 	check_link "$HOME/.config/mise/conf.d/00-dotfiles.toml"
 	check_link "$HOME/.config/glow/glow.yml"

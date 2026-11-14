@@ -29,8 +29,50 @@ with every other `*/install.sh`. Existing unlinked files are moved aside as
   [colour rule](../theme/README.md#colour-rule-reference-the-palette-never-hardcode-hex).
   Re-run the installer after a palette change.
 
-Window position, open spaces, layouts and mod state stay untracked because
-the app rewrites them.
+Window position, open spaces and mod state stay untracked because the app
+rewrites them.
+
+## Sidebar indicators
+
+`install.sh` links `mods/my-spaces/` and generates `layouts/my-main.json`
+from the shipped `main` layout with `my-spaces` in place of `spaces`. Pick
+the layout once with `herdr-app do layout.switch '{"name":"my-main"}'` (or
+Ctrl-Shift-L).
+
+`my-spaces` is a clone of Herdr's spaces mod. `indicators.js` adds a line under
+each space with the same PR and port data the TUI sidebar showed (see
+[herdr](../herdr/README.md#herdr-sidebar)): the PR number coloured by CI,
+then review, comment, merge and deploy icons, and listening ports on the
+right. PR data comes from one `gh api graphql` query every 60s; ports from one
+`lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too. The
+clone's `main.js` differs from upstream only in the lines marked
+`// indicators`.
+
+The app doesn't hot-reload mods through the symlink. After editing, switch
+layouts away and back (`herdr-update --check` does this).
+
+## Updating
+
+`herdr-update` (also run by `aiup`) replaces `hc update`. It updates
+herdr-core on this computer and on every connected machine (`hc machine
+update`), then reports anything that no longer fits:
+
+- **Upstream spaces mod changed**: three-way merges it into `my-spaces`
+  using the snapshot in `upstream/`. A clean merge waits for `--apply`; a
+  conflict is written to `mods/my-spaces/main.js.merge` to resolve.
+- **Mod API changed**: diffs `herdr.d.ts` against `upstream/` and names the
+  changed functions that our mods import.
+- **Keys**: bindings to commands the app no longer has, and default
+  shortcuts added or changed since `upstream/keys.json` (an edited
+  `keys.json` never gets new defaults).
+- **Runtime**: `herdr-app check` on each mod, `herdr-app status` errors and
+  `*.error` files.
+
+It exits 1 when something needs fixing. `herdr-update --check` only reports.
+`herdr-update --apply` writes clean merges and refreshes the `upstream/`
+snapshots it accepted. The app updates itself, and its first start after an
+update rewrites the shipped mods, so run `herdr-update` again after an app
+restart.
 
 ## Verification
 
