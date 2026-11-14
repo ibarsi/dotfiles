@@ -46,7 +46,24 @@ then review, comment, merge and deploy icons, and listening ports on the
 right. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too. The
 clone's `main.js` differs from upstream only in the lines marked
-`// indicators`.
+`// indicators` and in fixes marked `// local: <repo>#<n>`.
+
+Local fixes to the clone, such as a backport of an upstream PR that hasn't
+shipped yet or a fix for an open issue, go straight into `main.js`. Each hunk
+gets one line ending in `// local: herdrdev/herdr-app#<n>`. Keep a backport
+byte-identical to the upstream PR apart from that marker. Once a release ships
+the marked line verbatim, `herdr-update` drops the marker before merging, so
+the hunk merges away. A fix that upstream makes differently shows up as a
+normal conflict. Until then `herdr-update` lists the open markers. Current
+ones: herdrdev/herdr-app#856 (run at most 6 git checks at once) and
+herdrdev/herdr-app#857 (a failed check keeps a space's last git answer, so
+worktrees stop un-nesting from their repo on a momentary exec failure).
+
+Worktree grouping is sticky: each space remembers the last repo it was seen
+in (lines marked `// sticky`, kept across restarts), so a failed git lookup or
+a root space whose terminal left the repo no longer un-nests its worktrees.
+Lines marked `// local: <repo>#<n>` are upstream fixes backported early;
+`herdr-update` drops them once upstream ships the same line.
 
 The app doesn't hot-reload mods through the symlink. After editing, switch
 layouts away and back (`herdr-update --check` does this).

@@ -34,6 +34,10 @@ const base = (path) => path.replace(/\/+$/, "").split("/").pop();
 // Changes made outside Herdr (an editor's save, a commit in another app): looked
 // for this often, in repos the list shows, while the window is in front.
 const FALLBACK = 60000;
+// Places looked at together (two git runs each). All at once, a few hundred spaces
+// run out of the app's open files (256 when started from the Dock on macOS) or
+// past a machine core's 16 running execs, and those spaces wait for FALLBACK.
+const AT_ONCE = 6; // local: herdrdev/herdr-app#856
 
 // What a stored color name looks like on an avatar (the same in every mod
 // that draws space avatars): one strong color per hue, light and dark alike.
@@ -68,6 +72,7 @@ export default class Spaces extends View {
     this.reconnecting = JSON.parse(localStorage.getItem("machines.reconnecting") ?? "{}");
     for (const state of Object.values(this.reconnecting)) state.busy = false;
     this.folded = new Set(JSON.parse(localStorage.getItem("machines.folded") ?? "[]"));
+    this.sticky = JSON.parse(localStorage.getItem("spaces.sticky") ?? "{}"); // sticky: space -> last git info seen
     this.refreshMachines(cx);
     cx.timer.every(15000, cx => this.refreshMachines(cx));
     // Refresh only when the refs could have changed (see `due`).
@@ -187,7 +192,10 @@ export default class Spaces extends View {
       while (this.pending.size) {
         const keys = [...this.pending];
         this.pending.clear();
-        await Promise.all(keys.map((key) => this.check(key, cx)));
+        let next = 0;
+        await Promise.all(Array.from({ length: Math.min(AT_ONCE, keys.length) }, async () => {
+          while (next < keys.length) await this.check(keys[next++], cx);
+        }));
       }
       const used = new Set(Object.values(this.git).filter(Boolean).map((g) => JSON.parse(g.repo)).filter(([on]) => !on).map(([, repo]) => repo));
       for (const repo of this.watching) if (!used.has(repo)) this.watching.delete(repo);
@@ -211,7 +219,7 @@ export default class Spaces extends View {
       if (r.code !== 0 || common.code !== 0) {
         // Only git's own "no" is remembered as no repo; anything else is asked again.
         if (!/not a git repository/i.test(r.code !== 0 ? r.stderr : common.stderr)) this.unsure.add(key);
-        this.git[key] = null;
+        this.git[key] = this.unsure.has(key) ? this.git[key] ?? null : null; // local: herdrdev/herdr-app#857
         return;
       }
       // The repo's own .git folder names it; a worktree's top differs from it.
@@ -259,9 +267,10 @@ export default class Spaces extends View {
   // Spaces in order, each worktree space moved under its main checkout's.
   ordered() {
     const sp = spaces(), ps = panes();
-    const ready = (w) => this.shown.has(w.id) || where(w, ps) in this.git || Date.now() - (this.born[w.id] ??= Date.now()) > 1500;
+    const ready = (w) => this.shown.has(w.id) || where(w, ps) in this.git || w.id in this.sticky || Date.now() - (this.born[w.id] ??= Date.now()) > 1500;
     for (const w of sp) if (!this.shown.has(w.id) && ready(w)) this.shown.add(w.id);
-    const list = sp.map((w, i) => ({ w, i, g: this.git[where(w, ps)] ?? null }));
+    const list = sp.map((w, i) => ({ w, i, g: this.remember(w, this.git[where(w, ps)]) }));
+    this.saveSticky(sp); // sticky
     const mains = new Set(list.filter((r) => r.g && !r.g.linked).map((r) => r.g.repo));
     const nested = (r) => r.g?.linked && mains.has(r.g.repo);
     const out = [];
@@ -294,6 +303,21 @@ export default class Spaces extends View {
       this.ordering.machines = [...moved];
     }
     return out.filter(r => this.shown.has(r.w.id));
+  }
+
+  // sticky: a space keeps the last repo it was seen in until it's seen in another one,
+  // so worktrees stay nested when a lookup fails or the root space's terminal leaves
+  // the repo. Kept across restarts; ids of closed spaces are dropped.
+  remember(w, g) {
+    if (g) this.sticky[w.id] = g;
+    return this.sticky[w.id] ?? null;
+  }
+
+  saveSticky(sp) {
+    const ids = new Set(sp.map((s) => s.id));
+    for (const id of Object.keys(this.sticky)) if (!ids.has(id)) delete this.sticky[id];
+    const saved = JSON.stringify(this.sticky);
+    if (saved !== this.savedSticky) { localStorage.setItem("spaces.sticky", saved); this.savedSticky = saved; }
   }
 
   // The rows, under a header per machine once one isn't this computer.

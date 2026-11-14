@@ -87,7 +87,11 @@ for modjson in "$D"/mods/*/mod.json; do
 		cmp -s "$base" "$shipped" && continue
 		changed=1
 		merged=$(mktemp)
-		cp "$dir/$f" "$merged"
+		# A "// local: <repo>#<n>" line that now ships verbatim upstream was a
+		# backport: drop the marker so the hunk matches upstream and merges away.
+		awk 'NR == FNR { up[$0]; next }
+			{ i = index($0, " // local: "); if (i && substr($0, 1, i - 1) in up) $0 = substr($0, 1, i - 1); print }' \
+			"$shipped" "$dir/$f" >"$merged"
 		git merge-file -L "$mod" -L "$src@$cloned" -L "$src@$app" "$merged" "$base" "$shipped"
 		n=$?
 		if ((n == 0)); then
@@ -107,6 +111,9 @@ for modjson in "$D"/mods/*/mod.json; do
 		rm -f "$merged"
 	done
 	((changed)) || ok "$mod: upstream $src unchanged since $cloned"
+	if fixes=$(grep -ho '// local: [^ ]*' "$dir"/*.js | sed 's|// local: ||' | sort -u | paste -sd' ' -) && [[ -n $fixes ]]; then
+		note "$mod local fixes not shipped upstream yet: $fixes"
+	fi
 	if ((changed && conflicts == 0)) && [[ $mode == apply ]]; then
 		jq --arg v "$app" '.cloned_from.version = $v' "$modjson" >"$modjson.tmp" && mv "$modjson.tmp" "$modjson"
 	fi
