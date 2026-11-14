@@ -199,14 +199,17 @@ export function indicators(id, t, indent) {
   const status = { "≡": t.ansi6, "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
   const deploy = { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 };
   const chip = (key, text, color) => div().id(`${key}-${id}`).flex_none().px(4).rounded(4)
-    .text_color(color).cursor_pointer().hover((s) => s.bg(t.hover)).child(text);
+    .text_color(color).cursor_pointer()
+    // Row hover already paints t.hover, so the chip steps up a shade. Background only:
+    // text_color inside hover() makes the app silently drop the frame (0.1.15).
+    .hover((s) => s.bg(t.selected)).child(text);
   return h_flex().pl(indent - 4).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
       .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
-    .when(Boolean(po?.length), (el) => el.child(chip("ports", `:${po.join(",")}`, t.dim).min_w(0).truncate()))
+    .when(Boolean(po?.length), (el) => el.child(chip("ports", `:${po.join(",")}`, t.dim).flex_shrink(1).min_w(0).truncate()))
     .child(div().flex_1())
     .when(Boolean(p?.status), (el) => el.child(chip("status", p.status, status[p.status])))
     .when(Boolean(p?.deploy), (el) => el.child(chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)));
