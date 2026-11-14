@@ -2,8 +2,6 @@
 # zsh/aliases.zsh
 
 # macOS AI tool upgrades (Homebrew and mise).
-# herdr-update updates herdr-core here and on Omen, then checks the Herdr app customizations.
-alias herdr-update='"$DOTFILES/herdr-app/herdr-update"'
 alias aiup='brew upgrade claude-code@latest codex grok-build && herdr-update'
 
 # macOS-only Omen tmux sessions. This deliberately stays out of system/ so it

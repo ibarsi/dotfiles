@@ -164,7 +164,11 @@ defaults=$(strings "$APP_BIN" 2>/dev/null | awk '
 	on { print }
 	on && /^  "terminal": \{$/ { term = 1 }
 	term && /^    "[^"]+": "[^"]*"$/ { print "}}"; exit }')
-if ! jq -e '.global["cmd-q"]' <<<"$defaults" >/dev/null 2>&1; then
+# upstream/keys.json is the macOS keymap; Linux builds ship different defaults,
+# so comparing (or --apply overwriting) there would be wrong. The Mac tracks it.
+if [[ $(uname -s) != Darwin ]]; then
+	ok "default shortcuts: tracked on macOS (upstream/keys.json is the macOS keymap)"
+elif ! jq -e '.global["cmd-q"]' <<<"$defaults" >/dev/null 2>&1; then
 	warn "couldn't read the default keymap from the app; compare new shortcuts by hand"
 elif ! diff -q <(jq -S . "$UP/keys.json") <(jq -S . <<<"$defaults") >/dev/null; then
 	changes=$(jq -rn --slurpfile old "$UP/keys.json" --argjson new "$defaults" --slurpfile mine "$D/keys.json" '
