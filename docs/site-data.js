@@ -1,16 +1,16 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "d835bb0cb14237317cce4e754a5a9edf060289d2",
-  "source_hash": "300e9f2afeb1",
+  "git_revision": "9ee90344c244a94838ee3d1e651c26dbe2f8bb10",
+  "source_hash": "277f8ccd72f1",
   "stats": {
     "aliases": 69,
     "functions": 45,
     "git": 56,
     "features": 26,
     "tasks": 15,
-    "bootstrap_links": 16,
+    "bootstrap_links": 17,
     "brews": 37,
     "casks": 26,
-    "platforms": 19
+    "platforms": 20
   },
   "aliases": [
     {
@@ -1615,6 +1615,11 @@ window.DOTFILES_DOCS_DATA = {
       "source": "glow/install.sh"
     },
     {
+      "source_path": "herdr-app/$f",
+      "target_path": "~/.config/herdr-app/$f",
+      "source": "herdr-app/install.sh"
+    },
+    {
       "source_path": "herdr/config.toml",
       "target_path": "~/.config/herdr/config.toml",
       "source": "herdr/install.sh"
@@ -1813,6 +1818,15 @@ window.DOTFILES_DOCS_DATA = {
       },
       "omarchy": {
         "state": "full"
+      }
+    },
+    {
+      "topic": "herdr-app",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "absent"
       }
     },
     {

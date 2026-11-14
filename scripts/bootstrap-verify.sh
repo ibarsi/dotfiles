@@ -38,6 +38,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	check_link "$HOME/Library/Application Support/k9s/config.yaml"
 	check_link "$HOME/Library/Application Support/k9s/skins/catppuccin-mocha.yaml"
 	check_link "$HOME/.config/zed/settings.json"
+	check_link "$HOME/.config/herdr-app/keys.json"
+	check_link "$HOME/.config/herdr-app/settings.json"
 	check_link "$HOME/.config/zed/keymap.json"
 	check_link "$HOME/.config/mise/conf.d/00-dotfiles.toml"
 	check_link "$HOME/.config/glow/glow.yml"

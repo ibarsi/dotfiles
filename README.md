@@ -60,6 +60,7 @@ the macOS bootstrap.
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
 | `herdr` | ✅ | ✅ |
+| `herdr-app` | ✅ | — macOS only |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
 | `llama` | — Linux only | ✅ |
@@ -111,6 +112,7 @@ Each folder owns its documentation.
 | [gitmoji](gitmoji/README.md) | Commit preferences |
 | [ghostty](ghostty/README.md) | Terminal settings and keybindings |
 | [herdr](herdr/README.md) | Workspaces, remote sessions and sidebar feed |
+| [herdr-app](herdr-app/README.md) | Herdr desktop app keys, settings and theme |
 | [tmux](tmux/README.md) | Sessions, panes and notifications |
 | [glow](glow/README.md) | Markdown rendering |
 | [k9s](k9s/README.md) | Kubernetes TUI |

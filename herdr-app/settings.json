@@ -1,0 +1,10 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": false
+  },
+  "font_ligatures": true,
+  "pane_scrollbars": false,
+  "minimum_contrast": 1.0,
+  "theme": "catppuccin-mocha"
+}
