@@ -206,7 +206,7 @@ function refreshPorts(cx) {
 
 // The extra line for space `id`, or null when there's nothing to show.
 // `indent`: px to line it up under the space name. Layout A: #PR and ports on the
-// left, the status and deploy icons pinned right. Each piece is its own element
+// left; on rows with a PR, fixed deploy and status columns pinned right. Each piece is its own element
 // (pr-, ports-, status-, deploy-<space>) so a panel can hang a click on it later.
 export function indicators(id, t, indent) {
   const p = prs[id];
@@ -228,9 +228,15 @@ export function indicators(id, t, indent) {
       .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
     .when(Boolean(po?.length), (el) => el.child(chip("ports", `:${po.join(",")}`, t.dim).flex_shrink(1).min_w(0).truncate()))
     .child(div().flex_1())
-    .when(Boolean(p?.status), (el) => el.child(chip("status", p.status, status[p.status])))
-    .when(Boolean(p?.deploy), (el) => el.child(chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)));
+    .when(Boolean(p), (el) => el
+      .child(slot(p.deploy && chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
+      .child(slot(p.status && chip("status", p.status, status[p.status]))));
 }
+
+// Fixed-width column so the deploy and status icons never shift when the other
+// one comes or goes. Wide enough for the widest glyph (॥, ※) at 11px.
+const SLOT = 18;
+const slot = (el) => (el ? el.w(SLOT).px(0).flex().justify_center() : div().flex_none().w(SLOT));
 
 // Opens in the default browser on this computer (open on macOS, xdg-open elsewhere).
 function openUrl(url) {
