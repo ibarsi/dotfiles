@@ -1,16 +1,16 @@
 {
-  "git_revision": "6d821f9b26955625a78d4f18b544751e54851909",
-  "source_hash": "b4229d92e446",
+  "git_revision": "b53558bc36cdd87778cdd422290c1e0e94f03254",
+  "source_hash": "40937b933d43",
   "stats": {
     "aliases": 70,
     "functions": 45,
     "git": 56,
     "features": 26,
     "tasks": 15,
-    "bootstrap_links": 17,
+    "bootstrap_links": 15,
     "brews": 37,
     "casks": 26,
-    "platforms": 20
+    "platforms": 19
   },
   "aliases": [
     {
@@ -780,7 +780,7 @@
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
+      "summary": "Upgrade Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS.",
       "usage": "upall [--restart]",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -794,7 +794,7 @@
     },
     {
       "name": "wtclean",
-      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor where a live hc terminal is. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
       "usage": "wtclean [-n|--dry-run]",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -867,14 +867,14 @@
     {
       "name": "upall",
       "command": "upall [--restart]",
-      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
+      "summary": "Upgrade Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS.",
       "kind": "function",
       "source": "system/.functions"
     },
     {
       "name": "wtclean",
       "command": "wtclean [-n|--dry-run]",
-      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor where a live hc terminal is. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
       "kind": "function",
       "source": "system/.functions"
     },
@@ -1239,7 +1239,7 @@
     {
       "slug": "omarchy-bootstrap",
       "title": "Omarchy bootstrap",
-      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
       "details": [
         "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
         "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
@@ -1627,16 +1627,6 @@
       "source": "herdr-app/install.sh"
     },
     {
-      "source_path": "herdr/config.toml",
-      "target_path": "~/.config/herdr/config.toml",
-      "source": "herdr/install.sh"
-    },
-    {
-      "source_path": "herdr/herdr-move-workspace",
-      "target_path": "~/.config/herdr/herdr-move-workspace",
-      "source": "herdr/install.sh"
-    },
-    {
       "source_path": "mise/config.toml",
       "target_path": "~/.config/mise/conf.d/00-dotfiles.toml",
       "source": "mise/install.sh"
@@ -1816,15 +1806,6 @@
       },
       "omarchy": {
         "state": "absent"
-      }
-    },
-    {
-      "topic": "herdr",
-      "macos": {
-        "state": "full"
-      },
-      "omarchy": {
-        "state": "full"
       }
     },
     {
