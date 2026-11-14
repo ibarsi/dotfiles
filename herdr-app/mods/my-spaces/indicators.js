@@ -226,13 +226,14 @@ export function indicators(id, t, indent) {
     return el.border_1().border_color(alpha(color, "00"))
       .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(text);
   };
-  return h_flex().pl(indent - 4).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
+  // pl cancels the PR chip's px(7) + 1px border so its text lines up under the space name
+  return h_flex().pl(indent - 8).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
       .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
-    .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
+    .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
       .child(slot(p.deploy && chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
