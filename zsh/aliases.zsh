@@ -2,7 +2,7 @@
 # zsh/aliases.zsh
 
 # macOS AI tool upgrades (Homebrew and mise).
-alias aiup="brew upgrade claude-code@latest codex grok-build && mise upgrade herdr"
+alias aiup="brew upgrade claude-code@latest codex grok-build && hc update"
 
 # macOS-only Omen tmux sessions. This deliberately stays out of system/ so it
 # is never sourced by the Bash-based Omarchy bootstrap.

@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "9ee90344c244a94838ee3d1e651c26dbe2f8bb10",
-  "source_hash": "277f8ccd72f1",
+  "git_revision": "1e98b0dea91b9d214823a1f4071e5cb51f184f6b",
+  "source_hash": "563c149d0749",
   "stats": {
     "aliases": 69,
     "functions": 45,
@@ -71,7 +71,7 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex grok-build && mise upgrade herdr",
+      "command": "brew upgrade claude-code@latest codex grok-build && hc update",
       "group": "General",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
