@@ -1,9 +1,9 @@
 // The one review/merge icon for an open PR. No imports, so it runs in the mod and
 // under node (status.test.mjs). First match wins:
-//   ≡ in merge queue, ↯ merge conflict, ✓ approved,
+//   nothing in merge queue (the #PR chip turns teal instead), ↯ merge conflict, ✓ approved,
 //   ※ changes requested or someone else reviewed after your last non-merge commit.
 export function prStatus(pr) {
-  if (pr.mergeQueueEntry) return "≡";
+  if (pr.mergeQueueEntry) return "";
   if (pr.mergeable === "CONFLICTING") return "↯";
   if (pr.reviewDecision === "APPROVED") return "✓";
   if (pr.reviewDecision === "CHANGES_REQUESTED") return "※";

@@ -17,7 +17,7 @@ const pr = (overrides = {}, reviews = [], commits = [commit("2026-01-02T00:00:00
 const later = "2026-01-03T00:00:00Z", earlier = "2026-01-01T00:00:00Z";
 
 test("queue beats conflict and approval", () => {
-  assert.equal(prStatus(pr({ mergeQueueEntry: { state: "QUEUED" }, mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "≡");
+  assert.equal(prStatus(pr({ mergeQueueEntry: { state: "QUEUED" }, mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "");
 });
 
 test("conflict hides approval and comments", () => {

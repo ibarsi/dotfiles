@@ -42,9 +42,9 @@ Ctrl-Shift-L).
 `my-spaces` is a clone of Herdr's spaces mod. `indicators.js` adds a line under
 each space with the same PR and port data the TUI sidebar showed (see
 [herdr](../herdr/README.md#herdr-sidebar)): on the left the PR number
-coloured by CI (click it to open the PR in your browser) and listening ports;
+coloured by CI, grey while the PR is a draft and teal in the merge queue (click it to open the PR in your browser) and listening ports;
 one status icon and the deploy icon on the right edge. The status icon is the
-first that applies: ≡ in merge queue, ↯ merge conflict (peach), ✓ approved,
+first that applies (none while queued): ↯ merge conflict (peach), ✓ approved,
 ※ changes requested or a new review since your last non-merge commit
 (`mods/my-spaces/status.js`, tested with `node --test
 herdr-app/mods/my-spaces/status.test.mjs`). PR data comes from one `gh api graphql` query every 60s; ports from one

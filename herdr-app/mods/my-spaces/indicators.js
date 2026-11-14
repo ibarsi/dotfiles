@@ -2,7 +2,7 @@
 // Kept out of main.js so re-cloning Herdr's `spaces` mod only needs the few lines
 // marked "indicators" there (herdr-update merges them automatically).
 //
-// Line under the space name: #PR (coloured by CI) and listening ports on the left,
+// Line under the space name: #PR (coloured by CI, grey while a draft, teal in the merge queue) and listening ports on the left,
 // one review/merge status icon (status.js) and the deploy icon on the right.
 
 import { div } from "gpui-kit";
@@ -17,7 +17,7 @@ const PORTS_EVERY = 5000;
 const deployEnv = (n) => `max1-dev-pr-${n}`;
 
 const PR_FRAGMENT = `fragment P on PullRequest {
-  number url state reviewDecision mergeable
+  number url state isDraft reviewDecision mergeable
   author { login }
   mergeQueueEntry { state }
   reviews(last: 100) { nodes { author { login } submittedAt } }
@@ -109,7 +109,8 @@ function summarize(repo) {
   // Prefer an open PR for the branch, else the newest one
   const p = nodes.find((n) => n.state === "OPEN") ?? nodes[0];
   if (!p) return null;
-  const ci = p.state === "MERGED" ? "merged" : CI[p.head.nodes[0]?.commit.statusCheckRollup?.state ?? ""] ?? "";
+  // Drafts stay grey: CI doesn't matter until the PR is up for review
+  const ci = p.state === "MERGED" ? "merged" : p.mergeQueueEntry ? "queued" : p.isDraft ? "" : CI[p.head.nodes[0]?.commit.statusCheckRollup?.state ?? ""] ?? "";
   if (p.state !== "OPEN") return { num: p.number, url: p.url, ci, open: false };
   const deploy = DEPLOY[repo.deployments?.nodes?.[0]?.latestStatus?.state ?? ""] ?? "";
   return { num: p.number, url: p.url, ci, open: true, status: prStatus(p), deploy };
@@ -211,8 +212,8 @@ export function indicators(id, t, indent) {
   const p = prs[id];
   const po = ports[id];
   if (!p && !po?.length) return null;
-  const ci = { merged: t.ansi5, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
-  const status = { "≡": t.ansi6, "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
+  const ci = { merged: t.ansi5, queued: t.ansi6, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
+  const status = { "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
   const deploy = { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 };
   const chip = (key, text, color) => div().id(`${key}-${id}`).flex_none().px(4).rounded(4)
     .text_color(color).cursor_pointer()
