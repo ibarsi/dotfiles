@@ -16,7 +16,7 @@ const PORTS_EVERY = 5000;
 const deployEnv = (n) => `max1-dev-pr-${n}`;
 
 const PR_FRAGMENT = `fragment P on PullRequest {
-  number state reviewDecision mergeable
+  number url state reviewDecision mergeable
   author { login }
   mergeQueueEntry { state }
   reviews(last: 100) { nodes { author { login } submittedAt } }
@@ -95,7 +95,7 @@ function summarize(repo) {
   const p = nodes.find((n) => n.state === "OPEN") ?? nodes[0];
   if (!p) return null;
   const ci = p.state === "MERGED" ? "merged" : CI[p.head.nodes[0]?.commit.statusCheckRollup?.state ?? ""] ?? "";
-  if (p.state !== "OPEN") return { num: p.number, ci, open: false };
+  if (p.state !== "OPEN") return { num: p.number, url: p.url, ci, open: false };
   const merge = p.mergeable === "CONFLICTING" ? "↯" : p.mergeQueueEntry ? "≡" : "";
   // Queued implies approved, so the review icon is noise
   const review = merge === "≡" ? "" : ({ APPROVED: "✓", CHANGES_REQUESTED: "✗" })[p.reviewDecision ?? ""] ?? "";
@@ -105,7 +105,7 @@ function summarize(repo) {
     .map((c) => c.committedDate).sort().pop() ?? "";
   const comment = p.reviews.nodes.some((v) => v.author?.login !== me && v.submittedAt > push) ? "※" : "";
   const deploy = DEPLOY[repo.deployments?.nodes?.[0]?.latestStatus?.state ?? ""] ?? "";
-  return { num: p.number, ci, open: true, merge, review, comment, deploy };
+  return { num: p.number, url: p.url, ci, open: true, merge, review, comment, deploy };
 }
 
 function refreshPrs(cx) {
@@ -202,16 +202,29 @@ export function indicators(id, t, indent) {
   if (!p && !po?.length) return null;
   const ci = { merged: t.ansi5, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
   const icon = (glyph, color) => div().flex_none().text_color(color).child(glyph);
-  return h_flex().pl(indent).gap(5).items_center().text_size(11).text_color(t.dim)
-    .when(Boolean(p), (el) => el
-      .child(icon(`#${p.num}`, ci[p.ci] ?? t.dim))
-      .when(p.review === "✓", (el) => el.child(icon("✓", t.ansi2)))
-      .when(p.review === "✗", (el) => el.child(icon("✗", t.ansi1)))
-      .when(Boolean(p.comment), (el) => el.child(icon("※", t.ansi4)))
-      .when(p.merge === "↯", (el) => el.child(icon("↯", t.ansi1)))
-      .when(p.merge === "≡", (el) => el.child(icon("≡", t.ansi6)))
-      .when(Boolean(p.deploy), (el) => el.child(icon(p.deploy, { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 }[p.deploy] ?? t.dim))))
+  const icons = !p ? [] : [
+    p.review === "✓" && icon("✓", t.ansi2),
+    p.review === "✗" && icon("✗", t.ansi1),
+    p.comment && icon("※", t.ansi4),
+    p.merge === "↯" && icon("↯", t.ansi1),
+    p.merge === "≡" && icon("≡", t.ansi6),
+    p.deploy && icon(p.deploy, { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 }[p.deploy] ?? t.dim),
+  ].filter(Boolean);
+  // #PR and ports on the left, state icons pinned to the right edge.
+  return h_flex().pl(indent).pr(4).gap(8).items_center().text_size(11).text_color(t.dim)
+    .when(Boolean(p), (el) => el.child(icon(`#${p.num}`, ci[p.ci] ?? t.dim)
+      .id(`pr-${id}`).cursor_pointer().hover((s) => s.underline())
+      // Keep the press from selecting or dragging the space row underneath.
+      .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
+      .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
+      .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
+    .when(Boolean(po?.length), (el) => el.child(div().min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
-    .when(Boolean(po?.length), (el) => el.child(div().flex_none().truncate().child(`:${po.join(",")}`)));
+    .children(icons);
 }
 
+// Opens in the default browser on this computer (open on macOS, xdg-open elsewhere).
+function openUrl(url) {
+  if (!url) return;
+  exec("open", [url]).catch(() => exec("xdg-open", [url]).catch(() => {}));
+}

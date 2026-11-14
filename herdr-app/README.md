@@ -41,9 +41,9 @@ Ctrl-Shift-L).
 
 `my-spaces` is a clone of Herdr's spaces mod. `indicators.js` adds a line under
 each space with the same PR and port data the TUI sidebar showed (see
-[herdr](../herdr/README.md#herdr-sidebar)): the PR number coloured by CI,
-then review, comment, merge and deploy icons, and listening ports on the
-right. PR data comes from one `gh api graphql` query every 60s; ports from one
+[herdr](../herdr/README.md#herdr-sidebar)): on the left the PR number
+coloured by CI (click it to open the PR in your browser) and listening ports;
+review, comment, merge and deploy icons on the right edge. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
 Each row's white title is the space's git branch (the space name when it isn't
