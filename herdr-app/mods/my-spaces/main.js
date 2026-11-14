@@ -30,6 +30,7 @@ const rowHeight = ({ tree }) => (tree ? 28 : 30);
 const RAIL_CELL = 32;
 const railCell = (el) => h_flex().flex_none().justify_center().child(el);
 const where = (s, ps) => JSON.stringify([s.machine ?? null, place(s, ps)]);
+const home = (path) => path.replace(/^\/(Users|home)\/[^/]+(?=\/|$)/, "~"); // branch-first: ponytail: guesses the home folder, remote homes elsewhere stay absolute
 const base = (path) => path.replace(/\/+$/, "").split("/").pop();
 // Changes made outside Herdr (an editor's save, a commit in another app): looked
 // for this often, in repos the list shows, while the window is in front.
@@ -269,7 +270,7 @@ export default class Spaces extends View {
     const sp = spaces(), ps = panes();
     const ready = (w) => this.shown.has(w.id) || where(w, ps) in this.git || w.id in this.sticky || Date.now() - (this.born[w.id] ??= Date.now()) > 1500;
     for (const w of sp) if (!this.shown.has(w.id) && ready(w)) this.shown.add(w.id);
-    const list = sp.map((w, i) => ({ w, i, g: this.remember(w, this.git[where(w, ps)]) }));
+    const list = sp.map((w, i) => ({ w, i, g: this.remember(w, this.git[where(w, ps)]), path: place(w, ps) })); // branch-first
     this.saveSticky(sp); // sticky
     const mains = new Set(list.filter((r) => r.g && !r.g.linked).map((r) => r.g.repo));
     const nested = (r) => r.g?.linked && mains.has(r.g.repo);
@@ -388,12 +389,12 @@ export default class Spaces extends View {
     });
   }
 
-  // branch-first: the title is the branch, so the tail is "repo \u00b7 space-name \u21912 \u21931".
-  // The repo goes for worktrees and when the space is named after it; the space name
-  // goes when it matches the branch.
-  gitTail(g, tree, name, t) {
+  // branch-first: the title is the space's own name if someone gave it one, else the branch,
+  // so the tail is "repo \u00b7 branch-or-space-name \u21912 \u21931". The repo goes for worktrees
+  // and when the space is named after it; the space name goes when it matches the branch.
+  gitTail(g, tree, name, named, t) { // branch-first
     const same = (a, b) => a.toLowerCase() === b.toLowerCase(); // branch-first
-    const folder = same(name, g.branch ?? "") ? "" : name; // branch-first
+    const folder = same(name, g.branch ?? "") ? "" : named ? g.branch ?? "" : name; // branch-first
     const repo = tree || same(g.name, name) ? "" : g.name; // branch-first
     const where = [repo, folder].filter(Boolean).join(" \u00b7 "); // branch-first
     return h_flex()
@@ -409,7 +410,7 @@ export default class Spaces extends View {
       .when(g.behind > 0, (el) => el.child(div().flex_none().text_color(t.ansi1).child(`\u2193${g.behind}`)));
   }
 
-  row({ w, i, g, tree }, t) {
+  row({ w, i, g, tree, path }, t) { // branch-first
     const on = w.active;
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(s => s.id === this.pressed);
     const extra = indicators(w.id, t, tree ? 33 : 0); // indicators agents indent: no avatar, so 11 indent + 13 icon + 9 gap
@@ -459,8 +460,8 @@ export default class Spaces extends View {
           .gap(9)
           .items_center()
           .when(Boolean(tree), el => el.pl(11).child(svg("mods/workspace-chrome/branch.svg").size(13).text_color(t.dim))) // indent: half the upstream worktree indent
-          .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(g?.branch ?? w.name)) // branch-first
-          .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()),
+          .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(w.named ? w.name : g?.branch ?? home(path ?? w.name))) // branch-first
+          .child(g ? this.gitTail(g, tree, w.name, w.named, t) : div().flex_1()), // branch-first
       )
       .when(Boolean(extra), (el) => el.child(extra)) // indicators
       .when(Boolean(bar), (el) => el.child(bar)); // agents
