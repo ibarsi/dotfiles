@@ -417,7 +417,7 @@ export default class Spaces extends View {
     return v_flex()
       .relative()
       .id(`space-${w.id}`)
-      .px(8)
+      .pl(13).pr(8) // agents: room for the bar, so a hovered PR chip stays clear of it
       .h(rowHeight({ tree }) + (extra ? 18 : 0)) // indicators
       .flex_none()
       .justify_center()

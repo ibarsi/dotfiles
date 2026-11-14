@@ -21,3 +21,7 @@ export const alpha = (color, aa) => (/^#[0-9a-f]{6}$/i.test(color ?? "") ? color
 const URGENCY = ["blocked", "done", "working", "idle"];
 const rank = (s) => (URGENCY.includes(s) ? URGENCY.indexOf(s) : URGENCY.length);
 export const segments = (statuses) => [...statuses].sort((a, b) => rank(a) - rank(b)).slice(0, 4);
+
+// Fingerprint of every agent's space and status: the bar repaints when it changes,
+// since spaces() only changes with a space's most urgent status.
+export const agentKey = (list) => list.map((a) => `${a.space}:${a.status}`).join(",");

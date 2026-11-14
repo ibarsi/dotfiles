@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus, alpha, segments } from "./status.js";
+import { prStatus, alpha, segments, agentKey } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -63,4 +63,12 @@ test("segments sorts agents by urgency and keeps the 4 most urgent", () => {
   assert.deepEqual(segments(["idle", "idle", "working", "done", "idle", "blocked"]), ["blocked", "done", "working", "idle"]);
   assert.deepEqual(segments(["weird", "idle"]), ["idle", "weird"]);
   assert.deepEqual(segments([]), []);
+});
+
+test("agentKey changes when any agent's status or count changes", () => {
+  const a = [{ space: "s1", status: "blocked" }, { space: "s1", status: "working" }];
+  assert.equal(agentKey(a), agentKey([...a]));
+  assert.notEqual(agentKey(a), agentKey([a[0], { space: "s1", status: "idle" }]));
+  assert.notEqual(agentKey(a), agentKey([...a, { space: "s1", status: "working" }]));
+  assert.notEqual(agentKey(a), agentKey([a[0], { space: "s2", status: "working" }]));
 });

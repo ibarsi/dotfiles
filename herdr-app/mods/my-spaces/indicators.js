@@ -8,7 +8,7 @@
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, spaces, panes, terminals, agents } from "herdr";
-import { prStatus, alpha, segments } from "./status.js";
+import { prStatus, alpha, segments, agentKey } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -72,7 +72,11 @@ export function startIndicators(cx) {
   tick(cx);
   cx.timer.every(PORTS_EVERY, tick);
   let seen = version;
-  cx.timer.every(1000, (cx) => { if (seen !== version) { seen = version; cx.notify(); } });
+  let seenAgents = agentKey(agents());
+  cx.timer.every(1000, (cx) => {
+    const now = agentKey(agents()); // agentBar: a second agent or a quieter one doesn't change spaces()
+    if (seen !== version || seenAgents !== now) { seen = version; seenAgents = now; cx.notify(); }
+  });
 }
 
 // Space id -> its terminal panes' [machine, cwd], in pane order.
@@ -226,7 +230,8 @@ export function indicators(id, t, indent) {
     return el.border_1().border_color(alpha(color, "00"))
       .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(text);
   };
-  // Shift left by the PR chip's px(7) + 1px border so its text lines up under the branch name
+  // Shift left by the PR chip's px(7) + 1px border so its text lines up under the branch name.
+  // The row's pl(13) (main.js) keeps that shifted chip clear of the 3px agent bar.
   return h_flex().when(indent >= 8, (el) => el.pl(indent - 8)).when(indent < 8, (el) => el.ml(indent - 8)).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
