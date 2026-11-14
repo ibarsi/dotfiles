@@ -59,7 +59,7 @@ the macOS bootstrap.
 | `git` | ✅ | ◐ aliases + stack defaults + optional delta |
 | `gitmoji` | ✅ | ✅ |
 | `glow` | ✅ | — macOS only |
-| `herdr-app` | ✅ | — macOS only |
+| `herdr-app` | ✅ | ✅ |
 | `k9s` | ✅ | — macOS only |
 | `karabiner` | ✅ | — macOS only |
 | `llama` | — Linux only | ✅ |

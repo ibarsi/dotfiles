@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "b53558bc36cdd87778cdd422290c1e0e94f03254",
-  "source_hash": "40937b933d43",
+  "git_revision": "c7a5d7e5d52b74a23a4873f84e738503658997fa",
+  "source_hash": "72683651bef7",
   "stats": {
     "aliases": 70,
     "functions": 45,
@@ -226,9 +226,9 @@ window.DOTFILES_DOCS_DATA = {
     {
       "name": "herdr-update",
       "command": "\"$DOTFILES/herdr-app/herdr-update\"",
-      "group": "General",
-      "source": "zsh/aliases.zsh",
-      "source_kind": "zsh alias"
+      "group": "Shortcuts",
+      "source": "system/.aliases",
+      "source_kind": "system alias"
     },
     {
       "name": "ip",
@@ -1239,9 +1239,9 @@ window.DOTFILES_DOCS_DATA = {
     {
       "slug": "omarchy-bootstrap",
       "title": "Omarchy bootstrap",
-      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, llama, Starship, VoxType, and Herdr app configuration on Linux without applying macOS defaults.",
       "details": [
-        "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
+        "Runs ten topic setup steps; platform and operational details live in omarchy/README.md.",
         "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
         "Refuses to run outside Linux and does not manage system packages."
       ],
@@ -1814,7 +1814,7 @@ window.DOTFILES_DOCS_DATA = {
         "state": "full"
       },
       "omarchy": {
-        "state": "absent"
+        "state": "full"
       }
     },
     {

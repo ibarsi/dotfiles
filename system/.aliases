@@ -11,6 +11,9 @@ alias cdd="cd ~/Desktop"
 alias cdl="cd ~/Downloads"
 alias cdp="cd ~/Projects"
 
+# herdr-update updates herdr-core here and on connected machines, then checks the Herdr app customizations.
+alias herdr-update='"$DOTFILES/herdr-app/herdr-update"'
+
 # Detect which `ls` flavor is in use
 if command -v eza > /dev/null; then
     alias ls="eza --icons=auto"

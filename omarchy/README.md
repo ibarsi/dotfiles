@@ -10,7 +10,7 @@ cd ~/dotfiles
 ./bootstrap-omarchy.sh
 ```
 
-The bootstrap resolves its repository root internally. It does not install packages or change your login shell. Its nine steps are:
+The bootstrap resolves its repository root internally. It does not install packages or change your login shell. Its ten steps are:
 
 1. Load the shared shell layer through [additive Bash](../bash/README.md).
 2. Add [Git aliases and optional delta](../git/README.md#configuration) without replacing the host config.
@@ -20,6 +20,7 @@ The bootstrap resolves its repository root internally. It does not install packa
 6. Link [llama presets and copy its systemd unit](../llama/README.md); root authentication is needed only when the unit drifts.
 7. Link the shared [Starship prompt](../theme/README.md#starship).
 8. Configure [VoxType vocabulary sync](../voice-to-text/README.md#omarchy---voxtype).
+9. Link the [Herdr app keys, settings, theme and `my-spaces` mod](../herdr-app/README.md); install and launch the app first.
 
 Re-running is safe, but the vocabulary installer may restart its service. The llama installer restarts its server when it updates the unit.
 

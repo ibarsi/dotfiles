@@ -33,4 +33,7 @@ bash "$DOTFILES_ROOT/theme/install-starship.sh"
 echo "Scheduling the VoxType vocabulary sync..."
 bash "$DOTFILES_ROOT/voice-to-text/install.sh"
 
+echo "Linking Herdr app keys, settings, theme and mods..."
+bash "$DOTFILES_ROOT/herdr-app/install.sh"
+
 echo "Omarchy setup complete. Restart Bash or run: source ~/.bashrc"

@@ -23,6 +23,9 @@ check_link "$HOME/.config/ibarsi-dotfiles/git-aliases.gitconfig"
 check_link "$HOME/.config/ibarsi-dotfiles/git-delta.gitconfig"
 check_link "$HOME/.config/ibarsi-dotfiles/git-stack.gitconfig"
 check_link "$HOME/.config/starship.toml"
+check_link "$HOME/.config/herdr-app/keys.json"
+check_link "$HOME/.config/herdr-app/settings.json"
+check_link "$HOME/.config/herdr-app/mods/my-spaces"
 
 check_bin() {
 	if command -v "$1" >/dev/null 2>&1; then
@@ -37,9 +40,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	check_link "$HOME/Library/Application Support/k9s/config.yaml"
 	check_link "$HOME/Library/Application Support/k9s/skins/catppuccin-mocha.yaml"
 	check_link "$HOME/.config/zed/settings.json"
-	check_link "$HOME/.config/herdr-app/keys.json"
-	check_link "$HOME/.config/herdr-app/settings.json"
-	check_link "$HOME/.config/herdr-app/mods/my-spaces"
 	check_link "$HOME/.config/zed/keymap.json"
 	check_link "$HOME/.config/mise/conf.d/00-dotfiles.toml"
 	check_link "$HOME/.config/glow/glow.yml"
