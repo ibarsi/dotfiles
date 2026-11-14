@@ -388,15 +388,14 @@ export default class Spaces extends View {
     });
   }
 
-  // Only what's unusual, after the name: "herdr \u00b7 spike \u21912 \u21931". The repo or
-  // branch goes when the name already says it (a worktree is named after its branch),
-  // and master/main go: nearly every space is on one.
+  // branch-first: the title is the branch, so the tail is "repo \u00b7 space-name \u21912 \u21931".
+  // The repo goes for worktrees and when the space is named after it; the space name
+  // goes when it matches the branch.
   gitTail(g, tree, name, t) {
-    const raw = g.branch ?? "detached";
-    const same = (a) => a.toLowerCase() === name.toLowerCase();
-    const branch = same(raw) || raw === "master" || raw === "main" ? "" : raw;
-    const repo = tree || same(g.name) ? "" : g.name;
-    const where = [repo, branch].filter(Boolean).join(" \u00b7 ");
+    const same = (a, b) => a.toLowerCase() === b.toLowerCase(); // branch-first
+    const folder = same(name, g.branch ?? "") ? "" : name; // branch-first
+    const repo = tree || same(g.name, name) ? "" : g.name; // branch-first
+    const where = [repo, folder].filter(Boolean).join(" \u00b7 "); // branch-first
     return h_flex()
       .flex_1()
       .min_w(0)
@@ -463,7 +462,7 @@ export default class Spaces extends View {
           .items_center()
           .when(Boolean(tree), el => el.pl(22).child(svg("mods/workspace-chrome/branch.svg").size(13).text_color(t.dim)))
           .when(!tree, el => el.child(h_flex().size(18).flex_none().rounded(5).bg(fill).items_center().justify_center().text_size(10.5).font_bold().text_color("#ffffff").child([...w.name][0]?.toUpperCase() ?? "?")))
-          .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(w.name))
+          .child(div().flex_shrink(0).max_w(150).truncate().text_color(t.foreground).child(g?.branch ?? w.name)) // branch-first
           .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()),
       )
       .when(Boolean(extra), (el) => el.child(extra)); // indicators
