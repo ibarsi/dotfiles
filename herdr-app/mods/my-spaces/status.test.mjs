@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus } from "./status.js";
+import { prStatus, alpha } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -48,4 +48,12 @@ test("own reviews don't count", () => {
 
 test("no commits and null author", () => {
   assert.equal(prStatus(pr({}, [review(null, later)], [])), "※");
+});
+
+test("alpha appends a two-digit alpha only to #rrggbb colours", () => {
+  assert.equal(alpha("#a6e3a1", "2e"), "#a6e3a12e");
+  assert.equal(alpha("#ABCDEF", "73"), "#ABCDEF73");
+  assert.equal(alpha("#abc", "2e"), null);
+  assert.equal(alpha("#a6e3a1ff", "2e"), null);
+  assert.equal(alpha(undefined, "2e"), null);
 });

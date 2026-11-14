@@ -13,3 +13,6 @@ export function prStatus(pr) {
     .map((c) => c.committedDate).sort().pop() ?? "";
   return pr.reviews.nodes.some((v) => v.author?.login !== me && v.submittedAt > push) ? "※" : "";
 }
+
+// `color` with a two-hex-digit alpha appended, or null unless it's plain #rrggbb.
+export const alpha = (color, aa) => (/^#[0-9a-f]{6}$/i.test(color ?? "") ? color + aa : null);

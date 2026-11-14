@@ -420,7 +420,7 @@ export default class Spaces extends View {
       .relative()
       .id(`space-${w.id}`)
       .px(8)
-      .h(rowHeight({ tree }) + (extra ? 15 : 0)) // indicators
+      .h(rowHeight({ tree }) + (extra ? 18 : 0)) // indicators
       .flex_none()
       .justify_center()
       .rounded(8)

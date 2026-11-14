@@ -8,7 +8,7 @@
 import { div } from "gpui-kit";
 import { h_flex } from "gpui-base";
 import { exec, spaces, panes, terminals } from "herdr";
-import { prStatus } from "./status.js";
+import { prStatus, alpha } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -215,18 +215,24 @@ export function indicators(id, t, indent) {
   const ci = { merged: t.mauve ?? t.ansi5, queued: t.ansi6, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
   const status = { "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
   const deploy = { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 };
-  const chip = (key, text, color) => div().id(`${key}-${id}`).flex_none().px(4).rounded(4)
-    .text_color(color).cursor_pointer()
-    // Row hover already paints t.hover, so the chip steps up a shade. Background only:
-    // text_color inside hover() makes the app silently drop the frame (0.1.15).
-    .hover((s) => s.bg(t.selected)).child(text);
+  // Bigger hit box; hover tints and outlines the chip in its own colour. Only bg and
+  // border_color on hover: text_color inside hover() makes the app silently drop the
+  // frame (0.1.15). The border is always there (transparent at rest) so hover can't resize.
+  const chip = (key, text, color) => {
+    const tint = alpha(color, "2e");
+    const el = div().id(`${key}-${id}`).flex_none().px(7).py(2).rounded(4).text_color(color).cursor_pointer();
+    // ponytail: non-#rrggbb theme colours get today's plain t.selected hover, no outline
+    if (!tint) return el.hover((s) => s.bg(t.selected)).child(text);
+    return el.border_1().border_color(alpha(color, "00"))
+      .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(text);
+  };
   return h_flex().pl(indent - 4).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
       // Keep the press from selecting or dragging the space row underneath.
       .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
       .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
-    .when(Boolean(po?.length), (el) => el.child(chip("ports", `:${po.join(",")}`, t.dim).flex_shrink(1).min_w(0).truncate()))
+    .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
       .child(slot(p.deploy && chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
@@ -234,8 +240,8 @@ export function indicators(id, t, indent) {
 }
 
 // Fixed-width column so the deploy and status icons never shift when the other
-// one comes or goes. Wide enough for the widest glyph (॥, ※) at 11px.
-const SLOT = 18;
+// one comes or goes. Wide enough for the widest glyph (॥, ※) at 11px plus a hover margin.
+const SLOT = 24;
 const slot = (el) => (el ? el.w(SLOT).px(0).flex().justify_center() : div().flex_none().w(SLOT));
 
 // Opens in the default browser on this computer (open on macOS, xdg-open elsewhere).
