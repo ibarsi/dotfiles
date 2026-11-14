@@ -212,7 +212,7 @@ export function indicators(id, t, indent) {
   const p = prs[id];
   const po = ports[id];
   if (!p && !po?.length) return null;
-  const ci = { merged: t.ansi5, queued: t.ansi6, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
+  const ci = { merged: t.mauve ?? t.ansi5, queued: t.ansi6, failed: t.ansi1, running: t.ansi3, passed: t.ansi2 };
   const status = { "↯": t.peach ?? t.ansi3, "✓": t.ansi2, "※": t.ansi4 };
   const deploy = { "▲": t.ansi2, "△": t.ansi3, "▼": t.ansi1 };
   const chip = (key, text, color) => div().id(`${key}-${id}`).flex_none().px(4).rounded(4)

@@ -63,6 +63,7 @@ cat >"$APP_DIR/themes/catppuccin-mocha.json" <<JSON
     "muted": "$CATPPUCCIN_SUBTEXT0",
     "dim": "$CATPPUCCIN_OVERLAY1",
     "peach": "$CATPPUCCIN_PEACH",
+    "mauve": "$CATPPUCCIN_MAUVE",
     "accent": "$CATPPUCCIN_BLUE",
     "accent_foreground": "$CATPPUCCIN_CRUST",
     "solid": "$CATPPUCCIN_BLUE",
