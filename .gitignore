@@ -9,3 +9,7 @@ system/.extra
 
 # Build artifacts
 __pycache__/
+
+# Superpowers brainstorming mockups and specs
+.superpowers/
+docs/superpowers/
