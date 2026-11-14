@@ -1,13 +1,13 @@
 {
-  "git_revision": "d835bb0cb14237317cce4e754a5a9edf060289d2",
-  "source_hash": "300e9f2afeb1",
+  "git_revision": "b53558bc36cdd87778cdd422290c1e0e94f03254",
+  "source_hash": "40937b933d43",
   "stats": {
-    "aliases": 69,
+    "aliases": 70,
     "functions": 45,
     "git": 56,
     "features": 26,
     "tasks": 15,
-    "bootstrap_links": 16,
+    "bootstrap_links": 15,
     "brews": 37,
     "casks": 26,
     "platforms": 19
@@ -71,7 +71,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex grok-build && mise upgrade herdr",
+      "command": "brew upgrade claude-code@latest codex grok-build && herdr-update",
       "group": "General",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -222,6 +222,13 @@
       "group": "Shortcuts",
       "source": "system/.aliases",
       "source_kind": "system alias"
+    },
+    {
+      "name": "herdr-update",
+      "command": "\"$DOTFILES/herdr-app/herdr-update\"",
+      "group": "General",
+      "source": "zsh/aliases.zsh",
+      "source_kind": "zsh alias"
     },
     {
       "name": "ip",
@@ -773,7 +780,7 @@
     },
     {
       "name": "upall",
-      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
+      "summary": "Upgrade Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS.",
       "usage": "upall [--restart]",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -787,7 +794,7 @@
     },
     {
       "name": "wtclean",
-      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor where a live hc terminal is. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
       "usage": "wtclean [-n|--dry-run]",
       "source": "system/.functions",
       "source_kind": "system function"
@@ -860,14 +867,14 @@
     {
       "name": "upall",
       "command": "upall [--restart]",
-      "summary": "Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.",
+      "summary": "Upgrade Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS.",
       "kind": "function",
       "source": "system/.functions"
     },
     {
       "name": "wtclean",
       "command": "wtclean [-n|--dry-run]",
-      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor open as a herdr workspace. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
+      "summary": "Remove worktrees of the current repo that are neither on a branch with one of your open PRs nor where a live hc terminal is. Never uses --force, so dirty worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]",
       "kind": "function",
       "source": "system/.functions"
     },
@@ -1232,7 +1239,7 @@
     {
       "slug": "omarchy-bootstrap",
       "title": "Omarchy bootstrap",
-      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, Herdr, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
+      "summary": "Adds shared Bash, Git/delta, GitHub aliases/extensions, Gitmoji, tmux, llama, Starship, and VoxType configuration on Linux without applying macOS defaults.",
       "details": [
         "Runs nine topic setup steps; platform and operational details live in omarchy/README.md.",
         "Preserves Omarchy's existing Bash, Git, and tmux configuration.",
@@ -1615,14 +1622,9 @@
       "source": "glow/install.sh"
     },
     {
-      "source_path": "herdr/config.toml",
-      "target_path": "~/.config/herdr/config.toml",
-      "source": "herdr/install.sh"
-    },
-    {
-      "source_path": "herdr/herdr-move-workspace",
-      "target_path": "~/.config/herdr/herdr-move-workspace",
-      "source": "herdr/install.sh"
+      "source_path": "herdr-app/$f",
+      "target_path": "~/.config/herdr-app/$f",
+      "source": "herdr-app/install.sh"
     },
     {
       "source_path": "mise/config.toml",
@@ -1807,12 +1809,12 @@
       }
     },
     {
-      "topic": "herdr",
+      "topic": "herdr-app",
       "macos": {
         "state": "full"
       },
       "omarchy": {
-        "state": "full"
+        "state": "absent"
       }
     },
     {

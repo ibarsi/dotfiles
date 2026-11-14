@@ -17,16 +17,15 @@ The bootstrap resolves its repository root internally. It does not install packa
 3. Install [GitHub CLI aliases and extensions](../gh/README.md) when `gh` is available.
 4. Link [Gitmoji preferences](../gitmoji/README.md).
 5. Link [tmux](../tmux/README.md), preserving the Omarchy base configuration.
-6. Link [Herdr config and sidebar service](../herdr/README.md).
-7. Link [llama presets and copy its systemd unit](../llama/README.md); root authentication is needed only when the unit drifts.
-8. Link the shared [Starship prompt](../theme/README.md#starship).
-9. Configure [VoxType vocabulary sync](../voice-to-text/README.md#omarchy---voxtype).
+6. Link [llama presets and copy its systemd unit](../llama/README.md); root authentication is needed only when the unit drifts.
+7. Link the shared [Starship prompt](../theme/README.md#starship).
+8. Configure [VoxType vocabulary sync](../voice-to-text/README.md#omarchy---voxtype).
 
-Re-running is safe, but Herdr and vocabulary installers may restart their services. The llama installer restarts its server when it updates the unit.
+Re-running is safe, but the vocabulary installer may restart its service. The llama installer restarts its server when it updates the unit.
 
 ## Prerequisites and platform boundaries
 
-Install required applications through the host package manager before running their setup. The shell initializes zoxide, Starship and mise only when available; GitHub CLI setup skips when `gh` is missing. Herdr/sidebar, tmux, llama.cpp and VoxType need their respective tools installed to work. Follow the topic README for service and model prerequisites.
+Install required applications through the host package manager before running their setup. The shell initializes zoxide, Starship and mise only when available; GitHub CLI setup skips when `gh` is missing. tmux, llama.cpp and VoxType need their respective tools installed to work. Follow the topic README for service and model prerequisites.
 
 Other app configs remain host-managed. Consult the generated [platform matrix](../README.md#platform-support) for exactly which installers run; a macOS-only installer does not mean its portable shell helpers are unavailable on Linux.
 
@@ -36,6 +35,6 @@ See [benchall and its Arch toolchain](../system/docs/benchmarking.md) for usage,
 
 ## Verification
 
-Start a fresh Bash shell and confirm the shared helpers load. Inspect tmux/Herdr links and the user services described in their READMEs. Run `mise run bootstrap-verify` and `mise run ai-doctor` from the repository root; these checks may report intentionally host-managed tools or incomplete prerequisites.
+Start a fresh Bash shell and confirm the shared helpers load. Inspect tmux links and the user services described in their READMEs. Run `mise run bootstrap-verify` and `mise run ai-doctor` from the repository root; these checks may report intentionally host-managed tools or incomplete prerequisites.
 
 [Repository index](../README.md)

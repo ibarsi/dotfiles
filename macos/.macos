@@ -104,8 +104,8 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain KeyRepeat -int 1
 defaults write NSGlobalDomain InitialKeyRepeat -int 20
 
-# Free Control+arrow for Herdr. macOS otherwise consumes the chord before the
-# terminal sees it: Control+Up is Mission Control, Control+Down is Application
+# Free Control+arrow for the Herdr app (its ctrl-space ctrl-arrow pane swaps,
+# herdr-app/keys.json). macOS otherwise consumes the chord before the app sees it: Control+Up is Mission Control, Control+Down is Application
 # windows, and Control+Left/Right move between Spaces. Each action has a paired
 # "slow" id for the fn variant. Show Desktop (F11) stays as it is.
 disable_symbolic_hotkey() {

@@ -16,6 +16,7 @@ Applies to the entire dotfiles repo.
 - Prefer deterministic checks over stylistic guesswork.
 - Never hardcode theme hex colours in configs that can read variables — reference `CATPPUCCIN_*` from `theme/palette.sh`. See the colour rule in `theme/README.md`.
 - When user-facing behavior changes, update the owning topic’s `README.md` or linked topic-local docs. Document a workflow once and cross-link related topics. Keep `macos/README.md` and `omarchy/README.md` focused on platform bootstrap, and root `README.md` limited to the landing page, install steps, Quick Commands, linked topic index and the generated platform matrix. See `docs/README.md` for documentation conventions.
+- Herdr app changes live in `herdr-app/`. Edit the tracked files there, never `~/.config/herdr-app/` copies. Changes to `herdr-app/mods/my-spaces/main.js` need a line marker (see `herdr-app/README.md`), and `herdr-update --check` must pass afterwards.
 - Regenerate `docs/site-data.json` and keep the `docs/` site accurate — and the platform matrix embedded in `README.md` current — when aliases, functions, tasks, bootstrap links, topic install scripts, or user-visible features change. Run `mise run docs-build`.
 
 ## Safety

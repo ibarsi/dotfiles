@@ -125,11 +125,11 @@ function dotfiles-sync() {
     )
 }
 
-# Upgrade Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS.
+# Upgrade Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS.
 function upall() {
     if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
         echo "Usage: upall [--restart]"
-        echo "Update Homebrew, mise tools and GitHub CLI extensions, then Apple updates on macOS."
+        echo "Update Homebrew, mise tools, herdr-core and GitHub CLI extensions, then Apple updates on macOS."
         echo "  --restart  Automatically restart macOS if an update requires it."
         return 0
     fi
@@ -173,6 +173,14 @@ function upall() {
 
     echo "== mise up =="
     mise up -C "$repo_root" || return
+
+    # Same Herdr step as aiup: herdr-core here and on connected machines, then the
+    # app compatibility report. A report with things to fix shouldn't block the rest.
+    if command -v hc >/dev/null 2>&1 && [[ -x "$repo_root/herdr-app/herdr-update" ]]; then
+        echo "== Herdr =="
+        "$repo_root/herdr-app/herdr-update" ||
+            echo "upall: herdr-update reported problems (see above); continuing" >&2
+    fi
 
     if command -v gh >/dev/null 2>&1; then
         echo "== GitHub CLI extensions =="
@@ -818,10 +826,10 @@ function fwt() {
 }
 
 # Remove worktrees of the current repo that are neither on a branch with one of
-# your open PRs nor open as a herdr workspace. Never uses --force, so dirty
+# your open PRs nor where a live hc terminal is. Never uses --force, so dirty
 # worktrees are refused. Branches are kept. Usage: wtclean [-n|--dry-run]
 function wtclean() {
-    local dry_run=0 tool current pr_branches herdr_json herdr_paths
+    local dry_run=0 tool current pr_branches hc_json hc_cwds
     local wt_list wt_dir wt_branch notes doomed removed=0 failed=0 kept=0 reply dir root
 
     case "${1:-}" in
@@ -833,7 +841,7 @@ function wtclean() {
             ;;
     esac
 
-    for tool in git gh herdr jq; do
+    for tool in git gh hc jq; do
         command -v "$tool" >/dev/null 2>&1 || {
             echo "wtclean: $tool is not installed or not in PATH" >&2
             return 1
@@ -850,12 +858,12 @@ function wtclean() {
         echo "wtclean: could not list open PRs, nothing removed" >&2
         return 1
     }
-    herdr_json=$(herdr workspace list) || {
-        echo "wtclean: could not list herdr workspaces (is the herdr server running?), nothing removed" >&2
+    hc_json=$(hc ls) || {
+        echo "wtclean: could not list hc terminals (is herdr-core running?), nothing removed" >&2
         return 1
     }
-    herdr_paths=$(printf '%s' "$herdr_json" | jq -r '.result.workspaces[].worktree.checkout_path // empty') || {
-        echo "wtclean: unexpected herdr workspace output, nothing removed" >&2
+    hc_cwds=$(printf '%s' "$hc_json" | jq -r '.terminals[].cwd // empty') || {
+        echo "wtclean: unexpected hc ls output, nothing removed" >&2
         return 1
     }
 
@@ -871,7 +879,8 @@ function wtclean() {
     while IFS=$'\t' read -r wt_dir wt_branch; do
         [[ -z "$wt_dir" ]] && continue
         if [[ "$wt_dir" == "$current" ]] ||
-            printf '%s\n' "$herdr_paths" | grep -qxF -- "$wt_dir" ||
+            # A terminal in the worktree or any folder under it keeps it
+            printf '%s\n' "$hc_cwds" | awk -v d="$wt_dir" '$0 == d || index($0, d "/") == 1 { f = 1 } END { exit !f }' ||
             printf '%s\n' "$pr_branches" | grep -qxF -- "$wt_branch"; then
             kept=$((kept + 1))
             continue
@@ -885,7 +894,7 @@ function wtclean() {
     done <<<"$wt_list"
 
     if [[ -z "$doomed" ]]; then
-        echo "Nothing to remove ($kept worktree(s) kept: current, open PR, or open in herdr)"
+        echo "Nothing to remove ($kept worktree(s) kept: current, open PR, or a live hc terminal in it)"
         return 0
     fi
 
