@@ -7,7 +7,7 @@
 
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { exec, spaces, panes, terminals, agents } from "herdr";
+import { exec, run, spaces, panes, terminals, agents } from "herdr";
 import { prStatus, alpha, segments, agentKey } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
@@ -233,16 +233,33 @@ export function indicators(id, t, indent) {
   // Shift left by the PR chip's px(7) + 1px border so its text lines up under the branch name.
   // The row's pl(13) (main.js) keeps that shifted chip clear of the 3px agent bar.
   return h_flex().when(indent >= 8, (el) => el.pl(indent - 8)).when(indent < 8, (el) => el.ml(indent - 8)).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
-    .when(Boolean(p), (el) => el.child(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim)
-      // Keep the press from selecting or dragging the space row underneath.
-      .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
-      .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
-      .on_click((_e, cx) => { cx.stop_propagation(); openUrl(p.url); })))
+    .when(Boolean(p), (el) => el.child(clickable(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim), () => openUrl(p.url))))
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
       .child(slot(p.deploy && chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
-      .child(slot(p.status && chip("status", p.status, status[p.status]))));
+      .child(slot(p.status && (p.status === "↯" ? clickable(chip("status", p.status, status[p.status]), () => rebase(id)) : chip("status", p.status, status[p.status])))));
+}
+
+// Keep the press from selecting or dragging the space row underneath.
+const clickable = (el, fn) => el
+  .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
+  .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
+  .on_click((_e, cx) => { cx.stop_propagation(); fn(); });
+
+// Clicking ↯ splits a Claude pane into space `id`'s shown tab to resolve the conflict,
+// without switching to the space. Does nothing while one is still running there.
+const REBASE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"];
+function rebase(id) {
+  const running = terminals().some((t) => {
+    const sp = t.labels?.["herdr.space"];
+    return t.state === "live" && sp && (t.machine ? `${t.machine}/${sp}` : sp) === id
+      && REBASE_ARGV.every((a, i) => t.argv?.[i] === a);
+  });
+  if (running) return;
+  const tab = spaces().find((s) => s.id === id)?.tabs.find((tb) => tb.active);
+  const pane = tab && panes().find((p) => p.tab === tab.id && p.terminal);
+  if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv: REBASE_ARGV });
 }
 
 // Fixed-width column so the deploy and status icons never shift when the other

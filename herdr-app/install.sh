@@ -9,11 +9,16 @@ APP_DIR="$HOME/.config/herdr-app"
 mkdir -p "$APP_DIR/themes"
 
 # The app applies these live; an invalid edit leaves <name>.error beside it.
+# Settings are per OS: zoom (Cmd/Ctrl +/-) writes through the link, so one
+# shared file would make each machine clobber the other's zoom.
+[[ $(uname -s) == Darwin ]] && os=macos || os=linux
 for f in keys.json settings.json; do
 	if [[ -f "$APP_DIR/$f" && ! -L "$APP_DIR/$f" ]]; then
 		mv "$APP_DIR/$f" "$APP_DIR/$f.backup.$(date +%Y%m%d%H%M%S)"
 	fi
-	ln -sf "$DOTFILES_ROOT/herdr-app/$f" "$APP_DIR/$f"
+	src=$f
+	[[ $f == settings.json ]] && src=settings.$os.json
+	ln -sf "$DOTFILES_ROOT/herdr-app/$src" "$APP_DIR/$f"
 done
 
 # my-spaces is a clone of Herdr's spaces mod plus PR/port indicators. The app

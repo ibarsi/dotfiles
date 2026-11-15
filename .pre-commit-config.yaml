@@ -20,3 +20,11 @@ repos:
     hooks:
       - id: gitleaks
         args: ["protect", "--staged", "--verbose"]
+  - repo: local
+    hooks:
+      - id: herdr-settings-sync
+        name: herdr-app settings in sync (except zoom)
+        entry: mise run herdr-settings-check
+        language: system
+        files: ^herdr-app/settings\.(macos|linux)\.json$
+        pass_filenames: false
