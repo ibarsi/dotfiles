@@ -135,11 +135,29 @@ block appended to the `panel-body` stack in the generated `my-main.json`.
 Parsing the bot's `<!-- branch-deploy-status -->` comment lives in
 `mods/deploys/parse.js` (no imports, tested with `node --test
 herdr-app/mods/deploys/parse.test.mjs`), the same split `my-spaces/status.js`
-uses. `indicators.js` publishes each space's `{repo, pr}` through
-`setShared("deploys.targets", …)`, only when it changes; the panel fetches
-the comment once per space switch (showing a spinner, never the previous
-space's stale content), on a manual refresh, and every 60s while shown, and
-nothing while hidden.
+uses. `indicators.js` publishes each space's `{repo, branch, pr}` through
+`setShared("deploys.targets", …)`, only when it changes (`pr` is null without
+an open PR — a local deploy is branch-based, not PR-based); the panel fetches
+once per space switch (showing a spinner, never the previous space's stale
+content), on a manual refresh, and every 60s while shown, and nothing while
+hidden.
+
+The panel renders one section per source, and `this.sources` is exactly the
+array the original design left room for: a "Branch deploy" entry when there's
+an open PR, and a "Local" entry for the `maximum-dev` Kind cluster, shown
+whenever a branch is known (PR or not). `mods/deploys/local.js` (no imports,
+tested with `node --test herdr-app/mods/deploys/local.test.mjs`) mirrors
+`usemaximum/maximum`'s `dev-cd/devcd` naming: a branch slugifies into a
+`bnk-max1-<slug>` namespace and a `max1-dev-us-lcl-k1-bnk<slug>` ArgoCD app
+(local is branch-slug-keyed, remote is PR-number-keyed — not the same
+scheme). The Local section's state is one of: the Kind cluster not running,
+the branch not deployed to it, or its parent app's sync/health, with its
+child apps (`mesh`, `databases`, `infra`, `platform`, `ingress`, `test`)
+checked lazily on click like remote stages are. Local `argocd` calls use
+`--core --kube-context kind-maximum-dev` against a namespace-scoped temp
+kubeconfig copy (the same trick `dev-tooling/tasks/argocd/client.py`'s
+`CoreClient` uses) instead of `--server`/`--grpc-web` — there's no login step
+locally, so the "Not logged in to ArgoCD" row never applies to it.
 
 Clicking the sidebar icon from a non-active space switches spaces first.
 `my-tabs`' per-space panel memory can revert that switch's panel selection
