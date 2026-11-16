@@ -438,14 +438,10 @@ export default class Spaces extends View {
     });
   }
 
-  // branch-first: the title is the space's own name if someone gave it one, else the branch,
-  // so the tail is "repo \u00b7 branch-or-space-name \u21912 \u21931". The repo goes for worktrees
-  // and when the space is named after it; the space name goes when it matches the branch.
-  gitTail(g, tree, name, named, t) { // branch-first
-    const same = (a, b) => a.toLowerCase() === b.toLowerCase(); // branch-first
-    const folder = same(name, g.branch ?? "") ? "" : named ? g.branch ?? "" : name; // branch-first
-    const repo = tree || same(g.name, name) ? "" : g.name; // branch-first
-    const where = [repo, folder].filter(Boolean).join(" \u00b7 "); // branch-first
+  // branch-first: the tail shows only the repo and ahead/behind counts. No branch or
+  // space name repeats on the right; the repo goes for worktrees and matching names.
+  gitTail(g, tree, name, t) { // branch-first
+    const where = tree || g.name.toLowerCase() === name.toLowerCase() ? "" : g.name; // branch-first
     return h_flex()
       .flex_auto()
       .min_w(where ? SIDE_MIN : 0)
@@ -510,7 +506,7 @@ export default class Spaces extends View {
           .items_center()
           .when(Boolean(tree), el => el.pl(11).child(svg("mods/workspace-chrome/branch.svg").size(13).flex_none().text_color(t.dim))) // indent: half the upstream worktree indent
           .child(div().flex_initial().min_w(SIDE_MIN).truncate().text_color(t.foreground).child(w.named ? w.name : g?.branch ?? home(path ?? w.name))) // branch-first
-          .child(g ? this.gitTail(g, tree, w.name, w.named, t) : div().flex_1()), // branch-first
+          .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()), // branch-first
       )
       .when(Boolean(extra), (el) => el.child(extra)) // indicators
       .when(Boolean(bar), (el) => el.child(bar)); // agents

@@ -75,9 +75,9 @@ Those lines are marked `// agents`. The collapsed rail still shows one dot.
 
 Each row's white title is the name you gave the space (Shift-R), else its git
 branch, else the folder its first terminal is in (`~` for the home folder). The
-grey text on the right is the repo, unless the row is a worktree or the space is
-named after the repo, then the branch for a renamed space or the space name for
-the rest, unless it matches the branch. Those lines are marked `// branch-first`.
+grey text on the right shows only the repo, omitted for worktrees and spaces
+named after the repo. Branch and space names are not repeated there; ahead/behind
+counts remain. Those lines are marked `// branch-first`.
 
 Worktree rows sit at half the upstream indent (11px). Those lines are marked
 `// indent`.
