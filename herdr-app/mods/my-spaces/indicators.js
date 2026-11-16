@@ -275,26 +275,33 @@ export function indicators(id, t, indent) {
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
-      .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), () => openDeploys(id))))
+      .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openDeploys(id, cx))))
       .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id)) : iconChip("status", p.status, status[p.status])))));
 }
 
 // Switches to space `id` if needed, then shows its Deploys panel. Clicking the
 // chip of the already-active space while its Deploys panel is open hides it.
-function openDeploys(id) {
+function openDeploys(id, cx) {
   const active = spaces().find((s) => s.active)?.id;
-  const here = active === id && find(layout(), "panel-body")?.active === "deploys" && find(layout(), "panel")?.hidden !== true;
-  if (active !== id) run("space.select", { id });
-  if (here) { run("layout.hide", { id: "panel" }); return; }
-  run("layout.select", { stack: "panel-body", child: "deploys" });
-  run("layout.show", { id: "panel" });
+  const openPanel = () => { run("layout.select", { stack: "panel-body", child: "deploys" }); run("layout.show", { id: "panel" }); };
+  if (active === id) {
+    const here = find(layout(), "panel-body")?.active === "deploys" && find(layout(), "panel")?.hidden !== true;
+    if (here) run("layout.hide", { id: "panel" });
+    else openPanel();
+    return;
+  }
+  run("space.select", { id });
+  openPanel();
+  // tabs' per-space panel memory can revert this within 1s of a space switch
+  // (its own pending-restore window); reassert once that's settled.
+  cx.timer.after(1100, () => openPanel());
 }
 
 // Keep the press from selecting or dragging the space row underneath.
 const clickable = (el, fn) => el
   .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
   .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
-  .on_click((_e, cx) => { cx.stop_propagation(); fn(); });
+  .on_click((_e, cx) => { cx.stop_propagation(); fn(cx); });
 
 // Clicking ↯ splits a Claude pane into space `id`'s shown tab to resolve the conflict,
 // without switching to the space. Does nothing while one is still running there.
