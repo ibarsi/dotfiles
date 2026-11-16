@@ -5,7 +5,7 @@
 // Line under the space name: #PR (coloured by CI, grey while a draft, teal in the merge queue) and listening ports on the left,
 // one review/merge status icon (status.js) and the deploy icon on the right.
 
-import { div } from "gpui-kit";
+import { div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents } from "herdr";
 import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
@@ -27,6 +27,18 @@ const PR_FRAGMENT = `fragment P on PullRequest {
 
 const CI = { FAILURE: "failed", ERROR: "failed", PENDING: "running", EXPECTED: "running", SUCCESS: "passed" };
 const DEPLOY = { SUCCESS: "▲", IN_PROGRESS: "△", QUEUED: "△", PENDING: "△", WAITING: "△", FAILURE: "▼", ERROR: "▼", INACTIVE: "॥" };
+
+// Glyphs remain internal status keys; all visible status art uses the same SVG grid.
+const ICON_SIZE = 14;
+const ICONS = {
+  "▲": ["deploy-success", "Deployment succeeded"],
+  "△": ["deploy-pending", "Deployment pending or in progress"],
+  "▼": ["deploy-failed", "Deployment failed"],
+  "॥": ["deploy-inactive", "Deployment inactive"],
+  "↯": ["merge-conflict", "Merge conflict — click to start a rebase"],
+  "✓": ["approved", "Review approved"],
+  "※": ["review-comment", "Changes requested or a new review since your last push"],
+};
 
 // "<n> <url> <branch>" for the checkout in each folder argument: upstream branch
 // name when set. One exec per machine: herdr-core refuses more than 16 at once.
@@ -222,13 +234,18 @@ export function indicators(id, t, indent) {
   // Bigger hit box; hover tints and outlines the chip in its own colour. Only bg and
   // border_color on hover: text_color inside hover() makes the app silently drop the
   // frame (0.1.15). The border is always there (transparent at rest) so hover can't resize.
-  const chip = (key, text, color) => {
+  const chip = (key, content, color) => {
     const tint = alpha(color, "2e");
     const el = div().id(`${key}-${id}`).flex_none().px(7).py(2).rounded(4).text_color(color).cursor_pointer();
     // ponytail: non-#rrggbb theme colours get today's plain t.selected hover, no outline
-    if (!tint) return el.hover((s) => s.bg(t.selected)).child(text);
+    if (!tint) return el.hover((s) => s.bg(t.selected)).child(content);
     return el.border_1().border_color(alpha(color, "00"))
-      .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(text);
+      .hover((s) => s.bg(tint).border_color(alpha(color, "73"))).child(content);
+  };
+  const iconChip = (key, state, color) => {
+    const [name, label] = ICONS[state];
+    return chip(key, svg(`mods/my-spaces/icons/${name}.svg`).size(ICON_SIZE).flex_none().text_color(color), color)
+      .h(20).py(0).items_center().tooltip(label);
   };
   // Shift left by the PR chip's px(7) + 1px border so its text lines up under the branch name.
   // The row's pl(13) (main.js) keeps that shifted chip clear of the 3px agent bar.
@@ -237,8 +254,8 @@ export function indicators(id, t, indent) {
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
-      .child(slot(p.deploy && chip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
-      .child(slot(p.status && (p.status === "↯" ? clickable(chip("status", p.status, status[p.status]), () => rebase(id)) : chip("status", p.status, status[p.status])))));
+      .child(slot(p.deploy && iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
+      .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id)) : iconChip("status", p.status, status[p.status])))));
 }
 
 // Keep the press from selecting or dragging the space row underneath.
@@ -260,7 +277,7 @@ function rebase(id) {
 }
 
 // Fixed-width column so the deploy and status icons never shift when the other
-// one comes or goes. Wide enough for the widest glyph (॥, ※) at 11px plus a hover margin.
+// one comes or goes. Each 14px SVG sits in a 24px column with a hover margin.
 const SLOT = 24;
 const slot = (el) => (el ? el.w(SLOT).px(0).flex().justify_center() : div().flex_none().w(SLOT));
 
