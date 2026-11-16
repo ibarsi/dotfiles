@@ -25,3 +25,13 @@ export const segments = (statuses) => [...statuses].sort((a, b) => rank(a) - ran
 // Fingerprint of every agent's space and status: the bar repaints when it changes,
 // since spaces() only changes with a space's most urgent status.
 export const agentKey = (list) => list.map((a) => `${a.space}:${a.status}`).join(",");
+
+// The sidebar space id a core terminal belongs to, or null. Remote space ids carry a
+// `machine/` prefix that the terminal's own label omits; terminals name their machine
+// only through `address` (omen/t1k), so read it from there.
+export function terminalSpace(t) {
+  const sp = t.labels?.["herdr.space"];
+  if (!sp) return null;
+  const m = t.machine ?? (t.address?.includes("/") ? t.address.split("/")[0] : null);
+  return m ? `${m}/${sp}` : sp;
+}

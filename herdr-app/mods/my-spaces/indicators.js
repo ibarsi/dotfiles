@@ -8,7 +8,7 @@
 import { div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents } from "herdr";
-import { prStatus, alpha, segments, agentKey } from "./status.js";
+import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -180,10 +180,10 @@ function refreshPorts(cx) {
     try {
       const shells = {}; // machine -> { shell pid -> space id }
       for (const t of terminals()) {
-        const sp = t.labels?.["herdr.space"];
+        const sp = terminalSpace(t);
         if (t.state !== "live" || !t.pid || !sp) continue;
-        const m = t.machine ?? null;
-        (shells[m ?? ""] ??= {})[t.pid] = m ? `${m}/${sp}` : sp;
+        const m = sp.includes("/") ? sp.split("/")[0] : "";
+        (shells[m] ??= {})[t.pid] = sp;
       }
       const next = {};
       await Promise.all(Object.entries(shells).map(async ([m, shell]) => {
@@ -251,11 +251,8 @@ const clickable = (el, fn) => el
 // without switching to the space. Does nothing while one is still running there.
 const REBASE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"];
 function rebase(id) {
-  const running = terminals().some((t) => {
-    const sp = t.labels?.["herdr.space"];
-    return t.state === "live" && sp && (t.machine ? `${t.machine}/${sp}` : sp) === id
-      && REBASE_ARGV.every((a, i) => t.argv?.[i] === a);
-  });
+  const running = terminals().some((t) => t.state === "live" && terminalSpace(t) === id
+    && REBASE_ARGV.every((a, i) => t.argv?.[i] === a));
   if (running) return;
   const tab = spaces().find((s) => s.id === id)?.tabs.find((tb) => tb.active);
   const pane = tab && panes().find((p) => p.tab === tab.id && p.terminal);

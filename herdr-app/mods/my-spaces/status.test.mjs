@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus, alpha, segments, agentKey } from "./status.js";
+import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -71,4 +71,11 @@ test("agentKey changes when any agent's status or count changes", () => {
   assert.notEqual(agentKey(a), agentKey([a[0], { space: "s1", status: "idle" }]));
   assert.notEqual(agentKey(a), agentKey([...a, { space: "s1", status: "working" }]));
   assert.notEqual(agentKey(a), agentKey([a[0], { space: "s2", status: "working" }]));
+});
+
+test("terminalSpace prefixes remote spaces from the address", () => {
+  const labels = { "herdr.space": "sp1" };
+  assert.equal(terminalSpace({ address: "t3", labels }), "sp1");
+  assert.equal(terminalSpace({ address: "omen/t1k", labels }), "omen/sp1");
+  assert.equal(terminalSpace({ address: "omen/t1k" }), null);
 });

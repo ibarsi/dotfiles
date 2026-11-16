@@ -1,6 +1,6 @@
 {
-  "git_revision": "8ba09896723b497de37aca074d116c3af95d26b5",
-  "source_hash": "50cb27ed1eb5",
+  "git_revision": "e1ee6ebc831b0d0295644082852e97bc666a9504",
+  "source_hash": "073b5eae350d",
   "stats": {
     "aliases": 70,
     "functions": 45,
@@ -71,7 +71,7 @@
     },
     {
       "name": "aiup",
-      "command": "brew upgrade claude-code@latest codex grok-build && herdr-update",
+      "command": "brew upgrade claude-code@latest codex grok-build && mise upgrade npm:codeburn && herdr-update",
       "group": "General",
       "source": "zsh/aliases.zsh",
       "source_kind": "zsh alias"
@@ -1560,9 +1560,9 @@
     },
     {
       "name": "herdr-settings-check",
-      "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom",
+      "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom and font_size",
       "run": [
-        "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
+        "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom and font_size. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
       ],
       "source": "mise.toml"
     },

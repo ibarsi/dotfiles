@@ -56,10 +56,10 @@ run = [
 ]
 
 [tasks.herdr-settings-check]
-description = "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom"
-# ponytail: exits 1 on any non-zoom drift; intentional drift is committed with SKIP=herdr-settings-sync.
+description = "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom and font_size"
+# ponytail: exits 1 on drift beyond zoom and font_size; intentional drift is committed with SKIP=herdr-settings-sync.
 shell = "bash -c"
-run = "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
+run = "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom and font_size. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
 
 [tasks.bootstrap-verify]
 description = "Verify expected post-bootstrap config links/files"

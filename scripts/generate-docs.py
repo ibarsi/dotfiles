@@ -761,7 +761,7 @@ def main() -> None:
     DOCS_DIR.mkdir(exist_ok=True)
     serialized = json.dumps(docs, indent=2) + "\n"
     DATA_PATH.write_text(serialized)
-    DATA_JS_PATH.write_text(f"window.DOTFILES_DOCS_DATA = {serialized};")
+    DATA_JS_PATH.write_text(f"window.DOTFILES_DOCS_DATA = {serialized.rstrip()};\n")
 
 
 if __name__ == "__main__":

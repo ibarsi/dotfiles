@@ -30,8 +30,9 @@ Alt and Ctrl-Alt bindings behave the same on both.
   `settings.linux.json` elsewhere (Omarchy). Both select the `catppuccin-mocha`
   theme, turn on font ligatures and turn off sounds and pane scrollbars. The app
   writes through the link, so zoom (Cmd +/-) and other Settings changes land in
-  that platform's file only and show up in `git diff`. Keep everything except
-  `zoom` identical: copy other changes to the other file by hand.
+  that platform's file only and show up in `git diff`. `zoom` and `font_size`
+  are per screen and may differ. Keep everything else identical: copy other
+  changes to the other file by hand.
   `mise run herdr-settings-check` reports drift, and the `herdr-settings-sync`
   pre-commit hook runs it when either file is staged. To commit an intentional
   difference, use `SKIP=herdr-settings-sync git commit`.

@@ -14,16 +14,15 @@ repos:
     rev: v3.14.1-1
     hooks:
       - id: shfmt
-        args: ["-w", "-i", "2", "-ci"]
+        args: ["-w"]
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
     hooks:
       - id: gitleaks
-        args: ["protect", "--staged", "--verbose"]
   - repo: local
     hooks:
       - id: herdr-settings-sync
-        name: herdr-app settings in sync (except zoom)
+        name: herdr-app settings in sync (except zoom and font_size)
         entry: mise run herdr-settings-check
         language: system
         files: ^herdr-app/settings\.(macos|linux)\.json$

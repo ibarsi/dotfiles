@@ -115,6 +115,7 @@ Each folder owns its documentation.
 | [glow](glow/README.md) | Markdown rendering |
 | [k9s](k9s/README.md) | Kubernetes TUI |
 | [mise](mise/README.md) | Global tools and repository tasks |
+| [codeburn](codeburn/README.md) | Employment Vertex pricing and accuracy boundaries |
 | [zed](zed/README.md) | Editor settings and keybindings |
 | [vim](vim/README.md) | Vim configuration |
 | [karabiner](karabiner/README.md) | App-scoped macOS keyboard mappings |
