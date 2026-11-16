@@ -26,6 +26,7 @@ check_link "$HOME/.config/starship.toml"
 check_link "$HOME/.config/herdr-app/keys.json"
 check_link "$HOME/.config/herdr-app/settings.json"
 check_link "$HOME/.config/herdr-app/mods/my-spaces"
+check_link "$HOME/.config/herdr-app/mods/my-tabs"
 check_link "$HOME/.config/herdr-app/mods/deploys"
 
 check_bin() {
