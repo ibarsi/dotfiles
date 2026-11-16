@@ -118,35 +118,45 @@ layouts away and back (`herdr-update --check` does this).
 
 ## Deploys panel
 
-Clicking a space's deploy icon switches to that space and opens a **Deploys**
-panel in the same slot as Files and Changes, showing what
+A **Deploys** button sits in the tabs bar next to Files and Changes (added to
+`my-tabs`, a clone of Herdr's `tabs` mod), and a space's deploy icon switches
+to that space and opens the same panel. Either shows what
 [`gh bd`](../gh/README.md) shows for that space's PR: each target's state and
 ArgoCD stages, with every preview URL (Console, Admin, API, Consumer, Docs)
-one click away. Clicking an unhealthy stage opens its logs exactly as `gh bd
-<pr> --stage <stage>` prints them, in a terminal (never inside the panel).
-Clicking the icon again while its panel is already open hides it.
+one click away. Clicking a stage expands it in place and, if it's unhealthy,
+loads a tail of its Deployment/StatefulSet logs inline — the same `argocd`
+calls `gh bd --stage` makes, rendered in the panel instead of a terminal.
+Click the button (or the icon on the active space) again to close it.
 
-`mods/deploys/` is a from-scratch mod (not a clone), linked by `install.sh`
-the same way as `my-spaces`, with its `{id: "deploys", ...}` block appended to
-the `panel-body` stack in the generated `my-main.json`. Parsing the bot's
-`<!-- branch-deploy-status -->` comment lives in `mods/deploys/parse.js`
-(no imports, tested with `node --test herdr-app/mods/deploys/parse.test.mjs`),
-the same split `my-spaces/status.js` uses. `indicators.js` publishes each
-space's `{repo, pr}` through `setShared("deploys.targets", …)`, only when it
-changes; the panel fetches the comment once per space switch, on a manual
-refresh, and every 60s while shown, and nothing while hidden.
+`mods/deploys/` is a from-scratch mod (not a clone, visuals split into
+`main.js` for state/fetching and `ui.js` for small render helpers), linked by
+`install.sh` the same way as `my-spaces`, with its `{id: "deploys", ...}`
+block appended to the `panel-body` stack in the generated `my-main.json`.
+Parsing the bot's `<!-- branch-deploy-status -->` comment lives in
+`mods/deploys/parse.js` (no imports, tested with `node --test
+herdr-app/mods/deploys/parse.test.mjs`), the same split `my-spaces/status.js`
+uses. `indicators.js` publishes each space's `{repo, pr}` through
+`setShared("deploys.targets", …)`, only when it changes; the panel fetches
+the comment once per space switch (showing a spinner, never the previous
+space's stale content), on a manual refresh, and every 60s while shown, and
+nothing while hidden.
 
-The panel's `gh`/`argocd` calls, the ArgoCD login check and the stage-log
-terminal always run on this computer, regardless of which machine the active
-space lives on. For a space on another machine, logs open in a tab in a local
-space named "Deploys" instead of a split (`terminal.open` has no machine
-option). The `gh bd` alias in [`gh/aliases.yml`](../gh/aliases.yml) now takes
-its ArgoCD host from the bot comment's own links for every `--stage` call, so
-neither it nor the panel depends on whatever `argocd` context happens to be
-current.
+Clicking the sidebar icon from a non-active space switches spaces first.
+`my-tabs`' per-space panel memory can revert that switch's panel selection
+within 1s (its own pending-restore window), so the click reasserts the panel
+open once that settles rather than racing it.
 
-Because `deploys` has no `cloned_from`, `herdr-update`'s clone-merge loop
-skips it; a second loop runs `herdr-app check` on every mod without one.
+The panel's `gh`/`argocd` calls and the ArgoCD login check always run on this
+computer, regardless of which machine the active space lives on. The `gh bd`
+alias in [`gh/aliases.yml`](../gh/aliases.yml) also takes its ArgoCD host from
+the bot comment's own links for every `--stage` call, so neither it nor the
+panel depends on whatever `argocd` context happens to be current.
+
+Because `deploys` and `my-tabs` are mods in this repo, `herdr-update` keeps
+them in sync with upstream: `my-tabs` three-way merges against the `tabs`
+snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
+`deploys` has no `cloned_from` (nothing to merge), so a second loop runs
+`herdr-app check` on it and any other mod without one.
 
 ## Updating
 
