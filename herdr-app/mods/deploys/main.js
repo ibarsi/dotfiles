@@ -7,9 +7,28 @@ import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, spaces, theme, shared, setShared, layout } from "herdr";
 import { parseComment, isUnhealthy } from "./parse.js";
+import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT, LOCAL_CHILD_GROUPS } from "./local.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
 
 const FETCH_EVERY = 60000;
+
+// `argocd --core` reads Applications through the kubeconfig context's own
+// namespace, which defaults to "default", not sys-argocd — so every call
+// runs against a namespace-scoped temp copy, the same trick devcd's
+// CoreClient uses (dev-tooling/tasks/argocd/client.py). No login, no
+// --server/--grpc-web: --core talks to the Kubernetes API directly.
+const LOCAL_ARGOCD_SH = `set -e
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+kubectl config view --minify --context ${LOCAL_CONTEXT} --raw > "$tmp" 2>/dev/null
+KUBECONFIG="$tmp" kubectl config set-context --current --namespace sys-argocd >/dev/null 2>&1
+KUBECONFIG="$tmp" argocd "$@" --core --kube-context ${LOCAL_CONTEXT}`;
+
+const LOCAL_PROBE_SH = `kubectl --context ${LOCAL_CONTEXT} get nodes --request-timeout=3s >/dev/null 2>&1 || { echo no-cluster; exit; }
+kubectl --context ${LOCAL_CONTEXT} get deploy -n "$1" gat-main --request-timeout=3s >/dev/null 2>&1 || { echo not-deployed; exit; }
+echo ok`;
+
+const localArgocd = (args, timeout) => exec("sh", ["-c", LOCAL_ARGOCD_SH, "sh", ...args], { timeout });
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -29,7 +48,7 @@ function openUrl(url) {
   exec("open", [url]).catch(() => exec("xdg-open", [url]).catch(() => {}));
 }
 
-const statusColor = (status, t) => (status === "Healthy" || status === "Ready" ? t.ansi2 : status === "Torn down" ? t.dim : t.ansi1);
+const statusColor = (status, t) => (status === "Healthy" || status === "Ready" ? t.ansi2 : status === "Torn down" || status === "Not checked" ? t.dim : t.ansi1);
 
 export default class Deploys extends View {
   init(_props, cx) {
@@ -56,13 +75,13 @@ export default class Deploys extends View {
   tick(cx) {
     const visible = showing();
     const target = this.target();
-    const key = target ? `${target.repo}#${target.pr}` : null;
+    const key = target ? `${target.repo}@${target.branch}` : null;
     if (visible && (!this.wasVisible || key !== this.key || Date.now() - this.lastFetch > FETCH_EVERY)) {
       const switched = key !== this.key;
       this.key = key;
       if (switched) { this.sources = null; this.error = null; this.resetStages(); }
       if (target) this.fetch(cx, target);
-      else { this.sources = null; this.error = "No PR for this space"; cx.notify(); }
+      else { this.sources = null; this.error = "No repo detected for this space"; cx.notify(); }
     }
     if (visible !== this.wasVisible) cx.notify();
     this.wasVisible = visible;
@@ -73,24 +92,60 @@ export default class Deploys extends View {
     this.loading = true;
     cx.notify();
     cx.spawn(async (cx) => {
+      let ghEntry = null, ghError = null;
       try {
-        const r = await exec("gh", ["pr", "view", String(target.pr), "-R", target.repo, "--json", "comments"]);
-        if (JSON.stringify(this.target()) !== JSON.stringify(target)) return; // stale: space or PR moved on
-        if (r.code !== 0) { this.sources = null; this.error = "Could not reach GitHub"; return; }
-        const bot = (JSON.parse(r.stdout).comments ?? []).find((c) => c.body?.includes("<!-- branch-deploy-status -->"));
-        if (!bot) { this.sources = null; this.error = `No branch deploy for #${target.pr}`; return; }
-        this.sources = [parseComment(bot.body)];
-        this.error = null;
-        this.lastFetch = Date.now();
-        await this.checkArgocd();
+        if (target.pr) {
+          const r = await exec("gh", ["pr", "view", String(target.pr), "-R", target.repo, "--json", "comments"]);
+          if (r.code !== 0) ghError = "Could not reach GitHub";
+          else {
+            const bot = (JSON.parse(r.stdout).comments ?? []).find((c) => c.body?.includes("<!-- branch-deploy-status -->"));
+            if (!bot) ghError = `No branch deploy for #${target.pr}`;
+            else ghEntry = parseComment(bot.body);
+          }
+        }
       } catch {
-        this.sources = null;
-        this.error = "Could not reach GitHub";
-      } finally {
-        this.loading = false;
-        cx.notify();
+        ghError = "Could not reach GitHub";
       }
+      const localEntry = await this.fetchLocal(target.branch).catch(() => ({ name: "Local", summary: "Could not read local ArgoCD state", targets: [] }));
+      if (JSON.stringify(this.target()) !== JSON.stringify(target)) return; // stale: space or branch moved on
+      this.sources = [ghEntry, localEntry].filter(Boolean);
+      this.error = ghError;
+      this.lastFetch = Date.now();
+      await this.checkArgocd();
+      this.loading = false;
+      cx.notify();
     });
+  }
+
+  // The maximum-dev Kind cluster, one namespace per branch (see local.js).
+  // One argocd call for the parent app's overall health; children are
+  // checked lazily on click, the same as remote stages.
+  async fetchLocal(branch) {
+    if (!branch) return null;
+    const suffix = branchSuffix(branch);
+    const namespace = bankNamespace(suffix);
+    const appName = parentAppName(suffix);
+    const probe = await exec("sh", ["-c", LOCAL_PROBE_SH, "sh", namespace], { timeout: 8000 }).catch(() => ({ stdout: "no-cluster" }));
+    const state = probe.stdout.trim().split("\n").pop();
+    if (state === "no-cluster") return { name: "Local", summary: "Kind cluster not running", targets: [] };
+    if (state === "not-deployed") return { name: "Local", summary: `Not deployed on ${branch}`, targets: [] };
+    try {
+      const r = await localArgocd(["app", "get", appName, "-o", "json"], 20000);
+      if (r.code !== 0) return { name: "Local", summary: "Could not read local ArgoCD state", targets: [] };
+      const data = JSON.parse(r.stdout);
+      const health = data.status?.health?.status ?? "Unknown";
+      const sync = data.status?.sync?.status ?? "Unknown";
+      return {
+        name: "Local",
+        summary: `${sync} · ${health}`,
+        targets: [{
+          name: bankInstance(suffix), status: health, waves: "", links: [],
+          stages: LOCAL_CHILD_GROUPS.map((g) => ({ name: g, status: "Not checked", app: `${appName}-${g}`, local: true })),
+        }],
+      };
+    } catch {
+      return { name: "Local", summary: "Could not read local ArgoCD state", targets: [] };
+    }
   }
 
   async checkArgocd() {
@@ -126,10 +181,12 @@ export default class Deploys extends View {
     if (this.stageLogs[key] === undefined && !this.stageLoading[key]) this.loadStage(key, stage, cx);
   }
 
-  // Runs the same argocd calls as gh bd --stage (gh/aliases.yml), rendered
-  // in the panel instead of a terminal: sync/health, then a tail of each
-  // unhealthy Deployment/StatefulSet's logs. One click, sequential calls.
+  // Runs the same argocd calls as gh bd --stage (gh/aliases.yml) for a remote
+  // stage, or the --core equivalent for a local one, rendered in the panel
+  // instead of a terminal: sync/health, then a tail of each unhealthy
+  // Deployment/StatefulSet's logs. One click, sequential calls.
   loadStage(key, stage, cx) {
+    if (stage.local) return this.loadLocalStage(key, stage, cx);
     if (!stage.app || !stage.server) { this.stageLogs[key] = `status: ${stage.status}`; cx.notify(); return; }
     this.stageLoading[key] = true;
     cx.notify();
@@ -155,8 +212,33 @@ export default class Deploys extends View {
     });
   }
 
-  stageRow(tg, stage, t) {
-    const key = `${tg.name}:${stage.name}`;
+  loadLocalStage(key, stage, cx) {
+    this.stageLoading[key] = true;
+    cx.notify();
+    cx.spawn(async (cx) => {
+      try {
+        const r = await localArgocd(["app", "get", stage.app, "-o", "json"], 20000);
+        if (r.code !== 0) { this.stageError[key] = r.stderr || "Could not reach local ArgoCD"; return; }
+        const data = JSON.parse(r.stdout);
+        const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`];
+        const bad = (data.status?.resources ?? []).filter((res) => (res.health?.status ?? "Healthy") !== "Healthy" && (res.kind === "Deployment" || res.kind === "StatefulSet"));
+        if (!bad.length) lines.push("", "No unhealthy Deployment/StatefulSet resources.");
+        for (const res of bad) {
+          const logs = await localArgocd(["app", "logs", stage.app, "--kind", res.kind, "--group", "apps", "--name", res.name, "--tail", "30"], 20000).catch((e) => ({ stdout: "", stderr: String(e) }));
+          lines.push("", `== ${res.kind}/${res.name} (last 30) ==`, (logs.stdout || logs.stderr || "(no output)").trimEnd());
+        }
+        this.stageLogs[key] = lines.join("\n");
+      } catch (e) {
+        this.stageError[key] = String(e);
+      } finally {
+        this.stageLoading[key] = false;
+        cx.notify();
+      }
+    });
+  }
+
+  stageRow(sourceName, tg, stage, t) {
+    const key = `${sourceName}:${tg.name}:${stage.name}`;
     const open = this.openStages.has(key);
     return v_flex().id(`deploy-stage-${key}`)
       .child(Row({ id: `deploy-stage-toggle-${key}`, onClick: (cx) => this.toggleStage(key, stage, cx) })
@@ -174,8 +256,8 @@ export default class Deploys extends View {
     return content;
   }
 
-  targetBlock(tg, t) {
-    return v_flex().id(`deploy-target-${tg.name}`).gap(1).py(4)
+  targetBlock(sourceName, tg, t) {
+    return v_flex().id(`deploy-target-${sourceName}-${tg.name}`).gap(1).py(4)
       .child(h_flex().px(2).pb(2).gap(8).items_center()
         .child(div().font_semibold().text_size(TEXT.small).child(tg.name))
         .child(Badge(tg.status, statusColor(tg.status, t)))
@@ -183,7 +265,15 @@ export default class Deploys extends View {
         .child(div().flex_1())
         .when(tg.links.length > 0, (el) => el.child(h_flex().gap(10)
           .children(tg.links.map((l) => Link({ id: `deploy-link-${tg.name}-${l.label}`, label: l.label, onClick: () => openUrl(l.url) }))))))
-      .children(tg.stages.map((s) => this.stageRow(tg, s, t)));
+      .children(tg.stages.map((s) => this.stageRow(sourceName, tg, s, t)));
+  }
+
+  sourceSection(source, t) {
+    return v_flex().id(`deploy-source-${source.name}`).gap(1).py(4)
+      .child(h_flex().px(2).gap(6).items_center()
+        .child(div().font_semibold().text_size(TEXT.small).text_color(t.muted).child(source.name))
+        .child(div().text_size(TEXT.caption).text_color(t.dim).child(`· ${source.summary}`)))
+      .children(source.targets.map((tg) => this.targetBlock(source.name, tg, t)));
   }
 
   render(cx) {
@@ -191,16 +281,15 @@ export default class Deploys extends View {
     const target = this.target();
     const root = Panel("deploys")
       .child(PanelHeader()
-        .child(div().font_semibold().child(target ? `Deploys · #${target.pr}` : "Deploys"))
+        .child(div().font_semibold().child(target?.pr ? `Deploys · #${target.pr}` : "Deploys"))
         .child(div().flex_1())
         .child(IconButton({ id: "deploys-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => this.fetch(cx, target) })));
     const body = v_flex().id("deploys-body").flex_1().min_h(0).overflow_y_scrollbar().p(8).gap(2);
-    if (!target) body.child(Message(this.error ?? "No PR for this space"));
-    else if (this.loading && !this.sources) body.child(Busy("Loading deploy status…"));
-    else if (this.error) body.child(Message(this.error, true));
-    else if (this.sources) for (const source of this.sources) {
-      body.child(div().px(2).pb(2).text_size(TEXT.caption).text_color(t.dim).child(source.summary));
-      for (const tg of source.targets) body.child(this.targetBlock(tg, t));
+    if (!target) body.child(Message(this.error ?? "No repo detected for this space"));
+    else {
+      if (this.loading && !this.sources) body.child(Busy("Loading deploy status…"));
+      if (this.error) body.child(Message(this.error, true));
+      if (this.sources) for (const source of this.sources) body.child(this.sourceSection(source, t));
     }
     if (this.argocd?.loggedIn === false) body.child(h_flex().mt(6).pt(8).px(2).gap(8).items_center().border_t(1).border_color(t.border)
       .child(div().text_size(13).text_color(t.ansi3).child("⚠"))

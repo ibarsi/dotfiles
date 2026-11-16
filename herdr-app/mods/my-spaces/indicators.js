@@ -189,10 +189,15 @@ function refreshPrs(cx) {
         if (pls.some((pl) => failed.has(JSON.parse(pl)[0]))) continue;
         delete prs[id];
         // A space can hold a main checkout beside a worktree: first pane branch with an open PR wins
-        const found = pls.map((pl) => ({ key: keyOf[pl], s: byKey[keyOf[pl]] })).filter((f) => f.s);
-        const pick = found.find((f) => f.s.open) ?? found[0];
+        const withSummary = pls.map((pl) => ({ key: keyOf[pl], s: byKey[keyOf[pl]] })).filter((f) => f.s);
+        const pick = withSummary.find((f) => f.s.open) ?? withSummary[0];
         if (pick) prs[id] = pick.s;
-        if (pick?.s.open) targets[id] = { repo: pick.key.split(" ")[0], pr: pick.s.num };
+        // The deploys panel needs repo+branch even with no open PR: a local Kind deploy is branch-based, not PR-based.
+        const anyKey = pls.map((pl) => keyOf[pl]).find(Boolean);
+        if (anyKey) {
+          const [repo, branch] = anyKey.split(" ");
+          targets[id] = { repo, branch, pr: pick?.s.open ? pick.s.num : null };
+        }
       }
       publishTargets(targets);
       prsNext = Date.now() + PR_EVERY;
