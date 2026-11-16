@@ -54,6 +54,7 @@ the macOS bootstrap.
 | Topic | macOS | Omarchy |
 |-------|-------|---------|
 | `bash` | ✅ | ✅ |
+| `codeburn` | ✅ | ✅ |
 | `gh` | ✅ | ✅ |
 | `ghostty` | ✅ | — macOS only |
 | `git` | ✅ | ◐ aliases + stack defaults + optional delta |

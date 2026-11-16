@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "73c5cc0e582befe6adebacce92cbaa19c75a9e10",
-  "source_hash": "073b5eae350d",
+  "git_revision": "c60dfaaff6484fbf82f18f0620c51f74f44e5687",
+  "source_hash": "7ed0193d6029",
   "stats": {
     "aliases": 70,
     "functions": 45,
@@ -10,7 +10,7 @@ window.DOTFILES_DOCS_DATA = {
     "bootstrap_links": 15,
     "brews": 37,
     "casks": 26,
-    "platforms": 19
+    "platforms": 20
   },
   "aliases": [
     {
@@ -1496,6 +1496,7 @@ window.DOTFILES_DOCS_DATA = {
         "bash -n bash/bashrc",
         "bash -n bash/install.sh",
         "bash -n k9s/install.sh",
+        "bash -n codeburn/install.sh",
         "bash -n macos/.macos",
         "bash -n theme/install.sh theme/install-starship.sh theme/install-btop.sh",
         "bash -n glow/install.sh",
@@ -1546,7 +1547,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-check",
       "description": "Check shell formatting without writing",
       "run": [
-        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -d bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh codeburn/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1554,7 +1555,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "fmt-shell",
       "description": "Format shell scripts in this repo",
       "run": [
-        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
+        "shfmt -w bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh codeburn/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh zsh/.zshrc zsh/*.zsh scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1570,7 +1571,7 @@ window.DOTFILES_DOCS_DATA = {
       "name": "lint-shell",
       "description": "Lint shell scripts in this repo",
       "run": [
-        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
+        "shellcheck bootstrap.sh bootstrap-omarchy.sh bash/*.sh gh/*.sh git/install*.sh k9s/install.sh codeburn/install.sh macos/.macos theme/install.sh theme/install-starship.sh theme/install-btop.sh glow/install.sh system/.aliases system/.exports system/.functions system/.path zsh/.zshrc zsh/*.zsh zsh/*.theme scripts/*.sh"
       ],
       "source": "mise.toml"
     },
@@ -1763,6 +1764,15 @@ window.DOTFILES_DOCS_DATA = {
   "platforms": [
     {
       "topic": "bash",
+      "macos": {
+        "state": "full"
+      },
+      "omarchy": {
+        "state": "full"
+      }
+    },
+    {
+      "topic": "codeburn",
       "macos": {
         "state": "full"
       },

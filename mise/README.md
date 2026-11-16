@@ -54,8 +54,7 @@ The installer keeps `~/.config/mise/config.toml` as a real, machine-local file a
 Global tools in [config.toml](config.toml) include Node, Go, gitmoji-cli, CodeBurn (`npm:codeburn`), gopls, RTK and the Antigravity CLI (`agy`). `mise/install.sh` runs `mise install`, so bootstrap installs all of them; `mise upgrade <tool>` updates one. The project [mise.toml](../mise.toml) owns maintenance tasks and tool versions.
 
 CodeBurn's employment Vertex rates and accuracy boundaries are documented under
-[CodeBurn pricing](../codeburn/README.md). Applying those rates is a separate,
-manual step on machines using that billing account.
+[CodeBurn pricing](../codeburn/README.md). Bootstrap applies those rates through `codeburn/install.sh` on both platforms.
 
 See [repository validation](../scripts/README.md) and [docs generation](../docs/README.md#docs-site) for the complete maintenance flow.
 

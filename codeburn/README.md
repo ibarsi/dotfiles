@@ -20,7 +20,10 @@ their exact rates can be configured.
 
 ## Apply the verified subset
 
-On a machine using the employment Vertex account with **global endpoints**:
+`bootstrap.sh` (macOS) and `bootstrap-omarchy.sh` (Omen) both run
+[install.sh](install.sh), which applies the verified subset idempotently. A refusal
+(existing flat Haiku override or discount) warns instead of failing bootstrap. The
+rates assume the employment Vertex account with **global endpoints**. To run by hand:
 
 ```bash
 python3 codeburn/configure-pricing.py
@@ -34,8 +37,7 @@ The first command previews. Applying merges four verified flat Claude model rate
 into `~/.config/codeburn/config.json`, preserving unrelated configuration. Existing
 files receive a timestamped backup; unchanged files are not rewritten. Restore the
 backup to undo an update, or remove the four catalog keys from `priceOverrides`
-if the config did not exist beforehand. This is a manual step on macOS or Linux,
-not an automatic bootstrap action on every computer.
+if the config did not exist beforehand. Re-running bootstrap is safe.
 
 ## Accuracy boundaries
 
