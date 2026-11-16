@@ -17,6 +17,9 @@ Some bindings in `keys.json` use `cmd-…`. They're for macOS and may do nothing
 on Linux, or clash with Hyprland's Super bindings. The Ctrl-Space prefix,
 Alt and Ctrl-Alt bindings behave the same on both.
 
+Cmd-M minimizes the window and Cmd-A selects all terminal contents, matching
+the macOS defaults added in Herdr 0.1.16.
+
 ## What is tracked
 
 - `keys.json` is linked into `~/.config/herdr-app/`. On top of the app's
@@ -90,16 +93,20 @@ gets one line ending in `// local: herdrdev/herdr-app#<n>`. Keep a backport
 byte-identical to the upstream PR apart from that marker. Once a release ships
 the marked line verbatim, `herdr-update` drops the marker before merging, so
 the hunk merges away. A fix that upstream makes differently shows up as a
-normal conflict. Until then `herdr-update` lists the open markers. Current
-ones: herdrdev/herdr-app#856 (run at most 6 git checks at once) and
-herdrdev/herdr-app#857 (a failed check keeps a space's last git answer, so
-worktrees stop un-nesting from their repo on a momentary exec failure).
+normal conflict. Until then `herdr-update` lists the open markers. The previous
+backports, herdrdev/herdr-app#856 (bounded git checks) and #857 (retain the last
+git result on a transient failure), shipped in 0.1.16; no local backports remain.
 
 Worktree grouping is sticky: each space remembers the last repo it was seen
 in (lines marked `// sticky`, kept across restarts), so a failed git lookup or
 a root space whose terminal left the repo no longer un-nests its worktrees.
 Lines marked `// local: <repo>#<n>` are upstream fixes backported early;
 `herdr-update` drops them once upstream ships the same line.
+
+The clone is reconciled with Herdr 0.1.16. It includes upstream's automatic
+scrolling to the active space, flexible title widths and cancellation of folder
+watches for repositories no longer shown. PR/port indicators, agent bars, sticky
+grouping, custom titles and the reduced worktree indent remain in place.
 
 The app doesn't hot-reload mods through the symlink. After editing, switch
 layouts away and back (`herdr-update --check` does this).

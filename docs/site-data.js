@@ -1,5 +1,5 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "e1ee6ebc831b0d0295644082852e97bc666a9504",
+  "git_revision": "ad648f4bdef9d9292bdfc2de52eed35ac2566993",
   "source_hash": "073b5eae350d",
   "stats": {
     "aliases": 70,
