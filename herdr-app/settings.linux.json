@@ -1,5 +1,5 @@
 {
-  "zoom": 0.9,
+  "zoom": 0.8,
   "sounds": {
     "enabled": false
   },
@@ -7,6 +7,6 @@
   "pane_scrollbars": false,
   "minimum_contrast": 1,
   "theme": "catppuccin-mocha",
-  "font_weight": 500,
+  "font_size": 12,
   "terminal_scroll_speed": 1.4
 }

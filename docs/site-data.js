@@ -1,6 +1,6 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "c60dfaaff6484fbf82f18f0620c51f74f44e5687",
-  "source_hash": "7ed0193d6029",
+  "git_revision": "77d00a94ea67eb1228122056561397b1ef02c841",
+  "source_hash": "e4fd31f2fe7e",
   "stats": {
     "aliases": 70,
     "functions": 45,
@@ -1561,9 +1561,9 @@ window.DOTFILES_DOCS_DATA = {
     },
     {
       "name": "herdr-settings-check",
-      "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom and font_size",
+      "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom, font_size and font_weight",
       "run": [
-        "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom and font_size. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
+        "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom, font_size and font_weight. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
       ],
       "source": "mise.toml"
     },
