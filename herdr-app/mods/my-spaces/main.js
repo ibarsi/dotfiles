@@ -438,10 +438,13 @@ export default class Spaces extends View {
     });
   }
 
-  // branch-first: the tail shows only the repo and ahead/behind counts. No branch or
-  // space name repeats on the right; the repo goes for worktrees and matching names.
-  gitTail(g, tree, name, t) { // branch-first
-    const where = tree || g.name.toLowerCase() === name.toLowerCase() ? "" : g.name; // branch-first
+  // branch-first: the tail shows the repo plus the space's own folder/name when the
+  // title doesn't already say it (named spaces skip it, matching branch names skip it).
+  gitTail(g, tree, name, named, t) { // branch-first
+    const same = (a, b) => a.toLowerCase() === b.toLowerCase(); // branch-first
+    const folder = named || same(name, g.branch ?? "") ? "" : name; // branch-first
+    const repo = tree || same(g.name, name) ? "" : g.name; // branch-first
+    const where = [repo, folder].filter(Boolean).join(" · "); // branch-first
     return h_flex()
       .flex_auto()
       .min_w(where ? SIDE_MIN : 0)
@@ -506,7 +509,7 @@ export default class Spaces extends View {
           .items_center()
           .when(Boolean(tree), el => el.pl(11).child(svg("mods/workspace-chrome/branch.svg").size(13).flex_none().text_color(t.dim))) // indent: half the upstream worktree indent
           .child(div().flex_initial().min_w(SIDE_MIN).truncate().text_color(t.foreground).child(w.named ? w.name : g?.branch ?? home(path ?? w.name))) // branch-first
-          .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()), // branch-first
+          .child(g && !tree ? this.gitTail(g, tree, w.name, w.named, t) : div().flex_1()), // branch-first: the gray tail only makes sense for top-level spaces
       )
       .when(Boolean(extra), (el) => el.child(extra)) // indicators
       .when(Boolean(bar), (el) => el.child(bar)); // agents
