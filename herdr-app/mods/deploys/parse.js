@@ -7,6 +7,9 @@
 
 const HEALTHY = new Set(["Healthy", "Ready", "Torn down"]);
 export const isUnhealthy = (status) => !HEALTHY.has(status);
+// Failed, not merely unhealthy: Progressing, Missing (a stage not created yet
+// mid-deploy, "Missing 0/72") and Unknown are still settling, not broken.
+export const isFailed = (status) => /degraded|fail|error|timed out/i.test(status ?? "");
 
 const cleanStatus = (s) => s.replace(/^[^\p{L}]+/u, "").trim();
 const stripBackticks = (s) => s.replace(/^`(.*)`$/, "$1");

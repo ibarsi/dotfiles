@@ -142,33 +142,75 @@ once per space switch (showing a spinner, never the previous space's stale
 content), on a manual refresh, and every 60s while shown, and nothing while
 hidden.
 
-The panel renders one section per source, and `this.sources` is exactly the
-array the original design left room for: a "Branch deploy" entry when there's
-an open PR, and a "Local" entry for the `maximum-dev` Kind cluster, shown
-whenever a branch is known (PR or not). `mods/deploys/local.js` (no imports,
-tested with `node --test herdr-app/mods/deploys/local.test.mjs`) mirrors
-`usemaximum/maximum`'s `dev-cd/devcd` naming: a branch slugifies into a
-`bnk-max1-<slug>` namespace and a `max1-dev-us-lcl-k1-bnk<slug>` ArgoCD app
-(local is branch-slug-keyed, remote is PR-number-keyed — not the same
-scheme). The Local section's state is one of: the Kind cluster not running,
-the branch not deployed to it, or its parent app's sync/health, with its
-child apps (`mesh`, `databases`, `infra`, `platform`, `ingress`, `test`)
-checked lazily on click like remote stages are. Local `argocd` calls use
-`--core --kube-context kind-maximum-dev` against a namespace-scoped temp
-kubeconfig copy (the same trick `dev-tooling/tasks/argocd/client.py`'s
-`CoreClient` uses) instead of `--server`/`--grpc-web` — there's no login step
-locally, so the "Not logged in to ArgoCD" row never applies to it.
+The panel renders one section per source, and `this.sources` only ever holds
+the ones that actually have something deployed: a "Branch deploy" entry once
+there's an open PR with a branch-deploy bot comment, and a "Local" entry for
+the `maximum-dev` Kind cluster once the branch is actually deployed there.
+Neither existing isn't an error — the section is just omitted, so a branch
+with no PR and no local deploy shows "Not deployed anywhere" instead of two
+empty sections. When both are present they get a divider and extra vertical
+space between them so the two deploys read as separate, not one continuous
+list. `mods/deploys/local.js` (no imports, tested with `node --test
+herdr-app/mods/deploys/local.test.mjs`) mirrors `usemaximum/maximum`'s
+`dev-cd/devcd` naming: a branch slugifies into a `bnk-max1-<slug>` namespace
+and a `max1-dev-us-lcl-k1-bnk<slug>` ArgoCD app (local is branch-slug-keyed,
+remote is PR-number-keyed — not the same scheme). The Local section only
+appears once past both checks: the Kind cluster running and the branch
+actually deployed to it; from there it shows its parent app's sync/health,
+with its child apps (`mesh`, `databases`, `infra`, `platform`, `ingress`, `test`)
+read in the same single `kubectl get applications` call (three columns, not `-o json`, which runs to megabytes); clicking one tails
+its unhealthy workloads' logs. Those log calls use `argocd --core
+--kube-context kind-maximum-dev` against a namespace-scoped temp kubeconfig
+copy (the same trick `dev-tooling/tasks/argocd/client.py`'s `CoreClient`
+uses) instead of `--server`/`--grpc-web` — there's no login step locally, so
+the "Not logged in to ArgoCD" row never applies to it.
+
+Every deployed target also gets a **Pods** line ("2 of 109 unhealthy", "No
+pods") from one `kubectl get pods` per refresh, triaged by
+`mods/deploys/pods.js` (tested with `node --test
+herdr-app/mods/deploys/pods.test.mjs`): non-benign waiting reasons
+(CrashLoopBackOff, ImagePullBackOff…), non-`Completed` terminations,
+unschedulable or failed pods, and pods with 3+ restarts. kubectl prints only
+those fields through a go-template (`POD_TEMPLATE`): full `-o json` for one
+109-pod bank is 4.5 MB, and pulling that through `exec` every refresh
+crashed the app. Each flagged pod
+expands on click to its recent Warning events plus the last 30 log lines of
+the failing container, from the previous run when it restarted. Local pods
+and PR deploys' pods are both read on the worktree's machine, in its folder,
+since that's where its `gcloud` login and mise-pinned `kubectl`/
+`gke-gcloud-auth-plugin` live. PR deploys use the `bnk-pr-<n>` /
+`<target>-pr-<n>` namespaces on `max1-dev-us-gcp-e4`, through whichever
+context that machine has for it: the Tailscale API server (Omen), then
+`connectgateway_…` (a Mac, no VPN), then the direct `gke_…` one. The Pods
+line names the machine when it has no such context, its `gcloud` login has
+expired, or the tools aren't installed there.
+
+A failed stage (Degraded, or a bot status saying failed/error/timed out; not
+Progressing, Missing or Unknown, which are still settling) gets a magnifier
+icon beside its status. Like the sidebar's rebase icon, it splits a pane to the
+right in the space's shown tab running `claude --dangerously-skip-permissions
+--model haiku` (`ccyolo`) with a read-only investigation prompt: `gh bd <pr> -R
+<repo> --stage <name>` for a branch deploy stage, or the stage's Application
+YAML and its namespace's pods/events/logs on `kind-maximum-dev` for a local
+one (`gh bd` only knows PR deploys). It splits the pane sitting in the worktree,
+so mise's per-folder `argocd`/`kubectl` resolve, and does nothing while an
+agent for the same stage is still running there.
 
 Clicking the sidebar icon from a non-active space switches spaces first.
 `my-tabs`' per-space panel memory can revert that switch's panel selection
 within 1s (its own pending-restore window), so the click reasserts the panel
 open once that settles rather than racing it.
 
-The panel's `gh`/`argocd` calls and the ArgoCD login check always run on this
-computer, regardless of which machine the active space lives on. The `gh bd`
+The panel's `gh` calls and the remote ArgoCD login check always run on this
+computer, regardless of which machine the active space lives on — the `gh bd`
 alias in [`gh/aliases.yml`](../gh/aliases.yml) also takes its ArgoCD host from
 the bot comment's own links for every `--stage` call, so neither it nor the
-panel depends on whatever `argocd` context happens to be current.
+panel depends on whatever `argocd` context happens to be current. The Local
+source's `kubectl`/`argocd` calls run on `target.machine` in `target.cwd`
+instead — the machine and worktree directory `indicators.js` saw the
+worktree's pane in — since the Kind cluster itself lives there, not
+necessarily on this computer, and mise resolves `kubectl`/`argocd` versions
+per-directory, not globally.
 
 Because `deploys` and `my-tabs` are mods in this repo, `herdr-update` keeps
 them in sync with upstream: `my-tabs` three-way merges against the `tabs`

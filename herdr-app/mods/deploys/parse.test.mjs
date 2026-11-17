@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/deploys/parse.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseComment, isUnhealthy } from "./parse.js";
+import { parseComment, isUnhealthy, isFailed } from "./parse.js";
 
 // A real `gh pr view <n> --json comments` body (PR 5598, trimmed of nothing):
 // backtick-wrapped names, a nested "Recorded services" <details> inside
@@ -134,4 +134,9 @@ test("a target with no <details> at all (torn down) gets an empty stage list", (
 test("no comment parses to null", () => {
   assert.equal(parseComment(null), null);
   assert.equal(parseComment(""), null);
+});
+
+test("isFailed is only broken stages, not ones still settling", () => {
+  for (const s of ["Degraded", "Failed", "Sync error", "Timed out"]) assert.equal(isFailed(s), true, s);
+  for (const s of ["Healthy", "Ready", "Progressing", "Missing 0/72", "Missing", "Unknown", "Suspended", "Torn down", undefined]) assert.equal(isFailed(s), false, String(s));
 });

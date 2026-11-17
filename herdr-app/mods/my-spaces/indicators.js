@@ -193,10 +193,13 @@ function refreshPrs(cx) {
         const pick = withSummary.find((f) => f.s.open) ?? withSummary[0];
         if (pick) prs[id] = pick.s;
         // The deploys panel needs repo+branch even with no open PR: a local Kind deploy is branch-based, not PR-based.
-        const anyKey = pls.map((pl) => keyOf[pl]).find(Boolean);
-        if (anyKey) {
-          const [repo, branch] = anyKey.split(" ");
-          targets[id] = { repo, branch, pr: pick?.s.open ? pick.s.num : null };
+        // machine and cwd travel too: a local Kind cluster lives on whichever machine the worktree's pane is on,
+        // and its kubectl/argocd versions are pinned per-directory by mise, so the call needs that cwd to resolve them.
+        const anyPl = pls.find((pl) => keyOf[pl]);
+        if (anyPl) {
+          const [repo, branch] = keyOf[anyPl].split(" ");
+          const [machine, cwd] = JSON.parse(anyPl);
+          targets[id] = { repo, branch, pr: pick?.s.open ? pick.s.num : null, machine: machine || null, cwd };
         }
       }
       publishTargets(targets);
