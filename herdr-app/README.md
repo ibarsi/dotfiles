@@ -116,6 +116,66 @@ grouping, custom titles and the reduced worktree indent remain in place.
 The app doesn't hot-reload mods through the symlink. After editing, switch
 layouts away and back (`herdr-update --check` does this).
 
+## Deploys panel
+
+A **Deploys** button sits in the tabs bar next to Files and Changes (added to
+`my-tabs`, a clone of Herdr's `tabs` mod), and a space's deploy icon switches
+to that space and opens the same panel. Either shows what
+[`gh bd`](../gh/README.md) shows for that space's PR: each target's state and
+ArgoCD stages, with every preview URL (Console, Admin, API, Consumer, Docs)
+one click away. Clicking a stage expands it in place and, if it's unhealthy,
+loads a tail of its Deployment/StatefulSet logs inline — the same `argocd`
+calls `gh bd --stage` makes, rendered in the panel instead of a terminal.
+Click the button (or the icon on the active space) again to close it.
+
+`mods/deploys/` is a from-scratch mod (not a clone, visuals split into
+`main.js` for state/fetching and `ui.js` for small render helpers), linked by
+`install.sh` the same way as `my-spaces`, with its `{id: "deploys", ...}`
+block appended to the `panel-body` stack in the generated `my-main.json`.
+Parsing the bot's `<!-- branch-deploy-status -->` comment lives in
+`mods/deploys/parse.js` (no imports, tested with `node --test
+herdr-app/mods/deploys/parse.test.mjs`), the same split `my-spaces/status.js`
+uses. `indicators.js` publishes each space's `{repo, branch, pr}` through
+`setShared("deploys.targets", …)`, only when it changes (`pr` is null without
+an open PR — a local deploy is branch-based, not PR-based); the panel fetches
+once per space switch (showing a spinner, never the previous space's stale
+content), on a manual refresh, and every 60s while shown, and nothing while
+hidden.
+
+The panel renders one section per source, and `this.sources` is exactly the
+array the original design left room for: a "Branch deploy" entry when there's
+an open PR, and a "Local" entry for the `maximum-dev` Kind cluster, shown
+whenever a branch is known (PR or not). `mods/deploys/local.js` (no imports,
+tested with `node --test herdr-app/mods/deploys/local.test.mjs`) mirrors
+`usemaximum/maximum`'s `dev-cd/devcd` naming: a branch slugifies into a
+`bnk-max1-<slug>` namespace and a `max1-dev-us-lcl-k1-bnk<slug>` ArgoCD app
+(local is branch-slug-keyed, remote is PR-number-keyed — not the same
+scheme). The Local section's state is one of: the Kind cluster not running,
+the branch not deployed to it, or its parent app's sync/health, with its
+child apps (`mesh`, `databases`, `infra`, `platform`, `ingress`, `test`)
+checked lazily on click like remote stages are. Local `argocd` calls use
+`--core --kube-context kind-maximum-dev` against a namespace-scoped temp
+kubeconfig copy (the same trick `dev-tooling/tasks/argocd/client.py`'s
+`CoreClient` uses) instead of `--server`/`--grpc-web` — there's no login step
+locally, so the "Not logged in to ArgoCD" row never applies to it.
+
+Clicking the sidebar icon from a non-active space switches spaces first.
+`my-tabs`' per-space panel memory can revert that switch's panel selection
+within 1s (its own pending-restore window), so the click reasserts the panel
+open once that settles rather than racing it.
+
+The panel's `gh`/`argocd` calls and the ArgoCD login check always run on this
+computer, regardless of which machine the active space lives on. The `gh bd`
+alias in [`gh/aliases.yml`](../gh/aliases.yml) also takes its ArgoCD host from
+the bot comment's own links for every `--stage` call, so neither it nor the
+panel depends on whatever `argocd` context happens to be current.
+
+Because `deploys` and `my-tabs` are mods in this repo, `herdr-update` keeps
+them in sync with upstream: `my-tabs` three-way merges against the `tabs`
+snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
+`deploys` has no `cloned_from` (nothing to merge), so a second loop runs
+`herdr-app check` on it and any other mod without one.
+
 ## Updating
 
 `herdr-update` (a shared alias in Bash and Zsh, also run by `aiup` and

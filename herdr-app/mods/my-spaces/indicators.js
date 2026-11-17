@@ -7,8 +7,17 @@
 
 import { div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { exec, run, spaces, panes, terminals, agents } from "herdr";
+import { exec, run, spaces, panes, terminals, agents, layout, setShared } from "herdr";
 import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
+
+function find(node, id) {
+  if (node?.id === id) return node;
+  for (const child of node?.children ?? []) {
+    const found = find(child, id);
+    if (found) return found;
+  }
+  return null;
+}
 
 const PR_EVERY = 60000; // one batched GraphQL query, ~1 point of the 5,000/hour budget
 const PORTS_EVERY = 5000;
@@ -69,6 +78,15 @@ const claim = (k) => { if (Date.now() - busy[k] < STUCK) return false; busy[k] =
 const RETRY = 10000; // a failed PR refresh (rate limit, offline, refused exec) tries again this soon
 let prsNext = 0; // when the next PR refresh is due
 let version = 0; // bumped whenever prs or ports may have changed
+
+// Space id -> {repo, pr} for the deploys panel, published only when it changes.
+let publishedTargets = "{}";
+function publishTargets(targets) {
+  const json = JSON.stringify(targets);
+  if (json === publishedTargets) return;
+  publishedTargets = json;
+  setShared("deploys.targets", targets);
+}
 
 // The app can start this mod more than once (a layout switch plus a layout file
 // rewrite), and a discarded instance's tasks notify a view nobody sees. So each
@@ -166,14 +184,22 @@ function refreshPrs(cx) {
         byKey[k] = summarize(data[`r${i}`]);
         if (byKey[k]?.open) prNums[k] = byKey[k].num;
       });
+      const targets = {};
       for (const [id, pls] of Object.entries(places)) {
         if (pls.some((pl) => failed.has(JSON.parse(pl)[0]))) continue;
         delete prs[id];
         // A space can hold a main checkout beside a worktree: first pane branch with an open PR wins
-        const found = pls.map((pl) => byKey[keyOf[pl]]).filter(Boolean);
-        const pick = found.find((s) => s.open) ?? found[0];
-        if (pick) prs[id] = pick;
+        const withSummary = pls.map((pl) => ({ key: keyOf[pl], s: byKey[keyOf[pl]] })).filter((f) => f.s);
+        const pick = withSummary.find((f) => f.s.open) ?? withSummary[0];
+        if (pick) prs[id] = pick.s;
+        // The deploys panel needs repo+branch even with no open PR: a local Kind deploy is branch-based, not PR-based.
+        const anyKey = pls.map((pl) => keyOf[pl]).find(Boolean);
+        if (anyKey) {
+          const [repo, branch] = anyKey.split(" ");
+          targets[id] = { repo, branch, pr: pick?.s.open ? pick.s.num : null };
+        }
       }
+      publishTargets(targets);
       prsNext = Date.now() + PR_EVERY;
     } catch {
       // Machine away, rate limit, gh missing: keep showing the last values
@@ -254,15 +280,33 @@ export function indicators(id, t, indent) {
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
-      .child(slot(p.deploy && iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim)))
+      .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openDeploys(id, cx))))
       .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id)) : iconChip("status", p.status, status[p.status])))));
+}
+
+// Switches to space `id` if needed, then shows its Deploys panel. Clicking the
+// chip of the already-active space while its Deploys panel is open hides it.
+function openDeploys(id, cx) {
+  const active = spaces().find((s) => s.active)?.id;
+  const openPanel = () => { run("layout.select", { stack: "panel-body", child: "deploys" }); run("layout.show", { id: "panel" }); };
+  if (active === id) {
+    const here = find(layout(), "panel-body")?.active === "deploys" && find(layout(), "panel")?.hidden !== true;
+    if (here) run("layout.hide", { id: "panel" });
+    else openPanel();
+    return;
+  }
+  run("space.select", { id });
+  openPanel();
+  // tabs' per-space panel memory can revert this within 1s of a space switch
+  // (its own pending-restore window); reassert once that's settled.
+  cx.timer.after(1100, () => openPanel());
 }
 
 // Keep the press from selecting or dragging the space row underneath.
 const clickable = (el, fn) => el
   .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
   .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
-  .on_click((_e, cx) => { cx.stop_propagation(); fn(); });
+  .on_click((_e, cx) => { cx.stop_propagation(); fn(cx); });
 
 // Clicking ↯ splits a Claude pane into space `id`'s shown tab to resolve the conflict,
 // without switching to the space. Does nothing while one is still running there.

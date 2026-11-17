@@ -111,21 +111,24 @@ bd: |
       echo "$body" | grep -v '^- .*→' | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | glow -s "${GLAMOUR_STYLE:-auto}" -
       exit
     fi
-    # The bot's comment links each stage's ArgoCD app; take the name from there
-    app=$(echo "$body" | grep -oE "/applications/[^/]+/[^/?)]+-$stage\b" | head -1 | cut -d/ -f3-)
-    [ -n "$app" ] || { echo "no ArgoCD link for stage '$stage' in the branch-deploy comment" >&2; exit 1; }
-    json=$(argocd app get "$app" -o json --grpc-web) || exit 1
+    # The bot's comment links each stage's ArgoCD host and app; take both from
+    # there so the logs don't depend on whatever argocd context is current.
+    link=$(echo "$body" | grep -oE "https://[^/\"]+/applications/[^/]+/[^/?)]+-$stage\b" | head -1)
+    [ -n "$link" ] || { echo "no ArgoCD link for stage '$stage' in the branch-deploy comment" >&2; exit 1; }
+    server=${link#https://} server=${server%%/*}
+    app=$(echo "$link" | grep -oE "/applications/[^/]+/[^/?)]+-$stage\b" | cut -d/ -f3-)
+    json=$(argocd app get "$app" --server "$server" -o json --grpc-web) || exit 1
     e=$(printf '\033')
     {
     echo "== $app"
     echo "$json" | jq -r '.status | "sync: \(.sync.status)  health: \(.health.status)\nlast op: \(.operationState.phase // "-") \(.operationState.message // "")"'
     echo; echo "== not healthy"
-    argocd app resources "$app" --output tree=detailed --grpc-web | grep -vE 'Healthy|^[[:space:]]*$' || echo "(none)"
+    argocd app resources "$app" --server "$server" --output tree=detailed --grpc-web | grep -vE 'Healthy|^[[:space:]]*$' || echo "(none)"
     echo "$json" | jq -r '.status.resources[] | select((.health.status // "Healthy") != "Healthy")
       | select(.kind == "Deployment" or .kind == "StatefulSet") | "\(.kind) \(.name)"' |
       while read -r kind name; do
         echo; echo "== logs: $kind/$name (last 30)"
-        argocd app logs "$app" --kind "$kind" --group apps --name "$name" --tail 30 --grpc-web 2>&1
+        argocd app logs "$app" --server "$server" --kind "$kind" --group apps --name "$name" --tail 30 --grpc-web 2>&1
       done
     } | sed -E "s/^== .*/$e[1m&$e[0m/
       s/(Healthy|Synced|Succeeded)/$e[32m&$e[0m/g

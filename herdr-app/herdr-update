@@ -123,6 +123,17 @@ for modjson in "$D"/mods/*/mod.json; do
 	fi
 done
 
+# From-scratch mods (no upstream clone to merge) still need `herdr-app check`.
+for modjson in "$D"/mods/*/mod.json; do
+	mod=$(basename "$(dirname "$modjson")")
+	src=$(jq -r '.cloned_from.name // empty' "$modjson")
+	[[ -z $src ]] || continue
+	if out=$(herdr-app check "$A/mods/$mod" 2>&1); then ok "$mod: herdr-app check passed"; else
+		fix "$mod: herdr-app check failed"
+		note "$out"
+	fi
+done
+
 # Mod API: exported functions that changed, flagged where our mods import them.
 if ! cmp -s "$UP/herdr.d.ts" "$A/herdr.d.ts"; then
 	used=$(cat "$D"/mods/*/*.js | grep -o 'import {[^}]*} from "herdr"' | grep -o '{[^}]*}' | tr -d '{}' | tr ',' '\n' | awk '{print $1}' | sort -u)
