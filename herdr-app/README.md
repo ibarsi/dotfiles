@@ -218,6 +218,76 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 `deploys` has no `cloned_from` (nothing to merge), so a second loop runs
 `herdr-app check` on it and any other mod without one.
 
+## Code Burn panel
+
+A **Code Burn** button sits in the tabs bar next to Deploys. It shows what the
+coding agents cost, priced at the [employment Vertex contract rates](../codeburn/README.md)
+rather than a subscription plan: this month's work spend against a projected
+month-end figure, a 30-day trend, every open space's burn with its live
+agents, and the usual totals/models/projects tables. `mods/codeburn/` is a
+from-scratch mod, split the same way as `deploys`: `main.js` for
+state/fetching, `ui.js` for render helpers, and `model.js` for every number
+the panel shows (no imports, tested with `node --test
+herdr-app/mods/codeburn/model.test.mjs`).
+
+Each refresh (every 60s while shown, plus a manual Refresh) runs up to three
+`codeburn` calls: `codeburn status --format menubar-json --scope combined
+--combined-details --no-optimize` for the selected range chip and again for
+the current month (skipped when the chip already is "Month"), and `codeburn
+export --format json` for the date range, piped through `jq` down to cost per
+repo, cost per completed session and the last 10 minutes of per-call records
+— a raw export over real history is tens of megabytes, too much to parse on
+a poll. `codeburn` is installed through `mise` as a global npm package
+(`codeburn/README.md`), so it exists only as a shim at
+`~/.local/share/mise/shims/codeburn`; Herdr's own process doesn't source the
+shell profile that puts mise's shims on PATH, so every call runs through
+`sh -c` with that directory prefixed onto PATH, or `codeburn` resolves in a
+terminal but not here.
+
+**Work vs. personal** is decided per device and provider in `model.js`'s
+`PERSONAL` table (`[{ device: /MacBook/i, provider: "codex" }]`): everything
+not listed is Vertex (work) spend, by device name and codeburn's own provider
+id. Codex on the MacBook is personal; the same Codex on a machine running
+work Codex through Vertex would need its own row in that table, matched by
+device name — a one-line change, not a redesign. The headline and the dim
+"Personal" line both read this split from the current month's data,
+regardless of which range chip is selected.
+
+**Spaces** ties spend to open herdr spaces using `shared("deploys.targets")`
+(the same `{repo, branch}` map `indicators.js` publishes for Deploys): a
+space on a feature branch shows that branch's Claude cost (from codeburn's
+`byBranch`, the only per-branch data codeburn has) plus whatever its live
+non-Claude agents have spent this session. A space on `main`/`master`, or on
+any branch name another open space's repo also uses, shows its **repo**
+total instead, labelled `repo` — `byBranch` sums every repo that has ever
+used a branch name, open or not, so two spaces both on `master` would
+otherwise show each other's spend mixed together. An agent that matches no
+open space's repo and branch lands in an "Other (no space)" row instead of
+being silently dropped. Busy spaces sort to the top by $/h; quiet ones below
+2% of the range's cost fold into a single "+ N quiet spaces" row so the list
+stays short with many spaces open.
+
+A small **≈** next to a total means part of it isn't exactly priced:
+reference-only Gemini rates, Grok at codeburn's defaults (no Vertex override
+yet), Pi's possibly-unrepriced recorded costs, a model with no price at all,
+or — because codeburn's daily history caps each day at its top 5 models by
+cost — a day's spend that couldn't be split into work/personal and was
+counted as work. Hovering it lists which apply.
+
+gpui-shell's embedded JS runtime doesn't honor `Intl` format options:
+`Number.prototype.toLocaleString(locale, opts)` and
+`Date.prototype.toLocaleDateString(locale, opts)` silently ignore `opts` and
+fall back to raw/default output (a dollar figure as its full float, a month
+name as a full timestamp). `model.js`'s `money()`, `monthName()` and
+`shortDate()` are built from `toFixed` and a fixed month-name array instead —
+don't reach for `toLocale*` anywhere in this mod.
+
+Still to verify once a second device is paired for work Codex through
+Vertex: that each device prices its own usage before sharing (so the
+far device's own overrides apply, not this one's), and whether `codeburn
+export`'s records are local-only — if so, a remote device's live agents show
+no $/h until that's confirmed.
+
 ## Updating
 
 `herdr-update` (a shared alias in Bash and Zsh, also run by `aiup` and

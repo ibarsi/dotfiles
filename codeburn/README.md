@@ -4,6 +4,9 @@ Employment Vertex pricing in USD, applied at current contract rates to all match
 history. Personal GPT and Grok usage retains CodeBurn's default pricing. The CLI is
 installed through [mise](../mise/README.md) and updated by [aiup](../zsh/README.md#updates).
 
+These rates feed herdr-app's [Code Burn panel](../herdr-app/README.md#code-burn-panel),
+which shows what they add up to across devices and agents.
+
 ## Pricing evidence
 
 [global-pricing.json](global-pricing.json) records rates derived from the billing
