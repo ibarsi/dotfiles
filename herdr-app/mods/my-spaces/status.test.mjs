@@ -20,8 +20,12 @@ test("queue beats conflict and approval", () => {
   assert.equal(prStatus(pr({ mergeQueueEntry: { state: "QUEUED" }, mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "");
 });
 
-test("conflict hides approval and comments", () => {
-  assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" }, [review("bob", later)])), "↯");
+test("comments beat conflict", () => {
+  assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" }, [review("bob", later)])), "※");
+});
+
+test("conflict still hides approval when there are no comments", () => {
+  assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "↯");
 });
 
 test("approval hides comments", () => {
