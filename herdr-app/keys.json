@@ -121,6 +121,8 @@
     "cmd-f": "terminal.search",
     "cmd-c": "terminal.copy",
     "cmd-v": "terminal.paste",
+    "ctrl-shift-c": "terminal.copy",
+    "ctrl-shift-v": "terminal.paste",
     "ctrl-v": "terminal.paste_image",
     "alt-backspace": "send:\u0017",
     "cmd-left": "send:\u0001",

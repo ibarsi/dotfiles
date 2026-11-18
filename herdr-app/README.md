@@ -17,6 +17,12 @@ Some bindings in `keys.json` use `cmd-…`. They're for macOS and may do nothing
 on Linux, or clash with Hyprland's Super bindings. The Ctrl-Space prefix,
 Alt and Ctrl-Alt bindings behave the same on both.
 
+On Omarchy, Super-C and Super-V copy and paste in terminal panes. Hyprland
+sends Ctrl-Shift-C/V to windows tagged `terminal` and plain Ctrl-C/V to the
+rest, so add `o.window("herdr-app", { tag = "+terminal" })` to
+`~/.config/hypr/hyprland.lua` (not tracked here). `keys.json` binds
+Ctrl-Shift-C/V to `terminal.copy` and `terminal.paste`.
+
 Cmd-M minimizes the window and Cmd-A selects all terminal contents, matching
 the macOS defaults added in Herdr 0.1.16.
 
