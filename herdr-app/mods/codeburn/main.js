@@ -283,13 +283,12 @@ export default class CodeBurn extends View {
       .child(Spark(daily.series)));
 
     // Spaces: every herdr space that has an open PR/branch, its live agents, and its burn rate.
-    const allSpaceRows = [...spacesResult.rows, ...spacesResult.quiet.rows, ...(spacesResult.other ? [spacesResult.other] : [])];
-    const maxSpaceCost = Math.max(0.01, ...allSpaceRows.map((r) => r.cost ?? 0));
+    const rangeCost = current.cost || 0.01; // percentage denominator; avoids divide-by-zero before any spend exists
     body.child(v_flex().flex_none().gap(4)
       .child(Section(`SPACES · ${spacesResult.rows.length + spacesResult.quiet.count + (spacesResult.other ? 1 : 0)}`, div().text_size(TEXT.caption).text_color(t.dim).child(`${spacesResult.live} agents live · ${money(spacesResult.rate)}/h`)))
-      .children(spacesResult.rows.map((row) => this.spaceBlock(row, activeId, maxSpaceCost, t)))
-      .when(spacesResult.quiet.count > 0, (el) => el.child(this.quietBlock(spacesResult.quiet, maxSpaceCost, t)))
-      .when(Boolean(spacesResult.other), (el) => el.child(this.spaceBlock(spacesResult.other, activeId, maxSpaceCost, t))));
+      .children(spacesResult.rows.map((row) => this.spaceBlock(row, activeId, rangeCost, t)))
+      .when(spacesResult.quiet.count > 0, (el) => el.child(this.quietBlock(spacesResult.quiet, rangeCost, t)))
+      .when(Boolean(spacesResult.other), (el) => el.child(this.spaceBlock(spacesResult.other, activeId, rangeCost, t))));
 
     // Totals for the selected range.
     body.child(v_flex().flex_none().gap(6)
@@ -341,7 +340,7 @@ export default class CodeBurn extends View {
     return root.child(chips).child(body).child(footer);
   }
 
-  spaceBlock(row, activeId, maxSpaceCost, t) {
+  spaceBlock(row, activeId, rangeCost, t) {
     const open = this.isOpen(row.id, activeId);
     const workingCount = row.agents.filter((a) => !a.idle).length;
     const idleCount = row.agents.filter((a) => a.idle).length;
@@ -354,7 +353,7 @@ export default class CodeBurn extends View {
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).child(`${row.repo}${row.branch ? "  " + row.branch : ""}`))
         .when(row.shared, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child("repo")))
         .when(row.rate > 0, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child(`${money(row.rate)}/h`)))
-        .child(div().w(36).child(Bar(row.cost / maxSpaceCost, t.accent)))
+        .child(div().w(36).text_right().text_size(TEXT.caption).text_color(t.dim).child(`${Math.round((row.cost / rangeCost) * 100)}%`))
         .child(div().w(70).text_right().text_size(TEXT.small).text_color(t.foreground).child(money(row.cost))))
       .when(open && row.agents.length > 0, (el) => el.children(row.agents.map((a) => this.agentRow(a, t))));
   }
@@ -368,10 +367,10 @@ export default class CodeBurn extends View {
       .child(div().text_size(TEXT.caption).text_color(t.dim).child(`sess ${money(a.sessionCost)}`));
   }
 
-  quietBlock(quiet, maxSpaceCost, t) {
+  quietBlock(quiet, rangeCost, t) {
     if (this.showQuiet) {
       return v_flex().id("codeburn-quiet").flex_none()
-        .children(quiet.rows.map((row) => this.spaceBlock(row, null, maxSpaceCost, t)))
+        .children(quiet.rows.map((row) => this.spaceBlock(row, null, rangeCost, t)))
         .child(this.quietToggle(quiet, t, "hide"));
     }
     return this.quietToggle(quiet, t, "show");

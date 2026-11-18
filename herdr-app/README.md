@@ -297,7 +297,10 @@ whose herdr space closed or moved between codeburn's snapshot and herdr's own,
 a real but rare race between two independently-refreshing sources — lands in
 an "Other (no space)" row instead of being silently dropped. Busy spaces sort
 to the top by $/h; quiet ones below 2% of the range's cost fold into a single
-"+ N quiet spaces" row so the list stays short with many spaces open.
+"+ N quiet spaces" row so the list stays short with many spaces open. Each
+row's cost comes with its percentage of the range total, not a bar — the
+same reasoning as Models: a row's own `accent`-colored bar read as the same
+"capacity" meaning as the context-fill bar in the agents below it.
 
 None of a device's branch names, project paths or live sessions reach a peer
 through `--scope combined`: codeburn's own `sanitizeForSharing` (in its
