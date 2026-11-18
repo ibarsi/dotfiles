@@ -276,7 +276,7 @@ export function modelBreakdown(models, totalCost) {
 
 export function accuracyNotes({ providers, unpriced, unclassified }) {
   const notes = [];
-  if (providers?.has("gemini")) notes.push("Gemini uses reference Vertex rates; standard and priority tiers aren't distinguished.");
+  if (providers?.has("gemini")) notes.push("Gemini: Carbon and Hydrogen use verified Vertex rates; Argon, 3.8 Flash and Flash Lite mix standard/priority traffic under one model name, so those use reference-only rates.");
   if (providers?.has("pi")) notes.push("Pi can keep agent-recorded costs that the overrides don't reprice.");
   if (providers?.has("grok build") || providers?.has("grok")) notes.push("Grok is priced at codeburn defaults; no Vertex override yet.");
   if (unpriced?.length) notes.push(`No price for: ${unpriced.join(", ")}`);

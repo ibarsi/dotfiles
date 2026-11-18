@@ -10,12 +10,21 @@ import shutil
 import tempfile
 
 
+# Gemini models confirmed priority-tier-only across every billing export seen so
+# far (zero standard-tier dollars). Every other Gemini model mixes standard and
+# priority traffic under one model name, which CodeBurn's Gemini parser cannot
+# distinguish (see global-pricing.json's limitations), so a flat override would
+# systematically misprice one tier. Do not add a model here without export
+# evidence that it has never billed standard-tier.
+UNAMBIGUOUS_GEMINI_MODELS = {"gemini-4-carbon", "gemini-4-hydrogen"}
+
+
 def merge_pricing(config, catalog):
     """Preserve all settings except the explicitly managed model rates."""
     desired = catalog["priceOverrides"]
     if catalog["currency"] != "USD" or catalog["endpoint"] != "global":
         raise ValueError("Only the verified USD/global catalog is supported")
-    if any(not model.startswith("claude-") for model in desired):
+    if any(not (model.startswith("claude-") or model in UNAMBIGUOUS_GEMINI_MODELS) for model in desired):
         raise ValueError("This catalog must not override personal GPT/Grok or ambiguous Gemini usage")
     existing = config.get("priceOverrides", {})
     if not isinstance(existing, dict):
@@ -50,7 +59,7 @@ def main():
     updated = merge_pricing(original, catalog)
     print("Verified global Claude overrides (USD per million tokens):")
     print(json.dumps(catalog["priceOverrides"], indent=2))
-    print("Haiku 5.5 keeps native context tiers; Gemini rates remain reference-only.")
+    print("Haiku 5.5 keeps native context tiers; Gemini Argon/3.8 Flash/Flash Lite rates remain reference-only.")
     print("GPT/Grok defaults and unrelated settings are preserved.")
     if updated == original:
         print("Managed rates are current.")
