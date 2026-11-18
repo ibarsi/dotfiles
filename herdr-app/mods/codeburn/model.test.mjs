@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, monthName, shortDate, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent } from "./model.js";
+import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, monthName, shortDate, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent, stripPersonal, modelBreakdown, RANK_COLORS } from "./model.js";
 
 test("isPersonal: MacBook codex is personal", () => {
   assert.equal(isPersonal("Igors-MacBook-Pro.local", "codex"), true);
@@ -216,6 +216,71 @@ test("mergeCurrent on an empty device list returns zeroed totals, not NaN", () =
   assert.deepEqual(merged.topModels, []);
 });
 
+test("stripPersonal removes a personal provider's contribution from cost/calls/tokens/providerDetails/topModels", () => {
+  const combinedDevices = [
+    { id: "local", name: "Igors-MacBook-Pro.local", payload: { current: {
+      cost: 50, calls: 500, inputTokens: 1000, outputTokens: 2000, cacheReadTokens: 3000,
+      providerDetails: [
+        { id: "claude", cost: 40, calls: 400, inputTokens: 800, outputTokens: 1600, cacheReadTokens: 3000 },
+        { id: "codex", cost: 10, calls: 100, inputTokens: 200, outputTokens: 400 },
+      ],
+      topModels: [{ name: "Opus 5.5", cost: 40 }, { name: "GPT-6.1 Sol", cost: 10 }],
+    } } },
+  ];
+  const [stripped] = stripPersonal(combinedDevices);
+  const c = stripped.payload.current;
+  assert.equal(c.cost, 40);
+  assert.equal(c.calls, 400);
+  assert.equal(c.inputTokens, 800);
+  assert.equal(c.outputTokens, 1600);
+  assert.equal(c.cacheReadTokens, 3000);
+  assert.deepEqual(c.providerDetails.map((p) => p.id), ["claude"]);
+  assert.deepEqual(c.topModels.map((m) => m.name), ["Opus 5.5"]);
+});
+
+test("stripPersonal leaves a non-MacBook device's codex untouched (personal is device-specific, not provider-global)", () => {
+  const combinedDevices = [
+    { id: "omen", name: "omen", payload: { current: {
+      cost: 10, providerDetails: [{ id: "codex", cost: 10 }], topModels: [{ name: "GPT-6.1 Sol", cost: 10 }],
+    } } },
+  ];
+  const [stripped] = stripPersonal(combinedDevices);
+  assert.equal(stripped.payload.current.cost, 10);
+  assert.deepEqual(stripped.payload.current.providerDetails.map((p) => p.id), ["codex"]);
+});
+
+test("modelBreakdown assigns rank colors in order and percentages of the given total, with no leftover row when nothing is unaccounted for", () => {
+  const models = [{ name: "Opus 5.5", cost: 60 }, { name: "Sonnet 5", cost: 40 }];
+  const result = modelBreakdown(models, 100);
+  assert.deepEqual(result, [
+    { name: "Opus 5.5", cost: 60, color: RANK_COLORS[0], percent: 60 },
+    { name: "Sonnet 5", cost: 40, color: RANK_COLORS[1], percent: 40 },
+  ]);
+});
+
+test("modelBreakdown adds an 'Other' segment (color null) for spend not covered by the shown models", () => {
+  const models = [{ name: "Opus 5.5", cost: 60 }];
+  const result = modelBreakdown(models, 100); // 40 unaccounted (e.g. unpriced models, or smaller ones not in topModels)
+  assert.equal(result.length, 2);
+  assert.equal(result[1].name, "Other");
+  assert.equal(result[1].color, null);
+  assert.equal(result[1].cost, 40);
+  assert.equal(result[1].percent, 40);
+});
+
+test("modelBreakdown lumps every model past the 10-color limit into 'Other'", () => {
+  const models = Array.from({ length: 12 }, (_, i) => ({ name: `m${i}`, cost: 10 }));
+  const result = modelBreakdown(models, 120);
+  assert.equal(result.length, 11); // 10 colored + 1 "Other"
+  assert.equal(result[10].name, "Other");
+  assert.equal(result[10].cost, 20); // models 11 and 12
+});
+
+test("modelBreakdown with zero total cost gives zero percentages, not NaN", () => {
+  const result = modelBreakdown([{ name: "Opus 5.5", cost: 0 }], 0);
+  assert.equal(result[0].percent, 0);
+});
+
 function agent(overrides) {
   return { id: "a", provider: "claude", model: "Opus 5.5", project: "", branch: "", fill: 0, idle: false, idleSeconds: 0, rate: 0, sessionCost: 0, ...overrides };
 }
@@ -308,7 +373,7 @@ test("buildSpaces: no targets and no agents yields an empty, well-shaped result"
   assert.deepEqual(result, { rows: [], quiet: { count: 0, cost: 0, rows: [] }, other: null, live: 0, rate: 0 });
 });
 
-test("EXPORT_JQ keeps only records at or after the cutoff, and slims projects/sessions", (t) => {
+test("EXPORT_JQ keeps only records at or after the cutoff, sums project/session cost from non-personal providers only, and slims the shape", (t) => {
   try {
     execFileSync("jq", ["--version"]);
   } catch {
@@ -316,21 +381,49 @@ test("EXPORT_JQ keeps only records at or after the cutoff, and slims projects/se
     return;
   }
   const fixture = {
-    projects: [{ project: "/a/b", cost: 1, extra: "x" }],
-    sessions: [{ sessionId: "s", cost: 1, extra: "y" }],
+    projects: [{ project: "/a/b", cost: 999, extra: "x" }], // codeburn's own mixed-provider total; EXPORT_JQ ignores it and rebuilds from records
+    sessions: [{ sessionId: "s1", cost: 10, extra: "y" }, { sessionId: "s2", cost: 8 }],
     records: [
-      { sessionId: "s", cost: 1, timestamp: "2026-11-18T09:00:00Z" },
-      { sessionId: "s", cost: 2, timestamp: "2026-11-18T11:00:00Z" },
+      { project: "/a/b", provider: "claude", sessionId: "s1", cost: 10, timestamp: "2026-11-18T09:00:00Z" },
+      { project: "/a/b", provider: "codex", sessionId: "s2", cost: 5, timestamp: "2026-11-18T09:05:00Z" },
+      { project: "/a/b", provider: "codex", sessionId: "s2", cost: 3, timestamp: "2026-11-18T11:00:00Z" },
+      { project: "/a/b", provider: "claude", sessionId: "s1", cost: 2, timestamp: "2026-11-18T11:30:00Z" },
     ],
   };
   const file = join(tmpdir(), `codeburn-export-jq-test-${process.pid}.json`);
   writeFileSync(file, JSON.stringify(fixture));
   try {
-    const out = execFileSync("jq", ["-c", "--arg", "cutoff", "2026-11-18T10:00:00Z", EXPORT_JQ, file], { encoding: "utf8" });
+    const out = execFileSync("jq", ["-c", "--argjson", "personal", '["codex"]', "--arg", "cutoff", "2026-11-18T10:00:00Z", EXPORT_JQ, file], { encoding: "utf8" });
     const slim = JSON.parse(out);
+    assert.deepEqual(slim.projects, [{ project: "/a/b", cost: 12 }]); // claude's 10 + 2; codex's 5 + 3 excluded
+    assert.deepEqual(slim.sessions, [{ sessionId: "s1", cost: 10 }]); // s2 (codex) dropped entirely
     assert.equal(slim.recent.length, 1);
-    assert.equal(slim.recent[0].cost, 2);
+    assert.equal(slim.recent[0].cost, 2); // the one post-cutoff, non-personal record
     assert.deepEqual(Object.keys(slim.projects[0]).sort(), ["cost", "project"]);
+  } finally {
+    unlinkSync(file);
+  }
+});
+
+test("EXPORT_JQ with an empty personal list (e.g. a remote device with no personal providers) excludes nothing", (t) => {
+  try {
+    execFileSync("jq", ["--version"]);
+  } catch {
+    t.skip("jq not on PATH");
+    return;
+  }
+  const fixture = {
+    projects: [],
+    sessions: [{ sessionId: "s2", cost: 8 }],
+    records: [{ project: "/a/b", provider: "codex", sessionId: "s2", cost: 5, timestamp: "2026-11-18T09:05:00Z" }],
+  };
+  const file = join(tmpdir(), `codeburn-export-jq-test-empty-${process.pid}.json`);
+  writeFileSync(file, JSON.stringify(fixture));
+  try {
+    const out = execFileSync("jq", ["-c", "--argjson", "personal", "[]", "--arg", "cutoff", "2026-11-18T10:00:00Z", EXPORT_JQ, file], { encoding: "utf8" });
+    const slim = JSON.parse(out);
+    assert.deepEqual(slim.projects, [{ project: "/a/b", cost: 5 }]);
+    assert.deepEqual(slim.sessions, [{ sessionId: "s2", cost: 8 }]);
   } finally {
     unlinkSync(file);
   }

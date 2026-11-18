@@ -253,14 +253,23 @@ with no `--scope`, directly on that device (`exec(..., { on: device.name })`,
 the same pattern Deploys uses for remote `kubectl`/`argocd`) — see "Spaces"
 below for why.
 
-**Work vs. personal** is decided per device and provider in `model.js`'s
-`PERSONAL` table (`[{ device: /MacBook/i, provider: "codex" }]`): everything
-not listed is Vertex (work) spend, by device name and codeburn's own provider
-id. Codex on the MacBook is personal; the same Codex on a machine running
-work Codex through Vertex would need its own row in that table, matched by
-device name — a one-line change, not a redesign. The headline and the dim
-"Personal" line both read this split from the current month's data,
-regardless of which range chip is selected.
+**Personal spend never appears** — this panel is about Vertex (work) spend,
+and MacBook Codex (model.js's `PERSONAL` table, `[{ device: /MacBook/i,
+provider: "codex" }]`) is stripped before anything downstream sees it:
+`stripPersonal()` removes it from every device's `current` block (cost,
+calls, tokens, `providerDetails`, `topModels`) before `mergeCurrent` ever
+runs, a personal live session is filtered out of the agents list entirely,
+and the export's own jq program (`EXPORT_JQ`) excludes personal-provider
+records before summing project/session totals — codeburn's own `.projects`
+figure mixes every provider in a folder together, so a repo worked on with
+both Claude and personal Codex needs the per-record, per-provider rebuild,
+not a simple subtraction. The headline's work/personal split
+(`splitSpend()`) still runs over the *unstripped* month data to classify
+providers; its `work` figure already excluded personal by construction, it's
+only the separate "Personal" display line that's gone. The same `PERSONAL`
+table decides all of this, so moving Codex to a machine running it through
+Vertex (matched by device name) is the one change that un-hides it
+everywhere at once.
 
 **Totals, Models, Projects and Spaces** are built across every paired device
 rather than read off just this one: codeburn's own `combined.combined` block
@@ -308,6 +317,18 @@ total for that repo with each remote device's own (now real, once fetched
 directly) `topProjects` entry, since the two are mutually exclusive sources
 (export is this machine only; a remote device's own `topProjects` is only
 ever itself).
+
+**Models** shows a stacked bar above the list: one segment per model, sized
+to its share of the range's total cost, colored by rank (`model.js`'s
+`RANK_COLORS`, 10 fixed theme colors — not `accent`, which stays reserved for
+the context-fill bar elsewhere in the panel, so a cost color is never read as
+that). A model past the 10th, or any gap between the listed models' cost and
+the range total (an unpriced model, or one smaller than the ones shown),
+folds into one dim "Other" segment rather than implying coverage the bar
+doesn't have. Each row below carries a small swatch in its segment's color
+and its percentage in place of a per-row bar — a magnitude read without
+reusing `accent` for a second meaning, which rows and spaces' own cost-share
+bars both still use.
 
 A small **≈** next to a total means part of it isn't exactly priced:
 reference-only Gemini rates, Grok at codeburn's defaults (no Vertex override

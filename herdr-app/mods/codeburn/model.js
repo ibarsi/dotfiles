@@ -109,11 +109,24 @@ export function tokens(n) {
 }
 
 // Run against a codeburn `export --format json` file with
-// `jq -c --arg cutoff <ISO> "$EXPORT_JQ" <file>` to shrink it from tens of
-// megabytes to the three things the panel needs: cost per repo, cost per
-// session (for completed-session totals) and the last few minutes of
-// per-call records (for live burn rate).
-export const EXPORT_JQ = '{projects: [.projects[] | {project, cost}], sessions: [.sessions[] | {sessionId, cost}], recent: [.records[] | select(.timestamp >= $cutoff) | {sessionId, cost}]}';
+// `jq -c --argjson personal '["codex",...]' --arg cutoff <ISO> "$EXPORT_JQ" <file>`
+// to shrink it from tens of megabytes to the three things the panel needs —
+// cost per repo, cost per session (for completed-session totals) and the
+// last few minutes of per-call records (for live burn rate) — while
+// excluding every record whose provider is in `$personal` (this machine's
+// personal providers, e.g. Codex on a MacBook). codeburn's own `.projects`
+// total mixes every provider together (a repo worked on with both a work and
+// a personal tool shows one combined number), so `projects` is rebuilt from
+// `.records` (which does carry `provider`) instead of read off codeburn's own
+// summary. `.sessions` entries don't carry `provider` themselves, so each
+// session's provider is looked up from its own records first.
+export const EXPORT_JQ = `
+(.records | INDEX(.sessionId) | map_values(.provider)) as $providerBySession
+| {
+    projects: [.records | group_by(.project)[] | {project: .[0].project, cost: ([.[] | select(.provider as $p | ($personal | index($p)) | not) | .cost] | add // 0)}],
+    sessions: [.sessions[] | select(($providerBySession[.sessionId] // "") as $p | ($personal | index($p)) | not) | {sessionId, cost}],
+    recent: [.records[] | select((.timestamp >= $cutoff) and (.provider as $p | ($personal | index($p)) | not)) | {sessionId, cost}]
+  }`;
 
 export function agents(liveSessions, slim) {
   const sessionCostById = new Map((slim?.sessions ?? []).map((s) => [s.sessionId, s.cost]));
@@ -204,6 +217,61 @@ export function mergeCurrent(combinedDevices) {
     byBranch: [...branches.values()],
     unpricedModels: [...unpriced],
   };
+}
+
+// Removes every personal (device + provider) contribution from each
+// device's `current` block entirely, so personal spend doesn't show up in
+// Totals, Models, cache-hit rate, or anywhere else `mergeCurrent` feeds —
+// the panel is about work (Vertex) spend. `providerDetails` doesn't carry
+// cacheWriteTokens (verified against real codeburn output), so that one
+// field can't be exactly subtracted; in practice it's negligible for a
+// personal Codex account, which barely uses prompt caching.
+export function stripPersonal(combinedDevices) {
+  return (combinedDevices ?? []).map((device) => {
+    const c = device.payload?.current;
+    if (!c) return device;
+    const removed = (c.providerDetails ?? []).filter((pd) => isPersonal(device.name, pd.id));
+    if (!removed.length) return device;
+    const sub = (field) => removed.reduce((s, pd) => s + (pd[field] ?? 0), 0);
+    return {
+      ...device,
+      payload: {
+        ...device.payload,
+        current: {
+          ...c,
+          providerDetails: (c.providerDetails ?? []).filter((pd) => !isPersonal(device.name, pd.id)),
+          topModels: (c.topModels ?? []).filter((m) => !isPersonal(device.name, providerOfModel(m.name))),
+          cost: (c.cost ?? 0) - sub("cost"),
+          calls: (c.calls ?? 0) - sub("calls"),
+          inputTokens: (c.inputTokens ?? 0) - sub("inputTokens"),
+          outputTokens: (c.outputTokens ?? 0) - sub("outputTokens"),
+          cacheReadTokens: (c.cacheReadTokens ?? 0) - sub("cacheReadTokens"),
+        },
+      },
+    };
+  });
+}
+
+// Theme color-token names (read via theme() in ui.js, never a hardcoded hex —
+// see theme/README.md's colour rule), one per rank from highest spend down.
+// None of these is `accent`: that color is reserved for the context-fill bar
+// elsewhere in this panel, so a cost bar is never confused for one.
+export const RANK_COLORS = ["red", "peach", "yellow", "green", "teal", "sky", "sapphire", "lavender", "mauve", "pink"];
+
+// Models, already sorted by cost descending (as codeburn's topModels is),
+// assigned a fixed color by rank for the stacked breakdown bar. Anything past
+// RANK_COLORS.length, plus any gap between the shown models' cost and
+// `totalCost` (unpriced models, or models smaller than the ones shown),
+// collapses into one dim "Other" segment (color: null) so the bar never needs
+// an 11th color and never implies full coverage it doesn't have.
+export function modelBreakdown(models, totalCost) {
+  const pct = (cost) => (totalCost > 0 ? (cost / totalCost) * 100 : 0);
+  const shown = models.slice(0, RANK_COLORS.length).map((m, i) => ({ name: m.name, cost: m.cost ?? 0, color: RANK_COLORS[i], percent: pct(m.cost ?? 0) }));
+  const shownCost = shown.reduce((s, m) => s + m.cost, 0);
+  const restCost = models.slice(RANK_COLORS.length).reduce((s, m) => s + (m.cost ?? 0), 0);
+  const otherCost = restCost + Math.max(0, totalCost - shownCost - restCost);
+  if (otherCost > 0.005) shown.push({ name: "Other", cost: otherCost, color: null, percent: pct(otherCost) });
+  return shown;
 }
 
 export function accuracyNotes({ providers, unpriced, unclassified }) {

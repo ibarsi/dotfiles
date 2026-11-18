@@ -8,9 +8,9 @@ import { h_flex, v_flex } from "gpui-base";
 import { exec, theme, shared, setShared, layout, spaces } from "herdr";
 import {
   RANGES, PERSONAL, money, tokens, ago, monthName, shortDate, projectMonth, splitSpend, dailyWork,
-  providerOfModel, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent, EXPORT_JQ,
+  providerOfModel, isPersonal, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent, stripPersonal, modelBreakdown, EXPORT_JQ,
 } from "./model.js";
-import { TEXT, Panel, PanelHeader, Chip, Section, Bar, Spark, Stat, Approx, Link, IconButton, Message, Busy } from "./ui.js";
+import { TEXT, Panel, PanelHeader, Chip, Section, Bar, StackedBar, Swatch, Spark, Stat, Approx, Link, IconButton, Message, Busy } from "./ui.js";
 
 const FETCH_EVERY = 60000; // codeburn is fast (~0.5s/call); 60s keeps the panel fresh without hammering it
 const STALE_AFTER = 180000;
@@ -44,7 +44,7 @@ const LOCAL_STATUS_SH = `${PATH_PREFIX}; ${RUN} status --format menubar-json --n
 const EXPORT_SH = `${PATH_PREFIX}
 f=$(mktemp -t codeburn).json
 trap 'rm -f "$f"' EXIT
-${RUN} export --format json --from "$1" --to "$2" -o "$f" >/dev/null && jq -c --arg cutoff "$3" "$4" "$f"`;
+${RUN} export --format json --from "$1" --to "$2" -o "$f" >/dev/null && jq -c --argjson personal "$3" --arg cutoff "$4" "$5" "$f"`;
 
 function pad2(n) {
   return String(n).padStart(2, "0");
@@ -141,10 +141,9 @@ export default class CodeBurn extends View {
       const from = rangeFrom(period, today);
       const to = fmtDate(today);
       const cutoff = new Date(Date.now() - 10 * 60000).toISOString();
-      const [rangeR, monthR, exportR] = await Promise.all([
+      const [rangeR, monthR] = await Promise.all([
         exec("sh", ["-c", STATUS_SH, "sh", period], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
         period === "month" ? Promise.resolve(null) : exec("sh", ["-c", STATUS_SH, "sh", "month"], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
-        exec("sh", ["-c", EXPORT_SH, "sh", from, to, cutoff, EXPORT_JQ], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
       ]);
       if (this.period !== period) return; // stale: range chip moved on while this was in flight
       // lastFetch is set on every path below, success or failure: tick()'s
@@ -179,14 +178,22 @@ export default class CodeBurn extends View {
       // sanitized data (aggregate cost/tokens/models only, no branch/project
       // detail, no live agents from it).
       const remoteDevices = (range.combinedDevices ?? []).filter((d) => !d.local);
-      const remoteResults = await Promise.all(remoteDevices.map(async (d) => {
-        try {
-          const r = await exec("sh", ["-c", LOCAL_STATUS_SH, "sh", period], { on: d.name, timeout: 30000 });
-          return r.code === 0 ? JSON.parse(r.stdout) : null;
-        } catch {
-          return null;
-        }
-      }));
+      // codeburn export only ever covers this machine, so "personal" here
+      // means this machine's own PERSONAL entries — found from the local
+      // device's own name, now that `range` says what codeburn calls it.
+      const localDeviceName = range.combinedDevices?.find((d) => d.local)?.name ?? "";
+      const personalProviders = PERSONAL.filter((p) => p.device.test(localDeviceName)).map((p) => p.provider);
+      const [remoteResults, exportR] = await Promise.all([
+        Promise.all(remoteDevices.map(async (d) => {
+          try {
+            const r = await exec("sh", ["-c", LOCAL_STATUS_SH, "sh", period], { on: d.name, timeout: 30000 });
+            return r.code === 0 ? JSON.parse(r.stdout) : null;
+          } catch {
+            return null;
+          }
+        })),
+        exec("sh", ["-c", EXPORT_SH, "sh", from, to, JSON.stringify(personalProviders), cutoff, EXPORT_JQ], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
+      ]);
       range.combinedDevices = (range.combinedDevices ?? []).map((d) => {
         if (d.local) return d;
         const fresh = remoteResults[remoteDevices.indexOf(d)];
@@ -230,10 +237,13 @@ export default class CodeBurn extends View {
 
     const monthDevices = this.month?.combinedDevices ?? [];
     const rangeDevices = this.range?.combinedDevices ?? [];
-    // combined.combined only has coarse totals (no per-model/-project/-branch
-    // breakdown), so Totals/Models/Projects/Spaces are built by merging every
-    // paired device's own `current` block instead of reading just this one.
-    const current = mergeCurrent(rangeDevices);
+    // Personal spend (model.js's PERSONAL table) is stripped before anything
+    // else sees these devices, so it never shows up in Totals, Models,
+    // cache-hit rate, Spaces, or Projects — this panel is about work (Vertex)
+    // spend. combined.combined only has coarse totals (no per-model/-project
+    // /-branch breakdown), so those are built by merging every paired
+    // device's own `current` block instead of reading just this one.
+    const current = mergeCurrent(stripPersonal(rangeDevices));
 
     const split = splitSpend(monthDevices);
     const daily = dailyWork(monthDevices, 30);
@@ -244,7 +254,9 @@ export default class CodeBurn extends View {
     const monthUnpriced = mergeCurrent(monthDevices).unpricedModels;
     const headlineNotes = accuracyNotes({ providers: split.providers, unpriced: monthUnpriced, unclassified: daily.unclassified });
 
-    const liveSessions = rangeDevices.flatMap((d) => d.payload?.liveSessions?.sessions ?? []);
+    // Same reasoning as above: a personal agent doesn't attach to a space,
+    // doesn't carry a marker, and doesn't contribute a $/h anywhere.
+    const liveSessions = rangeDevices.flatMap((d) => (d.payload?.liveSessions?.sessions ?? []).filter((s) => !isPersonal(d.name, s.provider)));
     const agentsList = agents(liveSessions, this.slim ?? { sessions: [], recent: [] });
     // The local export is uncapped (every repo this machine touched); a
     // remote device only has its own `topProjects` (capped, and only
@@ -268,10 +280,7 @@ export default class CodeBurn extends View {
       .child(h_flex().items_baseline().gap(8)
         .child(div().font_semibold().text_size(18).child(money(split.work)))
         .child(div().text_size(TEXT.small).text_color(t.dim).child(`projected ${money(projected)} by ${shortDate(monthEnd)}`)))
-      .child(Spark(daily.series))
-      .when(split.personal > 0.005, (el) => el.child(h_flex().gap(6).items_center()
-        .child(div().text_size(TEXT.caption).text_color(t.dim).child(`Personal (${PERSONAL.map((p) => p.provider).join(", ")})`))
-        .child(div().text_size(TEXT.caption).text_color(t.dim).child(`${money(split.personal)} at API rates`)))));
+      .child(Spark(daily.series)));
 
     // Spaces: every herdr space that has an open PR/branch, its live agents, and its burn rate.
     const allSpaceRows = [...spacesResult.rows, ...spacesResult.quiet.rows, ...(spacesResult.other ? [spacesResult.other] : [])];
@@ -290,22 +299,33 @@ export default class CodeBurn extends View {
         .child(div().flex_1().child(Bar((current.cacheHitPercent ?? 0) / 100, t.ansi2)))
         .child(div().text_size(TEXT.caption).text_color(t.dim).child(`${(current.cacheHitPercent ?? 0).toFixed(1)}%`))));
 
-    // Models and projects for the selected range.
+    // Models for the selected range: one stacked bar showing every model's
+    // share of total cost (rank-colored, highest first, with a dim "Other"
+    // segment for anything past the top 10 or outside topModels entirely),
+    // then a row per model with the same rank color as its segment and its
+    // percentage in place of a per-row bar.
+    const breakdown = modelBreakdown(current.topModels ?? [], current.cost ?? 0);
     const models = (current.topModels ?? []).slice(0, 10);
-    const maxModelCost = Math.max(0.01, ...models.map((m) => m.cost ?? 0));
-    body.child(v_flex().flex_none().gap(2)
+    const other = breakdown.find((b) => b.color === null);
+    body.child(v_flex().flex_none().gap(4)
       .child(Section("MODELS"))
-      .children(models.map((m) => {
+      .child(StackedBar(breakdown))
+      .children(models.map((m, i) => {
         const approx = Approx(accuracyNotes({ providers: new Set([providerOfModel(m.name)]), unpriced: [], unclassified: 0 }));
-        return v_flex().flex_none().gap(2).py(2)
-          .child(h_flex().gap(6).items_center()
-            .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).child(m.name))
-            .when(Boolean(approx), (el) => el.child(approx))
-            .child(div().w(50).text_size(TEXT.caption).text_color(t.dim).child(String(m.calls ?? 0)))
-            .child(div().w(70).text_size(TEXT.caption).text_color(t.dim).child(tokens((m.inputTokens ?? 0) + (m.outputTokens ?? 0) + (m.cacheReadTokens ?? 0) + (m.cacheWriteTokens ?? 0))))
-            .child(div().w(70).text_size(TEXT.caption).text_color(t.foreground).child(money(m.cost))))
-          .child(Bar((m.cost ?? 0) / maxModelCost, t.accent));
-      })));
+        return h_flex().flex_none().gap(6).items_center().py(2)
+          .child(Swatch(breakdown[i]?.color))
+          .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).child(m.name))
+          .when(Boolean(approx), (el) => el.child(approx))
+          .child(div().w(50).text_size(TEXT.caption).text_color(t.dim).child(String(m.calls ?? 0)))
+          .child(div().w(70).text_size(TEXT.caption).text_color(t.dim).child(tokens((m.inputTokens ?? 0) + (m.outputTokens ?? 0) + (m.cacheReadTokens ?? 0) + (m.cacheWriteTokens ?? 0))))
+          .child(div().w(70).text_size(TEXT.caption).text_color(t.foreground).child(money(m.cost)))
+          .child(div().w(36).text_right().text_size(TEXT.caption).text_color(t.dim).child(`${Math.round(breakdown[i]?.percent ?? 0)}%`));
+      }))
+      .when(Boolean(other), (el) => el.child(h_flex().flex_none().gap(6).items_center().py(2)
+        .child(Swatch(null))
+        .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.dim).child("Other"))
+        .child(div().w(70).text_size(TEXT.caption).text_color(t.dim).child(money(other?.cost)))
+        .child(div().w(36).text_right().text_size(TEXT.caption).text_color(t.dim).child(`${Math.round(other?.percent ?? 0)}%`)))));
 
     const projects = current.topProjects ?? [];
     body.child(v_flex().flex_none().gap(2)

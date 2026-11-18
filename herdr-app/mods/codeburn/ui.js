@@ -56,6 +56,31 @@ export function Bar(fraction, color) {
     .child(div().h_full().flex_grow(1 - pct).flex_shrink(0));
 }
 
+// Maps a model.js RANK_COLORS key (or null, for the "Other" segment) to its
+// theme color. Never `accent`: that's reserved for the context-fill bar
+// elsewhere in this panel, so a cost color is never confused for it.
+export function rankColor(key, t) {
+  return { red: t.ansi1, peach: t.peach, yellow: t.ansi3, green: t.ansi2, teal: t.ansi6, sky: t.sky, sapphire: t.sapphire, lavender: t.lavender, mauve: t.mauve, pink: t.ansi5 }[key] ?? t.raised;
+}
+
+// A small colored square: the legend dot next to a model's name, matching
+// its segment in the StackedBar above it.
+export function Swatch(colorKey) {
+  const t = theme();
+  return div().flex_none().size(8).rounded(2).bg(rankColor(colorKey, t));
+}
+
+// One bar divided into proportional segments, each model.js's modelBreakdown
+// gave a `percent` and a `color` key (or null for "Other", shown dim).
+export function StackedBar(segments) {
+  const t = theme();
+  const bar = h_flex().h(8).w_full().flex_none().rounded(3).overflow_hidden().bg(t.raised);
+  for (const s of segments) bar.child(div().h_full().flex_grow(Math.max(0, s.percent)).flex_shrink(0).bg(rankColor(s.color, t)));
+  const shown = segments.reduce((sum, s) => sum + s.percent, 0);
+  if (shown < 100) bar.child(div().h_full().flex_grow(100 - shown).flex_shrink(0));
+  return bar;
+}
+
 // 30 thin bars, tallest at the highest value in the series.
 export function Spark(series) {
   const t = theme();
