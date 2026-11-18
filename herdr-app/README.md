@@ -218,6 +218,45 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 `deploys` has no `cloned_from` (nothing to merge), so a second loop runs
 `herdr-app check` on it and any other mod without one.
 
+## PR Reviews panel
+
+A **PR Reviews** button sits in the tabs bar next to Deploys (same
+`my-tabs` addition, one more `// pr-reviews`-marked line), listing every
+review on the active space's PR, oldest first, with resolved reviews
+collapsed and dimmed so unaddressed feedback stands out.
+
+`mods/pr-reviews/` is a from-scratch mod, split the same way as `deploys`:
+`main.js` for state/fetching/render, `ui.js` a local copy of `deploys/ui.js`'s
+small helpers (no cross-mod imports exist anywhere in this codebase, so each
+panel keeps its own), and `gql.js` (no imports, tested with `node --test
+herdr-app/mods/pr-reviews/gql.test.mjs`) for the GraphQL query and response
+shaping. It reads the same per-space `{repo, branch, pr}` target
+`my-spaces/indicators.js` publishes through `setShared("deploys.targets", …)`,
+and polls every 60s while shown, same cadence and visibility rules as
+Deploys.
+
+GitHub's REST API has no "thread resolved" concept, so `gql.js` queries
+`reviewThreads { isResolved }` over `gh api graphql` — one batched query per
+poll. A review counts as **resolved** only once every inline comment it
+posted sits in a resolved thread *and* at least one commit has landed on the
+PR since it was submitted; `DISMISSED` reviews are always resolved, and the
+signed-in user's own reviews never appear. The commit-since condition isn't
+just a staleness badge — it's what makes a review with findings only in its
+body and no inline comments (Gemini/Maximus often leave feedback that way)
+stay open until something has actually changed, with no separate body-text
+parsing needed. Expanding a review shows only its unresolved comments; a
+resolved review re-collapses by default but stays individually
+clickable.
+
+A launch icon appears on every unresolved review, splitting a pane to the
+right in the space's shown tab the same way Deploys' investigate button
+does: `agy --dangerously-skip-permissions -i "/pr-babysit"` (`agyyolo`,
+expanded to its real argv since `pane.split` execs directly, not through a
+shell alias) for a review from `gemini-code-assist` or `maximus-ci-app`, or
+`agy --dangerously-skip-permissions -i "/pr-review-response <review-id>"`
+for a human review, using the plain numeric review id. It does nothing
+while a terminal with the same argv is already running in that space.
+
 ## Updating
 
 `herdr-update` (a shared alias in Bash and Zsh, also run by `aiup` and
