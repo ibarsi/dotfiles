@@ -139,6 +139,88 @@ export function accuracyNotes({ providers, unpriced, unclassified }) {
   return notes;
 }
 
+// A space on one of these always shows its repo total: codeburn's byBranch
+// sums every repo that has ever used that branch name, so "master" mixes
+// spend across every project you've ever worked on, open or not.
+export const DEFAULT_BRANCHES = new Set(["main", "master"]);
+
+function repoName(repo) {
+  return (repo ?? "").split("/").filter(Boolean).pop() ?? "";
+}
+
+export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeCost }) {
+  const targetEntries = Object.entries(targets ?? {});
+  const claudeCostByBranch = new Map((byBranch ?? []).map((b) => [b.branch, b.cost]));
+
+  // branch name -> set of repo names currently open on it, to catch the same
+  // branch name shared by two open spaces in different repos.
+  const reposByBranch = new Map();
+  for (const [, t] of targetEntries) {
+    if (!reposByBranch.has(t.branch)) reposByBranch.set(t.branch, new Set());
+    reposByBranch.get(t.branch).add(repoName(t.repo));
+  }
+
+  const rowsById = new Map();
+  for (const [id, t] of targetEntries) {
+    const name = repoName(t.repo);
+    const shared = DEFAULT_BRANCHES.has(t.branch) || (reposByBranch.get(t.branch)?.size ?? 0) > 1;
+    rowsById.set(id, { id, repo: name, branch: t.branch, active: id === activeId, shared, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 });
+  }
+
+  let other = null;
+  let live = 0;
+  let rate = 0;
+  for (const a of agents ?? []) {
+    live += 1;
+    rate += a.rate;
+    const row = [...rowsById.values()].find((r) => r.repo === a.project && r.branch === a.branch);
+    if (row) {
+      row.agents.push(a);
+      row.rate += a.rate;
+    } else {
+      other ??= { id: "other", repo: "Other (no space)", branch: null, active: false, shared: false, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 };
+      other.agents.push(a);
+      other.rate += a.rate;
+      other.cost += a.sessionCost;
+    }
+  }
+
+  for (const row of rowsById.values()) {
+    if (row.shared) {
+      row.cost = repos?.get(row.repo) ?? 0;
+    } else {
+      row.claudeCost = claudeCostByBranch.get(row.branch) ?? 0;
+      row.liveCost = row.agents.filter((a) => a.provider !== "claude").reduce((sum, a) => sum + a.sessionCost, 0);
+      row.cost = row.claudeCost + row.liveCost;
+    }
+  }
+
+  const all = [...rowsById.values()];
+  const activeRows = all.filter((r) => r.active);
+  const restRows = all.filter((r) => !r.active);
+
+  const quiet = { count: 0, cost: 0, rows: [] };
+  const kept = [];
+  for (const row of restRows) {
+    if (row.agents.length === 0 && row.cost < 0.02 * (rangeCost ?? 0)) {
+      quiet.count += 1;
+      quiet.cost += row.cost;
+      quiet.rows.push(row);
+    } else {
+      kept.push(row);
+    }
+  }
+
+  kept.sort((a, b) => {
+    const aHas = a.agents.length > 0;
+    const bHas = b.agents.length > 0;
+    if (aHas !== bHas) return aHas ? -1 : 1;
+    return aHas ? b.rate - a.rate : b.cost - a.cost;
+  });
+
+  return { rows: [...activeRows, ...kept], quiet, other, live, rate };
+}
+
 export function ago(ms) {
   const s = Math.floor(ms / 1000);
   if (s < 10) return "just now";

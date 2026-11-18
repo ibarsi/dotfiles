@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, EXPORT_JQ, agents, repoTotals, accuracyNotes } from "./model.js";
+import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces } from "./model.js";
 
 test("isPersonal: MacBook codex is personal", () => {
   assert.equal(isPersonal("Igors-MacBook-Pro.local", "codex"), true);
@@ -130,6 +130,86 @@ test("accuracyNotes lists gemini, grok and unclassified remainder, gemini first"
   assert.match(notes[0], /Gemini/);
   assert.match(notes[1], /Grok/);
   assert.match(notes[2], /\$3\.00/);
+});
+
+function agent(overrides) {
+  return { id: "a", provider: "claude", model: "Opus 5.5", project: "", branch: "", fill: 0, idle: false, idleSeconds: 0, rate: 0, sessionCost: 0, ...overrides };
+}
+
+test("buildSpaces: a default branch (master) shows the repo total, not byBranch's cross-repo mix", () => {
+  const targets = { a: { repo: "ibarsi/dotfiles", branch: "master" }, b: { repo: "x/maximum", branch: "feat" } };
+  const byBranch = [{ branch: "master", cost: 500 }, { branch: "feat", cost: 8 }];
+  const repos = new Map([["dotfiles", 98]]);
+  const result = buildSpaces({ targets, activeId: null, byBranch, agents: [], repos, rangeCost: 0 });
+  const a = result.rows.find((r) => r.id === "a");
+  const b = result.rows.find((r) => r.id === "b");
+  assert.equal(a.shared, true);
+  assert.equal(a.cost, 98);
+  assert.equal(b.shared, false);
+  assert.equal(b.cost, 8);
+});
+
+test("buildSpaces: a branch name used by two different repos is shared even if not main/master", () => {
+  const targets = { a: { repo: "ibarsi/one", branch: "release" }, b: { repo: "x/two", branch: "release" } };
+  const repos = new Map([["one", 10], ["two", 20]]);
+  const result = buildSpaces({ targets, activeId: null, byBranch: [], agents: [], repos, rangeCost: 0 });
+  assert.equal(result.rows.find((r) => r.id === "a").shared, true);
+  assert.equal(result.rows.find((r) => r.id === "b").shared, true);
+});
+
+test("buildSpaces: a live non-claude agent adds its session cost to its space; a claude agent doesn't change cost", () => {
+  const targets = { b: { repo: "x/maximum", branch: "feat" } };
+  const byBranch = [{ branch: "feat", cost: 8 }];
+  const codexAgent = agent({ id: "c1", provider: "codex", project: "maximum", branch: "feat", sessionCost: 2, rate: 1 });
+  let result = buildSpaces({ targets, activeId: null, byBranch, agents: [codexAgent], repos: new Map(), rangeCost: 1000 });
+  let b = result.rows.find((r) => r.id === "b");
+  assert.equal(b.cost, 10);
+  assert.equal(b.rate, 1);
+  assert.equal(b.liveCost, 2);
+
+  const claudeAgent = agent({ id: "c2", provider: "claude", project: "maximum", branch: "feat", sessionCost: 5, rate: 0 });
+  result = buildSpaces({ targets, activeId: null, byBranch, agents: [codexAgent, claudeAgent], repos: new Map(), rangeCost: 1000 });
+  b = result.rows.find((r) => r.id === "b");
+  assert.equal(b.cost, 10); // claude agent's sessionCost is not added to liveCost
+});
+
+test("buildSpaces: an agent matching no open space's repo+branch lands in Other", () => {
+  const targets = { a: { repo: "ibarsi/dotfiles", branch: "feat" } };
+  const strayAgent = agent({ id: "s", provider: "codex", project: "scratch", branch: "main", sessionCost: 4 });
+  const result = buildSpaces({ targets, activeId: null, byBranch: [], agents: [strayAgent], repos: new Map(), rangeCost: 1000 });
+  assert.equal(result.other.cost, 4);
+  assert.equal(result.other.agents.length, 1);
+});
+
+test("buildSpaces: active row first, then busy rows by rate desc, then quiet-ineligible rows by cost desc", () => {
+  const targets = {
+    active: { repo: "r/active", branch: "idle-branch" },
+    busyLow: { repo: "r/busyLow", branch: "b1" },
+    busyHigh: { repo: "r/busyHigh", branch: "b2" },
+    costOnly: { repo: "r/costOnly", branch: "b3" },
+  };
+  const liveAgents = [
+    agent({ id: "1", project: "busyLow", branch: "b1", rate: 1 }),
+    agent({ id: "2", project: "busyHigh", branch: "b2", rate: 3 }),
+  ];
+  const byBranch = [{ branch: "b3", cost: 50 }];
+  const result = buildSpaces({ targets, activeId: "active", byBranch, agents: liveAgents, repos: new Map(), rangeCost: 0 });
+  assert.deepEqual(result.rows.map((r) => r.id), ["active", "busyHigh", "busyLow", "costOnly"]);
+});
+
+test("buildSpaces: a quiet, no-agent, low-cost non-active row folds into quiet; a bigger one stays in rows", () => {
+  const targets = { small: { repo: "r/small", branch: "b1" }, big: { repo: "r/big", branch: "b2" } };
+  const byBranch = [{ branch: "b1", cost: 10 }, { branch: "b2", cost: 30 }];
+  const result = buildSpaces({ targets, activeId: null, byBranch, agents: [], repos: new Map(), rangeCost: 1000 });
+  assert.equal(result.quiet.count, 1);
+  assert.equal(result.quiet.cost, 10);
+  assert.equal(result.rows.some((r) => r.id === "small"), false);
+  assert.equal(result.rows.some((r) => r.id === "big"), true);
+});
+
+test("buildSpaces: no targets and no agents yields an empty, well-shaped result", () => {
+  const result = buildSpaces({ targets: null, activeId: null, byBranch: [], agents: [], repos: new Map(), rangeCost: 0 });
+  assert.deepEqual(result, { rows: [], quiet: { count: 0, cost: 0, rows: [] }, other: null, live: 0, rate: 0 });
 });
 
 test("EXPORT_JQ keeps only records at or after the cutoff, and slims projects/sessions", (t) => {
