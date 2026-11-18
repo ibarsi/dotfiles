@@ -120,8 +120,11 @@ layouts away and back (`herdr-update --check` does this).
 
 ## Deploys panel
 
-A **Deploys** button sits in the tabs bar next to Files and Changes (added to
-`my-tabs`, a clone of Herdr's `tabs` mod), and a space's deploy icon switches
+A **Deploys** button sits in the tabs bar (added to `my-tabs`, a clone of
+Herdr's `tabs` mod — which also drops the stock Files and Changes buttons
+entirely, a personal preference, not an upstream change: `my-tabs`'s
+`enabled` always filters `"files"`/`"changes"` out of `workspace.panels`,
+see the marker `// panels`), and a space's deploy icon switches
 to that space and opens the same panel. Either shows what
 [`gh bd`](../gh/README.md) shows for that space's PR: each target's state and
 ArgoCD stages, with every preview URL (Console, Admin, API, Consumer, Docs)
