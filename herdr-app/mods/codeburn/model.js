@@ -95,6 +95,50 @@ export function tokens(n) {
   return `${v}`;
 }
 
+// Run against a codeburn `export --format json` file with
+// `jq -c --arg cutoff <ISO> "$EXPORT_JQ" <file>` to shrink it from tens of
+// megabytes to the three things the panel needs: cost per repo, cost per
+// session (for completed-session totals) and the last few minutes of
+// per-call records (for live burn rate).
+export const EXPORT_JQ = '{projects: [.projects[] | {project, cost}], sessions: [.sessions[] | {sessionId, cost}], recent: [.records[] | select(.timestamp >= $cutoff) | {sessionId, cost}]}';
+
+export function agents(liveSessions, slim) {
+  const sessionCostById = new Map((slim?.sessions ?? []).map((s) => [s.sessionId, s.cost]));
+  const recentById = new Map();
+  for (const r of slim?.recent ?? []) recentById.set(r.sessionId, (recentById.get(r.sessionId) ?? 0) + r.cost);
+  return (liveSessions ?? []).map((s) => ({
+    id: s.id,
+    provider: s.provider,
+    model: s.model,
+    project: s.project,
+    branch: s.branch,
+    fill: s.contextWindow ? s.contextTokens / s.contextWindow : 0,
+    idle: s.idleSeconds > 60,
+    idleSeconds: s.idleSeconds,
+    rate: (recentById.get(s.id) ?? 0) * 6,
+    sessionCost: sessionCostById.get(s.id) ?? 0,
+  }));
+}
+
+export function repoTotals(slim) {
+  const totals = new Map();
+  for (const p of slim?.projects ?? []) {
+    const name = p.project.split("/").filter(Boolean).pop();
+    totals.set(name, (totals.get(name) ?? 0) + p.cost);
+  }
+  return totals;
+}
+
+export function accuracyNotes({ providers, unpriced, unclassified }) {
+  const notes = [];
+  if (providers?.has("gemini")) notes.push("Gemini uses reference Vertex rates; standard and priority tiers aren't distinguished.");
+  if (providers?.has("pi")) notes.push("Pi can keep agent-recorded costs that the overrides don't reprice.");
+  if (providers?.has("grok build") || providers?.has("grok")) notes.push("Grok is priced at codeburn defaults; no Vertex override yet.");
+  if (unpriced?.length) notes.push(`No price for: ${unpriced.join(", ")}`);
+  if (unclassified > 0.005) notes.push(`${money(unclassified)} of daily spend couldn't be split by model (top-5 cap); counted as work.`);
+  return notes;
+}
+
 export function ago(ms) {
   const s = Math.floor(ms / 1000);
   if (s < 10) return "just now";
