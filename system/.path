@@ -21,9 +21,11 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
-# Go
+# Go. Appended, never prepended: `go install` copies go stale, and a stale one ahead of a
+# mise-pinned tool of the same name (protoc-gen-connect-openapi, gopls, ...) is the version the
+# repo's toolchain guard refuses to run under. Appended, a mise-managed copy always wins.
 if [ -d "$HOME/go/bin" ]; then
-  export PATH="$HOME/go/bin:$PATH"
+  export PATH="$PATH:$HOME/go/bin"
 fi
 
 # Rust

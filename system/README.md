@@ -10,7 +10,7 @@ Both shell topics load this layer. On macOS, `bash system/install.sh` additional
 
 | File | Purpose |
 |---|---|
-| [.path](.path) | Platform identity, available Homebrew paths, local binaries and language tool paths |
+| [.path](.path) | Platform identity, available Homebrew paths, local binaries and language tool paths. `~/go/bin` is appended so a stale `go install` copy never shadows a mise-managed tool |
 | [.exports](.exports) | Editor, locale, history, REPL and pager defaults |
 | [.aliases](.aliases) | Portable aliases with platform guards |
 | [.functions](.functions) | Shared workflow helpers |
