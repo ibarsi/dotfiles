@@ -48,6 +48,19 @@ files receive a timestamped backup; unchanged files are not rewritten. Restore t
 backup to undo an update, or remove the four catalog keys from `priceOverrides`
 if the config did not exist beforehand. Re-running bootstrap is safe.
 
+## Background sharing
+
+[install.sh](install.sh) also keeps `codeburn share --always` running so paired
+devices can reach this one: a systemd user unit (`codeburn-share.service`) on
+Omarchy and a launchd agent (`dev.ibarsi.codeburn-share`) on macOS. Both call the
+mise `latest` install symlink (the shim fails outside a mise-activated directory),
+so CLI updates need no change. Pairing stays manual (`codeburn share --pair`).
+
+```bash
+systemctl --user status codeburn-share   # Omarchy
+launchctl list | grep codeburn-share     # macOS
+```
+
 ## Accuracy boundaries
 
 Verified against CodeBurn 0.9.28:

@@ -17,6 +17,12 @@ Some bindings in `keys.json` use `cmd-…`. They're for macOS and may do nothing
 on Linux, or clash with Hyprland's Super bindings. The Ctrl-Space prefix,
 Alt and Ctrl-Alt bindings behave the same on both.
 
+On Omarchy, Super-C and Super-V copy and paste in terminal panes. Hyprland
+sends Ctrl-Shift-C/V to windows tagged `terminal` and plain Ctrl-C/V to the
+rest, so add `o.window("herdr-app", { tag = "+terminal" })` to
+`~/.config/hypr/hyprland.lua` (not tracked here). `keys.json` binds
+Ctrl-Shift-C/V to `terminal.copy` and `terminal.paste`.
+
 Cmd-M minimizes the window and Cmd-A selects all terminal contents, matching
 the macOS defaults added in Herdr 0.1.16.
 
@@ -61,7 +67,9 @@ the deploy icon and then one status icon in fixed columns on the right edge, so
 each keeps its place when the other is absent. The status icon is the
 first that applies (none while queued): crossing arrows for a merge conflict
 (peach), a check for approval, or a comment bubble for changes requested or a
-new review since your last non-merge commit. Deployment uses outlined circles
+new review since your last non-merge commit — click the comment bubble to
+switch to that space and open its [PR Reviews panel](#pr-reviews-panel), the
+same way the deploy icon opens Deploys. Deployment uses outlined circles
 with a check (success), clock (pending/running), cross (failure), or pause (inactive).
 All seven icons use a 24-unit SVG grid, 2-unit rounded strokes and a 14px rendered
 size, centered in the existing 24px columns; hover shows their meaning. Assets live
@@ -118,8 +126,11 @@ layouts away and back (`herdr-update --check` does this).
 
 ## Deploys panel
 
-A **Deploys** button sits in the tabs bar next to Files and Changes (added to
-`my-tabs`, a clone of Herdr's `tabs` mod), and a space's deploy icon switches
+A **Deploys** button sits in the tabs bar (added to `my-tabs`, a clone of
+Herdr's `tabs` mod — which also drops the stock Files and Changes buttons
+entirely, a personal preference, not an upstream change: `my-tabs`'s
+`enabled` always filters `"files"`/`"changes"` out of `workspace.panels`,
+see the marker `// panels`), and a space's deploy icon switches
 to that space and opens the same panel. Either shows what
 [`gh bd`](../gh/README.md) shows for that space's PR: each target's state and
 ArgoCD stages, with every preview URL (Console, Admin, API, Consumer, Docs)
@@ -374,6 +385,62 @@ session's export rows don't include.
 
 Still to verify once a second device runs work Codex through Vertex: that it
 prices its own usage with its own overrides before sharing, not this one's.
+
+## PR Reviews panel
+
+A **PR Reviews** button sits in the tabs bar next to Deploys (same
+`my-tabs` addition, one more `// pr-reviews`-marked line), and a space's
+review-comment sidebar icon (`※`, see [Sidebar indicators](#sidebar-indicators))
+switches to that space and opens the same panel. Both show one PR — the
+active space's, via the same per-space target `my-spaces/indicators.js`
+publishes through `setShared("deploys.targets", …)` — with an **Overview**
+tab (status, reviewers, agents on the PR, description) and a **Comments**
+tab (every comment, review and thread, in order, with reply, resolve and
+agent handoff). It polls every 60s while shown, same cadence and
+visibility rules as Deploys.
+
+This is a single-PR clone of [munza/herdr-mods' branch-pr](https://github.com/munza/herdr-mods/blob/main/branch-pr/RECIPE.md)
+(Apache-2.0), kept to this panel's own frame (the tab button and sidebar
+icon above, both pre-existing) and to a first slice of its functionality:
+Overview and Comments only — Checks, Files, PR list navigation (its
+Branch/Repo/Involved tabs) and merge/worktree actions are a later pass.
+Where upstream reads and writes GitHub through a bundled Go helper (a thin
+`gh`-wrapping RPC bridge), this mod calls `gh` directly from JS
+(`reads.js`), matching every other herdr-app mod — no new toolchain.
+
+`mods/pr-reviews/` splits the same way upstream does: `model.js` (no
+imports, tested with `node --test herdr-app/mods/pr-reviews/model.test.mjs`)
+holds what GitHub's answers mean as plain functions — who commented, the
+GraphQL query and response shaping, conversation ordering, merge-readiness
+stats, the messages sent to an agent — ported from upstream's
+`github/model.js` almost verbatim, since it already had no framework
+imports. `ui.js` is the design kit (ported from `views/ui.js`), `reads.js`
+the `gh` calls, `agents.js` who's on the PR and handing work to them
+(`actions/agents.js`), and `overview.js`/`conversation.js` the two tabs'
+rendering (`views/detail.js`/`views/conversation.js`), tied together by
+`main.js`.
+
+A review is no longer auto-resolved by a "commits since" heuristic — the
+approach this panel started with, which a rebase could quietly defeat
+(every commit's date resets, so a review could look "addressed" when
+nothing had changed). Upstream's model is simpler and doesn't have that
+failure mode: a *thread*'s resolved state is exactly GitHub's own
+(`reviewThreads { isResolved }`), and a *review* itself always shows as a
+conversation entry — there's nothing to auto-hide, so a bot's findings
+with no inline thread (Gemini/Maximus often leave feedback that way) can't
+disappear.
+
+Comments has an author filter, an Unresolved toggle, and a bordered
+"Send N to agent" for every unresolved thread at once. Each thread is
+collapsible (closed by default once resolved), shows its comment's diff
+hunk trimmed to its last 6 lines with the same line-numbered, colored-row
+treatment the Changes panel uses for its own diffs (`model.js`'s
+`parseDiffHunk`, `conversation.js`'s `diffLine`), then Reply, Resolve/Reopen
+and a per-thread "Send to agent". Delivery goes through `hc`, the same
+primitive Herdr's own agent commands use: to an agent already running on
+the PR or elsewhere in the space (reaching it mid-turn, not just when
+idle), a sub-agent spawned under one of them, or a brand new tab with the
+message as its first prompt — `agents.js`'s `agentButton`/`deliver`.
 
 ## Updating
 

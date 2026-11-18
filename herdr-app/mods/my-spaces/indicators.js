@@ -283,26 +283,28 @@ export function indicators(id, t, indent) {
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
-      .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openDeploys(id, cx))))
-      .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id)) : iconChip("status", p.status, status[p.status])))));
+      .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openPanel("deploys", id, cx))))
+      .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id))
+        : p.status === "※" ? clickable(iconChip("status", p.status, status[p.status]), (cx) => openPanel("pr-reviews", id, cx))
+        : iconChip("status", p.status, status[p.status])))));
 }
 
-// Switches to space `id` if needed, then shows its Deploys panel. Clicking the
-// chip of the already-active space while its Deploys panel is open hides it.
-function openDeploys(id, cx) {
+// Switches to space `id` if needed, then shows panel `mod`. Clicking the chip
+// of the already-active space while that panel is open hides it instead.
+function openPanel(mod, id, cx) {
   const active = spaces().find((s) => s.active)?.id;
-  const openPanel = () => { run("layout.select", { stack: "panel-body", child: "deploys" }); run("layout.show", { id: "panel" }); };
+  const show = () => { run("layout.select", { stack: "panel-body", child: mod }); run("layout.show", { id: "panel" }); };
   if (active === id) {
-    const here = find(layout(), "panel-body")?.active === "deploys" && find(layout(), "panel")?.hidden !== true;
+    const here = find(layout(), "panel-body")?.active === mod && find(layout(), "panel")?.hidden !== true;
     if (here) run("layout.hide", { id: "panel" });
-    else openPanel();
+    else show();
     return;
   }
   run("space.select", { id });
-  openPanel();
+  show();
   // tabs' per-space panel memory can revert this within 1s of a space switch
   // (its own pending-restore window); reassert once that's settled.
-  cx.timer.after(1100, () => openPanel());
+  cx.timer.after(1100, () => show());
 }
 
 // Keep the press from selecting or dragging the space row underneath.

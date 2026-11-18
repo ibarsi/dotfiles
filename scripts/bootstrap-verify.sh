@@ -29,6 +29,7 @@ check_link "$HOME/.config/herdr-app/mods/my-spaces"
 check_link "$HOME/.config/herdr-app/mods/my-tabs"
 check_link "$HOME/.config/herdr-app/mods/deploys"
 check_link "$HOME/.config/herdr-app/mods/codeburn"
+check_link "$HOME/.config/herdr-app/mods/pr-reviews"
 
 check_bin() {
 	if command -v "$1" >/dev/null 2>&1; then
