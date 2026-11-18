@@ -43,11 +43,14 @@ export function SubTab({ id, label, count, active, onClick }) {
     .when(count !== undefined && count !== null, (el) => el.child(Badge(count)));
 }
 
-export function IconButton({ id, icon, label, onClick, disabled = false, spinning = false, small = false }) {
+// `color` picks out the icon like the spaces sidebar's PR/review chips: its
+// own colour at rest, that colour's tint behind it on hover, pointer always.
+export function IconButton({ id, icon, label, onClick, disabled = false, spinning = false, small = false, color }) {
   const t = theme();
   return div().id(id).size(small ? 22 : 26).flex_none().flex().items_center().justify_center().rounded(6)
-    .text_color(t.dim).accessibility_label(label).tooltip(label)
-    .when(!disabled, (el) => el.cursor_pointer().hover((s) => s.bg(t.hover).text_color(t.foreground))
+    .text_color(color ?? t.dim).accessibility_label(label).tooltip(label)
+    .when(!disabled, (el) => el.cursor_pointer()
+      .hover((s) => (color ? s.bg(`${color.slice(0, 7)}2e`) : s.bg(t.hover).text_color(t.foreground)))
       .on_click((_e, cx) => { cx.stop_propagation(); onClick(cx); }))
     .child(spinning ? Icon(icon, 15).spin(SPIN_MS) : Icon(icon, small ? 13 : 15));
 }

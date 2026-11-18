@@ -79,20 +79,46 @@ export const authorsOf = (pr) => [...new Set(allComments(pr).map(who))].sort();
 
 const REVIEW_LABELS = { APPROVED: "Approved", CHANGES_REQUESTED: "Changes requested", COMMENTED: "Reviewed", DISMISSED: "Dismissed" };
 
-// Everything said on the PR in order, narrowed by the filters.
+// Everything said on the PR, newest first, narrowed by the filters. A
+// review's inline-comment threads nest inside it (GitHub links each thread
+// to the review that started it) instead of listing both as siblings.
 export function conversationEntries(pr, { author = "", unresolved = false } = {}) {
-  return [
-    ...(pr.comments ?? []).map((c) => ({ ...c, kind: "Comment", at: c.createdAt })),
-    ...(pr.reviews ?? []).filter((r) => r.state !== HIDDEN && (r.body || r.state !== "COMMENTED")).map((r) => ({ ...r, kind: REVIEW_LABELS[r.state] ?? "Review", at: r.submittedAt ?? "~" })),
-    ...(pr.threads ?? []).map((thread) => ({
-      id: thread.id,
-      thread,
-      kind: `${thread.isResolved ? "Resolved" : "Unresolved"}${thread.isOutdated ? " · Outdated" : ""}`,
-      at: thread.comments[0]?.createdAt,
-    })),
-  ]
-    .filter((e) => (!unresolved || (e.thread && !e.thread.isResolved)) && (!author || (e.thread ? e.thread.comments.some((c) => who(c) === author) : who(e) === author)))
-    .sort((a, b) => (a.at ?? "").localeCompare(b.at ?? ""));
+  const matches = (entry) => {
+    if (unresolved && !(entry.thread && !entry.thread.isResolved)) return false;
+    if (author) {
+      const authorMatch = entry.thread ? entry.thread.comments.some((c) => who(c) === author) : who(entry) === author;
+      if (!authorMatch) return false;
+    }
+    return true;
+  };
+
+  const comments = (pr.comments ?? []).map((c) => ({ ...c, kind: "Comment", at: c.createdAt })).filter(matches);
+
+  const threads = (pr.threads ?? []).map((thread) => ({
+    id: thread.id,
+    thread,
+    kind: `${thread.isResolved ? "Resolved" : "Unresolved"}${thread.isOutdated ? " · Outdated" : ""}`,
+    at: thread.comments[0]?.createdAt,
+  }));
+
+  const visibleReviews = (pr.reviews ?? []).filter((r) => r.state !== HIDDEN);
+  const reviewIds = new Set(visibleReviews.map((r) => r.id));
+  const byReview = new Map();
+  for (const entry of threads) {
+    const list = byReview.get(entry.thread.reviewId) ?? [];
+    list.push(entry);
+    byReview.set(entry.thread.reviewId, list);
+  }
+
+  const reviews = visibleReviews
+    .map((r) => ({ ...r, kind: REVIEW_LABELS[r.state] ?? "Review", at: r.submittedAt ?? "~", threads: (byReview.get(r.id) ?? []).filter(matches) }))
+    .filter((r) => (r.body || r.state !== "COMMENTED" || r.threads.length) && (matches(r) || r.threads.length));
+
+  // A thread whose review is missing or didn't make the list (a pending
+  // review of your own, say) has nowhere to nest, so it surfaces on its own.
+  const orphans = threads.filter((entry) => !reviewIds.has(entry.thread.reviewId)).filter(matches);
+
+  return [...comments, ...reviews, ...orphans].sort((a, b) => (b.at ?? "").localeCompare(a.at ?? ""));
 }
 
 // A comment is about the end of its hunk, which can run to hundreds of lines.
@@ -133,6 +159,12 @@ export function commentMessage(pr, repo, composer, prompt) {
 
 // ── Fetching ────────────────────────────────────────────────────────────────
 
+// ponytail: comments/reviews/threads use `last`, not `first` — GitHub has no
+// orderBy for these and defaults oldest-first, so a flat cap silently drops
+// the newest ones once a PR outgrows it. `last` drops old history instead,
+// which this panel (newest-first, "what's new") cares about less. A PR with
+// more unbounded activity than the cap still loses its oldest items; full
+// cursor pagination is the upgrade if that starts to matter.
 export const QUERY = `query($owner: String!, $name: String!, $number: Int!) {
   repository(owner: $owner, name: $name) {
     pullRequest(number: $number) {
@@ -142,9 +174,9 @@ export const QUERY = `query($owner: String!, $name: String!, $number: Int!) {
       reviewDecision mergeable mergeStateStatus
       reviewRequests(first: 50) { nodes { requestedReviewer { ... on User { login } } } }
       latestOpinionatedReviews(first: 50) { nodes { state author { login } } }
-      comments(first: 100) { nodes { databaseId body url createdAt author { login } } }
-      reviews(first: 100) { nodes { databaseId body url submittedAt state author { login } } }
-      reviewThreads(first: 50) { nodes { id path line isResolved isOutdated viewerCanResolve viewerCanUnresolve viewerCanReply comments(first: 100) { nodes { databaseId body url createdAt diffHunk author { login } } } } }
+      comments(last: 100) { nodes { databaseId body url createdAt author { login } } }
+      reviews(last: 100) { nodes { databaseId body url submittedAt state author { login } } }
+      reviewThreads(last: 50) { nodes { id path line isResolved isOutdated viewerCanResolve viewerCanUnresolve viewerCanReply comments(last: 100) { nodes { databaseId body url createdAt diffHunk author { login } pullRequestReview { databaseId } } } } }
     }
   }
   viewer { login }
@@ -167,6 +199,7 @@ export function shapePR(data, repo) {
     threads: (pr.reviewThreads?.nodes ?? []).map((t) => ({
       id: t.id, path: t.path, line: t.line, isResolved: t.isResolved, isOutdated: t.isOutdated,
       viewerCanResolve: t.viewerCanResolve, viewerCanUnresolve: t.viewerCanUnresolve, viewerCanReply: t.viewerCanReply,
+      reviewId: t.comments?.nodes?.[0]?.pullRequestReview?.databaseId ?? null,
       comments: (t.comments?.nodes ?? []).map((c) => ({ id: c.databaseId, body: c.body, url: c.url, createdAt: c.createdAt, diffHunk: c.diffHunk, author: c.author })),
     })),
   };

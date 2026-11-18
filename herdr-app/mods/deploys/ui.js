@@ -26,11 +26,14 @@ export function Badge(text, color) {
     .text_size(TEXT.badge).text_color(color ?? t.muted).child(String(text));
 }
 
-export function IconButton({ id, icon, label, onClick, disabled = false, spinning = false }) {
+// `color` picks out the icon like the spaces sidebar's PR/review chips: its
+// own colour at rest, that colour's tint behind it on hover, pointer always.
+export function IconButton({ id, icon, label, onClick, disabled = false, spinning = false, color }) {
   const t = theme();
   return div().id(id).size(26).flex_none().flex().items_center().justify_center().rounded(6)
-    .text_color(t.dim).accessibility_label(label).tooltip(label)
-    .when(!disabled, (el) => el.cursor_pointer().hover((s) => s.bg(t.hover).text_color(t.foreground))
+    .text_color(color ?? t.dim).accessibility_label(label).tooltip(label)
+    .when(!disabled, (el) => el.cursor_pointer()
+      .hover((s) => (color ? s.bg(`${color.slice(0, 7)}2e`) : s.bg(t.hover).text_color(t.foreground)))
       .on_click((_e, cx) => { cx.stop_propagation(); onClick(cx); }))
     .child(spinning ? svg("mods/workspace-chrome/spinner.svg").size(15).flex_none().spin(SPIN_MS) : Icon(icon, 15));
 }

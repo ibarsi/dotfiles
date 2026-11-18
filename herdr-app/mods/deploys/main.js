@@ -330,7 +330,7 @@ export default class Deploys extends View {
         .child(Chevron(open))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(pod.name))
         .child(div().text_size(TEXT.caption).text_color(t.ansi1).child(pod.restarts ? `${pod.reason} · ${pod.restarts}×` : pod.reason))
-        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-pod-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", onClick: () => this.investigatePod(tg, pod) }))))
+        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-pod-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", color: t.accent ?? t.ansi4, onClick: () => this.investigatePod(tg, pod) }))))
       .when(open, (el) => el.child(this.stageDetail(key, t)));
   }
 
@@ -388,7 +388,7 @@ export default class Deploys extends View {
         .child(Chevron(open))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(stage.name))
         .child(div().text_size(TEXT.caption).text_color(statusColor(stage.status, t)).child(stage.status))
-        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", onClick: () => this.investigate(stage) }))))
+        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", color: t.accent ?? t.ansi4, onClick: () => this.investigate(stage) }))))
       .when(open, (el) => el.child(this.stageDetail(key, t)));
   }
 

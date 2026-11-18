@@ -69,14 +69,52 @@ test("authorsOf collects every unique commenter across comments, reviews and thr
   assert.deepEqual(authorsOf(pr), ["alice", "bob", "carol"]);
 });
 
-test("conversationEntries interleaves comments, reviews and threads in time order", () => {
+test("conversationEntries interleaves comments, reviews and threads, newest first", () => {
   const pr = {
     comments: [{ id: 1, author: { login: "alice" }, body: "hi", createdAt: "2026-01-02T00:00:00Z" }],
     reviews: [{ id: 2, author: { login: "bob" }, state: "APPROVED", submittedAt: "2026-01-01T00:00:00Z" }],
     threads: [{ id: "t1", path: "a.js", line: 5, isResolved: false, comments: [{ author: { login: "carol" }, createdAt: "2026-01-03T00:00:00Z" }] }],
   };
   const entries = conversationEntries(pr);
-  assert.deepEqual(entries.map((e) => e.kind), ["Approved", "Comment", "Unresolved"]);
+  assert.deepEqual(entries.map((e) => e.kind), ["Unresolved", "Comment", "Approved"]);
+});
+
+test("conversationEntries nests a thread under the review that started it", () => {
+  const pr = {
+    reviews: [{ id: "R1", author: { login: "bob" }, state: "CHANGES_REQUESTED", submittedAt: "2026-01-01T00:00:00Z", body: "fix these" }],
+    threads: [{ id: "t1", reviewId: "R1", path: "a.js", line: 5, isResolved: false, comments: [{ author: { login: "bob" }, createdAt: "2026-01-01T00:05:00Z" }] }],
+  };
+  const entries = conversationEntries(pr);
+  assert.equal(entries.length, 1);
+  assert.equal(entries[0].kind, "Changes requested");
+  assert.deepEqual(entries[0].threads.map((t) => t.id), ["t1"]);
+});
+
+test("conversationEntries keeps a bodiless review visible for its inline comments, filtered the same as any thread", () => {
+  const pr = {
+    reviews: [{ id: "R1", author: { login: "bob" }, state: "COMMENTED", submittedAt: "2026-01-01T00:00:00Z", body: "" }],
+    threads: [
+      { id: "t1", reviewId: "R1", isResolved: true, comments: [{ author: { login: "alice" }, createdAt: "2026-01-01T00:05:00Z" }] },
+      { id: "t2", reviewId: "R1", isResolved: false, comments: [{ author: { login: "carol" }, createdAt: "2026-01-01T00:06:00Z" }] },
+    ],
+  };
+  const all = conversationEntries(pr);
+  assert.equal(all.length, 1);
+  assert.deepEqual(all[0].threads.map((t) => t.id), ["t1", "t2"]);
+
+  const unresolvedOnly = conversationEntries(pr, { unresolved: true });
+  assert.equal(unresolvedOnly.length, 1);
+  assert.deepEqual(unresolvedOnly[0].threads.map((t) => t.id), ["t2"]);
+});
+
+test("conversationEntries surfaces a thread with no matching review on its own", () => {
+  const pr = {
+    reviews: [{ id: "R1", author: { login: "bob" }, state: "APPROVED", submittedAt: "2026-01-01T00:00:00Z" }],
+    threads: [{ id: "t1", reviewId: "R-missing", isResolved: false, comments: [{ author: { login: "alice" }, createdAt: "2026-01-01T00:05:00Z" }] }],
+  };
+  const entries = conversationEntries(pr);
+  assert.deepEqual(entries.map((e) => e.id), ["t1", "R1"]);
+  assert.deepEqual(entries.find((e) => e.id === "R1").threads, []);
 });
 
 test("conversationEntries filters by author and unresolved-only", () => {
@@ -166,7 +204,7 @@ test("shapePR reshapes the GraphQL response into a plain pr object", () => {
         reviewThreads: {
           nodes: [{
             id: "RT_1", path: "a.js", line: 5, isResolved: false, isOutdated: false, viewerCanResolve: true, viewerCanUnresolve: false, viewerCanReply: true,
-            comments: { nodes: [{ databaseId: 3, body: "fix", url: "u3", createdAt: "t3", diffHunk: "@@ -1 +1 @@", author: { login: "carol" } }] },
+            comments: { nodes: [{ databaseId: 3, body: "fix", url: "u3", createdAt: "t3", diffHunk: "@@ -1 +1 @@", author: { login: "carol" }, pullRequestReview: { databaseId: 2 } }] },
           }],
         },
       },
@@ -179,6 +217,7 @@ test("shapePR reshapes the GraphQL response into a plain pr object", () => {
   assert.equal(pr.comments[0].id, 1);
   assert.equal(pr.reviews[0].state, "APPROVED");
   assert.equal(pr.threads[0].id, "RT_1");
+  assert.equal(pr.threads[0].reviewId, 2);
   assert.equal(pr.threads[0].comments[0].diffHunk, "@@ -1 +1 @@");
 });
 

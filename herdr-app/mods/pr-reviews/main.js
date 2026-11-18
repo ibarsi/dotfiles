@@ -32,6 +32,7 @@ class PrReviews extends View {
   init(_props, cx) {
     this.closedGroups = new Set();
     this.entryOpen = {};
+    this.drawerOpen = {};
     this.author = "";
     this.unresolved = false;
     this.section = "overview";
@@ -47,6 +48,7 @@ class PrReviews extends View {
   resetPR() {
     this.pr = null;
     this.entryOpen = {};
+    this.drawerOpen = {};
     this.author = "";
     this.unresolved = false;
     this.section = "overview";

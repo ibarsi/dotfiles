@@ -4,13 +4,23 @@
 // Adapted from munza/herdr-mods' branch-pr (Apache-2.0): actions/agents.js,
 // trimmed to this panel's scope (no worktree-aware work folder yet).
 import { h_flex } from "gpui-base";
-import { agents, panes, hc, knownAgents, run } from "herdr";
-import { agentsOnPR, commentMessage, unresolvedMessage } from "./model.js";
+import { agents, panes, spaces, terminals, hc, knownAgents, run } from "herdr";
+import { agentsOnPR, commentMessage, isBot, unresolvedMessage, who } from "./model.js";
 import { SmallButton, MenuButton } from "./ui.js";
 
 const SPAWN = "spawn:";
+const AGENT_ARGV = ["agy", "--dangerously-skip-permissions"]; // agyyolo
 
 export const agentName = (agent) => agent?.tab_name || agent?.title || agent?.address || "agent";
+
+// Same as Deploys' own spaceOf (my-spaces/status.js's terminalSpace): a
+// terminal's space id, machine-prefixed when remote.
+function spaceOf(tm) {
+  const sp = tm.labels?.["herdr.space"];
+  if (!sp) return null;
+  const m = tm.machine ?? (tm.address?.includes("/") ? tm.address.split("/")[0] : null);
+  return m ? `${m}/${sp}` : sp;
+}
 
 export const agentMethods = {
   prAgents() {
@@ -123,6 +133,23 @@ export const agentMethods = {
 
   sendUnresolved(agent, cx) {
     this.deliver(agent, unresolvedMessage(this.pr), cx);
+  },
+
+  // Like Deploys' investigate icon: splits an agyyolo agent into the active
+  // space's shown tab, no picker, no editing — just the skill for a human
+  // review vs. a bot's, with the review id `gh pr view --json reviews` shows.
+  addressReview(entry) {
+    const target = this.target();
+    const space = spaces().find((s) => s.active);
+    if (!target || !space) return;
+    const command = isBot(who(entry)) ? "/pr-babysit" : "/pr-review-response";
+    const argv = [...AGENT_ARGV, `${command} ${entry.id}`];
+    const running = terminals().some((tm) => tm.state === "live" && spaceOf(tm) === space.id && tm.argv?.join("\0") === argv.join("\0"));
+    if (running) return;
+    const tab = space.tabs?.find((tb) => tb.active);
+    const tabPanes = panes().filter((p) => p.tab === tab?.id && p.terminal);
+    const pane = tabPanes.find((p) => p.cwd === target.cwd) ?? tabPanes[0];
+    if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv });
   },
 
   sendAgent(cx) {

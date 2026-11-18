@@ -395,7 +395,7 @@ switches to that space and opens the same panel. Both show one PR — the
 active space's, via the same per-space target `my-spaces/indicators.js`
 publishes through `setShared("deploys.targets", …)` — with an **Overview**
 tab (status, reviewers, agents on the PR, description) and a **Comments**
-tab (every comment, review and thread, in order, with reply, resolve and
+tab (every comment and review, newest first, with reply, resolve and
 agent handoff). It polls every 60s while shown, same cadence and
 visibility rules as Deploys.
 
@@ -431,9 +431,26 @@ with no inline thread (Gemini/Maximus often leave feedback that way) can't
 disappear.
 
 Comments has an author filter, an Unresolved toggle, and a bordered
-"Send N to agent" for every unresolved thread at once. Each thread is
-collapsible (closed by default once resolved), shows its comment's diff
-hunk trimmed to its last 6 lines with the same line-numbered, colored-row
+"Send N to agent" for every unresolved thread at once. Every row — comment,
+review, thread — is collapsible and closed by default, so newest-first
+ordering actually gets you to the latest thing said without scrolling past
+everything else first. Every review's header carries its own agent icon,
+clickable without opening the review at all, coloured and hover-tinted like
+the spaces sidebar's own PR/review chips (`ui.js`'s `IconButton`'s `color`).
+Same idea as Deploys' investigate icon (now styled the same way): no picker,
+no editing, straight to a new `agyyolo` (`agy --dangerously-skip-permissions`)
+pane split into the active tab, addressing the review as a whole by the id
+`gh pr view --json reviews` shows — `/pr-review-response` for a person's
+review, `/pr-babysit` for a bot's (`model.js`'s `isBot`, `agents.js`'s
+`addressReview`). A review's inline-comment threads (`model.js`'s
+`conversationEntries`, matched to their review via each thread comment's
+`pullRequestReview.databaseId`) nest inside it behind a separate "N inline
+comments" drawer, itself closed by default regardless of resolved state —
+opening it reveals the usual per-thread rows. The per-thread "Send to agent"
+in `entryActions` is the richer, pick-an-agent flow from before, and still
+shows up on comments and threads — a review carries only its own agent icon.
+Each thread shows its comment's diff hunk
+trimmed to its last 6 lines with the same line-numbered, colored-row
 treatment the Changes panel uses for its own diffs (`model.js`'s
 `parseDiffHunk`, `conversation.js`'s `diffLine`), then Reply, Resolve/Reopen
 and a per-thread "Send to agent". Delivery goes through `hc`, the same
