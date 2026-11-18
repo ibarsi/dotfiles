@@ -61,7 +61,9 @@ the deploy icon and then one status icon in fixed columns on the right edge, so
 each keeps its place when the other is absent. The status icon is the
 first that applies (none while queued): crossing arrows for a merge conflict
 (peach), a check for approval, or a comment bubble for changes requested or a
-new review since your last non-merge commit. Deployment uses outlined circles
+new review since your last non-merge commit — click the comment bubble to
+switch to that space and open its [PR Reviews panel](#pr-reviews-panel), the
+same way the deploy icon opens Deploys. Deployment uses outlined circles
 with a check (success), clock (pending/running), cross (failure), or pause (inactive).
 All seven icons use a 24-unit SVG grid, 2-unit rounded strokes and a 14px rendered
 size, centered in the existing 24px columns; hover shows their meaning. Assets live
@@ -221,7 +223,9 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 ## PR Reviews panel
 
 A **PR Reviews** button sits in the tabs bar next to Deploys (same
-`my-tabs` addition, one more `// pr-reviews`-marked line), listing every
+`my-tabs` addition, one more `// pr-reviews`-marked line), and a space's
+review-comment sidebar icon (`※`, see [Sidebar indicators](#sidebar-indicators))
+switches to that space and opens the same panel — both list every
 review on the active space's PR, oldest first, with resolved reviews
 collapsed and dimmed so unaddressed feedback stands out.
 
