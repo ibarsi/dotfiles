@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces } from "./model.js";
+import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, monthName, shortDate, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces } from "./model.js";
 
 test("isPersonal: MacBook codex is personal", () => {
   assert.equal(isPersonal("Igors-MacBook-Pro.local", "codex"), true);
@@ -81,10 +81,23 @@ test("money formats with thousands separator and two decimals", () => {
   assert.equal(money(183.65), "$183.65");
 });
 
+test("money rounds to the nearest cent instead of showing full float precision", () => {
+  // gpui-shell's embedded JS runtime doesn't honor toLocaleString options (it
+  // falls back to raw toString()), so money() must round and group manually.
+  assert.equal(money(3186.3559860500036), "$3,186.36");
+  assert.equal(money(0.004999), "$0.00");
+});
+
 test("tokens formats compactly", () => {
   assert.equal(tokens(727769103), "727.8M");
   assert.equal(tokens(4200), "4.2K");
   assert.equal(tokens(950), "950");
+});
+
+test("monthName and shortDate avoid toLocaleString (gpui-shell ignores its format options)", () => {
+  assert.equal(monthName(new Date(2026, 10, 18)), "November");
+  assert.equal(shortDate(new Date(2026, 10, 30)), "Nov 30");
+  assert.equal(shortDate(new Date(2026, 0, 5)), "Jan 5");
 });
 
 test("ago formats elapsed time", () => {

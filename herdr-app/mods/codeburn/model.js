@@ -83,8 +83,13 @@ export function projectMonth(mtd, now = new Date()) {
   return (mtd / elapsedDays) * daysInMonth;
 }
 
+// Costs in this panel are never negative, so no sign handling is needed.
+// toFixed (plain ECMAScript, not Intl) does the rounding; toLocaleString is
+// avoided because gpui-shell's embedded JS runtime doesn't honor its format
+// options — it silently falls back to raw toString() precision.
 export function money(n) {
-  return `$${(n ?? 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const [whole, cents] = (n ?? 0).toFixed(2).split(".");
+  return `$${whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${cents}`;
 }
 
 export function tokens(n) {
@@ -219,6 +224,17 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
   });
 
   return { rows: [...activeRows, ...kept], quiet, other, live, rate };
+}
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// Same toLocaleString caveat as money(): built manually, not via Intl.
+export function monthName(d) {
+  return MONTH_NAMES[d.getMonth()];
+}
+
+export function shortDate(d) {
+  return `${MONTH_NAMES[d.getMonth()].slice(0, 3)} ${d.getDate()}`;
 }
 
 export function ago(ms) {

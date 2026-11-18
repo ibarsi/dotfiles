@@ -22,11 +22,12 @@ for f in keys.json settings.json; do
 done
 
 # my-spaces is a clone of Herdr's spaces mod plus PR/port indicators. my-tabs is
-# a clone of its tabs mod with a Deploys button added. deploys is a from-scratch
-# panel mod (not a clone) for the Deploys chip. The app doesn't hot-reload
-# through these links; herdr-update re-shows the layout instead.
+# a clone of its tabs mod with a Deploys and Code Burn button added. deploys
+# and codeburn are from-scratch panel mods (not clones) for their chips. The
+# app doesn't hot-reload through these links; herdr-update re-shows the
+# layout instead.
 mkdir -p "$APP_DIR/mods" "$APP_DIR/layouts"
-for mod in my-spaces my-tabs deploys; do
+for mod in my-spaces my-tabs deploys codeburn; do
 	if [[ -e "$APP_DIR/mods/$mod" && ! -L "$APP_DIR/mods/$mod" ]]; then
 		mv "$APP_DIR/mods/$mod" "$APP_DIR/mods/$mod.backup.$(date +%Y%m%d%H%M%S)"
 	fi
@@ -34,15 +35,17 @@ for mod in my-spaces my-tabs deploys; do
 done
 
 # my-main is Herdr's main layout with my-spaces in place of spaces, my-tabs in
-# place of tabs, and a deploys block added to the panel-body stack (alongside
-# files/changes). Generated from the shipped file (written on app start) so
-# app updates flow through.
+# place of tabs, and deploys/codeburn blocks added to the panel-body stack
+# (alongside files/changes). Generated from the shipped file (written on app
+# start) so app updates flow through.
 if [[ -f "$APP_DIR/layouts/main.json" ]]; then
 	jq --arg v "$(herdr-app --version 2>/dev/null | awk '{print $2}')" \
 		'(.. | objects | select(.mod? == "spaces") | .mod) = "my-spaces"
 		| (.. | objects | select(.mod? == "tabs") | .mod) = "my-tabs"
 		| (.. | objects | select(.id? == "panel-body") | .children) |=
 			(if any(.[]; .id == "deploys") then . else . + [{id: "deploys", type: "block", content: {mod: "deploys"}}] end)
+		| (.. | objects | select(.id? == "panel-body") | .children) |=
+			(if any(.[]; .id == "codeburn") then . else . + [{id: "codeburn", type: "block", content: {mod: "codeburn"}}] end)
 		| .cloned_from = {name: "main", version: $v}' \
 		"$APP_DIR/layouts/main.json" >"$APP_DIR/layouts/my-main.json.tmp"
 	mv "$APP_DIR/layouts/my-main.json.tmp" "$APP_DIR/layouts/my-main.json"
