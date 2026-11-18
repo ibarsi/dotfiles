@@ -324,27 +324,23 @@ export default class Deploys extends View {
   podRow(sourceName, tg, pod, t) {
     const key = `${sourceName}:${tg.name}:pod:${pod.name}`;
     const open = this.openStages.has(key);
+    const canInvestigate = tg.pods.context === LOCAL_CONTEXT || Boolean(this.target()?.pr);
     return v_flex().id(`deploy-pod-${key}`)
       .child(Row({ id: `deploy-pod-toggle-${key}`, onClick: (cx) => this.toggleStage(key, { ...tg.pods, pod: pod.name, container: pod.container }, cx) })
         .child(Chevron(open))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(pod.name))
-        .child(div().text_size(TEXT.caption).text_color(t.ansi1).child(pod.restarts ? `${pod.reason} · ${pod.restarts}×` : pod.reason)))
+        .child(div().text_size(TEXT.caption).text_color(t.ansi1).child(pod.restarts ? `${pod.reason} · ${pod.restarts}×` : pod.reason))
+        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-pod-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", onClick: () => this.investigatePod(tg, pod) }))))
       .when(open, (el) => el.child(this.stageDetail(key, t)));
   }
 
   // Like the sidebar's rebase icon: splits a haiku agent into the active space's
-  // shown tab to investigate a failed stage, read-only. Skipped while one for the
-  // same stage is still running there.
-  investigate(stage) {
+  // shown tab to investigate, read-only. Skipped while one for the same prompt
+  // is still running there.
+  spawnAgent(prompt) {
     const target = this.target();
     const space = spaces().find((s) => s.active);
     if (!target || !space) return;
-    const prompt = stage.local
-      ? `The ArgoCD app ${stage.app} (stage "${stage.name}") of the local Kind deploy for branch ${target.branch} is ${stage.status}. `
-        + `Investigate why: start with \`kubectl --context ${LOCAL_CONTEXT} -n sys-argocd get applications.argoproj.io ${stage.app} -o yaml\` `
-        + `(status.conditions, status.resources), then the unhealthy workloads in namespace ${stage.namespace} (pods, events, logs). `
-      : `Stage "${stage.name}" of PR #${target.pr}'s branch deploy is ${stage.status}. `
-        + `Investigate why: start with \`gh bd ${target.pr} -R ${target.repo} --stage ${stage.name}\`, then dig into the failing resources and their logs. `;
     const argv = [...AGENT_ARGV, prompt + "Read-only: don't sync, delete or edit cluster resources or code. Report the root cause and a suggested fix."];
     const running = terminals().some((tm) => tm.state === "live" && spaceOf(tm) === space.id && tm.argv?.join("\0") === argv.join("\0"));
     if (running) return;
@@ -354,6 +350,33 @@ export default class Deploys extends View {
     // ponytail: falls back to any pane, whose folder may lack them; wrap argv in `sh -c 'cd …'` if that bites.
     const pane = tabPanes.find((p) => p.cwd === target.cwd) ?? tabPanes[0];
     if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv });
+  }
+
+  investigate(stage) {
+    const target = this.target();
+    if (!target) return;
+    const prompt = stage.local
+      ? `The ArgoCD app ${stage.app} (stage "${stage.name}") of the local Kind deploy for branch ${target.branch} is ${stage.status}. `
+        + `Investigate why: start with \`kubectl --context ${LOCAL_CONTEXT} -n sys-argocd get applications.argoproj.io ${stage.app} -o yaml\` `
+        + `(status.conditions, status.resources), then the unhealthy workloads in namespace ${stage.namespace} (pods, events, logs). `
+      : `Stage "${stage.name}" of PR #${target.pr}'s branch deploy is ${stage.status}. `
+        + `Investigate why: start with \`gh bd ${target.pr} -R ${target.repo} --stage ${stage.name}\`, then dig into the failing resources and their logs. `;
+    this.spawnAgent(prompt);
+  }
+
+  investigatePod(tg, pod) {
+    const target = this.target();
+    if (!target) return;
+    const p = tg.pods;
+    const local = p.context === LOCAL_CONTEXT;
+    const restarted = pod.restarts ? ` (restarted ${pod.restarts}×)` : "";
+    const container = pod.container ? ` (container ${pod.container})` : "";
+    const prompt = local
+      ? `Pod ${pod.name} in namespace ${p.namespace} of the local Kind deploy for branch ${target.branch} is ${pod.reason}${restarted}. `
+        + `Investigate why: start with \`kubectl --context ${LOCAL_CONTEXT} -n ${p.namespace} describe pod ${pod.name}\`, then its events and logs${container}. `
+      : `Pod ${pod.name} in namespace ${p.namespace} of PR #${target.pr}'s branch deploy is ${pod.reason}${restarted}. `
+        + `Investigate why: pick a configured kubectl context from "${p.context}", then check the pod's events and logs${container} in that namespace. `;
+    this.spawnAgent(prompt);
   }
 
   stageRow(sourceName, tg, stage, t) {
