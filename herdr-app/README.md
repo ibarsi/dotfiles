@@ -248,10 +248,10 @@ pinned for it ("No version is set for shim: codeburn") even though the shim
 file exists, so the shim path that works fine on the Mac fails silently on
 Omen. Verified directly over SSH to both machines before relying on it.
 
-A further call per paired non-local device runs the same `status` command
-with no `--scope`, directly on that device (`exec(..., { on: device.name })`,
-the same pattern Deploys uses for remote `kubectl`/`argocd`) — see "Spaces"
-below for why.
+Two further calls per paired non-local device run directly on that device
+(`exec(..., { on: device.name })`, the same pattern Deploys uses for remote
+`kubectl`/`argocd`): the same `status` command with no `--scope`, and its own
+`export` scoped to just today — see "Spaces" below for why.
 
 **Personal spend never appears** — this panel is about Vertex (work) spend,
 and MacBook Codex (model.js's `PERSONAL` table, `[{ device: /MacBook/i,
@@ -361,17 +361,19 @@ name as a full timestamp). `model.js`'s `money()`, `monthName()` and
 don't reach for `toLocale*` anywhere in this mod.
 
 `codeburn export`'s records are local-only (confirmed: a paired device's
-projects never show up in another device's export), and there's no
-equivalent direct-fetch for it the way Spaces now has for branch/project/live
-data — exporting over a remote machine's logs would mean copying its whole
-history across for every refresh, not one status call. So a remote device's
-live agents attach to their real space (branch and project/cwd both come
-through the direct per-device fetch) but never get a $/h or session cost from
-this panel, same as a subagent's own spend, which codeburn records under a
-separate `agent-*` session id its parent session's export rows don't include.
+projects never show up in another device's export), so burn rate ($/h,
+session cost) needs the same direct per-device fetch Spaces already has for
+branch/project/live data — just `export`, not `status`. Scoped to just today
+regardless of the panel's selected range, since only the last 10 minutes is
+ever read from it (`cutoff`): a day's export for a heavy Omen session volume
+measured at under 2MB and well under a second over SSH, and only the
+jq-slimmed result (sessions and the last 10 minutes of records) ever crosses
+back. A subagent's own spend is still invisible everywhere, local or remote:
+codeburn records it under a separate `agent-*` session id its parent
+session's export rows don't include.
+
 Still to verify once a second device runs work Codex through Vertex: that it
-prices its own
-usage with its own overrides before sharing, not this one's.
+prices its own usage with its own overrides before sharing, not this one's.
 
 ## Updating
 

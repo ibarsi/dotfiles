@@ -178,12 +178,11 @@ export default class CodeBurn extends View {
       // sanitized data (aggregate cost/tokens/models only, no branch/project
       // detail, no live agents from it).
       const remoteDevices = (range.combinedDevices ?? []).filter((d) => !d.local);
-      // codeburn export only ever covers this machine, so "personal" here
-      // means this machine's own PERSONAL entries — found from the local
-      // device's own name, now that `range` says what codeburn calls it.
+      // codeburn export only ever covers the machine it runs on, so "personal"
+      // for each export call means that device's own PERSONAL entries.
       const localDeviceName = range.combinedDevices?.find((d) => d.local)?.name ?? "";
       const personalProviders = PERSONAL.filter((p) => p.device.test(localDeviceName)).map((p) => p.provider);
-      const [remoteResults, exportR] = await Promise.all([
+      const [remoteResults, exportR, remoteExportResults] = await Promise.all([
         Promise.all(remoteDevices.map(async (d) => {
           try {
             const r = await exec("sh", ["-c", LOCAL_STATUS_SH, "sh", period], { on: d.name, timeout: 30000 });
@@ -193,6 +192,20 @@ export default class CodeBurn extends View {
           }
         })),
         exec("sh", ["-c", EXPORT_SH, "sh", from, to, JSON.stringify(personalProviders), cutoff, EXPORT_JQ], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
+        // Burn rate needs each device's own export too — `status` never carries
+        // per-session cost. Scoped to just today (not the panel's selected
+        // range) regardless of the range chip, since only the last 10 minutes
+        // is ever used from it: measured at ~0.7s and under 2MB for a heavy
+        // day on Omen, run remotely so only the jq-slimmed result crosses back.
+        Promise.all(remoteDevices.map(async (d) => {
+          const devicePersonal = PERSONAL.filter((p) => p.device.test(d.name)).map((p) => p.provider);
+          try {
+            const r = await exec("sh", ["-c", EXPORT_SH, "sh", to, to, JSON.stringify(devicePersonal), cutoff, EXPORT_JQ], { on: d.name, timeout: 30000 });
+            return r.code === 0 ? JSON.parse(r.stdout) : null;
+          } catch {
+            return null;
+          }
+        })),
       ]);
       range.combinedDevices = (range.combinedDevices ?? []).map((d) => {
         if (d.local) return d;
@@ -207,7 +220,14 @@ export default class CodeBurn extends View {
         try { this.month = JSON.parse(monthR.stdout); } catch { /* keep the previous month figure over a one-off parse failure */ }
       }
       if (exportR.code === 0 && exportR.stdout.trim()) {
-        try { this.slim = JSON.parse(exportR.stdout); } catch { /* keep the previous slim data over a one-off parse failure */ }
+        try {
+          const localSlim = JSON.parse(exportR.stdout);
+          const remoteSlims = remoteExportResults.filter(Boolean);
+          this.slim = {
+            sessions: [...localSlim.sessions, ...remoteSlims.flatMap((s) => s.sessions)],
+            recent: [...localSlim.recent, ...remoteSlims.flatMap((s) => s.recent)],
+          };
+        } catch { /* keep the previous slim data over a one-off parse failure */ }
       }
       this.lastFetch = Date.now();
       this.loading = false;
