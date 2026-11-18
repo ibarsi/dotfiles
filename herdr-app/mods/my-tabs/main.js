@@ -158,8 +158,8 @@ export default class Tabs extends View {
         .children(shown.map(item)))
       .child(button("tab-new", "+", () => openOverlay({ mod: "new-menu", kind: "popup", width: 250, height: 512 })))
       .when(enabled.includes("deploys"), el => el.child(panelButton("deploys", "Deploys", "mods/deploys/icon.svg"))) // deploys
-      .when(enabled.includes("codeburn"), el => el.child(panelButton("codeburn", "Code Burn", "mods/codeburn/icon.svg"))) // codeburn
       .when(enabled.includes("pr-reviews"), el => el.child(panelButton("pr-reviews", "PR Reviews", "mods/pr-reviews/icon.svg"))) // pr-reviews
+      .when(enabled.includes("codeburn"), el => el.child(panelButton("codeburn", "Code Burn", "mods/codeburn/icon.svg"))) // codeburn
       .when(w?.buttons, el => el.child(button("minimize", w.platform === "windows" ? svg("mods/tabs/win-min.svg").size(16) : "−", () => run("window.minimize")))
         .child(button("maximize", w.platform === "windows" ? svg(`mods/tabs/${w.maximized ? "win-restore" : "win-max"}.svg`).size(16) : "□", () => run("window.maximize")))
         .child(button("close-window", w.platform === "windows" ? svg("mods/tabs/win-close.svg").size(16) : svg("mods/pane/close.svg").size(13), () => run("window.close"))));

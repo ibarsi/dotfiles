@@ -231,7 +231,7 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 
 ## Code Burn panel
 
-A **Code Burn** button sits in the tabs bar next to Deploys. It shows what the
+A **Code Burn** button sits in the tabs bar after PR Reviews. It shows what the
 coding agents cost, priced at the [employment Vertex contract rates](../codeburn/README.md)
 rather than a subscription plan: this month's work spend against a projected
 month-end figure, a 30-day trend, every open space's burn with its live
