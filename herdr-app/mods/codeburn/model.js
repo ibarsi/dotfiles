@@ -42,8 +42,11 @@ export function splitSpend(combinedDevices) {
   return { work, personal, providers };
 }
 
+// Local calendar date, not toISOString's UTC one — codeburn buckets daily
+// history by local day, and toISOString() rolls to tomorrow's date for any
+// evening local time with a negative UTC offset.
 function dateKey(d) {
-  return d.toISOString().slice(0, 10);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 export function dailyWork(combinedDevices, days = 30, today = new Date()) {
@@ -77,9 +80,14 @@ export function dailyWork(combinedDevices, days = 30, today = new Date()) {
 export function projectMonth(mtd, now = new Date()) {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  // Rounded to the nearest whole day: a raw ms difference drifts by the DST
-  // hour on any month that crosses a transition (e.g. Nov 1, 2026 in the US).
-  const elapsedDays = Math.max(1, Math.round((now - monthStart) / 86400000));
+  // Elapsed time stays continuous (not rounded to whole days — rounding down
+  // early in the month, e.g. 1.46 elapsed days floored to 1, overprojects by
+  // ~50%). The raw ms difference is corrected for the DST hour a month can
+  // gain or lose (e.g. Nov 1, 2026 in the US) by subtracting the difference
+  // between the two timestamps' UTC offsets, so a transition doesn't masquerade
+  // as an extra hour of spending pace.
+  const dstAdjustMs = (monthStart.getTimezoneOffset() - now.getTimezoneOffset()) * 60000;
+  const elapsedDays = Math.max(1, (now - monthStart - dstAdjustMs) / 86400000);
   return (mtd / elapsedDays) * daysInMonth;
 }
 
@@ -134,6 +142,70 @@ export function repoTotals(slim) {
   return totals;
 }
 
+// codeburn's own `combined.combined` block only has coarse totals (cost,
+// calls, tokens) — no per-model, per-project or per-branch breakdown across
+// devices (verified against codeburn 0.9.28's output). This builds that
+// breakdown from each device's own `current` block instead. cacheHitPercent
+// isn't a simple token ratio (codeburn's own value doesn't match
+// cacheRead/total or cacheRead/(cacheRead+input) on real data), so it's
+// approximated as a token-weighted average of each device's own rate rather
+// than guessed at from raw tokens.
+export function mergeCurrent(combinedDevices) {
+  const totals = { cost: 0, calls: 0, inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 };
+  const models = new Map();
+  const projects = new Map();
+  const branches = new Map();
+  const unpriced = new Set();
+  let hitWeightedSum = 0;
+  let hitWeightTotal = 0;
+  for (const device of combinedDevices ?? []) {
+    const c = device.payload?.current ?? {};
+    totals.cost += c.cost ?? 0;
+    totals.calls += c.calls ?? 0;
+    totals.inputTokens += c.inputTokens ?? 0;
+    totals.outputTokens += c.outputTokens ?? 0;
+    totals.cacheReadTokens += c.cacheReadTokens ?? 0;
+    totals.cacheWriteTokens += c.cacheWriteTokens ?? 0;
+    const deviceTokens = (c.inputTokens ?? 0) + (c.outputTokens ?? 0) + (c.cacheReadTokens ?? 0) + (c.cacheWriteTokens ?? 0);
+    if (deviceTokens > 0 && typeof c.cacheHitPercent === "number") {
+      hitWeightedSum += c.cacheHitPercent * deviceTokens;
+      hitWeightTotal += deviceTokens;
+    }
+    for (const m of c.topModels ?? []) {
+      const row = models.get(m.name) ?? { name: m.name, calls: 0, cost: 0, inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 };
+      row.calls += m.calls ?? 0;
+      row.cost += m.cost ?? 0;
+      row.inputTokens += m.inputTokens ?? 0;
+      row.outputTokens += m.outputTokens ?? 0;
+      row.cacheReadTokens += m.cacheReadTokens ?? 0;
+      row.cacheWriteTokens += m.cacheWriteTokens ?? 0;
+      models.set(m.name, row);
+    }
+    for (const p of c.topProjects ?? []) {
+      const row = projects.get(p.name) ?? { name: p.name, sessions: 0, cost: 0 };
+      row.sessions += p.sessions ?? 0;
+      row.cost += p.cost ?? 0;
+      projects.set(p.name, row);
+    }
+    for (const b of c.byBranch ?? []) {
+      const row = branches.get(b.branch) ?? { branch: b.branch, cost: 0, calls: 0, sessions: 0 };
+      row.cost += b.cost ?? 0;
+      row.calls += b.calls ?? 0;
+      row.sessions += b.sessions ?? 0;
+      branches.set(b.branch, row);
+    }
+    for (const u of c.unpricedModels ?? []) unpriced.add(typeof u === "string" ? u : (u.name ?? u.model ?? ""));
+  }
+  return {
+    ...totals,
+    cacheHitPercent: hitWeightTotal > 0 ? hitWeightedSum / hitWeightTotal : 0,
+    topModels: [...models.values()].sort((a, b) => b.cost - a.cost),
+    topProjects: [...projects.values()].sort((a, b) => b.cost - a.cost),
+    byBranch: [...branches.values()],
+    unpricedModels: [...unpriced],
+  };
+}
+
 export function accuracyNotes({ providers, unpriced, unclassified }) {
   const notes = [];
   if (providers?.has("gemini")) notes.push("Gemini uses reference Vertex rates; standard and priority tiers aren't distinguished.");
@@ -169,7 +241,11 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
   for (const [id, t] of targetEntries) {
     const name = repoName(t.repo);
     const shared = DEFAULT_BRANCHES.has(t.branch) || (reposByBranch.get(t.branch)?.size ?? 0) > 1;
-    rowsById.set(id, { id, repo: name, branch: t.branch, active: id === activeId, shared, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 });
+    // codeburn's live-session `project` is basename(cwd), not the repo name — a
+    // worktree's folder is usually named after its branch or task, not its
+    // repo — so an agent matches by either the repo name or the worktree's own
+    // folder name, whichever the running session actually reports.
+    rowsById.set(id, { id, repo: name, cwdName: repoName(t.cwd), branch: t.branch, active: id === activeId, shared, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 });
   }
 
   let other = null;
@@ -178,7 +254,7 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
   for (const a of agents ?? []) {
     live += 1;
     rate += a.rate;
-    const row = [...rowsById.values()].find((r) => r.repo === a.project && r.branch === a.branch);
+    const row = [...rowsById.values()].find((r) => r.branch === a.branch && (r.repo === a.project || r.cwdName === a.project));
     if (row) {
       row.agents.push(a);
       row.rate += a.rate;

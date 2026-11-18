@@ -8,7 +8,7 @@ import { h_flex, v_flex } from "gpui-base";
 import { exec, theme, shared, setShared, layout, spaces } from "herdr";
 import {
   RANGES, PERSONAL, money, tokens, ago, monthName, shortDate, projectMonth, splitSpend, dailyWork,
-  providerOfModel, agents, repoTotals, accuracyNotes, buildSpaces, EXPORT_JQ,
+  providerOfModel, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent, EXPORT_JQ,
 } from "./model.js";
 import { TEXT, Panel, PanelHeader, Chip, Section, Bar, Spark, Stat, Approx, Link, IconButton, Message, Busy } from "./ui.js";
 
@@ -94,7 +94,10 @@ export default class CodeBurn extends View {
 
   tick(cx) {
     const visible = showing();
-    if (visible && (!this.wasVisible || Date.now() - this.lastFetch > FETCH_EVERY)) this.fetch(cx);
+    // !this.loading matters because lastFetch stays unchanged while a fetch is
+    // in flight: without this guard, a slow or hanging codeburn call gets a
+    // fresh set of 3 processes launched every second on top of it.
+    if (visible && !this.loading && (!this.wasVisible || Date.now() - this.lastFetch > FETCH_EVERY)) this.fetch(cx);
     if (visible !== this.wasVisible) cx.notify();
     this.wasVisible = visible;
   }
@@ -132,17 +135,35 @@ export default class CodeBurn extends View {
         exec("sh", ["-c", EXPORT_SH, "sh", from, to, cutoff, EXPORT_JQ], { timeout: 30000 }).catch((e) => ({ code: 1, stderr: String(e) })),
       ]);
       if (this.period !== period) return; // stale: range chip moved on while this was in flight
+      // lastFetch is set on every path below, success or failure: tick()'s
+      // retry gate reads it unconditionally, so a persistent failure without
+      // this would retry every second instead of waiting FETCH_EVERY.
       if (rangeR.code !== 0) {
         this.error = firstLine(rangeR.stderr) ?? "codeburn unavailable";
+        this.lastFetch = Date.now();
+        this.loading = false;
+        cx.notify();
+        return;
+      }
+      let range;
+      try {
+        range = JSON.parse(rangeR.stdout);
+      } catch {
+        this.error = "codeburn status: unreadable output";
+        this.lastFetch = Date.now();
         this.loading = false;
         cx.notify();
         return;
       }
       this.error = null;
-      this.range = JSON.parse(rangeR.stdout);
+      this.range = range;
       if (period === "month") this.month = this.range;
-      else if (monthR?.code === 0) this.month = JSON.parse(monthR.stdout);
-      if (exportR.code === 0 && exportR.stdout.trim()) this.slim = JSON.parse(exportR.stdout);
+      else if (monthR?.code === 0) {
+        try { this.month = JSON.parse(monthR.stdout); } catch { /* keep the previous month figure over a one-off parse failure */ }
+      }
+      if (exportR.code === 0 && exportR.stdout.trim()) {
+        try { this.slim = JSON.parse(exportR.stdout); } catch { /* keep the previous slim data over a one-off parse failure */ }
+      }
       this.lastFetch = Date.now();
       this.loading = false;
       cx.notify();
@@ -169,9 +190,12 @@ export default class CodeBurn extends View {
         .child(Link({ id: "codeburn-retry", label: "Retry", onClick: (cx) => this.fetch(cx) })));
     }
 
-    const current = this.range.current ?? {};
     const monthDevices = this.month?.combinedDevices ?? [];
     const rangeDevices = this.range?.combinedDevices ?? [];
+    // combined.combined only has coarse totals (no per-model/-project/-branch
+    // breakdown), so Totals/Models/Projects/Spaces are built by merging every
+    // paired device's own `current` block instead of reading just this one.
+    const current = mergeCurrent(rangeDevices);
 
     const split = splitSpend(monthDevices);
     const daily = dailyWork(monthDevices, 30);
@@ -179,7 +203,7 @@ export default class CodeBurn extends View {
     const now = new Date();
     const monthLabel = monthName(now).toUpperCase();
     const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    const monthUnpriced = (this.month?.current?.unpricedModels ?? []).map((m) => (typeof m === "string" ? m : (m.name ?? m.model ?? "")));
+    const monthUnpriced = mergeCurrent(monthDevices).unpricedModels;
     const headlineNotes = accuracyNotes({ providers: split.providers, unpriced: monthUnpriced, unclassified: daily.unclassified });
 
     const liveSessions = rangeDevices.flatMap((d) => d.payload?.liveSessions?.sessions ?? []);
@@ -204,11 +228,13 @@ export default class CodeBurn extends View {
         .child(div().text_size(TEXT.caption).text_color(t.dim).child(`${money(split.personal)} at API rates`)))));
 
     // Spaces: every herdr space that has an open PR/branch, its live agents, and its burn rate.
+    const allSpaceRows = [...spacesResult.rows, ...spacesResult.quiet.rows, ...(spacesResult.other ? [spacesResult.other] : [])];
+    const maxSpaceCost = Math.max(0.01, ...allSpaceRows.map((r) => r.cost ?? 0));
     body.child(v_flex().flex_none().gap(4)
       .child(Section(`SPACES · ${spacesResult.rows.length + spacesResult.quiet.count + (spacesResult.other ? 1 : 0)}`, div().text_size(TEXT.caption).text_color(t.dim).child(`${spacesResult.live} agents live · ${money(spacesResult.rate)}/h`)))
-      .children(spacesResult.rows.map((row) => this.spaceBlock(row, activeId, t)))
-      .when(spacesResult.quiet.count > 0, (el) => el.child(this.quietBlock(spacesResult.quiet, t)))
-      .when(Boolean(spacesResult.other), (el) => el.child(this.spaceBlock(spacesResult.other, activeId, t))));
+      .children(spacesResult.rows.map((row) => this.spaceBlock(row, activeId, maxSpaceCost, t)))
+      .when(spacesResult.quiet.count > 0, (el) => el.child(this.quietBlock(spacesResult.quiet, maxSpaceCost, t)))
+      .when(Boolean(spacesResult.other), (el) => el.child(this.spaceBlock(spacesResult.other, activeId, maxSpaceCost, t))));
 
     // Totals for the selected range.
     body.child(v_flex().flex_none().gap(6)
@@ -249,7 +275,7 @@ export default class CodeBurn extends View {
     return root.child(chips).child(body).child(footer);
   }
 
-  spaceBlock(row, activeId, t) {
+  spaceBlock(row, activeId, maxSpaceCost, t) {
     const open = this.isOpen(row.id, activeId);
     const workingCount = row.agents.filter((a) => !a.idle).length;
     const idleCount = row.agents.filter((a) => a.idle).length;
@@ -261,23 +287,25 @@ export default class CodeBurn extends View {
         .child(div().w(18).text_size(TEXT.caption).text_color(t.working).child(marker))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).child(`${row.repo}${row.branch ? "  " + row.branch : ""}`))
         .when(row.shared, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child("repo")))
+        .when(row.rate > 0, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child(`${money(row.rate)}/h`)))
+        .child(div().w(36).child(Bar(row.cost / maxSpaceCost, t.accent)))
         .child(div().w(70).text_right().text_size(TEXT.small).text_color(t.foreground).child(money(row.cost))))
       .when(open && row.agents.length > 0, (el) => el.children(row.agents.map((a) => this.agentRow(a, t))));
   }
 
   agentRow(a, t) {
     return h_flex().id(`codeburn-agent-${a.id}`).pl(32).pr(8).min_h(20).gap(8).items_center()
-      .child(div().w(80).truncate().text_size(TEXT.caption).text_color(t.muted).child(a.model))
+      .child(div().w(80).truncate().text_size(TEXT.caption).text_color(t.muted).child(a.model ?? "-"))
       .child(div().w(50).child(Bar(a.fill, t.accent)))
       .child(div().w(30).text_size(TEXT.caption).text_color(t.dim).child(`${Math.round(a.fill * 100)}%`))
       .child(div().flex_1().text_size(TEXT.caption).text_color(t.dim).child(a.idle ? `idle ${Math.floor(a.idleSeconds / 60)}m` : `${money(a.rate)}/h`))
       .child(div().text_size(TEXT.caption).text_color(t.dim).child(`sess ${money(a.sessionCost)}`));
   }
 
-  quietBlock(quiet, t) {
+  quietBlock(quiet, maxSpaceCost, t) {
     if (this.showQuiet) {
       return v_flex().id("codeburn-quiet").flex_none()
-        .children(quiet.rows.map((row) => this.spaceBlock(row, null, t)))
+        .children(quiet.rows.map((row) => this.spaceBlock(row, null, maxSpaceCost, t)))
         .child(this.quietToggle(quiet, t, "hide"));
     }
     return this.quietToggle(quiet, t, "show");

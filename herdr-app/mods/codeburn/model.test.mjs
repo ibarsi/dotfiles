@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, monthName, shortDate, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces } from "./model.js";
+import { isPersonal, providerOfModel, splitSpend, dailyWork, projectMonth, money, tokens, ago, monthName, shortDate, EXPORT_JQ, agents, repoTotals, accuracyNotes, buildSpaces, mergeCurrent } from "./model.js";
 
 test("isPersonal: MacBook codex is personal", () => {
   assert.equal(isPersonal("Igors-MacBook-Pro.local", "codex"), true);
@@ -67,6 +67,23 @@ test("projectMonth on day 1 (elapsedDays floored to 1) is finite", () => {
   assert.equal(projectMonth(10, now), 300);
 });
 
+test("dailyWork buckets by local calendar day, not the UTC day toISOString gives", () => {
+  const prevTZ = process.env.TZ;
+  process.env.TZ = "America/Toronto"; // UTC-5 in November: late evening local is already tomorrow in UTC
+  try {
+    const today = new Date(2026, 10, 18, 20, 0, 0); // Nov 18 2026, 20:00 local
+    const combinedDevices = [
+      { id: "local", name: "Igors-MacBook-Pro.local", payload: { current: {}, history: { daily: [
+        { date: "2026-11-18", cost: 10, topModels: [{ name: "Opus 5.5", cost: 10 }] },
+      ] } } },
+    ];
+    const result = dailyWork(combinedDevices, 30, today);
+    assert.equal(result.series[29], 10); // the last slot is "today" (local Nov 18), not UTC's Nov 19
+  } finally {
+    process.env.TZ = prevTZ;
+  }
+});
+
 test("projectMonth with zero month-to-date is zero", () => {
   assert.equal(projectMonth(0, new Date(2026, 10, 1, 6)), 0);
 });
@@ -74,6 +91,15 @@ test("projectMonth with zero month-to-date is zero", () => {
 test("projectMonth midway through the month", () => {
   const now = new Date(2026, 10, 16);
   assert.equal(projectMonth(150, now), 300);
+});
+
+test("projectMonth does not overproject early in the month from whole-day rounding", () => {
+  // June has no US DST transition, so this isolates the rounding bug: whole-day
+  // rounding floors 1.4583 elapsed days down to 1, projecting 100/1*30 = 3000
+  // instead of the true ~100/1.4583*30 ≈ 2057.
+  const now = new Date(2026, 5, 2, 11, 0, 0);
+  const result = projectMonth(100, now);
+  assert.ok(result < 2200 && result > 1900, `expected a continuous-time projection near 2057, got ${result}`);
 });
 
 test("money formats with thousands separator and two decimals", () => {
@@ -143,6 +169,51 @@ test("accuracyNotes lists gemini, grok and unclassified remainder, gemini first"
   assert.match(notes[0], /Gemini/);
   assert.match(notes[1], /Grok/);
   assert.match(notes[2], /\$3\.00/);
+});
+
+test("mergeCurrent sums totals, merges models/projects/branches by name across devices, and token-weights the cache hit rate", () => {
+  const combinedDevices = [
+    { id: "a", name: "A", payload: { current: {
+      cost: 10, calls: 100, inputTokens: 1000, outputTokens: 500, cacheReadTokens: 2000, cacheWriteTokens: 100,
+      cacheHitPercent: 90,
+      topModels: [{ name: "Opus 5.5", calls: 50, cost: 6, inputTokens: 500, outputTokens: 250, cacheReadTokens: 1000, cacheWriteTokens: 50 }],
+      topProjects: [{ name: "dotfiles", sessions: 2, cost: 10 }],
+      byBranch: [{ branch: "feat", cost: 10, calls: 100, sessions: 2 }],
+      unpricedModels: ["mystery-model"],
+    } } },
+    { id: "b", name: "B", payload: { current: {
+      cost: 20, calls: 200, inputTokens: 2000, outputTokens: 1000, cacheReadTokens: 18000, cacheWriteTokens: 200,
+      cacheHitPercent: 85,
+      topModels: [{ name: "Opus 5.5", calls: 50, cost: 4, inputTokens: 500, outputTokens: 250, cacheReadTokens: 1000, cacheWriteTokens: 50 }],
+      topProjects: [{ name: "dotfiles", sessions: 1, cost: 5 }],
+      byBranch: [{ branch: "feat", cost: 5, calls: 50, sessions: 1 }],
+      unpricedModels: [],
+    } } },
+  ];
+  const merged = mergeCurrent(combinedDevices);
+  assert.equal(merged.cost, 30);
+  assert.equal(merged.calls, 300);
+  assert.equal(merged.inputTokens, 3000);
+  const opus = merged.topModels.find((m) => m.name === "Opus 5.5");
+  assert.equal(opus.calls, 100);
+  assert.equal(opus.cost, 10);
+  const dotfiles = merged.topProjects.find((p) => p.name === "dotfiles");
+  assert.equal(dotfiles.sessions, 3);
+  assert.equal(dotfiles.cost, 15);
+  const feat = merged.byBranch.find((b) => b.branch === "feat");
+  assert.equal(feat.cost, 15);
+  assert.deepEqual(merged.unpricedModels, ["mystery-model"]);
+  const tokensA = 1000 + 500 + 2000 + 100;
+  const tokensB = 2000 + 1000 + 18000 + 200;
+  const expectedHit = (90 * tokensA + 85 * tokensB) / (tokensA + tokensB);
+  assert.ok(Math.abs(merged.cacheHitPercent - expectedHit) < 1e-9);
+});
+
+test("mergeCurrent on an empty device list returns zeroed totals, not NaN", () => {
+  const merged = mergeCurrent([]);
+  assert.equal(merged.cost, 0);
+  assert.equal(merged.cacheHitPercent, 0);
+  assert.deepEqual(merged.topModels, []);
 });
 
 function agent(overrides) {
@@ -218,6 +289,18 @@ test("buildSpaces: a quiet, no-agent, low-cost non-active row folds into quiet; 
   assert.equal(result.quiet.cost, 10);
   assert.equal(result.rows.some((r) => r.id === "small"), false);
   assert.equal(result.rows.some((r) => r.id === "big"), true);
+});
+
+test("buildSpaces: an agent whose project is the worktree folder (not the repo name) still attaches via the target's cwd", () => {
+  // codeburn's live-session `project` is basename(cwd), not the repo name — a worktree's
+  // folder is usually named after its branch or task, not the repo it's a worktree of.
+  const targets = { w: { repo: "ibarsi/dotfiles", branch: "feat", cwd: "/Users/igorbarsi/worktrees/dotfiles-feat" } };
+  const byBranch = [{ branch: "feat", cost: 8 }];
+  const worktreeAgent = agent({ id: "w1", provider: "claude", project: "dotfiles-feat", branch: "feat", sessionCost: 0, rate: 2 });
+  const result = buildSpaces({ targets, activeId: null, byBranch, agents: [worktreeAgent], repos: new Map(), rangeCost: 0 });
+  const w = result.rows.find((r) => r.id === "w");
+  assert.equal(w.agents.length, 1);
+  assert.equal(w.rate, 2);
 });
 
 test("buildSpaces: no targets and no agents yields an empty, well-shaped result", () => {

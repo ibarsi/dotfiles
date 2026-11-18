@@ -253,19 +253,31 @@ device name — a one-line change, not a redesign. The headline and the dim
 "Personal" line both read this split from the current month's data,
 regardless of which range chip is selected.
 
+**Totals, Models, Projects and Spaces** are built across every paired device
+rather than read off just this one: codeburn's own `combined.combined` block
+only has coarse totals (cost, calls, tokens), with no per-model, per-project
+or per-branch breakdown across devices, so `model.js`'s `mergeCurrent()`
+builds that breakdown itself from each device's own `current` block.
+Cache-hit rate isn't a simple token ratio (codeburn's own figure doesn't
+match either obvious formula worked out from raw tokens), so it's
+approximated as a token-weighted average of each device's own reported rate.
+
 **Spaces** ties spend to open herdr spaces using `shared("deploys.targets")`
-(the same `{repo, branch}` map `indicators.js` publishes for Deploys): a
+(the `{repo, branch, cwd}` map `indicators.js` publishes for Deploys): a
 space on a feature branch shows that branch's Claude cost (from codeburn's
 `byBranch`, the only per-branch data codeburn has) plus whatever its live
 non-Claude agents have spent this session. A space on `main`/`master`, or on
 any branch name another open space's repo also uses, shows its **repo**
 total instead, labelled `repo` — `byBranch` sums every repo that has ever
 used a branch name, open or not, so two spaces both on `master` would
-otherwise show each other's spend mixed together. An agent that matches no
-open space's repo and branch lands in an "Other (no space)" row instead of
-being silently dropped. Busy spaces sort to the top by $/h; quiet ones below
-2% of the range's cost fold into a single "+ N quiet spaces" row so the list
-stays short with many spaces open.
+otherwise show each other's spend mixed together. A live agent attaches by
+branch plus either the repo name or the worktree folder's own name: codeburn
+reports a live session's `project` as `basename(cwd)`, not the repo it
+belongs to, so a worktree whose folder isn't named after its repo (the usual
+case) still needs to match. An agent that matches neither lands in an "Other
+(no space)" row instead of being silently dropped. Busy spaces sort to the
+top by $/h; quiet ones below 2% of the range's cost fold into a single
+"+ N quiet spaces" row so the list stays short with many spaces open.
 
 A small **≈** next to a total means part of it isn't exactly priced:
 reference-only Gemini rates, Grok at codeburn's defaults (no Vertex override
@@ -282,11 +294,13 @@ name as a full timestamp). `model.js`'s `money()`, `monthName()` and
 `shortDate()` are built from `toFixed` and a fixed month-name array instead —
 don't reach for `toLocale*` anywhere in this mod.
 
-Still to verify once a second device is paired for work Codex through
-Vertex: that each device prices its own usage before sharing (so the
-far device's own overrides apply, not this one's), and whether `codeburn
-export`'s records are local-only — if so, a remote device's live agents show
-no $/h until that's confirmed.
+`codeburn export`'s records are local-only (confirmed: a paired device's
+projects never show up in another device's export), so a paired device's
+live agents never get a $/h or session cost from this panel, same as a
+subagent's own spend, which codeburn records under a separate `agent-*`
+session id its parent session's export rows don't include. Still to verify
+once a second device runs work Codex through Vertex: that it prices its own
+usage with its own overrides before sharing, not this one's.
 
 ## Updating
 
