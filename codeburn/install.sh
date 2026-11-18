@@ -32,7 +32,7 @@ write_if_changed() {
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
 	PLIST="$HOME/Library/LaunchAgents/dev.ibarsi.codeburn-share.plist"
-	if write_if_changed "$PLIST" <<PLIST_EOF; then
+	if write_if_changed "$PLIST" <<PLIST_EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
@@ -42,6 +42,7 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
 <key>KeepAlive</key><true/>
 </dict></plist>
 PLIST_EOF
+	then
 		launchctl bootout "gui/$(id -u)" "$PLIST" 2>/dev/null || true
 		launchctl bootstrap "gui/$(id -u)" "$PLIST" ||
 			echo "⚠️  codeburn-share launch agent not loaded; see codeburn/README.md" >&2

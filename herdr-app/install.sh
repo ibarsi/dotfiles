@@ -46,6 +46,7 @@ if [[ -f "$APP_DIR/layouts/main.json" ]]; then
 			(if any(.[]; .id == "deploys") then . else . + [{id: "deploys", type: "block", content: {mod: "deploys"}}] end)
 		| (.. | objects | select(.id? == "panel-body") | .children) |=
 			(if any(.[]; .id == "codeburn") then . else . + [{id: "codeburn", type: "block", content: {mod: "codeburn"}}] end)
+		| (.. | objects | select(.id? == "panel-body") | .children) |=
 			(if any(.[]; .id == "pr-reviews") then . else . + [{id: "pr-reviews", type: "block", content: {mod: "pr-reviews"}}] end)
 		| .cloned_from = {name: "main", version: $v}' \
 		"$APP_DIR/layouts/main.json" >"$APP_DIR/layouts/my-main.json.tmp"
