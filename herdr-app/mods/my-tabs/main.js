@@ -1,6 +1,6 @@
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex, ScrollHandle } from "gpui-base";
-import { spaces, panes, run, openOverlay, theme, window, shared, layout, settings } from "herdr";
+import { spaces, panes, run, openOverlay, theme, window, shared, setShared, layout, settings } from "herdr";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -34,6 +34,15 @@ export default class Tabs extends View {
     try { this.panels = JSON.parse(localStorage.getItem("panels") ?? "{}"); } catch { this.panels = {}; }
     if (!this.panels || typeof this.panels !== "object" || Array.isArray(this.panels)) this.panels = {};
     this.swipe = { acc: 0, steps: 0, at: 0, last: 0 };
+    // panel-body only mounts its active child, so pr-reviews' own init() (which
+    // would normally self-register, like deploys' does) never runs until its tab
+    // button already exists — and deploys only escapes that trap because the
+    // sidebar PR chip force-selects it once. my-tabs always mounts, so it seeds
+    // the one-time enable here instead, and drops files/changes (not used here). // panels
+    const was = shared("workspace.panels") ?? ["files", "changes"];
+    const enabled = was.filter((p) => p !== "files" && p !== "changes");
+    if (!enabled.includes("pr-reviews")) enabled.push("pr-reviews");
+    if (JSON.stringify(enabled) !== JSON.stringify(was)) setShared("workspace.panels", enabled); // panels
   }
 
   // One tab per wheel notch. A touchpad or smooth-scrolling mouse sends many
@@ -129,7 +138,7 @@ export default class Tabs extends View {
       ? Math.max(10, (root.traffic_lights[0] + 64) / settings().zoom - (sidebar?.hidden ? 0 : sidebar?.size?.px ?? 0))
       : 10;
     const panel = find(root, "panel"), body = find(root, "panel-body");
-    const enabled = shared("workspace.panels") ?? ["files", "changes"];
+    const enabled = (shared("workspace.panels") ?? ["files", "changes"]).filter((p) => p !== "files" && p !== "changes"); // panels
     this.syncPanel(space, panel, body, enabled);
     const panelButton = (id, label, icon) => {
       const on = panel && !panel.hidden && body?.active === id;
@@ -148,9 +157,8 @@ export default class Tabs extends View {
         .on_size_change((_size, cx) => { if (active >= 0) { this.scroll.scroll_to_item(active); cx.notify(); } })
         .children(shown.map(item)))
       .child(button("tab-new", "+", () => openOverlay({ mod: "new-menu", kind: "popup", width: 250, height: 512 })))
-      .when(enabled.includes("files"), el => el.child(panelButton("files", "Files", "mods/files/file.svg")))
-      .when(enabled.includes("changes"), el => el.child(panelButton("changes", "Changes", "mods/changes/changes.svg")))
       .when(enabled.includes("deploys"), el => el.child(panelButton("deploys", "Deploys", "mods/deploys/icon.svg"))) // deploys
+      .when(enabled.includes("pr-reviews"), el => el.child(panelButton("pr-reviews", "PR Reviews", "mods/pr-reviews/icon.svg"))) // pr-reviews
       .when(w?.buttons, el => el.child(button("minimize", w.platform === "windows" ? svg("mods/tabs/win-min.svg").size(16) : "−", () => run("window.minimize")))
         .child(button("maximize", w.platform === "windows" ? svg(`mods/tabs/${w.maximized ? "win-restore" : "win-max"}.svg`).size(16) : "□", () => run("window.maximize")))
         .child(button("close-window", w.platform === "windows" ? svg("mods/tabs/win-close.svg").size(16) : svg("mods/pane/close.svg").size(13), () => run("window.close"))));
