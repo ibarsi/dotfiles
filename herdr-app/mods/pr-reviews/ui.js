@@ -4,7 +4,7 @@
 // Adapted from munza/herdr-mods' branch-pr (Apache-2.0): views/ui.js, trimmed
 // to this panel's scope (a single PR, no checks/files/merge yet).
 import { div, svg } from "gpui-kit";
-import { h_flex, v_flex, Popover, Textarea, TextView } from "gpui-base";
+import { h_flex, v_flex, Popover, TextView } from "gpui-base";
 import { theme, settings } from "herdr";
 
 export const TEXT = { badge: 10, caption: 11, small: 12, tab: 12.8, body: 13 };
@@ -62,26 +62,6 @@ export function TextButton({ id, label, active = false, disabled = false, onClic
     .text_color(active ? t.foreground : t.dim).when(active, (el) => el.bg(t.selected))
     .when(!disabled, (el) => el.cursor_pointer().hover((s) => s.bg(t.hover).text_color(t.foreground))
       .on_click((_e, cx) => { cx.stop_propagation(); onClick(cx); }))
-    .child(label);
-}
-
-// A full-size action. `primary` is the solid one; a view has at most one.
-export function Button({ id, label, onClick, primary = false, disabled = false }) {
-  const t = theme();
-  const solid = primary && !disabled;
-  return h_flex().id(id).h(32).flex_none().px(14).gap(7).items_center().justify_center().rounded(8)
-    .text_size(TEXT.small).bg(solid ? t.solid : t.raised).text_color(solid ? t.solid_foreground : disabled ? t.dim : t.foreground)
-    .accessibility_label(label)
-    .when(!disabled, (el) => el.cursor_pointer().hover((s) => (solid ? s.opacity(0.88) : s.bg(t.hover))).on_click((_e, cx) => onClick(cx)))
-    .child(label);
-}
-
-// A small bordered action, for a row with other things in it.
-export function SmallButton({ id, label, onClick, disabled = false }) {
-  const t = theme();
-  return h_flex().id(id).h(26).flex_none().px(8).gap(5).items_center().rounded(6).border_1().border_color(t.border)
-    .text_size(TEXT.small).text_color(disabled ? t.dim : t.foreground).accessibility_label(label)
-    .when(!disabled, (el) => el.cursor_pointer().hover((s) => s.bg(t.hover)).on_click((_e, cx) => { cx.stop_propagation(); onClick(cx); }))
     .child(label);
 }
 
@@ -143,12 +123,6 @@ export const Markdown = (id, text) => TextView.markdown(id, text).text_size(TEXT
 export function CodeBlock(text) {
   const t = theme();
   return div().flex_none().p(8).rounded(6).bg(t.canvas).text_size(TEXT.small).font_family(codeFont()).text_color(t.muted).child(text);
-}
-
-export function TextBox({ id, state, label, height = 96 }) {
-  const t = theme();
-  return Textarea.new(state).id(id).w_full().h(height).px(10).py(7).rounded(8).border_1().border_color(t.border)
-    .bg(t.input).text_size(TEXT.small).text_color(t.foreground).accessibility_label(label);
 }
 
 function MenuBody({ id, width, focus, children, onKey }) {

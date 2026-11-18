@@ -3,8 +3,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   isBot, who, timeAgo, prStatus, unresolvedThreads, reviewersOf, prStats,
-  authorsOf, conversationEntries, lastLines, entryContext, agentsOnPR,
-  unresolvedMessage, commentMessage, parseDiffHunk, shapePR, QUERY,
+  authorsOf, conversationEntries, lastLines, agentsOnPR,
+  parseDiffHunk, shapePR, QUERY,
 } from "./model.js";
 
 test("isBot matches known bot logins and strips a trailing [bot] suffix", () => {
@@ -135,38 +135,11 @@ test("lastLines trims a hunk to its final N lines", () => {
   assert.equal(lastLines(null), "");
 });
 
-test("entryContext includes the thread's location and hunk, or just the comments without one", () => {
-  const withThread = { thread: { path: "a.js", line: 5, comments: [{ author: { login: "alice" }, body: "fix", diffHunk: "@@ -1 +1 @@" }] } };
-  assert.match(entryContext(withThread), /a\.js:5/);
-  assert.match(entryContext(withThread), /alice: fix/);
-  const comment = { author: { login: "bob" }, body: "nice" };
-  assert.equal(entryContext(comment), "bob: nice");
-});
-
 test("agentsOnPR matches agents in the given space whose pane is on the PR's branch", () => {
   const agents = [{ address: "a1", space: "s1", pane: "p1" }, { address: "a2", space: "s1", pane: "p2" }, { address: "a3", space: "s2", pane: "p1" }];
   const panes = [{ pane: "p1", branch: "feature" }, { pane: "p2", branch: "main" }];
   const result = agentsOnPR({ agents, panes, pr: { headRefName: "feature" }, space: "s1" });
   assert.deepEqual(result.map((a) => a.address), ["a1"]);
-});
-
-test("unresolvedMessage names every unresolved thread with its quoted comments", () => {
-  const pr = {
-    number: 42, url: "https://github.com/o/r/pull/42", headRefName: "feature",
-    threads: [{ path: "a.js", line: 5, isResolved: false, comments: [{ author: { login: "alice" }, body: "fix this", url: "u" }] }],
-  };
-  const msg = unresolvedMessage(pr);
-  assert.match(msg, /1 unresolved review thread/);
-  assert.match(msg, /a\.js:5/);
-  assert.match(msg, /alice: fix this/);
-});
-
-test("commentMessage carries structured context alongside the prompt", () => {
-  const pr = { number: 42, url: "u", headRefOid: "sha", baseRefName: "main" };
-  const msg = commentMessage(pr, "o/r", { url: "cu", thread: "t1", context: "alice: hi" }, "Reply to this");
-  assert.match(msg, /Reply to this/);
-  assert.match(msg, /"pr":42/);
-  assert.match(msg, /alice: hi/);
 });
 
 test("parseDiffHunk numbers added, removed, and context lines against the hunk header", () => {

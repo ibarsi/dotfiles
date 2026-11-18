@@ -19,24 +19,6 @@ export async function fetchPR(repo, number) {
   return shapePR(data.data, repo);
 }
 
-export async function postComment(repo, number, body) {
-  const r = await exec("gh", ["api", `repos/${repo}/issues/${number}/comments`, "--method", "POST", "-f", `body=${body}`], { timeout: 15000 });
-  if (r.code !== 0) throw new Error(r.stderr || "Could not post the comment");
-}
-
-export async function replyToThread(threadId, body) {
-  const query = `mutation($id: ID!, $body: String!) { addPullRequestReviewThreadReply(input: { pullRequestReviewThreadId: $id, body: $body }) { comment { id } } }`;
-  const data = await graphql(["-f", `id=${threadId}`, "-f", `body=${body}`, "-f", `query=${query}`]);
-  if (data.errors) throw new Error(data.errors[0]?.message || "Could not post the reply");
-}
-
-export async function resolveThread(threadId, reopen = false) {
-  const mutation = reopen ? "unresolveReviewThread" : "resolveReviewThread";
-  const query = `mutation($id: ID!) { ${mutation}(input: { threadId: $id }) { thread { id isResolved } } }`;
-  const data = await graphql(["-f", `id=${threadId}`, "-f", `query=${query}`]);
-  if (data.errors) throw new Error(data.errors[0]?.message || "Could not update the thread");
-}
-
 export async function requestReviewAgain(repo, number, login) {
   const r = await exec("gh", ["api", `repos/${repo}/pulls/${number}/requested_reviewers`, "--method", "POST", "-f", `reviewers[]=${login}`], { timeout: 15000 });
   if (r.code !== 0) throw new Error(r.stderr || "Could not request another review");

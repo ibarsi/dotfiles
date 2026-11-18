@@ -395,8 +395,8 @@ switches to that space and opens the same panel. Both show one PR — the
 active space's, via the same per-space target `my-spaces/indicators.js`
 publishes through `setShared("deploys.targets", …)` — with an **Overview**
 tab (status, reviewers, agents on the PR, description) and a **Comments**
-tab (every comment and review, newest first, with reply, resolve and
-agent handoff). It polls every 60s while shown, same cadence and
+tab (every comment and review, newest first, read-only, with an agent
+icon per review). It polls every 60s while shown, same cadence and
 visibility rules as Deploys.
 
 This is a single-PR clone of [munza/herdr-mods' branch-pr](https://github.com/munza/herdr-mods/blob/main/branch-pr/RECIPE.md)
@@ -412,11 +412,11 @@ Where upstream reads and writes GitHub through a bundled Go helper (a thin
 imports, tested with `node --test herdr-app/mods/pr-reviews/model.test.mjs`)
 holds what GitHub's answers mean as plain functions — who commented, the
 GraphQL query and response shaping, conversation ordering, merge-readiness
-stats, the messages sent to an agent — ported from upstream's
+stats — ported from upstream's
 `github/model.js` almost verbatim, since it already had no framework
 imports. `ui.js` is the design kit (ported from `views/ui.js`), `reads.js`
-the `gh` calls, `agents.js` who's on the PR and handing work to them
-(`actions/agents.js`), and `overview.js`/`conversation.js` the two tabs'
+the `gh` calls, `agents.js` who's on the PR and the per-review agent
+launcher (`actions/agents.js`), and `overview.js`/`conversation.js` the two tabs'
 rendering (`views/detail.js`/`views/conversation.js`), tied together by
 `main.js`.
 
@@ -430,34 +430,28 @@ conversation entry — there's nothing to auto-hide, so a bot's findings
 with no inline thread (Gemini/Maximus often leave feedback that way) can't
 disappear.
 
-Comments has an author filter, an Unresolved toggle, and a bordered
-"Send N to agent" for every unresolved thread at once. Every row — comment,
-review, thread — is collapsible and closed by default, so newest-first
-ordering actually gets you to the latest thing said without scrolling past
-everything else first. Every review's header carries its own agent icon,
-clickable without opening the review at all, coloured and hover-tinted like
-the spaces sidebar's own PR/review chips (`ui.js`'s `IconButton`'s `color`).
-Same idea as Deploys' investigate icon (now styled the same way): no picker,
-no editing, straight to a new `agyyolo` (`agy --dangerously-skip-permissions`)
-pane split into the active tab, addressing the review as a whole by the id
-`gh pr view --json reviews` shows — `/pr-review-response` for a person's
-review, `/pr-babysit` for a bot's (`model.js`'s `isBot`, `agents.js`'s
+Comments is read-only: an author filter, an Unresolved toggle, and no
+comment boxes, Reply/Resolve or "Send to agent" controls (GitHub or an
+agent does that work). Every row — comment, review, thread — is collapsible
+and closed by default, so newest-first ordering actually gets you to the
+latest thing said without scrolling past everything else first. Every
+review's header carries its own agent icon, clickable without opening the
+review at all, coloured and hover-tinted like the spaces sidebar's own
+PR/review chips (`ui.js`'s `IconButton`'s `color`). Same idea as Deploys'
+investigate icon (now styled the same way): no picker, no editing, straight
+to a new `agyyolo` (`agy --dangerously-skip-permissions`) pane split into
+the active tab (the prompt goes in via `-i`; agy rejects a bare
+positional): `/pr-review-response <id>` for a person's review, with the
+review id `gh pr view --json reviews` shows, or a bare `/pr-babysit` for a
+bot's, which works the whole PR (`model.js`'s `isBot`, `agents.js`'s
 `addressReview`). A review's inline-comment threads (`model.js`'s
 `conversationEntries`, matched to their review via each thread comment's
 `pullRequestReview.databaseId`) nest inside it behind a separate "N inline
-comments" drawer, itself closed by default regardless of resolved state —
-opening it reveals the usual per-thread rows. The per-thread "Send to agent"
-in `entryActions` is the richer, pick-an-agent flow from before, and still
-shows up on comments and threads — a review carries only its own agent icon.
-Each thread shows its comment's diff hunk
-trimmed to its last 6 lines with the same line-numbered, colored-row
-treatment the Changes panel uses for its own diffs (`model.js`'s
-`parseDiffHunk`, `conversation.js`'s `diffLine`), then Reply, Resolve/Reopen
-and a per-thread "Send to agent". Delivery goes through `hc`, the same
-primitive Herdr's own agent commands use: to an agent already running on
-the PR or elsewhere in the space (reaching it mid-turn, not just when
-idle), a sub-agent spawned under one of them, or a brand new tab with the
-message as its first prompt — `agents.js`'s `agentButton`/`deliver`.
+comments" drawer, itself closed by default regardless of resolved state.
+Each thread shows its comment's diff hunk trimmed to its last 6 lines with
+the same line-numbered, colored-row treatment the Changes panel uses for
+its own diffs (`model.js`'s `parseDiffHunk`, `conversation.js`'s
+`diffLine`).
 
 ## Updating
 

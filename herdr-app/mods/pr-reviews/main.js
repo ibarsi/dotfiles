@@ -3,9 +3,9 @@
 // my-tabs/main.js and my-spaces/indicators.js) and scope (Overview + Comments;
 // Checks, Files, PR list navigation and merge actions are a later pass).
 import { View, div } from "gpui-kit";
-import { v_flex, h_flex, TextareaState } from "gpui-base";
+import { v_flex, h_flex } from "gpui-base";
 import { spaces, layout, shared, theme } from "herdr";
-import { fetchPR, postComment, replyToThread, resolveThread, requestReviewAgain as apiRequestReviewAgain } from "./reads.js";
+import { fetchPR, requestReviewAgain as apiRequestReviewAgain } from "./reads.js";
 import { overviewMethods } from "./overview.js";
 import { conversationMethods } from "./conversation.js";
 import { agentMethods } from "./agents.js";
@@ -37,10 +37,6 @@ class PrReviews extends View {
     this.unresolved = false;
     this.section = "overview";
     this.menuFocus = cx.focus_handle();
-    this.editor = TextareaState.new({ placeholder: "Write a comment…", rows: 4 });
-    this.editor.on("change", (_e, cx) => cx.notify());
-    this.newComment = TextareaState.new({ placeholder: "Write a comment…", rows: 4 });
-    this.newComment.on("change", (_e, cx) => cx.notify());
     this.tick(cx);
     cx.timer.every(1000, (cx) => this.tick(cx));
   }
@@ -52,7 +48,6 @@ class PrReviews extends View {
     this.author = "";
     this.unresolved = false;
     this.section = "overview";
-    this.composer = null;
   }
 
   target() {
@@ -124,71 +119,6 @@ class PrReviews extends View {
     });
   }
 
-  compose(kind, thread, context, cx, options = {}) {
-    if (this.mutating) return;
-    this.composer = { kind, thread, context, ...options };
-    this.agentTarget = options.target ?? null;
-    this.editor.set_value(kind === "agent" ? "Analyze this comment and suggest a response or fix." : (options.prefix ?? ""));
-    this.editor.focus();
-    cx.notify();
-  }
-
-  closeComposer(cx) {
-    if (this.mutating) return;
-    this.composer = null;
-    cx.notify();
-  }
-
-  postCommentOnPR(cx) {
-    if (this.mutating || !this.pr) return;
-    const key = this.spaceKey;
-    const body = this.newComment.value();
-    this.mutating = true;
-    this.error = null;
-    cx.notify();
-    cx.spawn(async (cx) => {
-      try {
-        await postComment(this.pr.repository, this.pr.number, body);
-        if (key !== this.spaceKey) return;
-        this.newComment.set_value("");
-        this.notice = "Saved to GitHub.";
-        this.noticeSince = Date.now();
-        this.refresh(cx);
-      } catch (e) {
-        if (key === this.spaceKey) this.error = `${e.message}. Refresh before retrying if it may have gone through.`;
-      } finally {
-        this.mutating = false;
-        cx.notify();
-      }
-    });
-  }
-
-  // Reply, resolve or reopen one thread.
-  mutate(action, cx, thread) {
-    if (this.mutating) return;
-    const key = this.spaceKey;
-    const body = this.editor.value();
-    this.mutating = true;
-    this.error = null;
-    cx.notify();
-    cx.spawn(async (cx) => {
-      try {
-        if (action === "reply") await replyToThread(thread, body);
-        else await resolveThread(thread, action === "reopen");
-        if (key !== this.spaceKey) return;
-        if (action === "reply") this.composer = null;
-        this.notice = "Saved to GitHub.";
-        this.noticeSince = Date.now();
-        this.refresh(cx);
-      } catch (e) {
-        if (key === this.spaceKey) this.error = `${e.message}. Refresh before retrying if it may have gone through.`;
-      } finally {
-        this.mutating = false;
-        cx.notify();
-      }
-    });
-  }
-
   requestReviewAgain(login, cx) {
     if (this.mutating || !this.pr) return;
     const key = this.spaceKey;
@@ -222,7 +152,6 @@ class PrReviews extends View {
   }
 
   render(cx) {
-    const t = theme();
     const target = this.target();
     const root = Panel("pr-reviews")
       .child(PanelHeader()
@@ -243,7 +172,6 @@ class PrReviews extends View {
     if (this.section === "conversation") this.conversationView(content, pr);
     else this.overview(content, pr);
     root.child(content);
-    if (this.composer && !this.composer.entry) root.child(v_flex().flex_none().p(10).border_t(1).border_color(t.border).child(this.composerView()));
     return root;
   }
 }

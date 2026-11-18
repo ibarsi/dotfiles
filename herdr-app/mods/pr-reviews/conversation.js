@@ -1,13 +1,12 @@
-// The Comments tab: everything said on the PR, and answering it or handing it on.
+// The Comments tab: everything said on the PR, read-only, with an agent icon per review.
 // Adapted from munza/herdr-mods' branch-pr (Apache-2.0): views/conversation.js.
 // A comment's diff hunk renders with changes/main.js's own line-numbered,
 // colored row treatment instead of a flat code block.
 import { div } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { theme } from "herdr";
-import { authorsOf, conversationEntries, entryContext, isBot, lastLines, parseDiffHunk, timeAgo, unresolvedThreads, who } from "./model.js";
-import { agentName } from "./agents.js";
-import { TEXT, Button, Chevron, IconButton, Markdown, Message, TextBox, TextButton, MenuButton, codeFont } from "./ui.js";
+import { authorsOf, conversationEntries, isBot, lastLines, parseDiffHunk, timeAgo, who } from "./model.js";
+import { TEXT, Chevron, IconButton, Markdown, Message, TextButton, MenuButton, codeFont } from "./ui.js";
 
 const HUNK_LINES = 6;
 
@@ -25,13 +24,9 @@ export const conversationMethods = {
   conversationFilters(pr) {
     const t = theme();
     const authors = ["", ...authorsOf(pr)];
-    const unresolved = unresolvedThreads(pr).length;
-    return h_flex().id("pr-comment-filters").flex_none().px(14).py(8).gap(8).flex_wrap().items_center().border_b(1).border_color(t.border)
-      .child(h_flex().flex_none().gap(6).items_center()
-        .child(this.authorChooser(authors))
-        .child(TextButton({ id: "pr-unresolved", label: "Unresolved", active: Boolean(this.unresolved), onClick: (cx) => { this.unresolved = !this.unresolved; cx.notify(); } })))
-      .child(h_flex().flex_none().ml_auto().gap(6).items_center()
-        .when(unresolved > 0, (el) => el.child(this.agentButton({ id: "pr-send-unresolved", label: `Send ${unresolved} to agent`, send: (agent, cx) => this.sendUnresolved(agent, cx) }))));
+    return h_flex().id("pr-comment-filters").flex_none().px(14).py(8).gap(6).flex_wrap().items_center().border_b(1).border_color(t.border)
+      .child(this.authorChooser(authors))
+      .child(TextButton({ id: "pr-unresolved", label: "Unresolved", active: Boolean(this.unresolved), onClick: (cx) => { this.unresolved = !this.unresolved; cx.notify(); } }));
   },
 
   authorChooser(authors) {
@@ -55,27 +50,10 @@ export const conversationMethods = {
       .child(Markdown(`pr-comment-${comment.id}`, comment.body || "No comment text."));
   },
 
-  entryActions(entry, comments) {
-    const thread = entry.thread;
-    const last = comments[comments.length - 1];
-    const url = last?.url || comments[0]?.url || this.pr.url;
-    const row = h_flex().gap(2).items_center()
-      .child(TextButton({ id: `pr-reply-${entry.id}`, label: "Reply", disabled: this.mutating || Boolean(thread && thread.viewerCanReply === false), onClick: (cx) => this.compose(thread ? "reply" : "comment", thread?.id, null, cx, { entry: entry.id, url, prefix: thread ? "" : `@${who(last)} ` }) }));
-    if (thread && (thread.isResolved ? thread.viewerCanUnresolve : thread.viewerCanResolve))
-      row.child(TextButton({ id: `pr-resolve-${entry.id}`, label: thread.isResolved ? "Reopen" : "Resolve", disabled: this.mutating, onClick: (cx) => this.mutate(thread.isResolved ? "reopen" : "resolve", cx, thread.id) }));
-    row.child(div().flex_1());
-    // A review already has its own agent icon on its header row, dispatching
-    // the right skill for the whole review; this generic one would just be a
-    // second, less specific way to do the same thing.
-    if (entry.threads === undefined) row.child(this.agentButton({ id: `pr-agent-send-${entry.id}`, label: "Send to agent", send: (agent, cx) => this.compose("agent", thread?.id ?? entry.id, entryContext(entry), cx, { entry: entry.id, url, target: agent.address }) }));
-    return row;
-  },
-
   conversationView(body, pr) {
     const entries = conversationEntries(pr, { author: this.author, unresolved: this.unresolved });
     if (!entries.length) body.child(Message(this.author || this.unresolved ? "No comments match these filters." : "No comments yet."));
     entries.forEach((entry, i) => body.child(this.entryBlock(entry, { divided: i > 0 })));
-    body.child(this.newCommentBox(entries.length > 0));
   },
 
   // A single collapsible row: a comment, a review, or (nested one level in,
@@ -111,8 +89,6 @@ export const conversationMethods = {
       const hunk = thread?.comments[0]?.diffHunk;
       if (hunk) content.children(parseDiffHunk(lastLines(hunk, HUNK_LINES)).map((row) => diffLine(row, t)));
       content.children(comments.map((c) => this.commentBlock(c, t)));
-      content.child(this.entryActions(entry, comments));
-      if (this.composer?.entry === entry.id) content.child(this.composerView());
       if (entry.threads?.length) content.child(this.drawer(entry));
       block.child(content);
     }
@@ -132,30 +108,5 @@ export const conversationMethods = {
         .child(Chevron(open)).child(div().child(label)));
     if (open) box.children(entry.threads.map((nested) => this.entryBlock(nested, { indent: true })));
     return box;
-  },
-
-  // Always here after the last comment, so saying something takes no extra click.
-  newCommentBox(divided) {
-    const t = theme();
-    const posting = this.mutating && !this.composer;
-    return v_flex().id("pr-new-comment").flex_none().min_w(0).px(8).py(10).gap(8)
-      .when(divided, (el) => el.mt(4).border_t(1).border_color(t.border))
-      .child(TextBox({ id: "pr-comment-input", state: this.newComment, label: "New comment" }))
-      .child(h_flex().justify_end().child(Button({ id: "pr-add-comment", label: posting ? "Sending…" : "Comment", primary: true, disabled: this.mutating || !this.newComment.value().trim(), onClick: (cx) => this.postCommentOnPR(cx) })));
-  },
-
-  composerView() {
-    const composer = this.composer;
-    const toAgent = composer.kind === "agent";
-    const agent = toAgent ? this.agentAt(this.agentTarget) : null;
-    const box = v_flex().id(`pr-composer-${composer.entry ?? "general"}`).gap(8).min_w(0);
-    if (toAgent) box.child(div().text_size(TEXT.small).font_medium().child(agent ? `Send to ${agentName(agent)}` : "That agent is no longer running."));
-    if (agent?.status === "working" && !agent.spawn) box.child(div().text_size(TEXT.caption).text_color(theme().dim).child("It's busy; your message waits in its session."));
-    const disabled = this.mutating || !this.editor.value().trim() || (toAgent && !agent);
-    return box
-      .child(TextBox({ id: "pr-inline-input", state: this.editor, label: "Message" }))
-      .child(h_flex().gap(8).justify_end()
-        .child(Button({ id: "pr-cancel", label: "Close", disabled: this.mutating, onClick: (cx) => this.closeComposer(cx) }))
-        .child(Button({ id: "pr-submit", label: this.mutating ? "Sending…" : toAgent ? "Send" : "Reply", primary: true, disabled, onClick: (cx) => (toAgent ? this.sendAgent(cx) : this.mutate(composer.kind, cx, composer.thread)) })));
   },
 };
