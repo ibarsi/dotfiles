@@ -231,18 +231,27 @@ the panel shows (no imports, tested with `node --test
 herdr-app/mods/codeburn/model.test.mjs`).
 
 Each refresh (every 60s while shown, plus a manual Refresh) runs up to three
-`codeburn` calls: `codeburn status --format menubar-json --scope combined
---combined-details --no-optimize` for the selected range chip and again for
-the current month (skipped when the chip already is "Month"), and `codeburn
-export --format json` for the date range, piped through `jq` down to cost per
-repo, cost per completed session and the last 10 minutes of per-call records
-— a raw export over real history is tens of megabytes, too much to parse on
-a poll. `codeburn` is installed through `mise` as a global npm package
-(`codeburn/README.md`), so it exists only as a shim at
-`~/.local/share/mise/shims/codeburn`; Herdr's own process doesn't source the
-shell profile that puts mise's shims on PATH, so every call runs through
-`sh -c` with that directory prefixed onto PATH, or `codeburn` resolves in a
-terminal but not here.
+`codeburn` calls for the selected range chip and the current month (skipped
+when the chip already is "Month"): `codeburn status --format menubar-json
+--scope combined --combined-details --no-optimize`, and `codeburn export
+--format json` for the date range, piped through `jq` down to cost per repo,
+cost per completed session and the last 10 minutes of per-call records — a
+raw export over real history is tens of megabytes, too much to parse on a
+poll. `codeburn` is installed through `mise` as a global npm package
+(`codeburn/README.md`); Herdr's own process doesn't source the shell profile
+that puts `mise` on PATH, so PATH is extended by hand, and every call runs as
+`mise exec npm:codeburn -- codeburn ...` rather than the bare `codeburn` a
+terminal resolves fine. `mise exec` resolves the installed version directly
+regardless of shim state — the `~/.local/share/mise/shims/codeburn` shim
+itself isn't reliable across machines: Omen's mise has no global version
+pinned for it ("No version is set for shim: codeburn") even though the shim
+file exists, so the shim path that works fine on the Mac fails silently on
+Omen. Verified directly over SSH to both machines before relying on it.
+
+A further call per paired non-local device runs the same `status` command
+with no `--scope`, directly on that device (`exec(..., { on: device.name })`,
+the same pattern Deploys uses for remote `kubectl`/`argocd`) — see "Spaces"
+below for why.
 
 **Work vs. personal** is decided per device and provider in `model.js`'s
 `PERSONAL` table (`[{ device: /MacBook/i, provider: "codex" }]`): everything
@@ -274,10 +283,31 @@ otherwise show each other's spend mixed together. A live agent attaches by
 branch plus either the repo name or the worktree folder's own name: codeburn
 reports a live session's `project` as `basename(cwd)`, not the repo it
 belongs to, so a worktree whose folder isn't named after its repo (the usual
-case) still needs to match. An agent that matches neither lands in an "Other
-(no space)" row instead of being silently dropped. Busy spaces sort to the
-top by $/h; quiet ones below 2% of the range's cost fold into a single
+case) still needs to match. An agent that matches neither — including one
+whose herdr space closed or moved between codeburn's snapshot and herdr's own,
+a real but rare race between two independently-refreshing sources — lands in
+an "Other (no space)" row instead of being silently dropped. Busy spaces sort
+to the top by $/h; quiet ones below 2% of the range's cost fold into a single
 "+ N quiet spaces" row so the list stays short with many spaces open.
+
+None of a device's branch names, project paths or live sessions reach a peer
+through `--scope combined`: codeburn's own `sanitizeForSharing` (in its
+source, not its docs) strips `byBranch`, `pullRequests` and `liveSessions`
+outright and zeroes `topProjects`/`topSessions` before a device's status
+crosses the wire to a paired device — by design, not a bug, since those are
+the identifying fields (folder layout, feature/PR names). So a remote
+device's spaces and live agents are invisible through the combined call alone,
+however many are actually running. The extra per-device direct call mentioned
+above fetches that device's own un-sanitized `current.byBranch`,
+`current.topProjects` and `liveSessions` and splices them in before Spaces
+ever sees the data; a device that's unreachable, named differently from its
+herdr machine id, or without codeburn installed just falls back to the
+sanitized combined figures (cost/tokens/models only) for that refresh. The
+default-branch **repo** total merges the uncapped local `codeburn export`
+total for that repo with each remote device's own (now real, once fetched
+directly) `topProjects` entry, since the two are mutually exclusive sources
+(export is this machine only; a remote device's own `topProjects` is only
+ever itself).
 
 A small **≈** next to a total means part of it isn't exactly priced:
 reference-only Gemini rates, Grok at codeburn's defaults (no Vertex override
@@ -295,11 +325,16 @@ name as a full timestamp). `model.js`'s `money()`, `monthName()` and
 don't reach for `toLocale*` anywhere in this mod.
 
 `codeburn export`'s records are local-only (confirmed: a paired device's
-projects never show up in another device's export), so a paired device's
-live agents never get a $/h or session cost from this panel, same as a
-subagent's own spend, which codeburn records under a separate `agent-*`
-session id its parent session's export rows don't include. Still to verify
-once a second device runs work Codex through Vertex: that it prices its own
+projects never show up in another device's export), and there's no
+equivalent direct-fetch for it the way Spaces now has for branch/project/live
+data — exporting over a remote machine's logs would mean copying its whole
+history across for every refresh, not one status call. So a remote device's
+live agents attach to their real space (branch and project/cwd both come
+through the direct per-device fetch) but never get a $/h or session cost from
+this panel, same as a subagent's own spend, which codeburn records under a
+separate `agent-*` session id its parent session's export rows don't include.
+Still to verify once a second device runs work Codex through Vertex: that it
+prices its own
 usage with its own overrides before sharing, not this one's.
 
 ## Updating

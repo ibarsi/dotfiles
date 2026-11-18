@@ -16,23 +16,35 @@ const FETCH_EVERY = 60000; // codeburn is fast (~0.5s/call); 60s keeps the panel
 const STALE_AFTER = 180000;
 
 // codeburn (codeburn/README.md) is installed through mise as a global npm
-// package, so it only exists as a shim at ~/.local/share/mise/shims/codeburn
-// (same path on macOS and Omarchy: mise's default XDG data dir). Herdr's own
-// process doesn't source the shell profile that puts mise's shims on PATH —
-// `herdr.exec("codeburn", ...)` fails with ENOENT even though a terminal
-// finds it fine — so every call here runs through `sh -c` with that
-// directory prefixed onto PATH.
-const MISE_PATH_PREFIX = 'PATH="$HOME/.local/share/mise/shims:$PATH"';
-const STATUS_SH = `${MISE_PATH_PREFIX} codeburn status --format menubar-json --scope combined --combined-details --no-optimize --period "$1"`;
+// package. Herdr's own process doesn't source the shell profile that puts
+// mise on PATH — `herdr.exec("codeburn", ...)` fails with ENOENT even though
+// a terminal finds it fine — so PATH is extended by hand with mise's own bin
+// dir. The shim at ~/.local/share/mise/shims/codeburn isn't reliable across
+// machines either: Omen's mise has no global version pinned for it ("No
+// version is set for shim: codeburn") even though the shim file exists,
+// while `mise exec npm:codeburn -- codeburn ...` resolves the installed
+// version directly regardless of any shim/version-pin state. Verified
+// against both machines directly over SSH before relying on it here.
+const PATH_PREFIX = 'PATH="$HOME/.local/bin:$PATH"';
+const RUN = "mise exec npm:codeburn -- codeburn";
+const STATUS_SH = `${PATH_PREFIX}; ${RUN} status --format menubar-json --scope combined --combined-details --no-optimize --period "$1"`;
+// Same call with no --scope, so it never recurses into fetching other paired
+// devices: this is the call made directly on each remote device (see
+// fetchRemoteCurrent) to get that device's own un-sanitized data — codeburn
+// strips branch names, project paths and live sessions from what a device
+// shares with its peers (sanitizeForSharing in codeburn's own source), so
+// those three things are only ever accurate read straight from the device
+// that has them.
+const LOCAL_STATUS_SH = `${PATH_PREFIX}; ${RUN} status --format menubar-json --no-optimize --period "$1"`;
 
 // Slims a codeburn export to disk, then jq's it down to what the panel needs
 // (cost per repo, cost per completed session, and the last few minutes of
 // per-call records for live burn rate) before it ever reaches JS — a raw
 // export over real history is tens of megabytes.
-const EXPORT_SH = `${MISE_PATH_PREFIX}
+const EXPORT_SH = `${PATH_PREFIX}
 f=$(mktemp -t codeburn).json
 trap 'rm -f "$f"' EXIT
-codeburn export --format json --from "$1" --to "$2" -o "$f" >/dev/null && jq -c --arg cutoff "$3" "$4" "$f"`;
+${RUN} export --format json --from "$1" --to "$2" -o "$f" >/dev/null && jq -c --arg cutoff "$3" "$4" "$f"`;
 
 function pad2(n) {
   return String(n).padStart(2, "0");
@@ -156,6 +168,32 @@ export default class CodeBurn extends View {
         return;
       }
       this.error = null;
+      // codeburn's combined/shared payload deliberately strips branch names,
+      // project paths and live sessions from what a device shares with its
+      // peers (sanitizeForSharing in codeburn's own source) — a remote
+      // device's spaces and live agents are invisible to Spaces otherwise.
+      // Fetched straight from the device, in parallel, with the range call
+      // already in hand so we know which devices are even paired. A device
+      // that's unreachable, isn't named the same as its herdr machine id, or
+      // doesn't have codeburn installed just falls back to the already-fetched
+      // sanitized data (aggregate cost/tokens/models only, no branch/project
+      // detail, no live agents from it).
+      const remoteDevices = (range.combinedDevices ?? []).filter((d) => !d.local);
+      const remoteResults = await Promise.all(remoteDevices.map(async (d) => {
+        try {
+          const r = await exec("sh", ["-c", LOCAL_STATUS_SH, "sh", period], { on: d.name, timeout: 30000 });
+          return r.code === 0 ? JSON.parse(r.stdout) : null;
+        } catch {
+          return null;
+        }
+      }));
+      range.combinedDevices = (range.combinedDevices ?? []).map((d) => {
+        if (d.local) return d;
+        const fresh = remoteResults[remoteDevices.indexOf(d)];
+        if (!fresh) return d;
+        return { ...d, payload: { ...d.payload, current: fresh.current ?? d.payload?.current, liveSessions: fresh.liveSessions ?? d.payload?.liveSessions } };
+      });
+      if (this.period !== period) return; // stale: range chip moved on while the remote enrichment was in flight
       this.range = range;
       if (period === "month") this.month = this.range;
       else if (monthR?.code === 0) {
@@ -208,7 +246,15 @@ export default class CodeBurn extends View {
 
     const liveSessions = rangeDevices.flatMap((d) => d.payload?.liveSessions?.sessions ?? []);
     const agentsList = agents(liveSessions, this.slim ?? { sessions: [], recent: [] });
+    // The local export is uncapped (every repo this machine touched); a
+    // remote device only has its own `topProjects` (capped, and only
+    // populated when fetched directly — see fetch()'s remote enrichment), so
+    // the two are merged rather than either alone.
     const repos = repoTotals(this.slim ?? { projects: [] });
+    for (const d of rangeDevices) {
+      if (d.local) continue;
+      for (const p of d.payload?.current?.topProjects ?? []) repos.set(p.name, (repos.get(p.name) ?? 0) + p.cost);
+    }
     const targets = shared("deploys.targets");
     const activeId = spaces().find((s) => s.active)?.id;
     const spacesResult = buildSpaces({ targets, activeId, byBranch: current.byBranch ?? [], agents: agentsList, repos, rangeCost: current.cost ?? 0 });
