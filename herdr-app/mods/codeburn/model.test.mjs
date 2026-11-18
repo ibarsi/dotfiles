@@ -368,6 +368,58 @@ test("buildSpaces: an agent whose project is the worktree folder (not the repo n
   assert.equal(w.rate, 2);
 });
 
+test("buildSpaces: two targets on the same repo+branch (e.g. two herdr spaces on different machines) collapse into one row", () => {
+  const targets = {
+    mac: { repo: "usemaximum/maximum", branch: "main", cwd: "/Users/igorbarsi/Projects/maximum" },
+    "omen/a": { repo: "usemaximum/maximum", branch: "main", cwd: "/home/ibarsi/Projects/maximum" },
+    "omen/b": { repo: "usemaximum/maximum", branch: "main", cwd: "/home/ibarsi/Projects/maximum" },
+  };
+  const repos = new Map([["maximum", 128.1]]);
+  const result = buildSpaces({ targets, activeId: null, byBranch: [], agents: [], repos, rangeCost: 1000 });
+  const maximumRows = result.rows.filter((r) => r.repo === "maximum" && r.branch === "main");
+  assert.equal(maximumRows.length, 1);
+  assert.equal(maximumRows[0].cost, 128.1);
+});
+
+test("buildSpaces: a deduped row is active if any of its merged targets is the active space", () => {
+  const targets = {
+    mac: { repo: "usemaximum/maximum", branch: "main", cwd: "/Users/igorbarsi/Projects/maximum" },
+    "omen/a": { repo: "usemaximum/maximum", branch: "main", cwd: "/home/ibarsi/Projects/maximum" },
+  };
+  const result = buildSpaces({ targets, activeId: "omen/a", byBranch: [], agents: [], repos: new Map(), rangeCost: 0 });
+  assert.equal(result.rows.length, 1);
+  assert.equal(result.rows[0].active, true);
+});
+
+test("buildSpaces: an agent attaches via either duplicate target's own cwd, not just the representative one's", () => {
+  const targets = {
+    mac: { repo: "usemaximum/maximum", branch: "main", cwd: "/Users/igorbarsi/Projects/maximum" },
+    "omen/a": { repo: "usemaximum/maximum", branch: "main", cwd: "/home/ibarsi/Projects/maximum" },
+  };
+  // "maximum" is also the repo name, so this specifically exercises the merged cwd set,
+  // not just the already-covered repo-name match.
+  const omenAgent = agent({ id: "o1", provider: "claude", project: "maximum", branch: "main", sessionCost: 3, rate: 1 });
+  const result = buildSpaces({ targets, activeId: null, byBranch: [], agents: [omenAgent], repos: new Map(), rangeCost: 0 });
+  assert.equal(result.rows.length, 1);
+  assert.equal(result.rows[0].agents.length, 1);
+});
+
+test("buildSpaces: a row with no agents and exactly zero cost is dropped entirely, not folded into quiet", () => {
+  const targets = { empty: { repo: "r/empty", branch: "b1" }, big: { repo: "r/big", branch: "b2" } };
+  const byBranch = [{ branch: "b2", cost: 30 }]; // "b1" has no byBranch entry at all: cost defaults to 0
+  const result = buildSpaces({ targets, activeId: null, byBranch, agents: [], repos: new Map(), rangeCost: 1000 });
+  assert.equal(result.rows.some((r) => r.id === "empty"), false);
+  assert.equal(result.quiet.rows.some((r) => r.id === "empty"), false);
+  assert.equal(result.quiet.count, 0); // only "big" exists, and it's not quiet-eligible (above 2%)
+});
+
+test("buildSpaces: the active row shows even with zero cost and no agents", () => {
+  const targets = { empty: { repo: "r/empty", branch: "b1" } };
+  const result = buildSpaces({ targets, activeId: "empty", byBranch: [], agents: [], repos: new Map(), rangeCost: 1000 });
+  assert.equal(result.rows.length, 1);
+  assert.equal(result.rows[0].id, "empty");
+});
+
 test("buildSpaces: no targets and no agents yields an empty, well-shaped result", () => {
   const result = buildSpaces({ targets: null, activeId: null, byBranch: [], agents: [], repos: new Map(), rangeCost: 0 });
   assert.deepEqual(result, { rows: [], quiet: { count: 0, cost: 0, rows: [] }, other: null, live: 0, rate: 0 });

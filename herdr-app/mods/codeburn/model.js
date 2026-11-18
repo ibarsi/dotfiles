@@ -305,15 +305,33 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
     reposByBranch.get(t.branch).add(repoName(t.repo));
   }
 
-  const rowsById = new Map();
+  // Two open herdr spaces can point at the exact same repo+branch — two tabs
+  // on the same checkout, or the same repo cloned on two machines (confirmed:
+  // a space on the Mac and two on Omen all on usemaximum/maximum's `main`).
+  // codeburn's branch/repo cost is the same either way (byBranch and repo
+  // totals are keyed by name, not by which space asked), so they'd otherwise
+  // show as identical-cost duplicate rows. Grouped by repo+branch first; the
+  // group's cwd names (every member's, not just one — different machines can
+  // have different paths for the "same" checkout) are kept so an agent still
+  // attaches via any of them.
+  const groups = new Map();
   for (const [id, t] of targetEntries) {
-    const name = repoName(t.repo);
-    const shared = DEFAULT_BRANCHES.has(t.branch) || (reposByBranch.get(t.branch)?.size ?? 0) > 1;
+    const key = `${repoName(t.repo)}::${t.branch}`;
+    (groups.get(key) ?? groups.set(key, []).get(key)).push({ id, ...t });
+  }
+
+  const rowsById = new Map();
+  for (const members of groups.values()) {
+    const activeMember = members.find((m) => m.id === activeId);
+    const rep = activeMember ?? members[0];
+    const name = repoName(rep.repo);
+    const shared = DEFAULT_BRANCHES.has(rep.branch) || (reposByBranch.get(rep.branch)?.size ?? 0) > 1;
     // codeburn's live-session `project` is basename(cwd), not the repo name — a
     // worktree's folder is usually named after its branch or task, not its
     // repo — so an agent matches by either the repo name or the worktree's own
     // folder name, whichever the running session actually reports.
-    rowsById.set(id, { id, repo: name, cwdName: repoName(t.cwd), branch: t.branch, active: id === activeId, shared, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 });
+    const cwdNames = new Set(members.map((m) => repoName(m.cwd)));
+    rowsById.set(rep.id, { id: rep.id, repo: name, cwdNames, branch: rep.branch, active: Boolean(activeMember), shared, agents: [], rate: 0, cost: 0, claudeCost: 0, liveCost: 0 });
   }
 
   let other = null;
@@ -322,7 +340,7 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
   for (const a of agents ?? []) {
     live += 1;
     rate += a.rate;
-    const row = [...rowsById.values()].find((r) => r.branch === a.branch && (r.repo === a.project || r.cwdName === a.project));
+    const row = [...rowsById.values()].find((r) => r.branch === a.branch && (r.repo === a.project || r.cwdNames.has(a.project)));
     if (row) {
       row.agents.push(a);
       row.rate += a.rate;
@@ -351,6 +369,7 @@ export function buildSpaces({ targets, activeId, byBranch, agents, repos, rangeC
   const quiet = { count: 0, cost: 0, rows: [] };
   const kept = [];
   for (const row of restRows) {
+    if (row.agents.length === 0 && row.cost <= 0.005) continue; // nothing was ever spent here: not even worth a quiet-space line
     if (row.agents.length === 0 && row.cost < 0.02 * (rangeCost ?? 0)) {
       quiet.count += 1;
       quiet.cost += row.cost;

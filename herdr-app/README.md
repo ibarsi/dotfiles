@@ -297,10 +297,22 @@ whose herdr space closed or moved between codeburn's snapshot and herdr's own,
 a real but rare race between two independently-refreshing sources — lands in
 an "Other (no space)" row instead of being silently dropped. Busy spaces sort
 to the top by $/h; quiet ones below 2% of the range's cost fold into a single
-"+ N quiet spaces" row so the list stays short with many spaces open. Each
-row's cost comes with its percentage of the range total, not a bar — the
-same reasoning as Models: a row's own `accent`-colored bar read as the same
-"capacity" meaning as the context-fill bar in the agents below it.
+"+ N quiet spaces" row so the list stays short with many spaces open, and a
+row with no agents and exactly zero cost doesn't show at all, quiet or
+otherwise. Each row's cost comes with its percentage of the range total, not
+a bar — the same reasoning as Models: a row's own `accent`-colored bar read
+as the same "capacity" meaning as the context-fill bar in the agents below
+it.
+
+Two open spaces can point at the exact same repo and branch — two tabs on
+the same checkout, or the repo cloned on two machines (seen in practice: one
+space on the Mac and two on Omen, all on `usemaximum/maximum`'s `main`) — and
+since codeburn's branch/repo cost is keyed by name, not by which space asked,
+they'd otherwise show up as separate rows with an identical cost. They're
+grouped by repo+branch into one row before anything else runs; an agent still
+attaches via any of the group's cwd folder names, not just one representative
+member's, since the same repo+branch can live at a different path on each
+machine.
 
 None of a device's branch names, project paths or live sessions reach a peer
 through `--scope combined`: codeburn's own `sanitizeForSharing` (in its
