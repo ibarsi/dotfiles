@@ -5,8 +5,8 @@
 import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, theme, shared, setShared, layout } from "herdr";
-import { QUERY, shapeReviews } from "./gql.js";
-import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Message, Busy, CodeBlock } from "./ui.js";
+import { QUERY, shapeReviews, relativeTime, parseDiffHunk } from "./gql.js";
+import { TEXT, Panel, PanelHeader, IconButton, Row, Chevron, Message, Busy } from "./ui.js";
 
 const FETCH_EVERY = 60000;
 
@@ -32,7 +32,20 @@ function spaceOf(tm) {
   return m ? `${m}/${sp}` : sp;
 }
 
+// One letter per state, same column treatment as changes/main.js's A/M/D/U status glyph.
+const STATE_GLYPH = { APPROVED: "✓", CHANGES_REQUESTED: "!", COMMENTED: "·", DISMISSED: "×", PENDING: "…" };
 const STATE_COLOR = (state, t) => (state === "APPROVED" ? t.ansi2 : state === "CHANGES_REQUESTED" ? t.ansi1 : state === "DISMISSED" ? t.dim : t.muted);
+
+// Mirrors changes/main.js's diffRow: a hunk-header row, or a line-numbered row
+// tinted green/red for an addition/removal, so a comment's code context reads
+// exactly like the Changes panel's own diff viewer.
+function diffLine({ kind, number, text }, t) {
+  if (kind === "@") return div().w_full().px(8).h(18).flex_none().truncate().bg(t.raised).text_color(t.dim).text_size(10).font_family("monospace").child(text);
+  return h_flex().w_full().h(18).flex_none().gap(8)
+    .when(kind === "+", (e) => e.bg(t.ansi2 + "18")).when(kind === "-", (e) => e.bg(t.ansi1 + "18"))
+    .child(div().w(28).flex_none().text_right().text_color(t.dim).text_size(10).font_family("monospace").child(number === undefined ? "" : String(number)))
+    .child(div().flex_1().min_w(0).truncate().font_family("monospace").text_size(10).child(text));
+}
 
 export default class PrReviews extends View {
   init(_props, cx) {
@@ -121,23 +134,32 @@ export default class PrReviews extends View {
     if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv });
   }
 
+  // Each comment renders as its own bordered card: a path:line header (same
+  // raised-background treatment as changes/main.js's hunk-header row), the
+  // comment's own diff hunk so you see the code being discussed, then the
+  // comment body in a clearly offset block below it.
   reviewDetail(review, t) {
-    const content = v_flex().flex_none().pl(22).pr(4).py(2).gap(6);
+    const content = v_flex().flex_none().pl(22).pr(8).py(4).gap(8);
     if (!review.comments.length) return content.child(Message("No unresolved comments"));
-    return content.children(review.comments.map((c) => v_flex().id(`pr-review-comment-${c.id}`).gap(2)
-      .child(div().text_size(TEXT.caption).text_color(t.muted).child(c.line != null ? `${c.path}:${c.line}` : c.path))
-      .child(CodeBlock(c.body))));
+    return content.children(review.comments.map((c) => {
+      const rows = parseDiffHunk(c.diffHunk);
+      return v_flex().id(`pr-review-comment-${c.id}`).gap(0).rounded(8).overflow_hidden().border_1().border_color(t.border)
+        .child(div().px(8).py(3).text_size(TEXT.caption).text_color(t.muted).bg(t.raised).truncate().child(c.line != null ? `${c.path}:${c.line}` : c.path))
+        .when(rows.length > 0, (el) => el.children(rows.map((row) => diffLine(row, t))))
+        .child(div().p(8).text_size(TEXT.small).text_color(t.foreground).bg(t.canvas).whitespace_normal().child(c.body));
+    }));
   }
 
   reviewRow(review, t) {
     const open = this.isOpen(review);
-    return v_flex().id(`pr-review-${review.id}`).opacity(review.resolved ? 0.55 : 1)
-      .child(Row({ id: `pr-review-toggle-${review.id}`, onClick: (cx) => this.toggleReview(review.id, cx) })
+    const dim = review.resolved;
+    return v_flex().id(`pr-review-${review.id}`)
+      .child(Row({ id: `pr-review-toggle-${review.id}`, onClick: (cx) => this.toggleReview(review.id, cx) }).when(open, (el) => el.bg(t.selected))
         .child(Chevron(open))
-        .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(review.author))
-        .child(Badge(review.state, STATE_COLOR(review.state, t)))
-        .child(div().text_size(TEXT.caption).text_color(t.dim).child(new Date(review.submittedAt).toLocaleString()))
-        .child(div().text_size(TEXT.caption).text_color(t.dim).child(`${review.commitsSince} commit${review.commitsSince === 1 ? "" : "s"} since`))
+        .child(div().w(14).flex_none().text_size(12).text_color(dim ? t.dim : STATE_COLOR(review.state, t)).child(STATE_GLYPH[review.state] ?? "·"))
+        .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(dim ? t.dim : t.foreground).child(review.author))
+        .child(div().text_size(TEXT.caption).text_color(t.dim).child(relativeTime(review.submittedAt)))
+        .when(review.commitsSince > 0, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child(`+${review.commitsSince} commit${review.commitsSince === 1 ? "" : "s"}`)))
         .when(!review.resolved, (el) => el.child(IconButton({ id: `pr-review-launch-${review.id}`, icon: "launch", label: review.isBot ? "Investigate with /pr-babysit" : "Respond with /pr-review-response", onClick: () => this.launch(review) }))))
       .when(open, (el) => el.child(this.reviewDetail(review, t)));
   }
@@ -145,10 +167,13 @@ export default class PrReviews extends View {
   render(cx) {
     const t = theme();
     const target = this.target();
+    const open = this.reviews?.filter((r) => !r.resolved).length ?? 0;
     const root = Panel("pr-reviews")
       .child(PanelHeader()
         .child(div().font_semibold().child(target?.pr ? `PR Reviews · #${target.pr}` : "PR Reviews"))
+        .when(Boolean(this.reviews?.length), (el) => el.child(div().px(5).py(1).rounded(4).border_1().border_color(t.border).text_size(TEXT.badge).text_color(t.muted).child(`${this.reviews.length} review${this.reviews.length === 1 ? "" : "s"}`)))
         .child(div().flex_1())
+        .when(open > 0, (el) => el.child(div().text_size(11).text_color(t.ansi1).child(`${open} open`)))
         .child(IconButton({ id: "pr-reviews-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => this.fetch(cx, target) })));
     const body = v_flex().id("pr-reviews-body").flex_1().min_h(0).overflow_y_scrollbar().p(8).gap(2);
     if (!target?.pr) body.child(Message(this.error ?? "No open PR for this branch"));

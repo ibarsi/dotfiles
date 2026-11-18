@@ -255,6 +255,17 @@ parsing needed. Expanding a review shows only its unresolved comments; a
 resolved review re-collapses by default but stays individually
 clickable.
 
+Each review row uses the same visual language as the Changes panel: a
+single colored letter for its state (`✓`/`!`/`·`/`×`) in a fixed column
+instead of a bordered badge, a relative timestamp (`gql.js`'s
+`relativeTime`), and the open row highlighted like a selected file.
+Expanding a comment shows its actual diff hunk — line-numbered, green/red
+tinted rows from `gql.js`'s `parseDiffHunk`, the same shape `changes/main.js`
+builds its own diff viewer from — above the comment body, so you see the
+code being discussed instead of a floating quote. The header's badges
+mirror Changes' "N files" pattern too: a review count and, only when
+nonzero, a count of still-open reviews.
+
 A launch icon appears on every unresolved review, splitting a pane to the
 right in the space's shown tab the same way Deploys' investigate button
 does: `agy --dangerously-skip-permissions -i "/pr-babysit"` (`agyyolo`,

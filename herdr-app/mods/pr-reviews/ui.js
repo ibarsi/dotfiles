@@ -21,12 +21,6 @@ export function PanelHeader() {
   return h_flex().h(42).flex_none().px(14).gap(8).items_center().border_b(1).border_color(t.border);
 }
 
-export function Badge(text, color) {
-  const t = theme();
-  return div().flex_none().px(5).py(1).rounded(4).border_1().border_color(color ?? t.border)
-    .text_size(TEXT.badge).text_color(color ?? t.muted).child(String(text));
-}
-
 export function IconButton({ id, icon, label, onClick, disabled = false, spinning = false }) {
   const t = theme();
   return div().id(id).size(26).flex_none().flex().items_center().justify_center().rounded(6)
@@ -47,12 +41,6 @@ export function Chevron(open) {
   const t = theme();
   return div().w(14).flex_none().flex().items_center().justify_center().text_color(t.dim)
     .child(div().text_size(10).child(open ? "▾" : "▸"));
-}
-
-export function CodeBlock(text) {
-  const t = theme();
-  return div().flex_none().p(8).rounded(6).bg(t.canvas).text_size(TEXT.small)
-    .font_family("monospace").text_color(t.muted).whitespace_normal().child(text);
 }
 
 export function Message(text, error = false) {
