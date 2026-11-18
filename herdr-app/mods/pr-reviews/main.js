@@ -1,14 +1,18 @@
-// PR Reviews panel: native rendering of the active space's PR reviews, with
-// resolved reviews collapsed/dimmed and a launch icon on unresolved ones that
-// spawns an `agy` shell — /pr-babysit for a bot review, /pr-review-response
-// <id> for a human one — in a split pane on the worktree's own machine.
+// PR Reviews panel: a single-PR clone of munza/herdr-mods' branch-pr (Apache-2.0),
+// kept to this panel's existing frame (tab button, sidebar icon, bootstrap — see
+// my-tabs/main.js and my-spaces/indicators.js) and scope (Overview + Comments;
+// Checks, Files, PR list navigation and merge actions are a later pass).
 import { View, div } from "gpui-kit";
-import { h_flex, v_flex } from "gpui-base";
-import { exec, run, spaces, panes, terminals, theme, shared, setShared, layout } from "herdr";
-import { QUERY, shapeReviews, relativeTime, parseDiffHunk } from "./gql.js";
-import { TEXT, Panel, PanelHeader, IconButton, Row, Chevron, Message, Busy } from "./ui.js";
+import { v_flex, h_flex, TextareaState } from "gpui-base";
+import { spaces, layout, shared, theme } from "herdr";
+import { fetchPR, postComment, replyToThread, resolveThread, requestReviewAgain as apiRequestReviewAgain } from "./reads.js";
+import { overviewMethods } from "./overview.js";
+import { conversationMethods } from "./conversation.js";
+import { agentMethods } from "./agents.js";
+import { TEXT, Panel, PanelHeader, IconButton, Busy, Message, Select } from "./ui.js";
 
 const FETCH_EVERY = 60000;
+const NOTICE_MS = 5000;
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -24,41 +28,29 @@ function showing() {
   return find(layout(), "panel-body")?.active === "pr-reviews" && panel?.hidden !== true;
 }
 
-// Same as deploys/main.js: a terminal's space id, machine-prefixed when remote.
-function spaceOf(tm) {
-  const sp = tm.labels?.["herdr.space"];
-  if (!sp) return null;
-  const m = tm.machine ?? (tm.address?.includes("/") ? tm.address.split("/")[0] : null);
-  return m ? `${m}/${sp}` : sp;
-}
-
-// One letter per state, same column treatment as changes/main.js's A/M/D/U status glyph.
-const STATE_GLYPH = { APPROVED: "✓", CHANGES_REQUESTED: "!", COMMENTED: "·", DISMISSED: "×", PENDING: "…" };
-const STATE_COLOR = (state, t) => (state === "APPROVED" ? t.ansi2 : state === "CHANGES_REQUESTED" ? t.ansi1 : state === "DISMISSED" ? t.dim : t.muted);
-
-// Mirrors changes/main.js's diffRow: a hunk-header row, or a line-numbered row
-// tinted green/red for an addition/removal, so a comment's code context reads
-// exactly like the Changes panel's own diff viewer.
-function diffLine({ kind, number, text }, t) {
-  if (kind === "@") return div().w_full().px(8).h(18).flex_none().truncate().bg(t.raised).text_color(t.dim).text_size(10).font_family("monospace").child(text);
-  return h_flex().w_full().h(18).flex_none().gap(8)
-    .when(kind === "+", (e) => e.bg(t.ansi2 + "18")).when(kind === "-", (e) => e.bg(t.ansi1 + "18"))
-    .child(div().w(28).flex_none().text_right().text_color(t.dim).text_size(10).font_family("monospace").child(number === undefined ? "" : String(number)))
-    .child(div().flex_1().min_w(0).truncate().font_family("monospace").text_size(10).child(text));
-}
-
-export default class PrReviews extends View {
+class PrReviews extends View {
   init(_props, cx) {
-    const enabled = shared("workspace.panels") ?? ["files", "changes"];
-    if (!enabled.includes("pr-reviews")) setShared("workspace.panels", [...enabled, "pr-reviews"]);
-    this.resetReviews();
+    this.closedGroups = new Set();
+    this.entryOpen = {};
+    this.author = "";
+    this.unresolved = false;
+    this.section = "overview";
+    this.menuFocus = cx.focus_handle();
+    this.editor = TextareaState.new({ placeholder: "Write a comment…", rows: 4 });
+    this.editor.on("change", (_e, cx) => cx.notify());
+    this.newComment = TextareaState.new({ placeholder: "Write a comment…", rows: 4 });
+    this.newComment.on("change", (_e, cx) => cx.notify());
     this.tick(cx);
     cx.timer.every(1000, (cx) => this.tick(cx));
   }
 
-  resetReviews() {
-    this.reviews = null;
-    this.toggled = new Set();
+  resetPR() {
+    this.pr = null;
+    this.entryOpen = {};
+    this.author = "";
+    this.unresolved = false;
+    this.section = "overview";
+    this.composer = null;
   }
 
   target() {
@@ -69,36 +61,36 @@ export default class PrReviews extends View {
 
   tick(cx) {
     const visible = showing();
+    this.sp = spaces().find((s) => s.active) ?? null;
+    this.spaceKey = this.sp?.id ?? null;
     const target = this.target();
-    const key = target ? `${target.repo}@${target.branch}` : null;
+    const key = target ? `${target.repo}@${target.pr}` : null;
     if (visible && (!this.wasVisible || key !== this.key || Date.now() - this.lastFetch > FETCH_EVERY)) {
       const switched = key !== this.key;
       this.key = key;
-      if (switched) { this.error = null; this.resetReviews(); }
+      if (switched) this.resetPR();
       if (target) this.fetch(cx, target);
-      else { this.reviews = null; this.error = "No repo detected for this space"; cx.notify(); }
+      else { this.pr = null; this.error = "No repo detected for this space"; cx.notify(); }
     }
+    if (this.notice && Date.now() - (this.noticeSince ?? 0) > NOTICE_MS) { this.notice = null; cx.notify(); }
     if (visible !== this.wasVisible) cx.notify();
     this.wasVisible = visible;
   }
 
   fetch(cx, target) {
     if (!target) return;
-    if (!target.pr) { this.reviews = null; this.error = "No open PR for this branch"; cx.notify(); return; }
+    if (!target.pr) { this.pr = null; this.error = "No open PR for this branch"; cx.notify(); return; }
     this.loading = true;
     cx.notify();
     cx.spawn(async (cx) => {
       try {
-        const [owner, name] = target.repo.split("/");
-        const r = await exec("gh", ["api", "graphql", "-f", `owner=${owner}`, "-f", `name=${name}`, "-F", `number=${target.pr}`, "-f", `query=${QUERY}`], { timeout: 30000 });
-        if (r.code !== 0) { this.error = "Could not reach GitHub"; this.loading = false; cx.notify(); return; }
-        const reviews = shapeReviews(JSON.parse(r.stdout).data);
+        const pr = await fetchPR(target.repo, target.pr);
         if (JSON.stringify(this.target()) !== JSON.stringify(target)) return; // stale: space or branch moved on
-        this.reviews = reviews;
-        this.error = null;
+        this.pr = pr;
+        this.error = pr ? null : "PR not found";
         this.lastFetch = Date.now();
-      } catch {
-        this.error = "Could not reach GitHub";
+      } catch (e) {
+        this.error = e.message || "Could not reach GitHub";
       } finally {
         this.loading = false;
         cx.notify();
@@ -106,83 +98,154 @@ export default class PrReviews extends View {
     });
   }
 
-  isOpen(review) {
-    return review.resolved ? this.toggled.has(review.id) : !this.toggled.has(review.id);
+  refresh(cx) {
+    const target = this.target();
+    if (target) this.fetch(cx, target);
   }
 
-  toggleReview(id, cx) {
-    if (this.toggled.has(id)) this.toggled.delete(id); else this.toggled.add(id);
+  selectSection(id, cx) {
+    this.section = id;
     cx.notify();
   }
 
-  // Like Deploys' investigate(): splits an agy pane into the active space's
-  // shown tab. Bot reviews all route to the same PR-wide /pr-babysit pass;
-  // human reviews get /pr-review-response for that specific review. Skipped
-  // while a terminal with the same argv is already running in this space.
-  launch(review) {
-    const target = this.target();
-    const space = spaces().find((s) => s.active);
-    if (!target || !space) return;
-    const argv = review.isBot
-      ? ["agy", "--dangerously-skip-permissions", "-i", "/pr-babysit"]
-      : ["agy", "--dangerously-skip-permissions", "-i", `/pr-review-response ${review.id}`];
-    const running = terminals().some((tm) => tm.state === "live" && spaceOf(tm) === space.id && tm.argv?.join("\0") === argv.join("\0"));
-    if (running) return;
-    const tab = space.tabs?.find((tb) => tb.active);
-    const tabPanes = panes().filter((p) => p.tab === tab?.id && p.terminal);
-    const pane = tabPanes.find((p) => p.cwd === target.cwd) ?? tabPanes[0];
-    if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv });
+  // The one popup open at a time, shared by every chooser in the panel.
+  chooser({ id, choices, value, onChoose, ...rest }) {
+    const enabled = choices.filter((c) => !c.disabled);
+    return Select({
+      id, choices, value, ...rest,
+      open: this.openMenu === id,
+      index: this.menuIndex ?? 0,
+      focus: this.menuFocus,
+      onOpenChange: (open, cx) => { this.openMenu = open ? id : null; this.menuIndex = Math.max(0, enabled.findIndex((c) => c.id === value)); cx.notify(); },
+      onMove: (index, cx) => { this.menuIndex = index; cx.notify(); },
+      onChoose: (choice, cx) => { this.openMenu = null; onChoose(choice.id, cx); cx.notify(); },
+    });
   }
 
-  // Each comment renders as its own bordered card: a path:line header (same
-  // raised-background treatment as changes/main.js's hunk-header row), the
-  // comment's own diff hunk so you see the code being discussed, then the
-  // comment body in a clearly offset block below it.
-  reviewDetail(review, t) {
-    const content = v_flex().flex_none().pl(22).pr(8).py(4).gap(8);
-    if (!review.comments.length) return content.child(Message("No unresolved comments"));
-    return content.children(review.comments.map((c) => {
-      const rows = parseDiffHunk(c.diffHunk);
-      return v_flex().id(`pr-review-comment-${c.id}`).gap(0).rounded(8).overflow_hidden().border_1().border_color(t.border)
-        .child(div().px(8).py(3).text_size(TEXT.caption).text_color(t.muted).bg(t.raised).truncate().child(c.line != null ? `${c.path}:${c.line}` : c.path))
-        .when(rows.length > 0, (el) => el.children(rows.map((row) => diffLine(row, t))))
-        .child(div().p(8).text_size(TEXT.small).text_color(t.foreground).bg(t.canvas).whitespace_normal().child(c.body));
-    }));
+  compose(kind, thread, context, cx, options = {}) {
+    if (this.mutating) return;
+    this.composer = { kind, thread, context, ...options };
+    this.agentTarget = options.target ?? null;
+    this.editor.set_value(kind === "agent" ? "Analyze this comment and suggest a response or fix." : (options.prefix ?? ""));
+    this.editor.focus();
+    cx.notify();
   }
 
-  reviewRow(review, t) {
-    const open = this.isOpen(review);
-    const dim = review.resolved;
-    return v_flex().id(`pr-review-${review.id}`)
-      .child(Row({ id: `pr-review-toggle-${review.id}`, onClick: (cx) => this.toggleReview(review.id, cx) }).when(open, (el) => el.bg(t.selected))
-        .child(Chevron(open))
-        .child(div().w(14).flex_none().text_size(12).text_color(dim ? t.dim : STATE_COLOR(review.state, t)).child(STATE_GLYPH[review.state] ?? "·"))
-        .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(dim ? t.dim : t.foreground).child(review.author))
-        .child(div().text_size(TEXT.caption).text_color(t.dim).child(relativeTime(review.submittedAt)))
-        .when(review.commitsSince > 0, (el) => el.child(div().text_size(TEXT.caption).text_color(t.dim).child(`+${review.commitsSince} commit${review.commitsSince === 1 ? "" : "s"}`)))
-        .when(!review.resolved, (el) => el.child(IconButton({ id: `pr-review-launch-${review.id}`, icon: "launch", label: review.isBot ? "Investigate with /pr-babysit" : "Respond with /pr-review-response", onClick: () => this.launch(review) }))))
-      .when(open, (el) => el.child(this.reviewDetail(review, t)));
+  closeComposer(cx) {
+    if (this.mutating) return;
+    this.composer = null;
+    cx.notify();
+  }
+
+  postCommentOnPR(cx) {
+    if (this.mutating || !this.pr) return;
+    const key = this.spaceKey;
+    const body = this.newComment.value();
+    this.mutating = true;
+    this.error = null;
+    cx.notify();
+    cx.spawn(async (cx) => {
+      try {
+        await postComment(this.pr.repository, this.pr.number, body);
+        if (key !== this.spaceKey) return;
+        this.newComment.set_value("");
+        this.notice = "Saved to GitHub.";
+        this.noticeSince = Date.now();
+        this.refresh(cx);
+      } catch (e) {
+        if (key === this.spaceKey) this.error = `${e.message}. Refresh before retrying if it may have gone through.`;
+      } finally {
+        this.mutating = false;
+        cx.notify();
+      }
+    });
+  }
+
+  // Reply, resolve or reopen one thread.
+  mutate(action, cx, thread) {
+    if (this.mutating) return;
+    const key = this.spaceKey;
+    const body = this.editor.value();
+    this.mutating = true;
+    this.error = null;
+    cx.notify();
+    cx.spawn(async (cx) => {
+      try {
+        if (action === "reply") await replyToThread(thread, body);
+        else await resolveThread(thread, action === "reopen");
+        if (key !== this.spaceKey) return;
+        if (action === "reply") this.composer = null;
+        this.notice = "Saved to GitHub.";
+        this.noticeSince = Date.now();
+        this.refresh(cx);
+      } catch (e) {
+        if (key === this.spaceKey) this.error = `${e.message}. Refresh before retrying if it may have gone through.`;
+      } finally {
+        this.mutating = false;
+        cx.notify();
+      }
+    });
+  }
+
+  requestReviewAgain(login, cx) {
+    if (this.mutating || !this.pr) return;
+    const key = this.spaceKey;
+    this.mutating = true;
+    this.error = null;
+    cx.notify();
+    cx.spawn(async (cx) => {
+      try {
+        await apiRequestReviewAgain(this.pr.repository, this.pr.number, login);
+        if (key !== this.spaceKey) return;
+        this.notice = `Asked ${login} to review again.`;
+        this.noticeSince = Date.now();
+        this.refresh(cx);
+      } catch (e) {
+        if (key === this.spaceKey) this.error = e.message;
+      } finally {
+        this.mutating = false;
+        cx.notify();
+      }
+    });
+  }
+
+  sectionTabs(pr) {
+    const t = theme();
+    const tab = (id, label, count) => div().id(`pr-${id}`).h(32).flex_none().mb(-1).px(0).gap(6).items_center()
+      .border_b(2).border_color(this.section === id ? t.foreground : t.background)
+      .text_size(TEXT.small).text_color(this.section === id ? t.foreground : t.muted).cursor_pointer()
+      .hover((s) => s.text_color(t.foreground)).on_click((_e, cx) => this.selectSection(id, cx)).child(label);
+    return h_flex().id("pr-detail-tabs").flex_none().px(14).pt(8).gap(16).items_center().border_b(1).border_color(t.border)
+      .child(tab("overview", "Overview")).child(tab("conversation", "Comments"));
   }
 
   render(cx) {
     const t = theme();
     const target = this.target();
-    const open = this.reviews?.filter((r) => !r.resolved).length ?? 0;
     const root = Panel("pr-reviews")
       .child(PanelHeader()
         .child(div().font_semibold().child(target?.pr ? `PR Reviews · #${target.pr}` : "PR Reviews"))
-        .when(Boolean(this.reviews?.length), (el) => el.child(div().px(5).py(1).rounded(4).border_1().border_color(t.border).text_size(TEXT.badge).text_color(t.muted).child(`${this.reviews.length} review${this.reviews.length === 1 ? "" : "s"}`)))
         .child(div().flex_1())
-        .when(open > 0, (el) => el.child(div().text_size(11).text_color(t.ansi1).child(`${open} open`)))
-        .child(IconButton({ id: "pr-reviews-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => this.fetch(cx, target) })));
-    const body = v_flex().id("pr-reviews-body").flex_1().min_h(0).overflow_y_scrollbar().p(8).gap(2);
-    if (!target?.pr) body.child(Message(this.error ?? "No open PR for this branch"));
-    else {
-      if (this.loading && !this.reviews) body.child(Busy("Loading reviews…"));
-      if (this.error) body.child(Message(this.error, true));
-      if (this.reviews && !this.reviews.length) body.child(Message("No reviews yet"));
-      this.reviews?.forEach((review) => body.child(this.reviewRow(review, t)));
-    }
-    return root.child(body);
+        .child(IconButton({ id: "pr-reviews-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => this.refresh(cx) })));
+    const body = v_flex().id("pr-reviews-body").flex_1().min_h(0).overflow_y_scrollbar().p(0);
+    if (!target?.pr) { body.p(8).child(Message(this.error ?? "No open PR for this branch")); return root.child(body); }
+    if (this.loading && !this.pr) { body.child(Busy("Loading…")); return root.child(body); }
+    if (!this.pr) { body.p(8).child(Message(this.error ?? "PR not found", Boolean(this.error))); return root.child(body); }
+    const pr = this.pr;
+    root.child(this.about(pr));
+    if (this.error) root.child(Message(this.error, true).px(14));
+    if (this.notice) root.child(Message(this.notice).px(14));
+    root.child(this.sectionTabs(pr));
+    if (this.section === "conversation") root.child(this.conversationFilters(pr));
+    const content = v_flex().id(`pr-detail-${this.section}`).flex_1().min_w(0).min_h(0).overflow_y_scrollbar().p(6);
+    if (this.section === "conversation") this.conversationView(content, pr);
+    else this.overview(content, pr);
+    root.child(content);
+    if (this.composer && !this.composer.entry) root.child(v_flex().flex_none().p(10).border_t(1).border_color(t.border).child(this.composerView()));
+    return root;
   }
 }
+
+Object.assign(PrReviews.prototype, overviewMethods, conversationMethods, agentMethods);
+
+export default PrReviews;

@@ -228,52 +228,56 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 A **PR Reviews** button sits in the tabs bar next to Deploys (same
 `my-tabs` addition, one more `// pr-reviews`-marked line), and a space's
 review-comment sidebar icon (`※`, see [Sidebar indicators](#sidebar-indicators))
-switches to that space and opens the same panel — both list every
-review on the active space's PR, oldest first, with resolved reviews
-collapsed and dimmed so unaddressed feedback stands out.
+switches to that space and opens the same panel. Both show one PR — the
+active space's, via the same per-space target `my-spaces/indicators.js`
+publishes through `setShared("deploys.targets", …)` — with an **Overview**
+tab (status, reviewers, agents on the PR, description) and a **Comments**
+tab (every comment, review and thread, in order, with reply, resolve and
+agent handoff). It polls every 60s while shown, same cadence and
+visibility rules as Deploys.
 
-`mods/pr-reviews/` is a from-scratch mod, split the same way as `deploys`:
-`main.js` for state/fetching/render, `ui.js` a local copy of `deploys/ui.js`'s
-small helpers (no cross-mod imports exist anywhere in this codebase, so each
-panel keeps its own), and `gql.js` (no imports, tested with `node --test
-herdr-app/mods/pr-reviews/gql.test.mjs`) for the GraphQL query and response
-shaping. It reads the same per-space `{repo, branch, pr}` target
-`my-spaces/indicators.js` publishes through `setShared("deploys.targets", …)`,
-and polls every 60s while shown, same cadence and visibility rules as
-Deploys.
+This is a single-PR clone of [munza/herdr-mods' branch-pr](https://github.com/munza/herdr-mods/blob/main/branch-pr/RECIPE.md)
+(Apache-2.0), kept to this panel's own frame (the tab button and sidebar
+icon above, both pre-existing) and to a first slice of its functionality:
+Overview and Comments only — Checks, Files, PR list navigation (its
+Branch/Repo/Involved tabs) and merge/worktree actions are a later pass.
+Where upstream reads and writes GitHub through a bundled Go helper (a thin
+`gh`-wrapping RPC bridge), this mod calls `gh` directly from JS
+(`reads.js`), matching every other herdr-app mod — no new toolchain.
 
-GitHub's REST API has no "thread resolved" concept, so `gql.js` queries
-`reviewThreads { isResolved }` over `gh api graphql` — one batched query per
-poll. A review counts as **resolved** only once every inline comment it
-posted sits in a resolved thread *and* at least one commit has landed on the
-PR since it was submitted; `DISMISSED` reviews are always resolved, and the
-signed-in user's own reviews never appear. The commit-since condition isn't
-just a staleness badge — it's what makes a review with findings only in its
-body and no inline comments (Gemini/Maximus often leave feedback that way)
-stay open until something has actually changed, with no separate body-text
-parsing needed. Expanding a review shows only its unresolved comments; a
-resolved review re-collapses by default but stays individually
-clickable.
+`mods/pr-reviews/` splits the same way upstream does: `model.js` (no
+imports, tested with `node --test herdr-app/mods/pr-reviews/model.test.mjs`)
+holds what GitHub's answers mean as plain functions — who commented, the
+GraphQL query and response shaping, conversation ordering, merge-readiness
+stats, the messages sent to an agent — ported from upstream's
+`github/model.js` almost verbatim, since it already had no framework
+imports. `ui.js` is the design kit (ported from `views/ui.js`), `reads.js`
+the `gh` calls, `agents.js` who's on the PR and handing work to them
+(`actions/agents.js`), and `overview.js`/`conversation.js` the two tabs'
+rendering (`views/detail.js`/`views/conversation.js`), tied together by
+`main.js`.
 
-Each review row uses the same visual language as the Changes panel: a
-single colored letter for its state (`✓`/`!`/`·`/`×`) in a fixed column
-instead of a bordered badge, a relative timestamp (`gql.js`'s
-`relativeTime`), and the open row highlighted like a selected file.
-Expanding a comment shows its actual diff hunk — line-numbered, green/red
-tinted rows from `gql.js`'s `parseDiffHunk`, the same shape `changes/main.js`
-builds its own diff viewer from — above the comment body, so you see the
-code being discussed instead of a floating quote. The header's badges
-mirror Changes' "N files" pattern too: a review count and, only when
-nonzero, a count of still-open reviews.
+A review is no longer auto-resolved by a "commits since" heuristic — the
+approach this panel started with, which a rebase could quietly defeat
+(every commit's date resets, so a review could look "addressed" when
+nothing had changed). Upstream's model is simpler and doesn't have that
+failure mode: a *thread*'s resolved state is exactly GitHub's own
+(`reviewThreads { isResolved }`), and a *review* itself always shows as a
+conversation entry — there's nothing to auto-hide, so a bot's findings
+with no inline thread (Gemini/Maximus often leave feedback that way) can't
+disappear.
 
-A launch icon appears on every unresolved review, splitting a pane to the
-right in the space's shown tab the same way Deploys' investigate button
-does: `agy --dangerously-skip-permissions -i "/pr-babysit"` (`agyyolo`,
-expanded to its real argv since `pane.split` execs directly, not through a
-shell alias) for a review from `gemini-code-assist` or `maximus-ci-app`, or
-`agy --dangerously-skip-permissions -i "/pr-review-response <review-id>"`
-for a human review, using the plain numeric review id. It does nothing
-while a terminal with the same argv is already running in that space.
+Comments has an author filter, an Unresolved toggle, and a bordered
+"Send N to agent" for every unresolved thread at once. Each thread is
+collapsible (closed by default once resolved), shows its comment's diff
+hunk trimmed to its last 6 lines with the same line-numbered, colored-row
+treatment the Changes panel uses for its own diffs (`model.js`'s
+`parseDiffHunk`, `conversation.js`'s `diffLine`), then Reply, Resolve/Reopen
+and a per-thread "Send to agent". Delivery goes through `hc`, the same
+primitive Herdr's own agent commands use: to an agent already running on
+the PR or elsewhere in the space (reaching it mid-turn, not just when
+idle), a sub-agent spawned under one of them, or a brand new tab with the
+message as its first prompt — `agents.js`'s `agentButton`/`deliver`.
 
 ## Updating
 
