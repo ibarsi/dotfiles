@@ -1,6 +1,6 @@
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex, ScrollHandle } from "gpui-base";
-import { spaces, panes, run, openOverlay, theme, window, shared, layout, settings } from "herdr";
+import { spaces, panes, run, openOverlay, theme, window, shared, setShared, layout, settings } from "herdr";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -34,6 +34,13 @@ export default class Tabs extends View {
     try { this.panels = JSON.parse(localStorage.getItem("panels") ?? "{}"); } catch { this.panels = {}; }
     if (!this.panels || typeof this.panels !== "object" || Array.isArray(this.panels)) this.panels = {};
     this.swipe = { acc: 0, steps: 0, at: 0, last: 0 };
+    // panel-body only mounts its active child, so pr-reviews' own init() (which
+    // would normally self-register, like deploys' does) never runs until its tab
+    // button already exists — and deploys only escapes that trap because the
+    // sidebar PR chip force-selects it once. my-tabs always mounts, so it seeds
+    // the one-time enable here instead.
+    const enabled = shared("workspace.panels") ?? ["files", "changes"];
+    if (!enabled.includes("pr-reviews")) setShared("workspace.panels", [...enabled, "pr-reviews"]); // pr-reviews
   }
 
   // One tab per wheel notch. A touchpad or smooth-scrolling mouse sends many
