@@ -320,11 +320,17 @@ const clickable = (el, fn) => el
 // Clicking ↯ (or ✗ beside a red #PR) splits a Claude pane into space `id`'s shown tab
 // to rebase (or triage CI), without switching to the space. Does nothing while the
 // same session is still running there.
-const REBASE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"];
-const TRIAGE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/ci-triage"];
+// pane.split runs argv bare, so the pane (and, if it was the last one, its tab
+// and space) closes when the agent exits. Run it in bash, which takes over after.
+const sq = (a) => `'${a.replaceAll("'", `'\\''`)}'`;
+const inShell = (argv) => ["bash", "-c", `${argv.map(sq).join(" ")}; exec bash`];
+// The shell outlives the agent, so "still running" means an agent is live in it.
+const agentIn = (tm) => agents().some((a) => a.address === tm.address);
+const REBASE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"]);
+const TRIAGE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "haiku", "/ci-triage"]);
 function launch(id, argv) {
   const running = terminals().some((t) => t.state === "live" && terminalSpace(t) === id
-    && argv.every((a, i) => t.argv?.[i] === a));
+    && argv.every((a, i) => t.argv?.[i] === a) && agentIn(t));
   if (running) return;
   const tab = spaces().find((s) => s.id === id)?.tabs.find((tb) => tb.active);
   const pane = tab && panes().find((p) => p.tab === tab.id && p.terminal);

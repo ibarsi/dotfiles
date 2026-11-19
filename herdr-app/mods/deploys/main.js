@@ -6,13 +6,20 @@
 // cluster lives there and mise resolves kubectl/argocd per-directory.
 import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { exec, run, spaces, panes, terminals, theme, shared, setShared, layout } from "herdr";
+import { exec, run, spaces, panes, terminals, agents, theme, shared, setShared, layout } from "herdr";
 import { parseComment, isUnhealthy, isFailed } from "./parse.js";
 import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT, LOCAL_CHILD_GROUPS } from "./local.js";
 import { podProblems, parsePodLines, POD_TEMPLATE } from "./pods.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
 
 const AGENT_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku"]; // ccyolo, haiku
+
+// pane.split runs argv bare, so the pane (and, if it was the last one, its tab
+// and space) closes when the agent exits. Run it in bash, which takes over after.
+const sq = (a) => `'${a.replaceAll("'", `'\\''`)}'`;
+const inShell = (argv) => ["bash", "-c", `${argv.map(sq).join(" ")}; exec bash`];
+// The shell outlives the agent, so "still running" means an agent is live in it.
+const agentIn = (tm) => agents().some((a) => a.address === tm.address);
 
 const FETCH_EVERY = 60000;
 
@@ -341,8 +348,8 @@ export default class Deploys extends View {
     const target = this.target();
     const space = spaces().find((s) => s.active);
     if (!target || !space) return;
-    const argv = [...AGENT_ARGV, prompt + "Read-only: don't sync, delete or edit cluster resources or code. Report the root cause and a suggested fix."];
-    const running = terminals().some((tm) => tm.state === "live" && spaceOf(tm) === space.id && tm.argv?.join("\0") === argv.join("\0"));
+    const argv = inShell([...AGENT_ARGV, prompt + "Read-only: don't sync, delete or edit cluster resources or code. Report the root cause and a suggested fix."]);
+    const running = terminals().some((tm) => tm.state === "live" && spaceOf(tm) === space.id && tm.argv?.join("\0") === argv.join("\0") && agentIn(tm));
     if (running) return;
     const tab = space.tabs?.find((tb) => tb.active);
     const tabPanes = panes().filter((p) => p.tab === tab?.id && p.terminal);
