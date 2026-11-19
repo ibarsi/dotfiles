@@ -47,6 +47,7 @@ const ICONS = {
   "↯": ["merge-conflict", "Merge conflict — click to start a rebase"],
   "✓": ["approved", "Review approved"],
   "※": ["review-comment", "Changes requested or a new review since your last push"],
+  "✗": ["ci-triage", "CI failed — click to start a CI triage"],
 };
 
 // "<n> <url> <branch>" for the checkout in each folder argument: upstream branch
@@ -282,12 +283,13 @@ export function indicators(id, t, indent) {
   // The row's pl(13) (main.js) keeps that shifted chip clear of the 3px agent bar.
   return h_flex().when(indent >= 8, (el) => el.pl(indent - 8)).when(indent < 8, (el) => el.ml(indent - 8)).pr(2).gap(6).items_center().text_size(11).text_color(t.dim)
     .when(Boolean(p), (el) => el.child(clickable(chip("pr", `#${p.num}`, ci[p.ci] ?? t.dim), () => openUrl(p.url))))
+    .when(p?.ci === "failed", (el) => el.child(clickable(iconChip("triage", "✗", ci.failed).px(3).ml(-4), () => launch(id, TRIAGE_ARGV))))
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
       .child(slot(p.comments && clickable(iconChip("comments", "※", status["※"]), (cx) => openPanel("pr-reviews", id, cx))))
       .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openPanel("deploys", id, cx))))
-      .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id))
+      .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => launch(id, REBASE_ARGV))
         : iconChip("status", p.status, status[p.status])))));
 }
 
@@ -315,16 +317,18 @@ const clickable = (el, fn) => el
   .on_mouse_up("left", (_e, cx) => cx.stop_propagation())
   .on_click((_e, cx) => { cx.stop_propagation(); fn(cx); });
 
-// Clicking ↯ splits a Claude pane into space `id`'s shown tab to resolve the conflict,
-// without switching to the space. Does nothing while one is still running there.
+// Clicking ↯ (or ✗ beside a red #PR) splits a Claude pane into space `id`'s shown tab
+// to rebase (or triage CI), without switching to the space. Does nothing while the
+// same session is still running there.
 const REBASE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"];
-function rebase(id) {
+const TRIAGE_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku", "/ci-triage"];
+function launch(id, argv) {
   const running = terminals().some((t) => t.state === "live" && terminalSpace(t) === id
-    && REBASE_ARGV.every((a, i) => t.argv?.[i] === a));
+    && argv.every((a, i) => t.argv?.[i] === a));
   if (running) return;
   const tab = spaces().find((s) => s.id === id)?.tabs.find((tb) => tb.active);
   const pane = tab && panes().find((p) => p.tab === tab.id && p.terminal);
-  if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv: REBASE_ARGV });
+  if (pane) run("pane.split", { direction: "right", pane: pane.pane, argv });
 }
 
 // Fixed-width column so the deploy and status icons never shift when the other

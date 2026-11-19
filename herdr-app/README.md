@@ -71,14 +71,15 @@ new review since your last non-merge commit — click the comment bubble to
 switch to that space and open its [PR Reviews panel](#pr-reviews-panel), the
 same way the deploy icon opens Deploys. Deployment uses outlined circles
 with a check (success), clock (pending/running), cross (failure), or pause (inactive).
-All seven icons use a 24-unit SVG grid, 2-unit rounded strokes and a 14px rendered
+All eight icons use a 24-unit SVG grid, 2-unit rounded strokes and a 14px rendered
 size, centered in the existing 24px columns; hover shows their meaning. Assets live
 in `mods/my-spaces/icons/` and take their colors from the active theme. Status logic
 remains in `mods/my-spaces/status.js` (tested with `node --test
 herdr-app/mods/my-spaces/status.test.mjs`). Click the conflict icon to split a
 `claude --model haiku /rebase` pane (skipping permissions) into that space's shown
 tab without switching to it. A second click does nothing while that session is
-still running. PR data comes from one `gh api graphql` query every 60s; ports from one
+still running. When CI fails, a red magnifier sits right of the red PR number;
+clicking it splits a `claude --model haiku /ci-triage` pane the same way. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
 Rows have no letter avatar. Instead, a bar down the row's left edge shows each
