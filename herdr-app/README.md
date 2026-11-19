@@ -21,7 +21,9 @@ On Omarchy, Super-C and Super-V copy and paste in terminal panes. Hyprland
 sends Ctrl-Shift-C/V to windows tagged `terminal` and plain Ctrl-C/V to the
 rest, so add `o.window("herdr-app", { tag = "+terminal" })` to
 `~/.config/hypr/hyprland.lua` (not tracked here). `keys.json` binds
-Ctrl-Shift-C/V to `terminal.copy` and `terminal.paste`.
+Ctrl-Shift-C/V to `terminal.copy` and `terminal.paste`, and Shift-Insert to
+`terminal.paste`, which VoxType sends to paste dictation (see
+[voice-to-text](../voice-to-text/README.md)).
 
 Cmd-M minimizes the window and Cmd-A selects all terminal contents, matching
 the macOS defaults added in Herdr 0.1.16.
