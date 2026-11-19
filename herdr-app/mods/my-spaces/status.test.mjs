@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -20,38 +20,40 @@ test("queue beats conflict and approval", () => {
   assert.equal(prStatus(pr({ mergeQueueEntry: { state: "QUEUED" }, mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "");
 });
 
-test("comments beat conflict", () => {
-  assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" }, [review("bob", later)])), "※");
+test("conflict shows alongside comments, each in their own column", () => {
+  assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" }, [review("bob", later)])), "↯");
+  assert.equal(hasComments(pr({ mergeable: "CONFLICTING" }, [review("bob", later)])), true);
 });
 
-test("conflict still hides approval when there are no comments", () => {
+test("conflict still shows when there are no comments", () => {
   assert.equal(prStatus(pr({ mergeable: "CONFLICTING", reviewDecision: "APPROVED" })), "↯");
 });
 
 test("approval hides comments", () => {
   assert.equal(prStatus(pr({ reviewDecision: "APPROVED" }, [review("bob", later)])), "✓");
+  assert.equal(hasComments(pr({ reviewDecision: "APPROVED" }, [review("bob", later)])), false);
 });
 
 test("changes requested shows comment icon", () => {
-  assert.equal(prStatus(pr({ reviewDecision: "CHANGES_REQUESTED" })), "※");
+  assert.equal(hasComments(pr({ reviewDecision: "CHANGES_REQUESTED" })), true);
 });
 
 test("review after last push", () => {
-  assert.equal(prStatus(pr({}, [review("bob", later)])), "※");
-  assert.equal(prStatus(pr({}, [review("bob", earlier)])), "");
+  assert.equal(hasComments(pr({}, [review("bob", later)])), true);
+  assert.equal(hasComments(pr({}, [review("bob", earlier)])), false);
 });
 
 test("merge commits don't count as a push", () => {
   const commits = [commit("2026-01-02T00:00:00Z"), commit("2026-01-04T00:00:00Z", "Merge branch 'main'")];
-  assert.equal(prStatus(pr({}, [review("bob", later)], commits)), "※");
+  assert.equal(hasComments(pr({}, [review("bob", later)], commits)), true);
 });
 
 test("own reviews don't count", () => {
-  assert.equal(prStatus(pr({}, [review("me", later)])), "");
+  assert.equal(hasComments(pr({}, [review("me", later)])), false);
 });
 
 test("no commits and null author", () => {
-  assert.equal(prStatus(pr({}, [review(null, later)], [])), "※");
+  assert.equal(hasComments(pr({}, [review(null, later)], [])), true);
 });
 
 test("alpha appends a two-digit alpha only to #rrggbb colours", () => {

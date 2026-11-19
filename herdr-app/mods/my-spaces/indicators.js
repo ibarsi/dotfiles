@@ -3,12 +3,12 @@
 // marked "indicators" there (herdr-update merges them automatically).
 //
 // Line under the space name: #PR (coloured by CI, grey while a draft, teal in the merge queue) and listening ports on the left,
-// one review/merge status icon (status.js) and the deploy icon on the right.
+// a comments icon, the deploy icon, and a review/merge status icon (status.js), each in their own column, on the right.
 
 import { div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, layout, setShared } from "herdr";
-import { prStatus, alpha, segments, agentKey, terminalSpace } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace } from "./status.js";
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -147,7 +147,7 @@ function summarize(repo) {
   const ci = p.state === "MERGED" ? "merged" : p.mergeQueueEntry ? "queued" : p.isDraft ? "" : CI[p.head.nodes[0]?.commit.statusCheckRollup?.state ?? ""] ?? "";
   if (p.state !== "OPEN") return { num: p.number, url: p.url, ci, open: false };
   const deploy = DEPLOY[repo.deployments?.nodes?.[0]?.latestStatus?.state ?? ""] ?? "";
-  return { num: p.number, url: p.url, ci, open: true, status: prStatus(p), deploy };
+  return { num: p.number, url: p.url, ci, open: true, status: prStatus(p), comments: hasComments(p), deploy };
 }
 
 function refreshPrs(cx) {
@@ -251,8 +251,10 @@ function refreshPorts(cx) {
 
 // The extra line for space `id`, or null when there's nothing to show.
 // `indent`: px to line it up under the space name. Layout A: #PR and ports on the
-// left; on rows with a PR, fixed deploy and status columns pinned right. Each piece is its own element
-// (pr-, ports-, status-, deploy-<space>) so a panel can hang a click on it later.
+// left; on rows with a PR, fixed comments, deploy and status columns pinned right, in that
+// order so a rebase conflict never shares a column with (and hides) outstanding comments.
+// Each piece is its own element (pr-, ports-, comments-, status-, deploy-<space>) so a panel
+// can hang a click on it later.
 export function indicators(id, t, indent) {
   const p = prs[id];
   const po = ports[id];
@@ -283,9 +285,9 @@ export function indicators(id, t, indent) {
     .when(Boolean(po?.length), (el) => el.child(div().id(`ports-${id}`).pl(p ? 0 : 8).flex_shrink(1).min_w(0).truncate().child(`:${po.join(",")}`)))
     .child(div().flex_1())
     .when(Boolean(p), (el) => el
+      .child(slot(p.comments && clickable(iconChip("comments", "※", status["※"]), (cx) => openPanel("pr-reviews", id, cx))))
       .child(slot(p.deploy && clickable(iconChip("deploy", p.deploy, deploy[p.deploy] ?? t.dim), (cx) => openPanel("deploys", id, cx))))
       .child(slot(p.status && (p.status === "↯" ? clickable(iconChip("status", p.status, status[p.status]), () => rebase(id))
-        : p.status === "※" ? clickable(iconChip("status", p.status, status[p.status]), (cx) => openPanel("pr-reviews", id, cx))
         : iconChip("status", p.status, status[p.status])))));
 }
 
