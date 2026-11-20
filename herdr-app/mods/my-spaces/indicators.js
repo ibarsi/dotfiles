@@ -321,9 +321,9 @@ const clickable = (el, fn) => el
 // to rebase (or triage CI), without switching to the space. Does nothing while the
 // same session is still running there.
 // pane.split runs argv bare, so the pane (and, if it was the last one, its tab
-// and space) closes when the agent exits. Run it in bash, which takes over after.
+// and space) closes when the agent exits. Run it in interactive bash (-i) so ~/.bashrc fixes PATH before the agent starts; bash takes over after.
 const sq = (a) => `'${a.replaceAll("'", `'\\''`)}'`;
-const inShell = (argv) => ["bash", "-c", `${argv.map(sq).join(" ")}; exec bash`];
+const inShell = (argv) => ["bash", "-ic", `${argv.map(sq).join(" ")}; exec bash`];
 // The shell outlives the agent, so "still running" means an agent is live in it.
 const agentIn = (tm) => agents().some((a) => a.address === tm.address);
 const REBASE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"]);

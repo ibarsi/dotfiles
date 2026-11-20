@@ -8,7 +8,7 @@ const AGENT_ARGV = ["agy", "--dangerously-skip-permissions"]; // agyyolo
 // pane.split runs argv bare, so the pane (and, if it was the last one, its tab
 // and space) closes when the agent exits. Run it in bash, which takes over after.
 const sq = (a) => `'${a.replaceAll("'", `'\\''`)}'`;
-const inShell = (argv) => ["bash", "-c", `${argv.map(sq).join(" ")}; exec bash`];
+const inShell = (argv) => ["bash", "-ic", `${argv.map(sq).join(" ")}; exec bash`];
 // The shell outlives the agent, so "still running" means an agent is live in it.
 const agentIn = (tm) => agents().some((a) => a.address === tm.address);
 
