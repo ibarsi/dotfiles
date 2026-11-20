@@ -1300,3 +1300,41 @@ EOF
     cat "$_BENCHALL_REPORT"
     unset _BENCHALL_REPORT _BENCHALL_SUDO _BENCHALL_MISSING
 }
+
+# List the herdr spaces closed on a day (default today), oldest first. herdr
+# keeps no close history, so this infers it from hc terminals whose space is
+# gone from the herdr-app layout doc; a space closed with no terminals, or one
+# whose finished terminals were removed, will not show. Usage: hcc [YYYY-MM-DD]
+function hcc() {
+    local state_dir="${HC_STATE_DIR:-$HOME/.local/state/herdr-core/default}"
+    local day="${1:-$(date +%F)}"
+
+    if [[ ! -r "$state_dir/docs.json" || ! -r "$state_dir/terminals.json" ]]; then
+        echo "hcc: no herdr-core state in $state_dir (set HC_STATE_DIR)" >&2
+        return 1
+    fi
+
+    python3 -I - "$state_dir" "$day" <<'PY'
+import datetime as dt
+import json
+import sys
+
+state_dir, day = sys.argv[1], sys.argv[2]
+doc = json.load(open(f"{state_dir}/docs.json"))["herdr-app"]
+live = {s["id"] for s in doc["value"]["spaces"]}
+terminals = json.load(open(f"{state_dir}/terminals.json"))["terminals"].values()
+
+closed = {}  # space id -> (last terminal finish ms, space name)
+for t in terminals:
+    space = t.get("labels", {}).get("herdr.space")
+    finished = t.get("finished_ms")
+    if space and space not in live and finished:
+        name = t["labels"]["where"].rsplit(" / ", 1)[0]
+        closed[space] = (max(finished, closed.get(space, (0,))[0]), name)
+
+for ms, name in sorted(closed.values()):
+    when = dt.datetime.fromtimestamp(ms / 1000)
+    if when.strftime("%F") == day:
+        print(when.strftime("%H:%M"), name)
+PY
+}

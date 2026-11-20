@@ -1,9 +1,9 @@
 {
-  "git_revision": "a1225587c41c7e036dd0ec038f4c8ca4ebc6be75",
-  "source_hash": "3b35c3f2d781",
+  "git_revision": "890379bedba4d609d36092b68bfc19aaa697f5ae",
+  "source_hash": "d9ad5e43850d",
   "stats": {
     "aliases": 70,
-    "functions": 45,
+    "functions": 46,
     "git": 56,
     "features": 26,
     "tasks": 16,
@@ -620,6 +620,13 @@
     {
       "name": "groot",
       "summary": "Jump to the current git repository root",
+      "usage": "",
+      "source": "system/.functions",
+      "source_kind": "system function"
+    },
+    {
+      "name": "hcc",
+      "summary": "List the herdr spaces closed on a day (default today), oldest first. herdr keeps no close history, so this infers it from hc terminals whose space is gone from the herdr-app layout doc; a space closed with no terminals, or one whose finished terminals were removed, will not show. Usage: hcc [YYYY-MM-DD]",
       "usage": "",
       "source": "system/.functions",
       "source_kind": "system function"

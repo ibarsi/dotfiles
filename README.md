@@ -96,6 +96,7 @@ Use `mise run ...` directly for project workflows:
 - `wtnew <branch> [base]` → create a worktree under `~/worktrees/<repo>/<branch>` and enter it
 - `wtsesh` → attach/create a tmux session for the current repo+branch
 - `wtclean [-n]` → remove worktrees with no open PR and no live hc terminal in them (`-n` = dry run)
+- `hcc [YYYY-MM-DD]` → list herdr spaces closed that day (default today), inferred from leftover hc terminals
 - `pr` → open existing PR in browser or create one
 
 ## Structure
