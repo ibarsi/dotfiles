@@ -1,0 +1,7 @@
+# Reviewed false positives / non-secrets (2026-11-20)
+# herdr keybinding "prefix+shift+down"
+4bf5f012564073750a8c791867cb3466def04100:herdr/config.toml:generic-api-key:93
+# local-only oMLX server key (127.0.0.1)
+c0aaeb318b808f62fcad05624f578548e86bff89:opencode/opencode.json:generic-api-key:22
+# GPG signing key ID (public)
+8c5e27272a39004215b6bcb0dff7a2bdb7cef8d6:.gitconfig:generic-api-key:4
