@@ -10,6 +10,12 @@ import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, layout, setShared } from "herdr";
 import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace } from "./status.js";
 
+// Herdr's own process doesn't source the shell profile that puts `gh` on PATH (same bug
+// as REBASE_ARGV/TRIAGE_ARGV below and codeburn/main.js's PATH_PREFIX). Routing through
+// a login shell resolves PATH the way a terminal would; args travel as real argv via
+// "$@", never interpolated into shell text.
+const gh = (args, opts) => exec("sh", ["-c", 'exec "${SHELL:-sh}" -lic \'exec gh "$@"\' sh "$@"', "sh", ...args], opts);
+
 function find(node, id) {
   if (node?.id === id) return node;
   for (const child of node?.children ?? []) {
@@ -177,7 +183,7 @@ function refreshPrs(cx) {
         }
         q.push(block + " }");
       });
-      const r = await exec("gh", ["api", "graphql", ...args, "-f", `query=query(${decl.join(", ")}) { ${q.join("\n")} } ${PR_FRAGMENT}`], { timeout: 30000 });
+      const r = await gh(["api", "graphql", ...args, "-f", `query=query(${decl.join(", ")}) { ${q.join("\n")} } ${PR_FRAGMENT}`], { timeout: 30000 });
       if (r.code !== 0) return;
       const data = JSON.parse(r.stdout).data ?? {};
       const byKey = {};

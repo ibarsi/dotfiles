@@ -76,10 +76,12 @@ size, centered in the existing 24px columns; hover shows their meaning. Assets l
 in `mods/my-spaces/icons/` and take their colors from the active theme. Status logic
 remains in `mods/my-spaces/status.js` (tested with `node --test
 herdr-app/mods/my-spaces/status.test.mjs`). Click the conflict icon to split a
-`claude --model haiku /rebase` pane (skipping permissions) into that space's shown
+`ccyolo --model haiku /rebase` pane (skipping permissions) into that space's shown
 tab without switching to it. A second click does nothing while that session is
 still running. When CI fails, a red magnifier sits right of the red PR number;
-clicking it splits a `claude --model haiku /ci-triage` pane the same way. PR data comes from one `gh api graphql` query every 60s; ports from one
+clicking it splits a `ccyolo --model haiku /ci-triage` pane the same way. Both
+start through your interactive login shell (`$SHELL -lic`) so the pane gets the
+same PATH as a terminal; herdr's own PATH trips repos' mise toolchain guards. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.
 
 Rows have no letter avatar. Instead, a bar down the row's left edge shows each

@@ -12,6 +12,15 @@ import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT
 import { podProblems, parsePodLines, POD_TEMPLATE } from "./pods.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
 
+// Herdr's own process doesn't source the shell profile that puts `gh`/`argocd`/`claude`
+// on PATH (same bug as my-spaces/indicators.js's REBASE_ARGV/TRIAGE_ARGV and
+// codeburn/main.js's PATH_PREFIX). Routing through a login shell resolves PATH the way
+// a terminal would; args travel as real argv via "$@", never interpolated into shell text.
+const LOGIN_SCRIPT = (bin) => `exec "\${SHELL:-sh}" -lic 'exec ${bin} "$@"' sh "$@"`;
+const viaLogin = (bin) => (args, opts) => exec("sh", ["-c", LOGIN_SCRIPT(bin), "sh", ...args], opts);
+const gh = viaLogin("gh");
+const argocd = viaLogin("argocd");
+
 const AGENT_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku"]; // ccyolo, haiku
 
 // pane.split runs argv bare, so the pane (and, if it was the last one, its tab
@@ -154,7 +163,7 @@ export default class Deploys extends View {
       let ghEntry = null, ghError = null;
       try {
         if (target.pr) {
-          const r = await exec("gh", ["pr", "view", String(target.pr), "-R", target.repo, "--json", "comments"]);
+          const r = await gh(["pr", "view", String(target.pr), "-R", target.repo, "--json", "comments"]);
           if (r.code !== 0) ghError = "Could not reach GitHub";
           else {
             // No bot comment yet just means nothing's deployed there, not an error: section stays hidden.
@@ -217,7 +226,7 @@ export default class Deploys extends View {
     if (!bad) { this.argocdServer = null; this.argocd = null; return; }
     this.argocdServer = bad.server;
     try {
-      const r = await exec("argocd", ["account", "get-user-info", "--server", bad.server, "--grpc-web"]);
+      const r = await argocd(["account", "get-user-info", "--server", bad.server, "--grpc-web"]);
       this.argocd = { loggedIn: r.code === 0 };
     } catch {
       this.argocd = { loggedIn: false };
@@ -230,7 +239,7 @@ export default class Deploys extends View {
     cx.notify();
     const server = this.argocdServer;
     cx.spawn(async (cx) => {
-      try { await exec("argocd", ["login", server, "--sso", "--grpc-web"]); } catch { /* re-checked below either way */ }
+      try { await argocd(["login", server, "--sso", "--grpc-web"]); } catch { /* re-checked below either way */ }
       await this.checkArgocd();
       this.loggingIn = false;
       cx.notify();
@@ -256,14 +265,14 @@ export default class Deploys extends View {
     cx.notify();
     cx.spawn(async (cx) => {
       try {
-        const r = await exec("argocd", ["app", "get", stage.app, "--server", stage.server, "-o", "json", "--grpc-web"]);
+        const r = await argocd(["app", "get", stage.app, "--server", stage.server, "-o", "json", "--grpc-web"]);
         if (r.code !== 0) { this.stageError[key] = r.stderr || "Could not reach ArgoCD"; return; }
         const data = JSON.parse(r.stdout);
         const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`];
         const bad = (data.status?.resources ?? []).filter((res) => (res.health?.status ?? "Healthy") !== "Healthy" && (res.kind === "Deployment" || res.kind === "StatefulSet"));
         if (!bad.length) lines.push("", "No unhealthy Deployment/StatefulSet resources.");
         for (const res of bad) {
-          const logs = await exec("argocd", ["app", "logs", stage.app, "--server", stage.server, "--kind", res.kind, "--group", "apps", "--name", res.name, "--tail", "30", "--grpc-web"]).catch((e) => ({ stdout: "", stderr: String(e) }));
+          const logs = await argocd(["app", "logs", stage.app, "--server", stage.server, "--kind", res.kind, "--group", "apps", "--name", res.name, "--tail", "30", "--grpc-web"]).catch((e) => ({ stdout: "", stderr: String(e) }));
           lines.push("", `== ${res.kind}/${res.name} (last 30) ==`, (logs.stdout || logs.stderr || "(no output)").trimEnd());
         }
         this.stageLogs[key] = lines.join("\n");
