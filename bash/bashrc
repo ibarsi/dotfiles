@@ -26,5 +26,10 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 if command -v mise >/dev/null 2>&1; then
+    # A parent (herdr, uwsm) can hand us a PATH with mise tool dirs already
+    # behind /usr/bin; mise leaves such entries where they are, so system
+    # binaries shadow the pinned ones and the repo toolchain guard refuses to
+    # run. Drop them so activate re-adds them ahead of system paths.
+    PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v -E '/mise/installs/' | paste -sd: -)
     eval "$(mise activate bash)"
 fi

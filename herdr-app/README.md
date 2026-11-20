@@ -242,6 +242,10 @@ state/fetching, `ui.js` for render helpers, and `model.js` for every number
 the panel shows (no imports, tested with `node --test
 herdr-app/mods/codeburn/model.test.mjs`).
 
+`my-tabs` enables the Deploys, Code Burn and PR Reviews buttons itself on
+first launch (`workspace.panels`, `// panels`): `panel-body` only mounts the
+active panel, so a mod's own `init()` can't register a button that doesn't exist yet.
+
 Each refresh (every 60s while shown, plus a manual Refresh) runs up to three
 `codeburn` calls for the selected range chip and the current month (skipped
 when the chip already is "Month"): `codeburn status --format menubar-json

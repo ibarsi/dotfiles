@@ -35,13 +35,13 @@ export default class Tabs extends View {
     if (!this.panels || typeof this.panels !== "object" || Array.isArray(this.panels)) this.panels = {};
     this.swipe = { acc: 0, steps: 0, at: 0, last: 0 };
     // panel-body only mounts its active child, so pr-reviews' own init() (which
-    // would normally self-register, like deploys' does) never runs until its tab
+    // would normally self-register, like deploys' and codeburn's do) never runs until its tab
     // button already exists — and deploys only escapes that trap because the
     // sidebar PR chip force-selects it once. my-tabs always mounts, so it seeds
-    // the one-time enable here instead, and drops files/changes (not used here). // panels
+    // the one-time enable for all three here instead, and drops files/changes (not used here). // panels
     const was = shared("workspace.panels") ?? ["files", "changes"];
     const enabled = was.filter((p) => p !== "files" && p !== "changes");
-    if (!enabled.includes("pr-reviews")) enabled.push("pr-reviews");
+    for (const p of ["deploys", "codeburn", "pr-reviews"]) if (!enabled.includes(p)) enabled.push(p); // panels
     if (JSON.stringify(enabled) !== JSON.stringify(was)) setShared("workspace.panels", enabled); // panels
   }
 
