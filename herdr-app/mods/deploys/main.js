@@ -7,7 +7,7 @@
 import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, theme, shared, setShared, layout } from "herdr";
-import { parseComment, parseApps, reconcileLive, isUnhealthy, isFailed } from "./parse.js";
+import { parseComment, parseApps, reconcileLive, isFailed } from "./parse.js";
 import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT, LOCAL_CHILD_GROUPS } from "./local.js";
 import { podProblems, parsePodLines, POD_TEMPLATE } from "./pods.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
@@ -242,11 +242,13 @@ export default class Deploys extends View {
 
   async checkArgocd() {
     const stages = (this.sources ?? []).flatMap((s) => s.targets.flatMap((t) => t.stages));
-    const bad = stages.find((s) => isUnhealthy(s.status) && s.server);
-    if (!bad) { this.argocdServer = null; this.argocd = null; return; }
-    this.argocdServer = bad.server;
+    // Any remote stage, not just an unhealthy one: opening a stage calls the ArgoCD
+    // CLI, so an expired login must show up even while everything reads Healthy.
+    const remote = stages.find((s) => s.server);
+    if (!remote) { this.argocdServer = null; this.argocd = null; return; }
+    this.argocdServer = remote.server;
     try {
-      const r = await argocd(["account", "get-user-info", "--server", bad.server, "--grpc-web"]);
+      const r = await argocd(["account", "get-user-info", "--server", remote.server, "--grpc-web"]);
       this.argocd = { loggedIn: r.code === 0 };
     } catch {
       this.argocd = { loggedIn: false };
@@ -286,7 +288,11 @@ export default class Deploys extends View {
     cx.spawn(async (cx) => {
       try {
         const r = await argocd(["app", "get", stage.app, "--server", stage.server, "-o", "json", "--grpc-web"]);
-        if (r.code !== 0) { this.stageError[key] = r.stderr || "Could not reach ArgoCD"; return; }
+        if (r.code !== 0) {
+          this.stageError[key] = r.stderr || "Could not reach ArgoCD";
+          if (/Unauthenticated|token is expired/i.test(this.stageError[key])) await this.checkArgocd(); // surfaces the Log in link
+          return;
+        }
         const data = JSON.parse(r.stdout);
         const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`];
         const bad = (data.status?.resources ?? []).filter((res) => (res.health?.status ?? "Healthy") !== "Healthy" && (res.kind === "Deployment" || res.kind === "StatefulSet"));
