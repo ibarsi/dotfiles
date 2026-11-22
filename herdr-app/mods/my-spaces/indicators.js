@@ -8,7 +8,7 @@
 import { div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, layout, setShared } from "herdr";
-import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, argoGlyph } from "./status.js";
 
 // Herdr's own process doesn't source the shell profile that puts `gh` on PATH (same bug
 // as REBASE_ARGV/TRIAGE_ARGV below and codeburn/main.js's PATH_PREFIX). Routing through
@@ -72,6 +72,39 @@ else
   ss -ltnpH 2>/dev/null | awk '{n = split($4, a, ":"); port = a[n]
     while (match($0, /pid=[0-9]+/)) { print "L", substr($0, RSTART+4, RLENGTH-4), port; $0 = substr($0, RSTART+RLENGTH) }}'
 fi`;
+
+// GitHub's own Deployment status is a one-time record from whatever workflow run last
+// touched it, for every state (success, in-progress, failed, paused) alike: it never
+// moves again once that run finishes, even after someone changes the sync outside that
+// workflow (e.g. a manual `argocd app sync` retry, or a later unrelated deploy). ArgoCD
+// is the truth, same as deploys/main.js's reconcileLive: the icon follows live sync/health
+// for the PR's main branch-deploy app whenever that app can be reached, for any GH state.
+const argocdApp = (pr) => `max1-dev-us-gcp-e4-bnk-pr-${pr}`;
+const MGT_CONTEXTS = "mgt1-dev-us-gcp-e4"; // ArgoCD runs on the management cluster, not the workload cluster
+const PICK_CONTEXT = `have=$(kubectl config get-contexts -o name 2>&1) || exit 4
+ctx=; for c in $1; do printf '%s\n' "$have" | grep -Fxq "$c" && { ctx=$c; break; }; done
+[ -n "$ctx" ] || exit 3
+`;
+const APPS_SH = `${PICK_CONTEXT}kubectl --context "$ctx" get applications.argoproj.io -n sys-argocd --no-headers -o custom-columns=N:.metadata.name,H:.status.health.status,S:.status.sync.status --request-timeout=8s`;
+const loginSh = (args, opts) => exec("sh", ["-c", 'exec "${SHELL:-sh}" -lic \'exec sh "$@"\' sh "$@"', "sh", ...args], opts);
+
+// One `kubectl get applications` list per machine covers every open PR's deploy icon,
+// the same batching prKeys uses for the per-machine KEYS_SH exec.
+async function checkDeployHealth(targets) {
+  const byMachine = {};
+  for (const [id, tg] of Object.entries(targets)) if (tg.pr) (byMachine[tg.machine ?? ""] ??= []).push([id, tg]);
+  await Promise.all(Object.entries(byMachine).map(async ([machine, list]) => {
+    try {
+      const r = await loginSh(["-c", APPS_SH, "sh", MGT_CONTEXTS], { on: machine || null, cwd: list[0][1].cwd, timeout: 10000 });
+      if (r.code !== 0) return;
+      const apps = parseApps(r.stdout);
+      for (const [id, tg] of list) {
+        const glyph = argoGlyph(apps[argocdApp(tg.pr)]);
+        if (glyph && prs[id]) { prs[id].deploy = glyph; version++; }
+      }
+    } catch { /* machine away or no matching context: leave the GitHub status showing */ }
+  }));
+}
 
 const prs = {}; // space id -> summary (see summarize)
 const prNums = {}; // "owner/repo branch" -> PR number, for the deployment lookup next refresh
@@ -210,6 +243,7 @@ function refreshPrs(cx) {
         }
       }
       publishTargets(targets);
+      checkDeployHealth(targets); // not awaited: recolors deploy icons once ArgoCD answers, without delaying this refresh
       prsNext = Date.now() + PR_EVERY;
     } catch {
       // Machine away, rate limit, gh missing: keep showing the last values

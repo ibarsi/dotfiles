@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, argoGlyph } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -84,4 +84,19 @@ test("terminalSpace prefixes remote spaces from the address", () => {
   assert.equal(terminalSpace({ address: "t3", labels }), "sp1");
   assert.equal(terminalSpace({ address: "omen/t1k", labels }), "omen/sp1");
   assert.equal(terminalSpace({ address: "omen/t1k" }), null);
+});
+
+test("parseApps reads the three-column kubectl output and skips short lines", () => {
+  assert.deepEqual(parseApps("a  Healthy  Synced\nb  Degraded  OutOfSync\n\nbad line\n"), { a: { health: "Healthy", sync: "Synced" }, b: { health: "Degraded", sync: "OutOfSync" } });
+});
+
+test("argoGlyph maps ArgoCD's sync/health onto GitHub's 4 deploy states", () => {
+  assert.equal(argoGlyph({ health: "Healthy", sync: "Synced" }), "▲");
+  assert.equal(argoGlyph({ health: "Progressing", sync: "Synced" }), "△");
+  assert.equal(argoGlyph({ health: "Healthy", sync: "OutOfSync" }), "△");
+  assert.equal(argoGlyph({ health: "Degraded", sync: "Synced" }), "▼");
+  assert.equal(argoGlyph({ health: "Suspended", sync: "Synced" }), "॥");
+  assert.equal(argoGlyph({ health: "Missing", sync: "Unknown" }), "॥");
+  assert.equal(argoGlyph({ health: "Unknown", sync: "Unknown" }), null);
+  assert.equal(argoGlyph(undefined), null);
 });

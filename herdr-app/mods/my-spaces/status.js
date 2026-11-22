@@ -41,3 +41,19 @@ export function terminalSpace(t) {
   const m = t.machine ?? (t.address?.includes("/") ? t.address.split("/")[0] : null);
   return m ? `${m}/${sp}` : sp;
 }
+
+// `kubectl get applications -o custom-columns=N:..,H:..,S:..` (no headers) -> { name: { health, sync } }.
+export function parseApps(stdout) {
+  return Object.fromEntries(stdout.split("\n").map((l) => l.trim().split(/\s+/)).filter((c) => c[0] && c.length >= 3).map(([n, h, s]) => [n, { health: h, sync: s }]));
+}
+
+// Maps ArgoCD's (sync, health) onto the same 4 states GitHub's Deployment API reports;
+// null for a combination too ambiguous to recolor the icon from (e.g. Unknown).
+export function argoGlyph(app) {
+  if (!app) return null;
+  if (app.health === "Degraded") return "▼";
+  if (app.health === "Suspended" || app.health === "Missing") return "॥";
+  if (app.health === "Progressing" || app.sync === "OutOfSync") return "△";
+  if (app.health === "Healthy" && app.sync === "Synced") return "▲";
+  return null;
+}
