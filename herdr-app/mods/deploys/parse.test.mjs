@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/deploys/parse.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseComment, isUnhealthy, isFailed } from "./parse.js";
+import { parseComment, parseApps, reconcileLive, isUnhealthy, isFailed } from "./parse.js";
 
 // A real `gh pr view <n> --json comments` body (PR 5598, trimmed of nothing):
 // backtick-wrapped names, a nested "Recorded services" <details> inside
@@ -139,4 +139,74 @@ test("no comment parses to null", () => {
 test("isFailed is only broken stages, not ones still settling", () => {
   for (const s of ["Degraded", "Failed", "Sync error", "Timed out"]) assert.equal(isFailed(s), true, s);
   for (const s of ["Healthy", "Ready", "Progressing", "Missing 0/72", "Missing", "Unknown", "Suspended", "Torn down", undefined]) assert.equal(isFailed(s), false, String(s));
+});
+
+// PR 5762: the sync workflow gave up ("Sync failed 3 times") but ArgoCD
+// converged afterwards, and the Recorded services list flagged a tag mismatch.
+const STALE = `<!-- branch-deploy-status -->
+### Branch Deploy — ❌ 1 of 1 targets need attention
+
+| Target | Status | Waves | Images | Preview |
+|---|---|---|---|---|
+| \`platform\` | ❌ Sync failed 3 times on \`a2a276e\`, retries stopped | 5 of 5 | main [\`450d6f2\`](https://github.com/x/y/commit/450d6f2) + 63 changed | — |
+
+<details open><summary><code>platform</code> details</summary>
+
+- 1. [\`mesh\`](https://argocd.dev.usemaximum.net/applications/sys-argocd/max1-dev-us-gcp-e4-bnk-pr-5762-mesh?view=tree) (✅ Healthy)
+- 2. [\`platform\`](https://argocd.dev.usemaximum.net/applications/sys-argocd/max1-dev-us-gcp-e4-bnk-pr-5762-platform?view=tree) (✅ Healthy)
+
+<details><summary>Recorded services (2)</summary>
+
+- \`gat-main\` — this PR, [\`a2a276e\`](https://github.com/x/y/commit/a2a276e)
+- ⚠️ \`inf-temporal\` recorded [\`a2a276e\`](https://github.com/x/y/commit/a2a276e), running \`branch-5762-0ceffd76\`
+
+</details>
+
+</details>
+`;
+const PARENT = "max1-dev-us-gcp-e4-bnk-pr-5762";
+const live = (health, sync = "Synced") => ({ health, sync });
+const allLive = () => ({ [PARENT]: live("Healthy"), [`${PARENT}-mesh`]: live("Healthy"), [`${PARENT}-platform`]: live("Healthy") });
+
+test("surfaces ⚠️ Recorded-services lines as issues, links and backticks stripped", () => {
+  assert.deepEqual(parseComment(STALE).targets[0].issues, ["inf-temporal recorded a2a276e, running branch-5762-0ceffd76"]);
+  assert.deepEqual(parseComment(COMMENT).targets[0].issues, []);
+});
+
+test("parseApps reads the three-column kubectl output and skips short lines", () => {
+  assert.deepEqual(parseApps("a  Healthy  Synced\nb  Degraded  OutOfSync\n\nbad line\n"), { a: live("Healthy"), b: { health: "Degraded", sync: "OutOfSync" } });
+});
+
+test("a failed bot status is overridden when ArgoCD has converged", () => {
+  const tg = parseComment(STALE).targets[0];
+  reconcileLive(tg, allLive(), PARENT);
+  assert.equal(tg.status, "Healthy");
+  assert.match(tg.note, /Sync failed 3 times/);
+});
+
+test("the failed status stays while any app is not Synced and Healthy", () => {
+  for (const bad of [live("Degraded"), live("Healthy", "OutOfSync"), undefined]) {
+    const tg = parseComment(STALE).targets[0];
+    const apps = allLive();
+    apps[`${PARENT}-platform`] = bad;
+    reconcileLive(tg, apps, PARENT);
+    assert.match(tg.status, /Sync failed/);
+    assert.equal(tg.note, undefined);
+  }
+});
+
+test("stage health follows ArgoCD even when the target stays failed", () => {
+  const tg = parseComment(STALE).targets[0];
+  const apps = allLive();
+  apps[`${PARENT}-mesh`] = live("Degraded");
+  reconcileLive(tg, apps, PARENT);
+  assert.equal(tg.stages[0].status, "Degraded");
+  assert.match(tg.status, /Sync failed/);
+});
+
+test("a linkless unhealthy stage blocks the override", () => {
+  const tg = parseComment(COMMENT).targets[0];
+  tg.status = "Sync failed 3 times";
+  reconcileLive(tg, {}, "none");
+  assert.match(tg.status, /Sync failed/);
 });

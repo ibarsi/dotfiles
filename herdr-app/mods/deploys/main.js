@@ -7,7 +7,7 @@
 import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, theme, shared, setShared, layout } from "herdr";
-import { parseComment, isUnhealthy, isFailed } from "./parse.js";
+import { parseComment, parseApps, reconcileLive, isUnhealthy, isFailed } from "./parse.js";
 import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT, LOCAL_CHILD_GROUPS } from "./local.js";
 import { podProblems, parsePodLines, POD_TEMPLATE } from "./pods.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
@@ -20,6 +20,7 @@ const LOGIN_SCRIPT = (bin) => `exec "\${SHELL:-sh}" -lic 'exec ${bin} "$@"' sh "
 const viaLogin = (bin) => (args, opts) => exec("sh", ["-c", LOGIN_SCRIPT(bin), "sh", ...args], opts);
 const gh = viaLogin("gh");
 const argocd = viaLogin("argocd");
+const loginSh = viaLogin("sh"); // kubectl is a mise shim: needs the login PATH, same as gh/argocd
 
 const AGENT_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku"]; // ccyolo, haiku
 
@@ -60,8 +61,11 @@ const REMOTE_CONTEXTS = [
 ].join(" ");
 const remoteNamespace = (target, pr) => (target === "platform" ? `bnk-pr-${pr}` : `${target}-pr-${pr}`);
 
-// $1: space-separated candidate contexts, first one configured wins.
-const PICK_CONTEXT = `ctx=; for c in $1; do kubectl config get-contexts "$c" >/dev/null 2>&1 && { ctx=$c; break; }; done
+// $1: space-separated candidate contexts, first one configured wins. A kubectl that
+// can't run at all (mise shim without a version for this cwd, binary missing) exits 4
+// with its own stderr, so it isn't misreported as an unconfigured context (exit 3).
+const PICK_CONTEXT = `have=$(kubectl config get-contexts -o name 2>&1) || { echo "$have" >&2; exit 4; }
+ctx=; for c in $1; do printf '%s\\n' "$have" | grep -Fxq "$c" && { ctx=$c; break; }; done
 [ -n "$ctx" ] || { echo "no-context" >&2; exit 3; }
 `;
 const PODS_SH = `${PICK_CONTEXT}kubectl --context "$ctx" get pods -n "$2" -o go-template="$3" --request-timeout=8s`;
@@ -74,17 +78,29 @@ echo; echo "== Logs\${4:+ ($4)} (last 30) =="
 kubectl --context "$ctx" -n "$2" logs "$3" "$sel" --tail 30 --previous --request-timeout=8s 2>/dev/null \\
   || kubectl --context "$ctx" -n "$2" logs "$3" "$sel" --tail 30 --request-timeout=8s 2>&1`;
 
-function podsError(stderr, on) {
+// ArgoCD runs on the management cluster, not the workload cluster the pods are on.
+const MGT_CONTEXTS = "mgt1-dev-us-gcp-e4";
+const APPS_SH = `${PICK_CONTEXT}kubectl --context "$ctx" get applications.argoproj.io -n sys-argocd --no-headers -o custom-columns=N:.metadata.name,H:.status.health.status,S:.status.sync.status --request-timeout=8s`;
+// Branch-deploy app names, mirroring usemaximum/maximum's branch_deploy/targets.py.
+const remoteApp = (target, pr) => (target === "platform" ? `max1-dev-us-gcp-e4-bnk-pr-${pr}` : `max1-dev-us-gcp-e4-${target}-pr-${pr}`);
+
+async function fetchLiveApps({ on, cwd }) {
+  const r = await loginSh(["-c", APPS_SH, "sh", MGT_CONTEXTS], { timeout: 15000, on: on || null, cwd }).catch(() => null);
+  return r?.code === 0 ? parseApps(r.stdout) : null; // null: keep the bot comment as is
+}
+
+function podsError(stderr, on, cwd) {
   const where = on || "this computer";
   if (/no-context/.test(stderr)) return `No kube context for this cluster on ${where}`;
   if (/Reauthentication|refreshing your current auth|gcloud auth login/.test(stderr)) return `GKE auth expired on ${where}: run gcloud auth login`;
-  if (/plugin not found|No version is set for shim/.test(stderr)) return `kubectl or gke-gcloud-auth-plugin not available on ${where}`;
-  return "Could not list pods";
+  if (/plugin not found|No version is set for shim|kubectl.*not found/.test(stderr)) return `kubectl or gke-gcloud-auth-plugin not available on ${where}${cwd ? ` (in ${cwd})` : ""}`;
+  const reason = stderr.trim().split("\n").pop();
+  return reason ? `Could not list pods: ${reason.slice(0, 120)}` : "Could not list pods";
 }
 
 async function fetchPods({ context, namespace, on, cwd }) {
-  const r = await exec("sh", ["-c", PODS_SH, "sh", context, namespace, POD_TEMPLATE], { timeout: 15000, on: on || null, cwd }).catch((e) => ({ code: 1, stderr: String(e) }));
-  if (r.code !== 0) return { error: podsError(r.stderr ?? "", on) };
+  const r = await loginSh(["-c", PODS_SH, "sh", context, namespace, POD_TEMPLATE], { timeout: 15000, on: on || null, cwd }).catch((e) => ({ code: 1, stderr: String(e) }));
+  if (r.code !== 0) return { error: podsError(r.stderr ?? "", on, cwd) };
   return podProblems(parsePodLines(r.stdout));
 }
 
@@ -176,6 +192,10 @@ export default class Deploys extends View {
         ghError = "Could not reach GitHub";
       }
       const localEntry = await this.fetchLocal(target.branch, target.machine, target.cwd).catch(() => ({ name: "Local", summary: "Could not read local ArgoCD state", targets: [] }));
+      if (ghEntry && target.pr) {
+        const apps = await fetchLiveApps(target);
+        if (apps) for (const tg of ghEntry.targets) if (tg.status !== "Torn down") reconcileLive(tg, apps, remoteApp(tg.name, target.pr));
+      }
       const sources = [ghEntry, localEntry].filter(Boolean);
       await Promise.all(sources.flatMap((s) => s.targets).filter((tg) => tg.pods).map(async (tg) => Object.assign(tg.pods, await fetchPods(tg.pods))));
       if (JSON.stringify(this.target()) !== JSON.stringify(target)) return; // stale: space or branch moved on
@@ -315,7 +335,7 @@ export default class Deploys extends View {
     cx.notify();
     cx.spawn(async (cx) => {
       try {
-        const r = await exec("sh", ["-c", POD_DETAIL_SH, "sh", s.context, s.namespace, s.pod, s.container ?? ""], { timeout: 30000, on: s.on || null, cwd: s.cwd });
+        const r = await loginSh(["-c", POD_DETAIL_SH, "sh", s.context, s.namespace, s.pod, s.container ?? ""], { timeout: 30000, on: s.on || null, cwd: s.cwd });
         this.stageLogs[key] = (r.stdout || r.stderr || "(no output)").trimEnd();
       } catch (e) {
         this.stageError[key] = String(e);
@@ -425,6 +445,8 @@ export default class Deploys extends View {
         .child(div().flex_1())
         .when(tg.links.length > 0, (el) => el.child(h_flex().gap(10)
           .children(tg.links.map((l) => Link({ id: `deploy-link-${tg.name}-${l.label}`, label: l.label, onClick: () => openUrl(l.url) }))))))
+      .when(Boolean(tg.note), (el) => el.child(div().px(2).pb(2).text_size(TEXT.caption).text_color(t.dim).child(tg.note)))
+      .children((tg.issues ?? []).map((i) => div().px(2).pb(2).text_size(TEXT.caption).text_color(t.ansi3).child(`⚠ ${i}`)))
       .children(tg.stages.map((s) => this.stageRow(sourceName, tg, s, t)))
       .when(Boolean(tg.pods), (el) => el.child(this.podsBlock(sourceName, tg, t)));
   }

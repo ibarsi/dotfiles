@@ -69,12 +69,44 @@ function parseTargets(body) {
     if (name === "Target" || /^:?-+:?$/.test(name)) continue;
     rows.push({ name: stripBackticks(name), status: cleanStatus(status), waves: waves.trim(), links: preview.trim() === "—" ? [] : parseLinks(preview) });
   }
-  const blocks = topLevelDetailsBlocks(body).map(stripNestedDetails);
-  return rows.map((row, i) => ({ ...row, stages: (blocks[i] ?? "").split("\n").map(parseStageLine).filter(Boolean) }));
+  const raw = topLevelDetailsBlocks(body);
+  const blocks = raw.map(stripNestedDetails);
+  return rows.map((row, i) => ({ ...row, stages: (blocks[i] ?? "").split("\n").map(parseStageLine).filter(Boolean), issues: parseIssues(raw[i] ?? "") }));
+}
+
+// The nested "Recorded services" list flags a service whose live pods run a
+// different image than the one recorded with a leading ⚠️; the rest of that
+// list is noise for the panel.
+function parseIssues(block) {
+  return block.split("\n")
+    .map((l) => /^-\s*⚠️\s*(.+)$/.exec(l)?.[1])
+    .filter(Boolean)
+    .map((t) => t.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replaceAll("`", ""));
 }
 
 export function parseComment(body) {
   if (!body) return null;
   const title = /^###\s+Branch Deploy\s+—\s+(.+)$/m.exec(body);
   return { name: "Branch deploy", summary: title?.[1]?.trim() ?? "", targets: parseTargets(body) };
+}
+
+// `kubectl get applications -o custom-columns=N:..,H:..,S:..` (no headers) -> { name: { health, sync } }.
+export function parseApps(stdout) {
+  return Object.fromEntries(stdout.split("\n").map((l) => l.trim().split(/\s+/)).filter((c) => c[0] && c.length >= 3).map(([n, h, s]) => [n, { health: h, sync: s }]));
+}
+
+// The bot comment only updates when the deploy workflow writes it, so a sync
+// that failed its retries stays "Sync failed" after ArgoCD converges on its
+// own. ArgoCD is the truth: stage health always follows it, and a failed
+// target whose apps are all Synced and Healthy is shown Healthy, with the
+// comment's claim kept in `note`.
+export function reconcileLive(target, apps, parentApp) {
+  const live = (app) => (app ? apps[app] : undefined);
+  for (const s of target.stages) if (live(s.app)) s.status = live(s.app).health;
+  const watched = [parentApp, ...target.stages.map((s) => s.app)].filter(Boolean);
+  const converged = watched.length > 0 && target.stages.every((s) => s.app || !isUnhealthy(s.status)) && watched.every((a) => live(a)?.health === "Healthy" && live(a)?.sync === "Synced");
+  if (isFailed(target.status) && converged) {
+    target.note = `Bot comment says "${target.status}", but ArgoCD is Synced and Healthy`;
+    target.status = "Healthy";
+  }
 }
