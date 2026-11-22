@@ -97,16 +97,24 @@ export function parseApps(stdout) {
 
 // The bot comment only updates when the deploy workflow writes it, so a sync
 // that failed its retries stays "Sync failed" after ArgoCD converges on its
-// own. ArgoCD is the truth: stage health always follows it, and a failed
-// target whose apps are all Synced and Healthy is shown Healthy, with the
-// comment's claim kept in `note`.
+// own, and an image-mismatch notice outlives the rollout that fixed it.
+// ArgoCD is the truth: stage health always follows it, a failed target whose
+// apps are all Synced and Healthy is shown Healthy, and its stale image
+// notices are dropped.
 export function reconcileLive(target, apps, parentApp) {
   const live = (app) => (app ? apps[app] : undefined);
   for (const s of target.stages) if (live(s.app)) s.status = live(s.app).health;
   const watched = [parentApp, ...target.stages.map((s) => s.app)].filter(Boolean);
   const converged = watched.length > 0 && target.stages.every((s) => s.app || !isUnhealthy(s.status)) && watched.every((a) => live(a)?.health === "Healthy" && live(a)?.sync === "Synced");
-  if (isFailed(target.status) && converged) {
-    target.note = `Bot comment says "${target.status}", but ArgoCD is Synced and Healthy`;
-    target.status = "Healthy";
-  }
+  if (isFailed(target.status) && converged) target.status = "Healthy";
+  if (converged && target.issues?.length) target.issues = [];
+}
+
+// The bot's own title line ("❌ 1 of 2 targets need attention") goes stale
+// the same way a target's status does, one level up — recompute it from
+// targets already reconciled against live ArgoCD.
+export function summarize(targets) {
+  const bad = targets.filter((tg) => isFailed(tg.status)).length;
+  if (!bad) return "✅ All targets healthy";
+  return `❌ ${bad} of ${targets.length} target${targets.length === 1 ? "" : "s"} need attention`;
 }

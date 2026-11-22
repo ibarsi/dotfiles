@@ -7,7 +7,7 @@
 import { View, div } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, theme, shared, setShared, layout } from "herdr";
-import { parseComment, parseApps, reconcileLive, isFailed } from "./parse.js";
+import { parseComment, parseApps, reconcileLive, summarize, isFailed } from "./parse.js";
 import { branchSuffix, bankInstance, bankNamespace, parentAppName, LOCAL_CONTEXT, LOCAL_CHILD_GROUPS } from "./local.js";
 import { podProblems, parsePodLines, POD_TEMPLATE } from "./pods.js";
 import { TEXT, Panel, PanelHeader, Badge, IconButton, Row, Chevron, Link, CodeBlock, Message, Busy } from "./ui.js";
@@ -160,10 +160,13 @@ export default class Deploys extends View {
     const visible = showing();
     const target = this.target();
     const key = target ? `${target.repo}@${target.branch}` : null;
-    if (visible && (!this.wasVisible || key !== this.key || Date.now() - this.lastFetch > FETCH_EVERY)) {
+    const opening = visible && !this.wasVisible;
+    if (visible && (opening || key !== this.key || Date.now() - this.lastFetch > FETCH_EVERY)) {
       const switched = key !== this.key;
       this.key = key;
-      if (switched) { this.sources = null; this.error = null; this.resetStages(); }
+      // Opening the panel (not just switching target) should also drop any open
+      // drawers: reopening one re-fetches instead of showing what an earlier credential/session saw.
+      if (switched || opening) { this.sources = null; this.error = null; this.resetStages(); }
       if (target) this.fetch(cx, target);
       else { this.sources = null; this.error = "No repo detected for this space"; cx.notify(); }
     }
@@ -193,8 +196,11 @@ export default class Deploys extends View {
       }
       const localEntry = await this.fetchLocal(target.branch, target.machine, target.cwd).catch(() => ({ name: "Local", summary: "Could not read local ArgoCD state", targets: [] }));
       if (ghEntry && target.pr) {
-        const apps = await fetchLiveApps(target);
-        if (apps) for (const tg of ghEntry.targets) if (tg.status !== "Torn down") reconcileLive(tg, apps, remoteApp(tg.name, target.pr));
+        const apps = await fetchLiveApps({ on: target.machine, cwd: target.cwd });
+        if (apps) {
+          for (const tg of ghEntry.targets) if (tg.status !== "Torn down") reconcileLive(tg, apps, remoteApp(tg.name, target.pr));
+          ghEntry.summary = summarize(ghEntry.targets);
+        }
       }
       const sources = [ghEntry, localEntry].filter(Boolean);
       await Promise.all(sources.flatMap((s) => s.targets).filter((tg) => tg.pods).map(async (tg) => Object.assign(tg.pods, await fetchPods(tg.pods))));
@@ -451,7 +457,6 @@ export default class Deploys extends View {
         .child(div().flex_1())
         .when(tg.links.length > 0, (el) => el.child(h_flex().gap(10)
           .children(tg.links.map((l) => Link({ id: `deploy-link-${tg.name}-${l.label}`, label: l.label, onClick: () => openUrl(l.url) }))))))
-      .when(Boolean(tg.note), (el) => el.child(div().px(2).pb(2).text_size(TEXT.caption).text_color(t.dim).child(tg.note)))
       .children((tg.issues ?? []).map((i) => div().px(2).pb(2).text_size(TEXT.caption).text_color(t.ansi3).child(`⚠ ${i}`)))
       .children(tg.stages.map((s) => this.stageRow(sourceName, tg, s, t)))
       .when(Boolean(tg.pods), (el) => el.child(this.podsBlock(sourceName, tg, t)));
@@ -472,7 +477,7 @@ export default class Deploys extends View {
       .child(PanelHeader()
         .child(div().font_semibold().child(target?.pr ? `Deploys · #${target.pr}` : "Deploys"))
         .child(div().flex_1())
-        .child(IconButton({ id: "deploys-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => this.fetch(cx, target) })));
+        .child(IconButton({ id: "deploys-refresh", icon: "refresh", label: "Refresh", spinning: this.loading, disabled: !target, onClick: (cx) => { this.resetStages(); this.fetch(cx, target); } })));
     const body = v_flex().id("deploys-body").flex_1().min_h(0).overflow_y_scrollbar().p(8).gap(2);
     if (!target) body.child(Message(this.error ?? "No repo detected for this space"));
     else {

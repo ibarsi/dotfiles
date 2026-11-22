@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/deploys/parse.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseComment, parseApps, reconcileLive, isUnhealthy, isFailed } from "./parse.js";
+import { parseComment, parseApps, reconcileLive, summarize, isUnhealthy, isFailed } from "./parse.js";
 
 // A real `gh pr view <n> --json comments` body (PR 5598, trimmed of nothing):
 // backtick-wrapped names, a nested "Recorded services" <details> inside
@@ -181,7 +181,6 @@ test("a failed bot status is overridden when ArgoCD has converged", () => {
   const tg = parseComment(STALE).targets[0];
   reconcileLive(tg, allLive(), PARENT);
   assert.equal(tg.status, "Healthy");
-  assert.match(tg.note, /Sync failed 3 times/);
 });
 
 test("the failed status stays while any app is not Synced and Healthy", () => {
@@ -191,7 +190,6 @@ test("the failed status stays while any app is not Synced and Healthy", () => {
     apps[`${PARENT}-platform`] = bad;
     reconcileLive(tg, apps, PARENT);
     assert.match(tg.status, /Sync failed/);
-    assert.equal(tg.note, undefined);
   }
 });
 
@@ -209,4 +207,27 @@ test("a linkless unhealthy stage blocks the override", () => {
   tg.status = "Sync failed 3 times";
   reconcileLive(tg, {}, "none");
   assert.match(tg.status, /Sync failed/);
+});
+
+test("a stale image-mismatch issue is dropped once ArgoCD has converged", () => {
+  const tg = parseComment(STALE).targets[0];
+  reconcileLive(tg, allLive(), PARENT);
+  assert.deepEqual(tg.issues, []);
+});
+
+test("summarize recomputes the bot's title line from reconciled target statuses", () => {
+  const healthy = parseComment(STALE).targets[0];
+  reconcileLive(healthy, allLive(), PARENT);
+  assert.equal(summarize([healthy]), "✅ All targets healthy");
+  const stillFailing = parseComment(STALE).targets[0];
+  assert.equal(summarize([stillFailing]), "❌ 1 of 1 target need attention");
+  assert.equal(summarize([stillFailing, healthy]), "❌ 1 of 2 targets need attention");
+});
+
+test("an image-mismatch issue stays while the target hasn't converged", () => {
+  const tg = parseComment(STALE).targets[0];
+  const apps = allLive();
+  apps[`${PARENT}-mesh`] = live("Degraded");
+  reconcileLive(tg, apps, PARENT);
+  assert.deepEqual(tg.issues, ["inf-temporal recorded a2a276e, running branch-5762-0ceffd76"]);
 });
