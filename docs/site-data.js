@@ -1,12 +1,12 @@
 window.DOTFILES_DOCS_DATA = {
-  "git_revision": "890379bedba4d609d36092b68bfc19aaa697f5ae",
-  "source_hash": "d9ad5e43850d",
+  "git_revision": "7192eaf2b483895efe22f679b9a61f3c0e8f9f20",
+  "source_hash": "5ffdf62870ce",
   "stats": {
     "aliases": 70,
     "functions": 46,
     "git": 56,
     "features": 26,
-    "tasks": 16,
+    "tasks": 17,
     "bootstrap_links": 15,
     "brews": 37,
     "casks": 26,
@@ -1571,6 +1571,14 @@ window.DOTFILES_DOCS_DATA = {
       "description": "Check herdr-app settings.macos.json and settings.linux.json match apart from zoom, font_size and font_weight",
       "run": [
         "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom, font_size and font_weight. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
+      ],
+      "source": "mise.toml"
+    },
+    {
+      "name": "herdr-test",
+      "description": "Run every herdr-app mod's node tests",
+      "run": [
+        "node --test herdr-app/mods/*/*.test.mjs"
       ],
       "source": "mise.toml"
     },

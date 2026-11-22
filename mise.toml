@@ -62,6 +62,10 @@ description = "Check herdr-app settings.macos.json and settings.linux.json match
 shell = "bash -c"
 run = "diff -u --label settings.macos.json --label settings.linux.json <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.macos.json) <(jq -S 'del(.zoom, .font_size, .font_weight)' herdr-app/settings.linux.json) || { echo 'herdr-app settings differ beyond zoom, font_size and font_weight. Copy the change to the other file, or if the drift is intentional commit with SKIP=herdr-settings-sync.' >&2; exit 1; }"
 
+[tasks.herdr-test]
+description = "Run every herdr-app mod's node tests"
+run = "node --test herdr-app/mods/*/*.test.mjs"
+
 [tasks.bootstrap-verify]
 description = "Verify expected post-bootstrap config links/files"
 run = "./scripts/bootstrap-verify.sh"

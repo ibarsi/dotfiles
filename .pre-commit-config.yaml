@@ -27,3 +27,9 @@ repos:
         language: system
         files: ^herdr-app/settings\.(macos|linux)\.json$
         pass_filenames: false
+      - id: herdr-test
+        name: herdr-app mod tests
+        entry: mise run herdr-test
+        language: system
+        files: ^herdr-app/mods/.*\.m?js$
+        pass_filenames: false

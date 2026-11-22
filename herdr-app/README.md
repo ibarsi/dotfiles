@@ -26,6 +26,9 @@ Ctrl-Shift-C/V to `terminal.copy` and `terminal.paste`.
 Cmd-M minimizes the window and Cmd-A selects all terminal contents, matching
 the macOS defaults added in Herdr 0.1.16.
 
+`mise run herdr-test` runs every mod's `node --test` suite at once; the
+`herdr-test` pre-commit hook runs it whenever a commit touches `mods/**/*.js`.
+
 ## What is tracked
 
 - `keys.json` is linked into `~/.config/herdr-app/`. On top of the app's
