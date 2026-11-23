@@ -57,3 +57,16 @@ export function argoGlyph(app) {
   if (app.health === "Healthy" && app.sync === "Synced") return "▲";
   return null;
 }
+
+// A paused (INACTIVE) deploy is a deliberate GitHub-side state, not a stale record,
+// and ArgoCD keeps reporting the last sync as Healthy: keep the pause over live state.
+// Otherwise the worst of the PR's apps (parent and every child stage) wins; one app
+// ArgoCD can't classify (e.g. sync Unknown after a comparison error) keeps GitHub's state.
+// ponytail: a deploy resumed outside the workflow stays paused here until GitHub's status moves.
+export function liveDeploy(gh, apps) {
+  if (gh === "॥" || !apps.length) return gh;
+  const glyphs = apps.map(argoGlyph);
+  if (glyphs.includes("▼")) return "▼";
+  if (glyphs.includes(null)) return gh;
+  return ["॥", "△"].find((g) => glyphs.includes(g)) ?? "▲";
+}

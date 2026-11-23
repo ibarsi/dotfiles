@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/my-spaces/status.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, argoGlyph } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, argoGlyph, liveDeploy } from "./status.js";
 
 const commit = (committedDate, messageHeadline = "fix") => ({ commit: { committedDate, messageHeadline } });
 const review = (login, submittedAt) => ({ author: login === null ? null : { login }, submittedAt });
@@ -99,4 +99,14 @@ test("argoGlyph maps ArgoCD's sync/health onto GitHub's 4 deploy states", () => 
   assert.equal(argoGlyph({ health: "Missing", sync: "Unknown" }), "॥");
   assert.equal(argoGlyph({ health: "Unknown", sync: "Unknown" }), null);
   assert.equal(argoGlyph(undefined), null);
+});
+
+test("liveDeploy keeps a paused GitHub deploy, otherwise takes the worst live app", () => {
+  const ok = { health: "Healthy", sync: "Synced" };
+  assert.equal(liveDeploy("॥", [ok]), "॥");
+  assert.equal(liveDeploy("▼", [ok, ok]), "▲");
+  assert.equal(liveDeploy("▲", [ok, { health: "Degraded", sync: "Synced" }]), "▼");
+  assert.equal(liveDeploy("▲", [ok, { health: "Progressing", sync: "Synced" }]), "△");
+  assert.equal(liveDeploy("△", [ok, { health: "Healthy", sync: "Unknown" }]), "△");
+  assert.equal(liveDeploy("△", []), "△");
 });

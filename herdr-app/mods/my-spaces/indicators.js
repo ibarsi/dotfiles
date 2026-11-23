@@ -8,7 +8,7 @@
 import { div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { exec, run, spaces, panes, terminals, agents, layout, setShared } from "herdr";
-import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, argoGlyph } from "./status.js";
+import { prStatus, hasComments, alpha, segments, agentKey, terminalSpace, parseApps, liveDeploy } from "./status.js";
 
 // Herdr's own process doesn't source the shell profile that puts `gh` on PATH (same bug
 // as REBASE_ARGV/TRIAGE_ARGV below and codeburn/main.js's PATH_PREFIX). Routing through
@@ -78,7 +78,7 @@ fi`;
 // moves again once that run finishes, even after someone changes the sync outside that
 // workflow (e.g. a manual `argocd app sync` retry, or a later unrelated deploy). ArgoCD
 // is the truth, same as deploys/main.js's reconcileLive: the icon follows live sync/health
-// for the PR's main branch-deploy app whenever that app can be reached, for any GH state.
+// for the PR's branch-deploy apps (parent and child stages) whenever they can be reached.
 const argocdApp = (pr) => `max1-dev-us-gcp-e4-bnk-pr-${pr}`;
 const MGT_CONTEXTS = "mgt1-dev-us-gcp-e4"; // ArgoCD runs on the management cluster, not the workload cluster
 const PICK_CONTEXT = `have=$(kubectl config get-contexts -o name 2>&1) || exit 4
@@ -99,8 +99,11 @@ async function checkDeployHealth(targets) {
       if (r.code !== 0) return;
       const apps = parseApps(r.stdout);
       for (const [id, tg] of list) {
-        const glyph = argoGlyph(apps[argocdApp(tg.pr)]);
-        if (glyph && prs[id]) { prs[id].deploy = glyph; version++; }
+        if (!prs[id]) continue;
+        const parent = argocdApp(tg.pr);
+        const mine = Object.entries(apps).filter(([n]) => n === parent || n.startsWith(`${parent}-`)).map(([, a]) => a);
+        const glyph = liveDeploy(prs[id].deploy, mine);
+        if (glyph !== prs[id].deploy) { prs[id].deploy = glyph; version++; }
       }
     } catch { /* machine away or no matching context: leave the GitHub status showing */ }
   }));
