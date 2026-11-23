@@ -103,11 +103,16 @@ export function parseApps(stdout) {
 // notices are dropped.
 export function reconcileLive(target, apps, parentApp) {
   const live = (app) => (app ? apps[app] : undefined);
-  for (const s of target.stages) if (live(s.app)) s.status = live(s.app).health;
+  const ok = (a) => live(a)?.health === "Healthy" && live(a)?.sync === "Synced";
+  // Health alone hides a stage ArgoCD can't sync or even diff (sync Unknown after a ComparisonError).
+  for (const s of target.stages) if (live(s.app)) s.status = live(s.app).sync === "Synced" ? live(s.app).health : `${live(s.app).health} · ${live(s.app).sync}`;
   const watched = [parentApp, ...target.stages.map((s) => s.app)].filter(Boolean);
-  const converged = watched.length > 0 && target.stages.every((s) => s.app || !isUnhealthy(s.status)) && watched.every((a) => live(a)?.health === "Healthy" && live(a)?.sync === "Synced");
+  const converged = watched.length > 0 && target.stages.every((s) => s.app || !isUnhealthy(s.status)) && watched.every(ok);
   if (isFailed(target.status) && converged) target.status = "Healthy";
   if (converged && target.issues?.length) target.issues = [];
+  // Marks a failure as current rather than a stale bot comment; absent when ArgoCD couldn't be read.
+  const stuck = target.stages.filter((s) => live(s.app) && !ok(s.app)).map((s) => s.name);
+  if (isFailed(target.status) && stuck.length) target.note = `Live ArgoCD confirms it: ${stuck.join(", ")} not Synced and Healthy`;
 }
 
 // The bot's own title line ("❌ 1 of 2 targets need attention") goes stale

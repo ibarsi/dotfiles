@@ -132,6 +132,9 @@ function openUrl(url) {
   exec("open", [url]).catch(() => exec("xdg-open", [url]).catch(() => {}));
 }
 
+// ArgoCD's own reason a sync can't happen (e.g. ComparisonError on an immutable Job), clipped: messages embed whole manifests.
+const conditionLines = (data) => (data.status?.conditions ?? []).map((c) => `${c.type}: ${c.message.length > 400 ? `${c.message.slice(0, 400)}…` : c.message}`);
+
 const statusColor = (status, t) => (status === "Healthy" || status === "Ready" ? t.ansi2 : status === "Torn down" ? t.dim : t.ansi1);
 
 export default class Deploys extends View {
@@ -300,7 +303,7 @@ export default class Deploys extends View {
           return;
         }
         const data = JSON.parse(r.stdout);
-        const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`];
+        const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`, ...conditionLines(data)];
         const bad = (data.status?.resources ?? []).filter((res) => (res.health?.status ?? "Healthy") !== "Healthy" && (res.kind === "Deployment" || res.kind === "StatefulSet"));
         if (!bad.length) lines.push("", "No unhealthy Deployment/StatefulSet resources.");
         for (const res of bad) {
@@ -325,7 +328,7 @@ export default class Deploys extends View {
         const r = await localArgocd(["app", "get", stage.app, "-o", "json"], 20000, stage.machine, stage.cwd);
         if (r.code !== 0) { this.stageError[key] = r.stderr || "Could not reach local ArgoCD"; return; }
         const data = JSON.parse(r.stdout);
-        const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`];
+        const lines = [`sync: ${data.status?.sync?.status ?? "-"}  health: ${data.status?.health?.status ?? "-"}`, ...conditionLines(data)];
         const bad = (data.status?.resources ?? []).filter((res) => (res.health?.status ?? "Healthy") !== "Healthy" && (res.kind === "Deployment" || res.kind === "StatefulSet"));
         if (!bad.length) lines.push("", "No unhealthy Deployment/StatefulSet resources.");
         for (const res of bad) {

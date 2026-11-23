@@ -231,3 +231,19 @@ test("an image-mismatch issue stays while the target hasn't converged", () => {
   reconcileLive(tg, apps, PARENT);
   assert.deepEqual(tg.issues, ["inf-temporal recorded a2a276e, running branch-5762-0ceffd76"]);
 });
+
+test("a stage that can't sync shows its sync, and a live-confirmed failure gets a note", () => {
+  const tg = parseComment(STALE).targets[0];
+  const apps = allLive();
+  apps[`${PARENT}-platform`] = live("Healthy", "Unknown");
+  reconcileLive(tg, apps, PARENT);
+  assert.equal(tg.stages.find((s) => s.name === "platform").status, "Healthy · Unknown");
+  assert.match(tg.status, /Sync failed/);
+  assert.equal(tg.note, "Live ArgoCD confirms it: platform not Synced and Healthy");
+});
+
+test("no note without live data, so an unverified bot status reads as such", () => {
+  const tg = parseComment(STALE).targets[0];
+  reconcileLive(tg, {}, PARENT);
+  assert.equal(tg.note, undefined);
+});
