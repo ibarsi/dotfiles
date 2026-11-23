@@ -235,6 +235,31 @@ snapshot in `upstream/mods/tabs/main.js` like `my-spaces` does for `spaces`;
 `deploys` has no `cloned_from` (nothing to merge), so a second loop runs
 `herdr-app check` on it and any other mod without one.
 
+## Search popup
+
+`ctrl-space /` opens a popup that finds a live terminal by what's in it, on
+this computer or Omen, not only by its name: Cmd-P's stock picker only
+matches names, spaces and agents, so with two dozen terminals open across
+both machines it can't answer "which pane had that error". Typing filters by
+space/tab name, cwd, the terminal's visible screen, or its last 1000 lines of
+scrollback — every word typed must match somewhere, case-insensitive,
+substring only (no fuzzy matching). Results rank name matches above cwd,
+screen, then scrollback, each labelled with which it was, and the right-hand
+pane previews the match in context. ↑/↓ to move, Enter (or a click) switches
+to that space and focuses the terminal, Esc closes.
+
+Nothing runs while the popup is closed: on open it reads every live
+terminal's screen and scrollback fresh with `hc read`, in parallel. Screen
+matches appear immediately (all screens together are ~0.05s); scrollback
+fills in behind a "searching scrollback…" label, since one Claude Code pane's
+1000-line history can take ~1s on top of Omen's own near-instant reads. This
+is the no-cache design `mods/search/` settled on after measuring: a 30s
+background sweep made the popup's results stale for no real savings.
+
+`mods/search/search.js` (no imports, tested with `node --test
+herdr-app/mods/search/search.test.mjs`) is the matching core: `main.js`
+only reads terminals and renders.
+
 ## Code Burn panel
 
 A **Code Burn** button sits in the tabs bar after PR Reviews. It shows what the

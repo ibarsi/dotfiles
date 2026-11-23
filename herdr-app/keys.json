@@ -58,6 +58,7 @@
     "ctrl-8": "space.select:8",
     "ctrl-9": "space.select:9",
     "ctrl-space shift-/": "app.help",
+    "ctrl-space /": "mod.open:search",
     "ctrl-space d": "window.close",
     "ctrl-space h": "pane.split:down",
     "alt-enter": "pane.split:down",

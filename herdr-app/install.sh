@@ -23,11 +23,12 @@ done
 
 # my-spaces is a clone of Herdr's spaces mod plus PR/port indicators. my-tabs is
 # a clone of its tabs mod with Deploys and Code Burn buttons added. deploys,
-# codeburn and pr-reviews are from-scratch panel mods (not clones) for the
-# Deploys and Code Burn chips and the PR Reviews tab. The app doesn't hot-reload
-# through these links; herdr-update re-shows the layout instead.
+# codeburn, pr-reviews and search are from-scratch panel mods (not clones) for
+# the Deploys and Code Burn chips, the PR Reviews tab and the ctrl-space /
+# search popup. The app doesn't hot-reload through these links; herdr-update
+# re-shows the layout instead.
 mkdir -p "$APP_DIR/mods" "$APP_DIR/layouts"
-for mod in my-spaces my-tabs deploys codeburn pr-reviews; do
+for mod in my-spaces my-tabs deploys codeburn pr-reviews search; do
 	if [[ -e "$APP_DIR/mods/$mod" && ! -L "$APP_DIR/mods/$mod" ]]; then
 		mv "$APP_DIR/mods/$mod" "$APP_DIR/mods/$mod.backup.$(date +%Y%m%d%H%M%S)"
 	fi

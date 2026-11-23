@@ -1,7 +1,7 @@
 // node --test herdr-app/mods/search/search.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { words, match, search, snippet } from "./search.js";
+import { words, match, search, snippet, lineKind } from "./search.js";
 
 const e = (o) => ({ address: "t1", name: "", cwd: "", screen: "", scrollback: "", ...o });
 
@@ -39,3 +39,15 @@ test("long lines are capped around the hit", () => {
 
 test("empty query lists everything in order", () =>
   assert.deepEqual(search([e({ address: "a", name: "A" }), e({ address: "b", name: "B" })], " ").map((h) => h.address), ["a", "b"]));
+
+test("lineKind classifies diff, prompt, error and ok lines", () => {
+  assert.equal(lineKind("+  new line"), "add");
+  assert.equal(lineKind("-  old line"), "remove");
+  assert.equal(lineKind("+++ b/file"), null);
+  assert.equal(lineKind("--- a/file"), null);
+  assert.equal(lineKind("➜ herdr-update --check"), "prompt");
+  assert.equal(lineKind("$ ls"), "prompt");
+  assert.equal(lineKind("Error: something failed"), "error");
+  assert.equal(lineKind("  ok    this computer 0.1.21"), "ok");
+  assert.equal(lineKind("just plain output"), null);
+});

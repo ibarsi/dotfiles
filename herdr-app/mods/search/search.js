@@ -76,3 +76,18 @@ export function search(entries, query) {
   }
   return entries.map((e) => match(e, query)).filter(Boolean).sort((a, b) => a.rank - b.rank);
 }
+
+// hc read strips ANSI entirely (no escape codes survive, and the mod API has
+// no per-cell color), so the preview panel can't reproduce real terminal
+// colors. This is a readability heuristic over the plain text instead: shapes
+// common in shell output, not real syntax highlighting. Order matters — a
+// diff line always wins over an incidental "error"/"ok" substring in it.
+export function lineKind(line) {
+  const s = line.trim();
+  if (/^\+(?!\+\+)/.test(s)) return "add";
+  if (/^-(?!--)/.test(s)) return "remove";
+  if (s.startsWith("➜") || /^[$#]\s/.test(s)) return "prompt";
+  if (/error|fail|✗|✖/i.test(s)) return "error";
+  if (/^ok\b|success|✓/i.test(s)) return "ok";
+  return null;
+}
