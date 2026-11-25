@@ -32,4 +32,15 @@ if command -v mise >/dev/null 2>&1; then
     # run. Drop them so activate re-adds them ahead of system paths.
     PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v -E '/mise/installs/' | paste -sd: -)
     eval "$(mise activate bash)"
+
+    # Run the real agent binaries, not Omarchy's mise command wrappers. When
+    # mise 2026.10.17 dispatches a wrapper, it drops its shims and wrapper dirs
+    # from PATH and appends the tool dirs after /usr/bin. Every agent then gets
+    # system python3, node and protoc, and the repo toolchain guard refuses in
+    # its hooks. The wrappers exist only for Omarchy agent accounts, which are
+    # not in use here. Verified 2026-11-25 with real claude in herdr terminals.
+    for _agent in claude codex grok; do
+        eval "$_agent() { local bin; bin=\$(mise which $_agent 2>/dev/null) || { command $_agent \"\$@\"; return; }; \"\$bin\" \"\$@\"; }"
+    done
+    unset _agent
 fi

@@ -15,6 +15,7 @@ The installer links `bashrc` under `~/.config/ibarsi-dotfiles/` and appends one 
 1. [Theme exports](../theme/catppuccin.zsh).
 2. Shared `.path`, `.exports`, `.aliases`, `.functions`, then optional `.extra` from [system/](../system/README.md).
 3. zoxide, Starship and mise activation when their binaries exist.
+4. `claude`, `codex` and `grok` functions that run the binary `mise which` resolves. They skip Omarchy's mise command wrappers: mise 2026.10.17 dispatches a wrapper with its tool directories after `/usr/bin`, so an agent started through one runs system `python3`, `node` and `protoc`, and repository toolchain guards refuse. The wrappers only serve Omarchy agent accounts, which this setup does not use.
 
 For a checkout somewhere else, set `DOTFILES` before this fragment is sourced.
 
