@@ -62,6 +62,14 @@ async function both(a, b) {
 // that draws space avatars): one strong color per hue, light and dark alike.
 const MARK = { ansi6: "#22a99a", ansi3: "#e3814f", ansi4: "#5b8def", ansi5: "#8b7cf6", ansi2: "#3fae6a", ansi1: "#d9649a" };
 
+// Keep the whole leading emoji in the avatar (same rule in spaces and picker).
+// Newer pictographs such as 🖥 may be drawn as emoji without VS16. A trailing
+// selector, modifier or joiner can signal that we matched only part of a glyph.
+const EMOJI = /^(?:[#*0-9]\uFE0F?\u20E3|\p{Regional_Indicator}{2}|(?:\p{Emoji_Presentation}|(?=[\u{1F000}-\u{1FFFF}])\p{Extended_Pictographic}|\p{Extended_Pictographic}(?=\uFE0F)|\p{Emoji_Modifier_Base}(?=\p{Emoji_Modifier}))\uFE0F?[\p{Emoji_Modifier}\u{E0020}-\u{E007F}]*(?:\u200D\p{Extended_Pictographic}\uFE0F?\p{Emoji_Modifier}?)*)(?![\p{Grapheme_Extend}\p{Emoji_Modifier}\u200D])/u;
+function spaceAvatar(name) {
+  return EMOJI.exec(name)?.[0] ?? ([...name][0]?.toUpperCase() ?? "?");
+}
+
 // A space speaks up only when something in it needs you.
 export function glyph(status) {
   return status === "blocked" || status === "done" ? "●" : "·";
@@ -448,7 +456,8 @@ export default class Spaces extends View {
   // branch-first: the tail shows the repo plus the space's own folder/name when the
   // title doesn't already say it (named spaces skip it, matching branch names skip it).
   gitTail(g, tree, name, named, t) { // branch-first
-    const same = (a, b) => a.toLowerCase() === b.toLowerCase(); // branch-first
+    const label = (n) => { const e = EMOJI.exec(n)?.[0]; return e ? n.slice(e.length).trim().toLowerCase() : n.toLowerCase(); }; // branch-first: emoji-aware, from spaces 0.1.18
+    const same = (a, b) => a.toLowerCase() === b.toLowerCase() || a.toLowerCase() === label(b); // branch-first
     const folder = named || same(name, g.branch ?? "") ? "" : name; // branch-first
     const repo = tree || same(g.name, name) ? "" : g.name; // branch-first
     const where = [repo, folder].filter(Boolean).join(" · "); // branch-first
