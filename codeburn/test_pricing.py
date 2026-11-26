@@ -37,6 +37,12 @@ class ConfigurationTests(unittest.TestCase):
             with self.subTest(config=config), self.assertRaises(ValueError):
                 module.merge_pricing(config, CATALOG)
 
+    def test_rejects_unlisted_gemini_override(self):
+        catalog = {**CATALOG, "priceOverrides": {**CATALOG["priceOverrides"], "gemini-4-argon": {"input": 2, "output": 10}}}
+        with self.assertRaises(ValueError):
+            module.merge_pricing({}, catalog)
+        self.assertIn("gemini-4-neon", module.merge_pricing({}, CATALOG)["priceOverrides"])
+
     def test_apply_is_backed_up_and_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
             config = Path(directory) / "config.json"

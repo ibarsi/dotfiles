@@ -24,8 +24,13 @@ exports show priority-tier billing exclusively (0 standard-tier dollars), so one
 rate prices them correctly. Gemini 4 Argon and 3.8 Flash mix standard and priority
 traffic under the same model name and stay reference-only, since CodeBurn's Gemini
 parser can't tell which tier a given call billed at — a flat override would
-misprice whichever tier isn't chosen. Small Flash Lite samples need a
-pricing-table export before their exact rates can be configured.
+misprice whichever tier isn't chosen. Gemini 4 Neon is the exception to
+that rule. It mixes tiers (about 72% priority spend in November), but it is
+installed at a blended rate: spend divided by tokens for each token kind in the
+2026-11-25 export. That rate reproduces November exactly and drifts if the tier
+mix changes, so re-derive it from each export. Without it, the panel showed
+Neon at 1/23 of its billed cost. Small Flash Lite samples need a pricing-table
+export before their exact rates can be configured.
 
 ## Apply the verified subset
 
@@ -42,10 +47,10 @@ codeburn price-override --list
 codeburn models --period all
 ```
 
-The first command previews. Applying merges four verified flat Claude model rates
+The first command previews. Applying merges the verified flat model rates
 into `~/.config/codeburn/config.json`, preserving unrelated configuration. Existing
 files receive a timestamped backup; unchanged files are not rewritten. Restore the
-backup to undo an update, or remove the four catalog keys from `priceOverrides`
+backup to undo an update, or remove the catalog keys from `priceOverrides`
 if the config did not exist beforehand. Re-running bootstrap is safe.
 
 ## Background sharing
@@ -78,6 +83,22 @@ Verified against CodeBurn 0.9.28:
   exception: two independent exports show them billing exclusively at the
   priority tier, so a flat override at that rate is installed for both. In
   particular, local 3.5/3.6/3.7 Flash IDs are not assumed to mean billed 3.8 Flash.
+- CodeBurn stores each Antigravity call's cost when it first parses the call,
+  in two caches. A new or changed override does not reprice those calls. After
+  `--apply`, remove both Antigravity caches so CodeBurn parses again:
+
+  ```bash
+  rm ~/.cache/codeburn/antigravity-results.v*.json ~/.cache/codeburn/session-cache.v*/antigravity.*
+  ```
+
+  If you remove only one of them, CodeBurn keeps the old costs. A rebuild only
+  reprices conversations whose files still exist.
+- Antigravity CLI before 1.5.15 deleted all but the 500 most recent conversations
+  at startup, and CodeBurn drops cached calls whose conversation file is gone.
+  CodeBurn therefore has no Omen Antigravity history before 2026-11-18. Later
+  versions keep all conversations. If you delete old conversations, their
+  history also leaves CodeBurn, so delete them only after a billing month is
+  reconciled.
 - Pi can retain agent-recorded costs. Native overrides do not guarantee that every
   Pi history entry is repriced. Compare a known session before treating its total
   as a contract-cost estimate.
