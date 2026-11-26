@@ -17,6 +17,11 @@ import tempfile
 # systematically misprice one tier. Do not add a model here without export
 # evidence that it has never billed standard-tier.
 UNAMBIGUOUS_GEMINI_MODELS = {"gemini-4-carbon", "gemini-4-hydrogen"}
+# Mixed-tier Gemini models priced at a blended rate (spend / tokens per token
+# kind from one export). Accepted for a model whose cached CodeBurn cost is far
+# worse than any tier-mix drift; re-derive the rate from each new export.
+BLENDED_GEMINI_MODELS = {"gemini-4-neon"}
+OVERRIDABLE_GEMINI_MODELS = UNAMBIGUOUS_GEMINI_MODELS | BLENDED_GEMINI_MODELS
 
 
 def merge_pricing(config, catalog):
@@ -24,7 +29,7 @@ def merge_pricing(config, catalog):
     desired = catalog["priceOverrides"]
     if catalog["currency"] != "USD" or catalog["endpoint"] != "global":
         raise ValueError("Only the verified USD/global catalog is supported")
-    if any(not (model.startswith("claude-") or model in UNAMBIGUOUS_GEMINI_MODELS) for model in desired):
+    if any(not (model.startswith("claude-") or model in OVERRIDABLE_GEMINI_MODELS) for model in desired):
         raise ValueError("This catalog must not override personal GPT/Grok or ambiguous Gemini usage")
     existing = config.get("priceOverrides", {})
     if not isinstance(existing, dict):
@@ -57,9 +62,9 @@ def main():
     if not isinstance(original, dict):
         raise ValueError("Existing CodeBurn config is not an object")
     updated = merge_pricing(original, catalog)
-    print("Verified global Claude overrides (USD per million tokens):")
+    print("Verified global overrides (USD per million tokens):")
     print(json.dumps(catalog["priceOverrides"], indent=2))
-    print("Haiku 5.5 keeps native context tiers; Gemini Argon/3.8 Flash/Flash Lite rates remain reference-only.")
+    print("Haiku 5.5 keeps native context tiers; Gemini 4 Neon uses a blended rate; Gemini Argon/3.8 Flash/Flash Lite rates remain reference-only.")
     print("GPT/Grok defaults and unrelated settings are preserved.")
     if updated == original:
         print("Managed rates are current.")

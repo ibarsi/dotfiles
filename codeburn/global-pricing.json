@@ -2,14 +2,15 @@
   "currency": "USD",
   "endpoint": "global",
   "rate_basis": "Current employment contract rates applied to all history",
-  "source": "Billing CSV exported 2026-11-16, usage period 2026-08-01 through 2026-11-30; cross-checked against a second CSV exported 2026-11-18, usage period 2026-11-01 through 2026-11-18; unrounded subtotal divided by token count",
+  "source": "Billing CSV exported 2026-11-16, usage period 2026-08-01 through 2026-11-30; cross-checked against a second CSV exported 2026-11-18, usage period 2026-11-01 through 2026-11-18; Gemini 4 Neon from a third CSV exported 2026-11-25, usage period 2026-11-01 through 2026-11-24; unrounded subtotal divided by token count",
   "priceOverrides": {
     "claude-opus-5-5": { "input": 4, "output": 20, "cacheRead": 0.2, "cacheCreation": 5 },
     "claude-sonnet-5-5": { "input": 2, "output": 10, "cacheRead": 0.1, "cacheCreation": 2.5 },
     "claude-sonnet-5": { "input": 2, "output": 10, "cacheRead": 0.2, "cacheCreation": 2.5 },
     "claude-haiku-4-5": { "input": 1, "output": 5, "cacheRead": 0.1, "cacheCreation": 1.25 },
     "gemini-4-carbon": { "input": 3.6, "output": 18, "cacheRead": 0.18, "cacheCreation": 0 },
-    "gemini-4-hydrogen": { "input": 2.7, "output": 13.5, "cacheRead": 0.135, "cacheCreation": 0 }
+    "gemini-4-hydrogen": { "input": 2.7, "output": 13.5, "cacheRead": 0.135, "cacheCreation": 0 },
+    "gemini-4-neon": { "input": 4.39, "output": 22.35, "cacheRead": 0.218, "cacheCreation": 0 }
   },
   "nativeTieredPricing": {
     "claude-haiku-5-5": {
@@ -34,6 +35,8 @@
     "Gemini priority and standard traffic share model names; the Gemini parser does not preserve priority mode (CodeBurn's Gemini session parser hardcodes speed: 'standard' for every call, with no field to set it from). A flat override is only safe for a model whose billing has never shown a standard-tier line.",
     "Gemini 4 Carbon and Gemini 4 Hydrogen have shown priority-tier billing exclusively across both the 2026-08-01..11-30 and 2026-11-01..11-18 exports (0 standard-tier dollars in either), so they are installed as flat priceOverrides at the priority rate. Hydrogen's prior 'sample too small' caveat is resolved by this second export corroborating the same per-token rate.",
     "Gemini 4 Argon and Gemini 3.8 Flash mix standard and priority traffic in both exports (Argon: ~79%/21% priority/standard in the 2026-11-01..11-18 export) and stay reference-only; a flat override would systematically misprice whichever tier isn't chosen.",
+    "Gemini 4 Neon is a blended override, not a tier rate. The 2026-11-01..11-24 export shows ~72%/28% priority/standard spend (priority 5.4/27/0.27, standard 3/15/0.15, no contract discount on either). The flat rate is spend divided by tokens per token kind, so it reproduces that export exactly and drifts if the tier mix changes. Re-derive it from each new export. The 23x underpricing it replaces (cached $0 costs) was far worse than any tier-mix drift.",
+    "CodeBurn 0.9.28 stores costUSD in its Antigravity cache at parse time. A new or changed override does not reprice cached Antigravity calls until both ~/.cache/codeburn/antigravity-results.v*.json and ~/.cache/codeburn/session-cache.v*/antigravity.* are removed and rebuilt; removing only one keeps the old costs.",
     "Local Gemini 3.5/3.6/3.7 Flash IDs have not been matched to billing SKUs; do not alias them to 3.8 Flash or Argon.",
     "Gemini 3.5 Flash Lite's sample is too small to establish exact rates from this export alone.",
     "Pi can preserve agent-recorded costs instead of recalculating them. An override is not proof that all Pi history was repriced.",
