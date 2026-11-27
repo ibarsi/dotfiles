@@ -121,3 +121,58 @@ export function resumeArgv(s) {
   if (s.tool === "codex") return ["codex", "resume", s.id];
   return ["agy", "--conversation", s.id];
 }
+
+const DAY = 86400e3;
+const AGENT_NAMES = { claude: "claude-code", codex: "codex", agy: "antigravity" };
+
+const under = (dir, parent) => dir === parent || dir.startsWith(parent.replace(/\/+$/, "") + "/");
+
+// The space a session belongs to, on its own machine only: a tab whose live
+// terminal is in that folder, else a space with that folder, else the space
+// with the longest parent folder.
+export function matchSpace(s, spaces, panes) {
+  const mine = spaces.filter((w) => (w.machine ?? null) === (s.machine ?? null));
+  const tabSpace = new Map();
+  for (const w of mine) for (const tb of w.tabs || []) tabSpace.set(tb.id, w);
+  const live = panes.find((p) => p.cwd === s.cwd && tabSpace.has(p.tab));
+  if (live) return tabSpace.get(live.tab);
+  let best = null;
+  for (const w of mine) {
+    if (!w.folder || !under(s.cwd, w.folder)) continue;
+    if (!best || w.folder.length > best.folder.length) best = w;
+  }
+  return best;
+}
+
+export function buildRows(results, spaces, panes, finished, now) {
+  const rows = [], errors = [];
+  for (const r of results) {
+    if (r.error) { errors.push({ machine: r.machine, error: r.error }); continue; }
+    const { boot, sessions } = parseMachine(r.stdout || "", r.machine);
+    for (const s of sessions) {
+      if (now - s.stoppedAt > 7 * DAY) continue;
+      const group = boot && s.stoppedAt < boot && boot - s.stoppedAt < DAY ? "restart" : "recent";
+      const where = finished.find((t) => t.cwd === s.cwd && t.agent === AGENT_NAMES[s.tool]
+        && (t.address.includes("/") ? t.address.split("/")[0] : null) === s.machine)?.where ?? null;
+      rows.push({ ...s, group, space: matchSpace(s, spaces, panes), where });
+    }
+  }
+  rows.sort((a, b) => (a.group === b.group ? b.stoppedAt - a.stoppedAt : a.group === "restart" ? -1 : 1));
+  return { rows, errors };
+}
+
+export function filterRows(rows, query) {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return rows.filter((r) => {
+    const hay = [r.title, r.cwd, r.space?.name, r.tool].filter(Boolean).join(" ").toLowerCase();
+    return words.every((w) => hay.includes(w));
+  });
+}
+
+export function ago(ms, now) {
+  const s = (now - ms) / 1000;
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
+  return `${Math.floor(s / 86400)} d ago`;
+}

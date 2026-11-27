@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseMachine, resumeArgv } from "./sessions.js";
+import { parseMachine, resumeArgv, matchSpace, buildRows, filterRows, ago } from "./sessions.js";
 
 const claude = (id, cwd, extra = {}) => JSON.stringify({ type: "user", entrypoint: "cli", cwd, sessionId: id,
   message: { role: "user", content: "fix the ledger replay" }, ...extra });
@@ -74,4 +74,59 @@ test("resume argv is exact", () => {
   assert.deepEqual(resumeArgv({ tool: "claude", id: "a" }), ["claude", "--resume", "a"]);
   assert.deepEqual(resumeArgv({ tool: "codex", id: "a" }), ["codex", "resume", "a"]);
   assert.deepEqual(resumeArgv({ tool: "agy", id: "a" }), ["agy", "--conversation", "a"]);
+});
+
+const sp = (id, machine, folder, tabs = []) => ({ id, machine, folder, name: id, tabs });
+const S = (cwd, machine = null) => ({ tool: "claude", id: "i", cwd, title: "t", stoppedAt: 0, machine });
+
+test("matchSpace prefers a live terminal folder, then the space folder, then the longest parent", () => {
+  const spaces = [sp("a", null, "/p"), sp("b", null, "/p/x"), sp("c", null, "/q", [{ id: "tc" }])];
+  const panes = [{ tab: "tc", cwd: "/p/x/y" }];
+  assert.equal(matchSpace(S("/p/x/y"), spaces, panes).id, "c");
+  assert.equal(matchSpace(S("/p/x"), spaces, []).id, "b");
+  assert.equal(matchSpace(S("/p/z"), spaces, []).id, "a");
+  assert.equal(matchSpace(S("/px"), spaces, []), null);
+  assert.equal(matchSpace(S("/r"), spaces, []), null);
+});
+
+test("matchSpace never crosses machines", () => {
+  assert.equal(matchSpace(S("/p", "omen"), [sp("a", null, "/p")], []), null);
+  assert.equal(matchSpace(S("/p", "omen"), [sp("o", "omen", "/p")], []).id, "o");
+});
+
+test("buildRows splits by boot time with a 24 h window", () => {
+  const H = 3600;
+  const line = (id, t) => `C\t${t}\t/p/${id}.jsonl\t${JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/p", sessionId: id })}`;
+  const stdout = [`B\t${100 * H}`, line("old", 70 * H), line("pre", 99 * H), line("post", 101 * H)].join("\n");
+  const { rows } = buildRows([{ machine: null, stdout }], [], [], [], 102 * H * 1000);
+  assert.deepEqual(rows.map((r) => [r.id, r.group]), [["pre", "restart"], ["post", "recent"], ["old", "recent"]]);
+});
+
+test("buildRows drops sessions older than 7 days and fills where", () => {
+  const D = 86400;
+  const line = (id, t) => `C\t${t}\t/p/${id}.jsonl\t${JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/p", sessionId: id })}`;
+  const stdout = [line("new", 9 * D), line("stale", 1 * D)].join("\n");
+  const finished = [{ cwd: "/p", agent: "claude-code", where: "ledger / 2", address: "omen/t9" }, { cwd: "/p", agent: "claude-code", where: "x / 1", address: "t1" }];
+  const { rows } = buildRows([{ machine: "omen", stdout }], [], [], finished, 10 * D * 1000);
+  assert.deepEqual(rows.map((r) => [r.id, r.where]), [["new", "ledger / 2"]]);
+});
+
+test("buildRows keeps other machines when one fails", () => {
+  const stdout = `C\t1\t/p/m.jsonl\t${JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/p", sessionId: "m" })}`;
+  const r = buildRows([{ machine: null, stdout }, { machine: "omen", error: "timed out" }], [], [], [], 5000);
+  assert.equal(r.rows.length, 1);
+  assert.deepEqual(r.errors, [{ machine: "omen", error: "timed out" }]);
+});
+
+test("filterRows matches every word in title, folder, space name or tool", () => {
+  const rows = [{ ...S("/w/ledger"), title: "replay fix", space: { name: "maximum" } }, { ...S("/w/ui"), title: "css", space: null }];
+  assert.equal(filterRows(rows, "ledger max").length, 1);
+  assert.equal(filterRows(rows, "").length, 2);
+});
+
+test("ago", () => {
+  assert.equal(ago(0, 30e3), "just now");
+  assert.equal(ago(0, 5 * 60e3), "5 min ago");
+  assert.equal(ago(0, 2 * 3600e3), "2 h ago");
+  assert.equal(ago(0, 4 * 86400e3), "4 d ago");
 });
