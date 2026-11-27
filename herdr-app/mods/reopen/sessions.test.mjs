@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseMachine, resumeArgv, matchSpace, buildRows, filterRows, ago } from "./sessions.js";
+import { parseMachine, resumeArgv, matchSpace, buildRows, filterRows, ago, MACHINE_SCRIPT } from "./sessions.js";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const claude = (id, cwd, extra = {}) => JSON.stringify({ type: "user", entrypoint: "cli", cwd, sessionId: id,
   message: { role: "user", content: "fix the ledger replay" }, ...extra });
@@ -30,11 +34,11 @@ test("drops sdk claude sessions and live ones", () => {
   assert.equal(parseMachine(out, null).sessions.length, 0);
 });
 
-test("parses codex and drops vscode and running ones", () => {
-  const meta = (id, source) => JSON.stringify({ type: "session_meta", payload: { id, cwd: "/c", originator: "codex-tui", source } });
+test("parses codex and drops exec and running ones", () => {
+  const meta = (id, source, originator = "codex-tui") => JSON.stringify({ type: "session_meta", payload: { id, cwd: "/c", originator, source } });
   const user = JSON.stringify({ type: "event_msg", payload: { type: "user_message", message: "add a test" } });
   const out = [`X\t5\t/r/rollout-a.jsonl\t${meta("a", "cli")}\t${user}`,
-    `X\t5\t/r/rollout-v.jsonl\t${meta("v", "vscode")}\t${user}`,
+    `X\t5\t/r/rollout-v.jsonl\t${meta("v", "exec", "codex_exec")}\t${user}`,
     `X\t6\t/r/rollout-o.jsonl\t${meta("o", "cli")}\t${user}`, `P\t/c`].join("\n"); // one TUI in /c: the newest (o) runs
   const { sessions } = parseMachine(out, null);
   assert.deepEqual(sessions.map((s) => [s.id, s.title]), [["a", "add a test"]]);
@@ -68,6 +72,22 @@ test("antigravity prompts without an id still give the title, and open dbs are r
 test("antigravity folder falls back to last_conversations", () => {
   const out = [`D\t9\tg3`, `G\t${JSON.stringify({ "/z/proj": "g3" })}`].join("\n");
   assert.deepEqual(parseMachine(out, null).sessions.map((s) => [s.cwd, s.title]), [["/z/proj", "proj"]]);
+});
+
+test("codex TUI sessions marked vscode still show", () => {
+  const meta = JSON.stringify({ type: "session_meta", payload: { id: "t", cwd: "/c", originator: "codex-tui", source: "vscode" } });
+  assert.equal(parseMachine(`X\t5\t/r/rollout-t.jsonl\t${meta}\t`, null).sessions.length, 1);
+});
+
+test("a slash command start gives the command as title", () => {
+  const line = `"content":"<command-message>ci-triage</command-message>\\n<command-name>/ci-triage</command-name> "entrypoint":"cli" "cwd":"/w" "sessionId":"s"`;
+  assert.equal(parseMachine(`C\t1\t/p/s.jsonl\t${line}`, null).sessions[0].title, "/ci-triage");
+});
+
+test("antigravity summaries give folder and title for sessions missing from history", () => {
+  const out = [`D\t9\tf1`, `S\tf1\tGitHub Pull Request Code Review\t["file:///home/u/my%20wt"]`, `S\tf2\t\t["file:///x"]`, `D\t8\tf2`].join("\n");
+  assert.deepEqual(parseMachine(out, "omen").sessions.map((s) => [s.id, s.cwd, s.title]),
+    [["f1", "/home/u/my wt", "GitHub Pull Request Code Review"], ["f2", "/x", "x"]]);
 });
 
 test("resume argv is exact", () => {
@@ -129,4 +149,37 @@ test("ago", () => {
   assert.equal(ago(0, 5 * 60e3), "5 min ago");
   assert.equal(ago(0, 2 * 3600e3), "2 h ago");
   assert.equal(ago(0, 4 * 86400e3), "4 d ago");
+});
+
+test("MACHINE_SCRIPT reads a fake home", () => {
+  const home = mkdtempSync(join(tmpdir(), "reopen-"));
+  mkdirSync(join(home, ".claude/projects/-w/aaa/subagents"), { recursive: true });
+  // Real field order: message comes before cwd and entrypoint, and can be long.
+  writeFileSync(join(home, ".claude/projects/-w/aaa.jsonl"),
+    '{"type":"mode"}\n' + JSON.stringify({ type: "user", message: { role: "user", content: "hi\tthere " + "x".repeat(9000) }, entrypoint: "cli", cwd: "/w", sessionId: "aaa" }) + "\n");
+  writeFileSync(join(home, ".claude/projects/-w/aaa/subagents/agent-1.jsonl"),
+    JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/w", sessionId: "sub" }) + "\n");
+  mkdirSync(join(home, ".claude/sessions"), { recursive: true });
+  writeFileSync(join(home, ".claude/sessions/1.json"), JSON.stringify({ pid: 1, sessionId: "live1" }));
+  mkdirSync(join(home, ".codex/sessions/2026/11/26"), { recursive: true });
+  writeFileSync(join(home, ".codex/sessions/2026/11/26/rollout-x.jsonl"),
+    JSON.stringify({ type: "session_meta", payload: { id: "x", cwd: "/c", originator: "codex-tui", source: "cli" } }) + "\n"
+    + JSON.stringify({ type: "event_msg", payload: { type: "user_message", message: "add a test" } }) + "\n");
+  writeFileSync(join(home, ".codex/session_index.jsonl"), JSON.stringify({ id: "x", thread_name: "Add a test" }) + "\n");
+  mkdirSync(join(home, ".gemini/antigravity-cli/conversations"), { recursive: true });
+  mkdirSync(join(home, ".gemini/antigravity-cli/cache"), { recursive: true });
+  writeFileSync(join(home, ".gemini/antigravity-cli/history.jsonl"),
+    JSON.stringify({ display: "go", timestamp: 1, workspace: "/g", conversationId: "g1" }) + "\n");
+  writeFileSync(join(home, ".gemini/antigravity-cli/cache/last_conversations.json"), '{\n  "/g": "g1"\n}\n');
+  writeFileSync(join(home, ".gemini/antigravity-cli/conversations/g1.db"), "");
+  writeFileSync(join(home, ".gemini/antigravity-cli/conversations/g2.db"), "");
+  execFileSync("sqlite3", [join(home, ".gemini/antigravity-cli/conversation_summaries.db"),
+    "create table conversation_summaries (conversation_id text, title text, workspace_uris text, last_modified_time datetime);"
+    + "insert into conversation_summaries values ('g2', 'Fee review', '[\"file:///s\"]', datetime('now'));"]);
+  const out = execFileSync("sh", ["-c", MACHINE_SCRIPT], { env: { ...process.env, HOME: home } }).toString();
+  assert.match(out, /^B\t\d+$/m);
+  assert.match(out, /^L\tlive1$/m); // pid 1 (launchd/init) is always alive
+  assert.match(out, /^G\t\{.*"\/g": "g1".*\}$/m);
+  const got = parseMachine(out, null).sessions.map((s) => [s.id, s.cwd, s.title]).sort();
+  assert.deepEqual(got, [["aaa", "/w", "hi there " + "x".repeat(70) + "…"], ["g1", "/g", "go"], ["g2", "/s", "Fee review"], ["x", "/c", "Add a test"]]);
 });
