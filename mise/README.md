@@ -51,7 +51,7 @@ On macOS, [bootstrap](../macos/README.md#bootstrap) runs `bash mise/install.sh`.
 
 The installer keeps `~/.config/mise/config.toml` as a real, machine-local file and layers the tracked fragment through `conf.d`. It also registers the `mise-local` Git clean filter to strip `trusted_config_paths` from the tracked config. Zsh exports `MISE_TRUSTED_CONFIG_PATHS=$HOME/worktrees`.
 
-Global tools in [config.toml](config.toml) include Node, Go, gitmoji-cli, CodeBurn (`npm:codeburn`), gopls, RTK and the Antigravity CLI (`agy`). `mise/install.sh` runs `mise install`, so bootstrap installs all of them; `mise upgrade <tool>` updates one. The project [mise.toml](../mise.toml) owns maintenance tasks and tool versions.
+Global tools in [config.toml](config.toml) include Node, Go, gitmoji-cli, CodeBurn (`npm:codeburn`), Issue Graph (`npm:issue-graph`), gopls, RTK and the Antigravity CLI (`agy`). The bootstrap installer runs `mise install` for these tools. The [`upall` command](../system/README.md#maintenance) upgrades them. Use `mise upgrade <tool>` to update one tool. The project [mise.toml](../mise.toml) owns maintenance tasks and tool versions.
 
 CodeBurn's employment Vertex rates and accuracy boundaries are documented under
 [CodeBurn pricing](../codeburn/README.md). Bootstrap applies those rates through `codeburn/install.sh` on both platforms.
