@@ -61,8 +61,9 @@ export const conversationMethods = {
   // starts closed — newest-first ordering means the one you want is at the
   // top, not necessarily the one with the most text. A review's own agent
   // icon sits right on this header, clickable without opening anything:
-  // like Deploys' investigate icon, straight to an agyyolo agent running
-  // /pr-review-response for a person's review or /pr-babysit for a bot's.
+  // like Deploys' investigate icon, straight to a ccyolo (opus) agent
+  // running /review-judge for a person's review or an agyyolo agent running
+  // /pr-babysit for a bot's.
   entryBlock(entry, { indent = false, divided = false } = {}) {
     const t = theme();
     const thread = entry.thread;
@@ -81,7 +82,7 @@ export const conversationMethods = {
         .child(div().flex_none().text_color(t.dim).child(timeAgo(entry.at)))
         .when(isReview, (el) => el.child(IconButton({
           id: `pr-review-agent-${entry.id}`, icon: "agent", small: true, color: t.accent ?? t.ansi4,
-          label: `Address with agent (${isBot(who(entry)) ? "/pr-babysit" : "/pr-review-response"})`,
+          label: `Address with agent (${isBot(who(entry)) ? "/pr-babysit" : "/review-judge"})`,
           onClick: () => this.addressReview(entry),
         }))));
     if (open) {

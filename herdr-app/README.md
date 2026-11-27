@@ -510,11 +510,11 @@ review's header carries its own agent icon, clickable without opening the
 review at all, coloured and hover-tinted like the spaces sidebar's own
 PR/review chips (`ui.js`'s `IconButton`'s `color`). Same idea as Deploys'
 investigate icon (now styled the same way): no picker, no editing, straight
-to a new `agyyolo` (`agy --dangerously-skip-permissions`) pane split into
-the active tab (the prompt goes in via `-i`; agy rejects a bare
-positional): `/pr-review-response <id>` for a person's review, with the
-review id `gh pr view --json reviews` shows, or a bare `/pr-babysit` for a
-bot's, which works the whole PR (`model.js`'s `isBot`, `agents.js`'s
+to a new pane split into the active tab: `ccyolo --model opus` running
+`/review-judge <id>` for a person's review, with the review id
+`gh pr view --json reviews` shows, or `agyyolo` (`agy
+--dangerously-skip-permissions -i`; agy rejects a bare positional) running
+a bare `/pr-babysit` for a bot's, which works the whole PR (`model.js`'s `isBot`, `agents.js`'s
 `addressReview`). A review's inline-comment threads (`model.js`'s
 `conversationEntries`, matched to their review via each thread comment's
 `pullRequestReview.databaseId`) nest inside it behind a separate "N inline
