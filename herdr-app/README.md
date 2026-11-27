@@ -209,7 +209,7 @@ A failed stage (Degraded, or a bot status saying failed/error/timed out; not
 Progressing, Missing or Unknown, which are still settling) gets a magnifier
 icon beside its status. Like the sidebar's rebase icon, it splits a pane to the
 right in the space's shown tab running `claude --dangerously-skip-permissions
---model haiku` (`ccyolo`) with a read-only investigation prompt: `gh bd <pr> -R
+--model sonnet` (`ccyolo`) with a read-only investigation prompt: `gh bd <pr> -R
 <repo> --stage <name>` for a branch deploy stage, or the stage's Application
 YAML and its namespace's pods/events/logs on `kind-maximum-dev` for a local
 one (`gh bd` only knows PR deploys). It splits the pane sitting in the worktree,

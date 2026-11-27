@@ -22,7 +22,7 @@ const gh = viaLogin("gh");
 const argocd = viaLogin("argocd");
 const loginSh = viaLogin("sh"); // kubectl is a mise shim: needs the login PATH, same as gh/argocd
 
-const AGENT_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "haiku"]; // ccyolo, haiku
+const AGENT_ARGV = ["claude", "--dangerously-skip-permissions", "--model", "sonnet"]; // ccyolo, sonnet
 
 // pane.split runs argv bare, so the pane (and, if it was the last one, its tab
 // and space) closes when the agent exits. Run it in bash, which takes over after.
@@ -381,11 +381,11 @@ export default class Deploys extends View {
         .child(Chevron(open))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(pod.name))
         .child(div().text_size(TEXT.caption).text_color(t.ansi1).child(pod.restarts ? `${pod.reason} · ${pod.restarts}×` : pod.reason))
-        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-pod-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", color: t.accent ?? t.ansi4, onClick: () => this.investigatePod(tg, pod) }))))
+        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-pod-${key}`, icon: "investigate", label: "Investigate with Claude (sonnet)", color: t.accent ?? t.ansi4, onClick: () => this.investigatePod(tg, pod) }))))
       .when(open, (el) => el.child(this.stageDetail(key, t)));
   }
 
-  // Like the sidebar's rebase icon: splits a haiku agent into the active space's
+  // Like the sidebar's rebase icon: splits a sonnet agent into the active space's
   // shown tab to investigate, read-only. Skipped while one for the same prompt
   // is still running there.
   spawnAgent(prompt) {
@@ -439,7 +439,7 @@ export default class Deploys extends View {
         .child(Chevron(open))
         .child(div().flex_1().min_w(0).truncate().text_size(TEXT.small).text_color(t.foreground).child(stage.name))
         .child(div().text_size(TEXT.caption).text_color(statusColor(stage.status, t)).child(stage.status))
-        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-${key}`, icon: "investigate", label: "Investigate with Claude (haiku)", color: t.accent ?? t.ansi4, onClick: () => this.investigate(stage) }))))
+        .when(canInvestigate, (el) => el.child(IconButton({ id: `deploy-investigate-${key}`, icon: "investigate", label: "Investigate with Claude (sonnet)", color: t.accent ?? t.ansi4, onClick: () => this.investigate(stage) }))))
       .when(open, (el) => el.child(this.stageDetail(key, t)));
   }
 
