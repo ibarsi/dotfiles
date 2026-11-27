@@ -266,7 +266,7 @@ only reads terminals and renders.
 sessions that no longer run, on this computer and on Omen, and resumes the
 one you pick in its own space on its own machine. Use it to find an agent
 that you closed in an unknown space, or to bring back agents after a crash
-or a reboot.
+or a reboot: the list holds every stopped session, newest first.
 
 The popup reads only the data that the agents already store. It has no
 watcher or journal file, and nothing runs while the popup is closed:
@@ -284,11 +284,6 @@ does not show `claude -p`, SDK runs, subagents or `codex exec`. A click or
 Enter opens a new tab in the matching space and runs the exact resume
 command. If no space matches the folder, the popup makes a new space there.
 Type to filter, and press Esc to close.
-
-"Before restart" holds the sessions whose last write is in the 24 hours
-before the machine booted. **Resume all** resumes all of them. This rule
-uses time only, so sessions that you closed on purpose before a reboot also
-show there.
 
 Each machine runs one `sh` script (`MACHINE_SCRIPT` in
 `mods/reopen/sessions.js`). It needs `find`, `stat`, `grep`, `ps` and, for

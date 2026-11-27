@@ -10,9 +10,8 @@ const claude = (id, cwd, extra = {}) => JSON.stringify({ type: "user", entrypoin
   message: { role: "user", content: "fix the ledger replay" }, ...extra });
 
 test("parses a claude session", () => {
-  const out = `B\t1795721999\nC\t1795700000\t/h/.claude/projects/-x/aaa.jsonl\t${claude("aaa", "/w/x")}\n`;
-  const { boot, sessions } = parseMachine(out, "omen");
-  assert.equal(boot, 1795721999000);
+  const out = `C\t1795700000\t/h/.claude/projects/-x/aaa.jsonl\t${claude("aaa", "/w/x")}\n`;
+  const { sessions } = parseMachine(out, "omen");
   assert.deepEqual(sessions[0], { tool: "claude", id: "aaa", cwd: "/w/x", title: "fix the ledger replay", stoppedAt: 1795700000000, machine: "omen" });
 });
 
@@ -114,12 +113,13 @@ test("matchSpace never crosses machines", () => {
   assert.equal(matchSpace(S("/p", "omen"), [sp("o", "omen", "/p")], []).id, "o");
 });
 
-test("buildRows splits by boot time with a 24 h window", () => {
-  const H = 3600;
+test("buildRows lists sessions newest first, with no groups", () => {
   const line = (id, t) => `C\t${t}\t/p/${id}.jsonl\t${JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/p", sessionId: id })}`;
-  const stdout = [`B\t${100 * H}`, line("old", 70 * H), line("pre", 99 * H), line("post", 101 * H)].join("\n");
-  const { rows } = buildRows([{ machine: null, stdout }], [], [], [], 102 * H * 1000);
-  assert.deepEqual(rows.map((r) => [r.id, r.group]), [["pre", "restart"], ["post", "recent"], ["old", "recent"]]);
+  const stdout = [line("old", 1), line("mid", 2)].join("\n");
+  const omen = line("new", 3);
+  const { rows } = buildRows([{ machine: null, stdout }, { machine: "omen", stdout: omen }], [], [], [], 5000);
+  assert.deepEqual(rows.map((r) => r.id), ["new", "mid", "old"]);
+  assert.equal("group" in rows[0], false);
 });
 
 test("buildRows drops sessions older than 7 days and fills where", () => {
@@ -177,7 +177,7 @@ test("MACHINE_SCRIPT reads a fake home", () => {
     "create table conversation_summaries (conversation_id text, title text, workspace_uris text, last_modified_time datetime);"
     + "insert into conversation_summaries values ('g2', 'Fee review', '[\"file:///s\"]', datetime('now'));"]);
   const out = execFileSync("sh", ["-c", MACHINE_SCRIPT], { env: { ...process.env, HOME: home } }).toString();
-  assert.match(out, /^B\t\d+$/m);
+  assert.doesNotMatch(out, /^B\t/m);
   assert.match(out, /^L\tlive1$/m); // pid 1 (launchd/init) is always alive
   assert.match(out, /^G\t\{.*"\/g": "g1".*\}$/m);
   const got = parseMachine(out, null).sessions.map((s) => [s.id, s.cwd, s.title]).sort();

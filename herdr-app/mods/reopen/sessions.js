@@ -15,9 +15,6 @@ cd "$HOME" 2>/dev/null || exit 0
 T=$(printf '\t')
 if stat -c %Y / >/dev/null 2>&1; then mt() { stat -c %Y "$1"; }; else mt() { stat -f %m "$1"; }; fi
 newest() { while IFS= read -r f; do printf '%s\t%s\n' "$(mt "$f")" "$f"; done | sort -rn | head -n 100; }
-b=$(sysctl -n kern.boottime 2>/dev/null | sed -n 's/.*{ sec = \([0-9]*\).*/\1/p')
-[ -n "$b" ] || b=$(awk '/^btime/ {print $2}' /proc/stat 2>/dev/null)
-printf 'B\t%s\n' "$b"
 if [ -d .claude/projects ]; then
   find .claude/projects -mindepth 2 -maxdepth 2 -name '*.jsonl' -mtime -7 | newest | while IFS="$T" read -r m f; do
     l=$(grep -m1 '"type":"user"' "$f" | grep -o -E '"(cwd|entrypoint|sessionId)":"[^"]*"|"(content|text)":"([^"\\]|\\.){0,200}' | tr -d '\t' | tr '\n' ' ')
@@ -78,14 +75,12 @@ function title(text, cwd) {
 const claudeText = (line) => field(line, "content") ?? field(line, "text");
 
 export function parseMachine(stdout, machine) {
-  let boot = null;
   const live = new Set(), open = new Set(), names = new Map(), tuiCwds = [];
   const claude = [], codex = [], history = [], dbs = new Map(), summaries = new Map();
   let lastConv = {};
   for (const raw of stdout.split("\n")) {
     const [kind, ...f] = raw.split("\t");
-    if (kind === "B") boot = Number(f[0]) * 1000 || null;
-    else if (kind === "L") live.add(f[0]);
+    if (kind === "L") live.add(f[0]);
     else if (kind === "O") open.add(f[0]);
     else if (kind === "P") tuiCwds.push(f[0]);
     else if (kind === "N") { const id = field(f[0] || "", "id"); if (id) names.set(id, field(f[0], "thread_name")); }
@@ -131,7 +126,7 @@ export function parseMachine(stdout, machine) {
 
   out.sort((a, b) => b.stoppedAt - a.stoppedAt);
   const count = {};
-  return { boot, sessions: out.filter((s) => (count[s.tool] = (count[s.tool] || 0) + 1) <= PER_TOOL) };
+  return { sessions: out.filter((s) => (count[s.tool] = (count[s.tool] || 0) + 1) <= PER_TOOL) };
 }
 
 function antigravity(history, dbs, open, lastConv, summaries, machine) {
@@ -198,16 +193,14 @@ export function buildRows(results, spaces, panes, finished, now) {
   const rows = [], errors = [];
   for (const r of results) {
     if (r.error) { errors.push({ machine: r.machine, error: r.error }); continue; }
-    const { boot, sessions } = parseMachine(r.stdout || "", r.machine);
-    for (const s of sessions) {
+    for (const s of parseMachine(r.stdout || "", r.machine).sessions) {
       if (now - s.stoppedAt > 7 * DAY) continue;
-      const group = boot && s.stoppedAt < boot && boot - s.stoppedAt < DAY ? "restart" : "recent";
       const where = finished.find((t) => t.cwd === s.cwd && t.agent === AGENT_NAMES[s.tool]
         && (t.address.includes("/") ? t.address.split("/")[0] : null) === s.machine)?.where ?? null;
-      rows.push({ ...s, group, space: matchSpace(s, spaces, panes), where });
+      rows.push({ ...s, space: matchSpace(s, spaces, panes), where });
     }
   }
-  rows.sort((a, b) => (a.group === b.group ? b.stoppedAt - a.stoppedAt : a.group === "restart" ? -1 : 1));
+  rows.sort((a, b) => b.stoppedAt - a.stoppedAt);
   return { rows, errors };
 }
 

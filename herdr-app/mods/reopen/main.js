@@ -21,7 +21,6 @@ const POPUP_H = 500;
 const MARGIN = 16;
 const LIST_H = 360;
 const ROW_H = 44;
-const HEADER_H = 28;
 const ICONS = { claude: "icons/claude.svg", codex: "icons/codex.svg", agy: "icons/antigravity.svg" };
 const machineLabel = (m) => m ?? "This Mac";
 
@@ -83,43 +82,28 @@ export default class Reopen extends View {
     if (props()?.overlay) closeOverlay(props().overlay);
   }
 
-  // Returns true when Herdr accepted the new tab or space.
-  async resumeOne(row, focus) {
-    const key = `${row.machine}/${row.id}`;
-    try {
-      const t = await exec("test", ["-d", row.cwd], { on: row.machine, timeout: 10000 });
-      if (t.code !== 0) { this.rowError.set(key, "Folder is gone"); return false; }
-      const argv = resumeArgv(row);
-      if (row.space) run("tab.new", { space: row.space.id, folder: row.cwd, argv, focus });
-      else run("space.new", { folder: row.cwd, machine: row.machine, argv, focus });
-    } catch (e) {
-      this.rowError.set(key, String(e?.message ?? e));
-      return false;
-    }
-    this.resumed = (this.resumed || new Set()).add(key);
-    return true;
-  }
-
+  // Checks the folder on the session's machine, then opens the exact resume in
+  // a new tab of its space (or a new space there). The popup closes on success.
   resume(row, cx) {
     if (!row || this.busy) return;
     this.busy = true;
     cx.spawn(async (cx) => {
-      const ok = await this.resumeOne(row, true);
+      const key = `${row.machine}/${row.id}`;
+      try {
+        const t = await exec("test", ["-d", row.cwd], { on: row.machine, timeout: 10000 });
+        if (t.code === 0) {
+          const argv = resumeArgv(row);
+          if (row.space) run("tab.new", { space: row.space.id, folder: row.cwd, argv });
+          else run("space.new", { folder: row.cwd, machine: row.machine, argv });
+          this.busy = false;
+          return this.close();
+        }
+        this.rowError.set(key, "Folder is gone");
+      } catch (e) {
+        this.rowError.set(key, String(e?.message ?? e));
+      }
       this.busy = false;
-      if (ok) this.close();
-      else cx.notify();
-    });
-  }
-
-  resumeAll(rows, cx) {
-    if (this.busy || !rows.length) return;
-    this.busy = true;
-    cx.spawn(async (cx) => {
-      let failed = 0;
-      for (let i = 0; i < rows.length; i++) if (!(await this.resumeOne(rows[i], i === rows.length - 1))) failed++;
-      this.busy = false;
-      if (!failed) this.close();
-      else cx.notify();
+      cx.notify();
     });
   }
 
@@ -141,40 +125,21 @@ export default class Reopen extends View {
     if (this.launcher) return this.renderLauncher(cx);
     const t = theme();
     const { rows: all, errors } = this.rows(); // parse once per render
-    const resumed = this.resumed || new Set();
-    const rows = filterRows(all, this.query).filter((r) => !resumed.has(`${r.machine}/${r.id}`));
-    const restart = rows.filter((r) => r.group === "restart");
+    const rows = filterRows(all, this.query);
     this.sel = rows.length ? Math.min(this.sel, rows.length - 1) : 0;
     const now = Date.now();
 
-    const items = [];
-    let last = null;
-    rows.forEach((r, i) => {
-      if (r.group !== last) { items.push({ kind: "header", group: r.group }); last = r.group; }
-      items.push({ kind: "row", row: r, index: i });
-    });
-    const itemH = (it) => (it.kind === "header" ? HEADER_H : ROW_H);
-    const tops = [];
-    let y = 0;
-    for (const it of items) { tops.push(y); y += itemH(it); }
+    const tops = rows.map((_, i) => i * ROW_H);
+    const y = rows.length * ROW_H;
     const fixed = y > LIST_H;
     const maxScroll = Math.max(0, y - LIST_H);
-    const selItem = items.findIndex((it) => it.kind === "row" && it.index === this.sel);
-    if (selItem >= 0) {
-      if (tops[selItem] < this.scroll) this.scroll = tops[selItem];
-      if (tops[selItem] + ROW_H > this.scroll + LIST_H) this.scroll = tops[selItem] + ROW_H - LIST_H;
+    if (rows.length) {
+      if (tops[this.sel] < this.scroll) this.scroll = tops[this.sel];
+      if (tops[this.sel] + ROW_H > this.scroll + LIST_H) this.scroll = tops[this.sel] + ROW_H - LIST_H;
     }
     this.scroll = Math.max(0, Math.min(this.scroll, maxScroll));
-    const place = (el, i) => (fixed ? el.absolute().left(0).right(0).top(tops[i] - this.scroll).h(itemH(items[i])) : el);
-    const visible = (i) => !fixed || (tops[i] + itemH(items[i]) > this.scroll && tops[i] < this.scroll + LIST_H);
-
-    const header = (group) =>
-      h_flex().h(HEADER_H).px(8).items_center().text_size(10).font_semibold().text_color(t.muted)
-        .child(div().flex_1().child(group === "restart" ? "BEFORE RESTART" : "RECENTLY CLOSED"))
-        .when(group === "restart", (el) => el.child(
-          div().id("reopen-all").text_color(this.busy ? t.dim : t.accent).cursor_pointer()
-            .on_click((_e, cx) => this.resumeAll(restart, cx))
-            .child(`Resume all (${restart.length})`)));
+    const place = (el, i) => (fixed ? el.absolute().left(0).right(0).top(tops[i] - this.scroll).h(ROW_H) : el);
+    const visible = (i) => !fixed || (tops[i] + ROW_H > this.scroll && tops[i] < this.scroll + LIST_H);
 
     const row = (r, i) => {
       const err = this.rowError.get(`${r.machine}/${r.id}`);
@@ -209,13 +174,13 @@ export default class Reopen extends View {
         .child(div().id("reopen-close").px(6).text_color(t.dim).cursor_pointer().on_click(() => this.close()).child("×")))
       .child(h_flex().h(30).px(8).items_center().rounded(6).border_1().border_color(t.accent).bg(t.background)
         .child(Input.new(this.input).flex_1().min_w(0).h_full().text_size(12).text_color(t.foreground)))
-      .child(items.length
+      .child(rows.length
         ? v_flex().id("reopen-list").h(LIST_H).min_h(0).flex_none()
             .when(fixed, (el) => el.overflow_hidden().on_scroll_wheel((e, cx) => {
               this.scroll = Math.max(0, Math.min(this.scroll - e.delta.y, maxScroll));
               cx.notify();
             }))
-            .children(items.map((it, i) => (visible(i) ? place(it.kind === "header" ? header(it.group) : row(it.row, it.index), i) : null)).filter(Boolean))
+            .children(rows.map((r, i) => (visible(i) ? place(row(r, i), i) : null)).filter(Boolean))
         : v_flex().h(LIST_H).items_center().justify_center().text_color(t.dim)
             .child(this.loading.size ? "Reading sessions…" : "Nothing to reopen"))
       .child(h_flex().flex_none().pt(6).border_t(1).border_color(t.border).text_size(10).text_color(t.dim)
