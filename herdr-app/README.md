@@ -42,7 +42,10 @@ the macOS defaults added in Herdr 0.1.16.
   `settings.linux.json` elsewhere (Omarchy). Both select the `catppuccin-mocha`
   theme, turn on font ligatures and turn off sounds and pane scrollbars. The app
   writes through the link, so zoom (Cmd +/-) and other Settings changes land in
-  that platform's file only and show up in `git diff`. `zoom`, `font_size` and `font_weight`
+  that platform's file only and show up in `git diff`. Both files set
+  `worktrees.directory` to `~/worktrees`, so the New worktree dialog creates each
+  checkout at `~/worktrees/<repo>/<branch>` on both machines. Existing checkouts
+  do not move. `zoom`, `font_size` and `font_weight`
   are per screen or platform and may differ. Keep everything else identical: copy other
   changes to the other file by hand.
   `mise run herdr-settings-check` reports drift, and the `herdr-settings-sync`

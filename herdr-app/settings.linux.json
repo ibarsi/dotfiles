@@ -8,5 +8,8 @@
   "minimum_contrast": 1,
   "theme": "catppuccin-mocha",
   "font_size": 12,
-  "terminal_scroll_speed": 1.4
+  "terminal_scroll_speed": 1.4,
+  "worktrees": {
+    "directory": "~/worktrees"
+  }
 }
