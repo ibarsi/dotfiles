@@ -4,7 +4,7 @@
 // stopped, interactive sessions. Fields come from regexes, not JSON.parse,
 // because the script cuts long lines.
 
-const PER_TOOL = 100;
+const PER_TOOL = 300;
 
 // Prints the records parseMachine reads, for $HOME on the machine it runs on.
 // POSIX sh with standard tools only: Omen has no lsof, so Linux reads /proc.
@@ -14,7 +14,7 @@ export const MACHINE_SCRIPT = String.raw`
 cd "$HOME" 2>/dev/null || exit 0
 T=$(printf '\t')
 if stat -c %Y / >/dev/null 2>&1; then mt() { stat -c %Y "$1"; }; else mt() { stat -f %m "$1"; }; fi
-newest() { while IFS= read -r f; do printf '%s\t%s\n' "$(mt "$f")" "$f"; done | sort -rn | head -n 100; }
+newest() { while IFS= read -r f; do printf '%s\t%s\n' "$(mt "$f")" "$f"; done | sort -rn | head -n 300; }
 if [ -d .claude/projects ]; then
   find .claude/projects -mindepth 2 -maxdepth 2 -name '*.jsonl' -mtime -7 | newest | while IFS="$T" read -r m f; do
     l=$(grep -m1 '"type":"user"' "$f" | grep -o -E '"(cwd|entrypoint|sessionId)":"[^"]*"|"(content|text)":"([^"\\]|\\.){0,200}' | tr -d '\t' | tr '\n' ' ')

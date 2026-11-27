@@ -183,3 +183,13 @@ test("MACHINE_SCRIPT reads a fake home", () => {
   const got = parseMachine(out, null).sessions.map((s) => [s.id, s.cwd, s.title]).sort();
   assert.deepEqual(got, [["aaa", "/w", "hi there " + "x".repeat(70) + "…"], ["g1", "/g", "go"], ["g2", "/s", "Fee review"], ["x", "/c", "Add a test"]]);
 });
+
+test("a busy week (more than 100 Claude sessions) still lists them all", () => {
+  const home = mkdtempSync(join(tmpdir(), "reopen-busy-"));
+  mkdirSync(join(home, ".claude/projects/-w"), { recursive: true });
+  for (let i = 0; i < 250; i++) {
+    writeFileSync(join(home, `.claude/projects/-w/s${i}.jsonl`), JSON.stringify({ type: "user", entrypoint: "cli", cwd: "/w", sessionId: `s${i}` }) + "\n");
+  }
+  const out = execFileSync("sh", ["-c", MACHINE_SCRIPT], { env: { ...process.env, HOME: home } }).toString();
+  assert.equal(parseMachine(out, null).sessions.length, 250);
+});
