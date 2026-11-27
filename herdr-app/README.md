@@ -260,6 +260,44 @@ background sweep made the popup's results stale for no real savings.
 herdr-app/mods/search/search.test.mjs`) is the matching core: `main.js`
 only reads terminals and renders.
 
+## Reopen popup
+
+`ctrl-space u` opens a popup in the bottom-right corner. It lists the agent
+sessions that no longer run, on this computer and on Omen, and resumes the
+one you pick in its own space on its own machine. Use it to find an agent
+that you closed in an unknown space, or to bring back agents after a crash
+or a reboot.
+
+The popup reads only the data that the agents already store. It has no
+watcher or journal file, and nothing runs while the popup is closed:
+
+| Tool | Data | Resume command |
+|------|------|----------------|
+| Claude Code | `~/.claude/projects/*/*.jsonl` | `claude --resume <id>` |
+| Codex | `~/.codex/sessions/**/rollout-*.jsonl`, `session_index.jsonl` | `codex resume <id>` |
+| Antigravity CLI | `~/.gemini/antigravity-cli/conversation_summaries.db`, `history.jsonl`, `conversations/*.db` | `agy --conversation <id>` |
+
+Each row shows the title, the space, the machine and how long ago the session
+stopped. The list holds the last 7 days and hides the sessions that still run.
+It shows only sessions from a terminal, which includes factory children. It
+does not show `claude -p`, SDK runs, subagents or `codex exec`. A click or
+Enter opens a new tab in the matching space and runs the exact resume
+command. If no space matches the folder, the popup makes a new space there.
+Type to filter, and press Esc to close.
+
+"Before restart" holds the sessions whose last write is in the 24 hours
+before the machine booted. **Resume all** resumes all of them. This rule
+uses time only, so sessions that you closed on purpose before a reboot also
+show there.
+
+Each machine runs one `sh` script (`MACHINE_SCRIPT` in
+`mods/reopen/sessions.js`). It needs `find`, `stat`, `grep`, `ps` and, for
+Antigravity titles, `sqlite3`. Linux reads `/proc` and macOS uses `lsof`. A
+running Codex has no exact signal, because its daemon keeps closed rollouts
+open. So the newest Codex session in each folder with a live `codex` process
+counts as running. Run the tests with `node --test
+herdr-app/mods/reopen/sessions.test.mjs`.
+
 ## Code Burn panel
 
 A **Code Burn** button sits in the tabs bar after PR Reviews. It shows what the

@@ -74,11 +74,8 @@ function title(text, cwd) {
   return one.length > 80 ? `${one.slice(0, 79)}…` : one;
 }
 
-function claudeText(line) {
-  const m = line.match(/"content":"((?:[^"\\]|\\.)*)/);
-  if (m) return field(line, "content");
-  return field(line, "text");
-}
+// A string content, else the first text item of an array content.
+const claudeText = (line) => field(line, "content") ?? field(line, "text");
 
 export function parseMachine(stdout, machine) {
   let boot = null;
@@ -140,17 +137,13 @@ export function parseMachine(stdout, machine) {
 function antigravity(history, dbs, open, lastConv, summaries, machine) {
   const byId = new Map();
   for (const h of history) {
-    if (!h.conversationId) continue;
-    const e = byId.get(h.conversationId) || { lines: [] };
-    e.lines.push(h);
-    byId.set(h.conversationId, e);
+    if (h.conversationId) byId.set(h.conversationId, [...(byId.get(h.conversationId) || []), h]);
   }
   const folderOf = new Map(Object.entries(lastConv).map(([dir, id]) => [id, dir]));
-  const ids = dbs.keys(); // no .db file: nothing to resume
   const out = [];
-  for (const id of ids) {
+  for (const id of dbs.keys()) { // no .db file: nothing to resume
     if ([...open].some((p) => p.endsWith(`/${id}.db`))) continue;
-    const lines = byId.get(id)?.lines || [];
+    const lines = byId.get(id) || [];
     const sum = summaries.get(id);
     let uri = null;
     try { uri = sum?.uri && decodeURIComponent(sum.uri); } catch { uri = sum.uri; }
