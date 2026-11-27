@@ -85,7 +85,7 @@ herdr-app/mods/my-spaces/status.test.mjs`). Click the conflict icon to split a
 `ccyolo --model haiku /rebase` pane (skipping permissions) into that space's shown
 tab without switching to it. A second click does nothing while that session is
 still running. When CI fails, a red magnifier sits right of the red PR number;
-clicking it splits a `ccyolo --model haiku /ci-triage` pane the same way. Both
+clicking it splits a `ccyolo --model sonnet /ci-triage` pane the same way. Both
 start through your interactive login shell (`$SHELL -lic`) so the pane gets the
 same PATH as a terminal; herdr's own PATH trips repos' mise toolchain guards. PR data comes from one `gh api graphql` query every 60s; ports from one
 `lsof`/`ss` scan per machine every 5s, so Omen spaces get theirs too.

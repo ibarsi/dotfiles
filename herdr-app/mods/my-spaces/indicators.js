@@ -370,7 +370,7 @@ const inShell = (argv) => ["bash", "-ic", `${argv.map(sq).join(" ")}; exec bash`
 // The shell outlives the agent, so "still running" means an agent is live in it.
 const agentIn = (tm) => agents().some((a) => a.address === tm.address);
 const REBASE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "haiku", "/rebase"]);
-const TRIAGE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "haiku", "/ci-triage"]);
+const TRIAGE_ARGV = inShell(["claude", "--dangerously-skip-permissions", "--model", "sonnet", "/ci-triage"]);
 function launch(id, argv) {
   const running = terminals().some((t) => t.state === "live" && terminalSpace(t) === id
     && argv.every((a, i) => t.argv?.[i] === a) && agentIn(t));
